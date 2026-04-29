@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>Подписка — Система Молодцова</title>
+  <meta name="description" content="Тарифы и подписка на Систему Молодцова" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand brand-outlined">
+        <img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img" />
+      </a>
+      <div class="nav-links desktop-only">
+        <a href="courses.html" class="nav-link">Обучение</a>
+        <a href="index.html#channels" class="nav-link">Каналы</a>
+        <a href="index.html#support" class="nav-link">Поддержка</a>
+      </div>
+      <div class="nav-actions">
+        <button id="nav-auth-btn" class="btn-nav-outline" onclick="window.openAuthModal('login')">Войти</button>
+        <a id="nav-account-link" href="account.html" class="btn-nav-outline" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <a href="index.html" class="back-link-glass" style="margin-top:24px;margin-bottom:12px;display:inline-flex">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Назад
+    </a>
+    <section class="hero hero-courses" style="min-height:auto;padding-bottom:0">
+      <div class="hero-content text-left">
+        <div class="hero-top-text fade-up">Доступ ко всему</div>
+        <h1 class="hero-title fade-up">Подписка</h1>
+        <p class="hero-subtitle fade-up">Один абонемент — все курсы, марафоны, вебинары и закрытый канал.</p>
+      </div>
+    </section>
+
+    <section class="section" id="plans">
+      <div id="plans-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:960px;margin:0 auto;padding:0 20px">
+        <div class="bento-card reveal" style="justify-content:center;align-items:center;padding:40px">
+          <p style="color:var(--text-2)">Загрузка тарифов...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="text-align:center;padding-top:0">
+      <p style="color:var(--text-2);font-size:14px;max-width:520px;margin:0 auto;line-height:1.6">
+        Оплата через Robokassa. После оплаты доступ активируется автоматически.<br>
+        Можно отменить в любой момент в личном кабинете.
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand"><img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img small"/></div>
+      <div class="footer-links"><a href="about.html">О сообществе</a><a href="author.html">Об авторе</a></div>
+      <div class="footer-copy">2026 Все права защищены.</div>
+    </div>
+  </footer>
+
+  <nav class="glass-tab-bar">
+    <a href="index.html" class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Главная</span></a>
+    <a href="courses.html" class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M8 21h8M12 17v4"/></svg><span>Курсы</span></a>
+    <a href="subscription.html" class="tab-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Подписка</span></a>
+    <a href="index.html#channels" class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Каналы</span></a>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    (async () => {
+      window.refreshAuthUI = function(user) {
+        const btn = document.getElementById('nav-auth-btn');
+        const link = document.getElementById('nav-account-link');
+        if (user || window.API.isLoggedIn()) {
+          if (btn) btn.style.display = 'none';
+          if (link) link.style.display = 'inline-flex';
+        }
+      };
+      if (window.API.isLoggedIn()) {
+        window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
+      }
+
+      try {
+        const data = await window.API.getPlans();
+        const container = document.getElementById('plans-container');
+        container.innerHTML = data.plans.map(p => {
+          const features = Array.isArray(p.features) ? p.features : (p.features ? JSON.parse(p.features) : []);
+          return `
+            <div class="bento-card reveal card-hover" style="padding:28px;flex-direction:column;align-items:flex-start">
+              <h3 style="margin:0 0 8px;font-size:20px;color:#fff">${p.title}</h3>
+              <p style="margin:0 0 16px;font-size:14px;color:var(--text-2);line-height:1.5">${p.description || ''}</p>
+              <div style="font-size:32px;font-weight:700;color:#fff;margin-bottom:20px">${p.price_rub} <span style="font-size:16px;font-weight:400;color:var(--text-2)">₽</span></div>
+              <ul style="list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px">
+                ${features.map(f => `<li style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#4ade80;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>${f}</li>`).join('')}
+              </ul>
+              <button class="btn btn-primary" style="width:100%;margin-top:auto" onclick="subscribe('${p.slug}')">Оформить</button>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        document.getElementById('plans-container').innerHTML = '<p style="color:var(--text-2);text-align:center">Не удалось загрузить тарифы.</p>';
+      }
+    })();
+
+    async function subscribe(planSlug) {
+      if (!window.API.isLoggedIn()) {
+        window.openAuthModal('login');
+        window.addEventListener('auth:change', function handler(e) {
+          window.removeEventListener('auth:change', handler);
+          subscribe(planSlug);
+        }, { once: true });
+        return;
+      }
+      try {
+        const res = await window.API.createPayment({ plan_slug: planSlug, provider: 'robokassa' });
+        if (res.payment_url) window.location.href = res.payment_url;
+        else alert('Ошибка создания платежа');
+      } catch (err) {
+        alert(err.error || 'Ошибка. Попробуйте позже.');
+      }
+    }
+  </script>
+</body>
+</html>

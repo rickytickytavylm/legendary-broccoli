@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>Система — Руслан Молодцов</title>
+  <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия, сценарий, вебинары." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json" />
+</head>
+<body class="dark-theme">
+
+  <!-- Навигация (Desktop & Mobile Top) -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand brand-outlined">
+        <img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img" />
+      </a>
+      
+      <div class="nav-links desktop-only">
+        <a href="#learning" class="nav-link">Обучение</a>
+        <a href="#channels" class="nav-link">Каналы</a>
+        <a href="#support" class="nav-link">Поддержка</a>
+      </div>
+
+      <div class="nav-actions">
+        <a href="https://t.me/obrazmisl" target="_blank" class="btn-nav-outline desktop-only">
+          Вступить в клуб
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </a>
+        <button id="nav-auth-btn" class="btn-nav-outline" onclick="window.openAuthModal('login')">Войти</button>
+        <a id="nav-account-link" href="account.html" class="btn-nav-outline" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    
+    <!-- Hero Section (Framer style) -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-top-text fade-up">АВТОРСКИЙ ПРОЕКТ</div>
+        <h1 class="hero-title fade-up">
+          Система<br>
+          <span class="text-gradient">Руслана Молодцова</span>
+        </h1>
+        <p class="hero-subtitle fade-up">
+          Пространство для развития, телесной терапии и построения личного сценария жизни.
+        </p>
+        <div class="hero-actions fade-up">
+          <a href="#learning" class="btn btn-primary btn-lg">
+            Начать обучение
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#channels" class="btn btn-secondary btn-lg">
+            Наши каналы
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Декоративный элемент на фоне -->
+      <div class="hero-glow"></div>
+    </section>
+
+    <!-- Bento Grid: Обучение -->
+    <section id="learning" class="section bento-section">
+      <div class="section-header reveal">
+        <h2 class="section-title">Обучение</h2>
+        <p class="section-desc">Фундаментальные программы и практики</p>
+      </div>
+
+      <div class="bento-grid">
+
+        <!-- Row 1: Гештальт (wide) + Телесная терапия -->
+        <a href="geshtalt.html" class="bento-card wide reveal card-hover">
+          <div class="card-bg" style="background: url('assets/courses.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Гештальт</h3>
+              <p>Гештальт-подход в психотерапии</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="therapy.html" class="bento-card reveal card-hover">
+          <div class="card-bg" style="background: url('assets/theraphy.jpg') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Телесная терапия</h3>
+              <p>Практики и упражнения</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <!-- Row 2: small left + wide right -->
+        <a href="courses.html" class="bento-card reveal card-hover">
+          <div class="card-bg" style="background: url('assets/geshtalt.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Курс Дермер</h3>
+              <p>31 урок по психологическим кризисам и травмам</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="webinars.html" class="bento-card wide reveal card-hover">
+          <div class="card-bg" style="background: url('assets/speaker.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Вебинары</h3>
+              <p>Прямые эфиры и записи прошедших встреч</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <!-- Row 3: wide left + small right -->
+        <a href="#" class="bento-card wide reveal card-hover">
+          <div class="card-bg" style="background: url('assets/psysomatic.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Психосоматика</h3>
+              <p>Лекции по телесно-ориентированной терапии</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <div class="bento-card reveal card-hover disabled">
+          <span class="card-badge">Скоро</span>
+          <div class="card-bg" style="background: url('assets/scenario.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Сценарий</h3>
+              <p>Ваш личный план</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: small left + wide right -->
+        <a href="#" class="bento-card reveal card-hover">
+          <div class="card-bg" style="background: url('assets/hipno.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Гипноз</h3>
+              <p>Техники и практики гипнотерапии</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="marathons.html" class="bento-card wide reveal card-hover">
+          <div class="card-bg" style="background: url('assets/maraphones.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Марафоны</h3>
+              <p>Интенсивные программы трансформации</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <!-- Row 5: wide left + small right -->
+        <a href="#" class="bento-card wide reveal card-hover">
+          <div class="card-bg" style="background: url('assets/way_block.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Профайлинг</h3>
+              <p>Курс по распознаванию личности</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="#" class="bento-card reveal card-hover">
+          <div class="card-bg" style="background: url('assets/supervision.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Супервизия</h3>
+              <p>Профессиональная поддержка психологов</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <!-- Row 6: 3 small -->
+        <a href="#" class="bento-card reveal card-hover">
+          <div class="card-bg" style="background: url('assets/masterofcommication.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Мастер Коммуникаций</h3>
+              <p>Развитие навыков общения</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="#" class="bento-card reveal card-hover">
+          <div class="card-bg" style="background: url('assets/mini-yoga.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Мини-курс Йога</h3>
+              <p>Базовые практики для начинающих</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+        <a href="#" class="bento-card reveal card-hover">
+          <div class="card-bg" style="background: url('assets/antology.png') center/cover no-repeat;"></div>
+          <div class="card-overlay"></div>
+          <div class="card-content">
+            <div class="card-text">
+              <h3>Антология</h3>
+              <p>Сборник материалов и практик</p>
+            </div>
+          </div>
+          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Section: Каналы (Rork style lists) -->
+    <section id="channels" class="section">
+      <div class="section-header reveal">
+        <h2 class="section-title">Каналы & Комьюнити</h2>
+      </div>
+
+      <div class="minimal-list">
+        
+        <!-- Открытый Канал -->
+        <a href="https://t.me/obrazmisl" target="_blank" class="minimal-list-item reveal">
+          <div class="minimal-list-number">01</div>
+          <div class="minimal-list-content">
+            <h3>Открытый Канал</h3>
+            <p>Новости, объявления, публичная информация</p>
+          </div>
+          <div class="minimal-list-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Канал Клуба -->
+        <a href="#" class="minimal-list-item reveal">
+          <div class="minimal-list-number">02</div>
+          <div class="minimal-list-content">
+            <h3>Канал Клуба</h3>
+            <p>Закрытые новости и эксклюзивные материалы</p>
+          </div>
+          <div class="minimal-list-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Чат Клуба -->
+        <a href="#" class="minimal-list-item reveal">
+          <div class="minimal-list-number">03</div>
+          <div class="minimal-list-content">
+            <h3>Чат Клуба</h3>
+            <p>Общение с участниками и единомышленниками</p>
+          </div>
+          <div class="minimal-list-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Support & App -->
+    <section id="support" class="section">
+      <div class="support-grid">
+        
+        <!-- Отдел заботы -->
+        <div class="support-card reveal card-hover">
+          <div class="support-card-bg" style="background: url('assets/hope.png') center/cover no-repeat;"></div>
+          <div class="support-card-overlay"></div>
+          <div class="support-card-content">
+            <div class="support-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </div>
+            <div class="support-text">
+              <h3>Отдел Заботы</h3>
+              <p>Напишите нам — ответим на вопросы и поможем разобраться</p>
+            </div>
+            <a href="#" class="btn-support-outline mt-auto">
+              Написать в Telegram
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Установка PWA -->
+        <div class="support-card reveal card-hover">
+          <div class="support-card-bg" style="background: url('assets/app.png') center/cover no-repeat;"></div>
+          <div class="support-card-overlay"></div>
+          <div class="support-card-content">
+            <div class="support-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div class="support-text">
+              <h3>Приложение</h3>
+              <p>Установите Систему на экран телефона для быстрого доступа</p>
+            </div>
+            <button id="btn-install-pwa" class="btn-support-text mt-auto">
+              <span class="btn-support-text-label">Установить</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Об Авторе -->
+    <section id="author" class="section">
+      <div class="author-card reveal">
+        <div class="author-photo">
+          <img src="assets/ruslan_promo.jpg" alt="Руслан Молодцов" />
+        </div>
+        <div class="author-body">
+          <p class="author-label">Руслан Молодцов</p>
+          <h2 class="author-headline">Автор проекта<br>«Система»</h2>
+          <div class="author-bio">
+            <p>Клинический психолог, сертифицированный консультант и тренер ППЛ РФ. Преподаватель интегральной гуманистической психотерапии. Основатель института «Образ Мысли» — института психологии персонального будущего.</p>
+            <p>Автор книг «Кресло страха», «Руководство по консультированию», «Дневник Пифагора» и других. Создатель приложения WAY для психологического портрета личности.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-col footer-about">
+        <img src="assets/logo2.png" alt="Система" class="footer-logo" />
+        <p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>
+        <p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">О проекте</h4>
+        <ul class="footer-list">
+          <li><a href="about.html">О сообществе</a></li>
+          <li><a href="author.html">Об авторе</a></li>
+          <li><a href="#">Партнёрам</a></li>
+          <li><a href="#">Контакты</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Обучение</h4>
+        <ul class="footer-list">
+          <li><a href="courses.html">Все курсы</a></li>
+          <li><a href="#channels">Каналы</a></li>
+          <li><a href="#">Библиотека</a></li>
+          <li><a href="therapy.html">Практики</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Поддержка</h4>
+        <ul class="footer-list">
+          <li><a href="#">Вопросы и ответы</a></li>
+          <li><a href="#">Условия использования</a></li>
+          <li><a href="#">Политика конфиденциальности</a></li>
+          <li><a href="#">Возврат средств</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-cta">
+        <h4 class="footer-heading">Будьте в курсе</h4>
+        <p class="footer-desc">Получайте важные материалы<br>и анонсы прямо в Telegram.</p>
+        <a href="https://t.me/obrazmisl" target="_blank" class="btn-footer-telegram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          Подписаться в Telegram
+        </a>
+        <div class="footer-socials">
+          <a href="https://t.me/obrazmisl" target="_blank" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </a>
+          <a href="#" target="_blank" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+          </a>
+          <a href="#" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-trust">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Ваши данные под надёжной защитой.
+      </div>
+      <div class="footer-craft">Сделано с вниманием к деталям
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div>
+  </footer>
+
+  <!-- iOS Glass Tab Bar (Mobile Only) -->
+  <nav class="glass-tab-bar">
+    <a href="index.html" class="tab-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Главная</span>
+    </a>
+    <a href="courses.html" class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M8 21h8M12 17v4"/></svg>
+      <span>Курсы</span>
+    </a>
+    <a href="subscription.html" class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span>Подписка</span>
+    </a>
+    <a href="#channels" class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Каналы</span>
+    </a>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    window.refreshAuthUI = function(user) {
+      const btn = document.getElementById('nav-auth-btn');
+      const link = document.getElementById('nav-account-link');
+      if (user || window.API.isLoggedIn()) {
+        if (btn) btn.style.display = 'none';
+        if (link) link.style.display = 'inline-flex';
+      }
+    };
+    if (window.API.isLoggedIn()) {
+      window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
+    }
+  </script>
+</body>
+</html>
