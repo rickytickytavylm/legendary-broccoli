@@ -10,6 +10,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .cs-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:2000; display:none; align-items:center; justify-content:center; opacity:0; transition:opacity .3s; }
+    .cs-overlay.active { display:flex; opacity:1; }
+    .cs-box { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:24px; padding:40px 32px; text-align:center; max-width:320px; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); transform:scale(.95); transition:transform .3s; }
+    .cs-overlay.active .cs-box { transform:scale(1); }
+    .cs-box svg { margin:0 auto 16px; display:block; }
+    .cs-box h3 { color:#fff; font-size:18px; font-weight:700; margin:0 0 8px; }
+    .cs-box p { color:rgba(255,255,255,.55); font-size:14px; margin:0 0 24px; line-height:1.5; }
+    .cs-box button { background:rgba(167,139,250,.2); border:1px solid rgba(167,139,250,.3); color:#a78bfa; padding:10px 24px; border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
+    .cs-box button:hover { background:rgba(167,139,250,.3); }
+  </style>
 </head>
 <body class="dark-theme">
 
@@ -149,6 +160,9 @@
         window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
       }
 
+      function showComingSoon() { document.getElementById('cs-overlay').classList.add('active'); }
+      function hideComingSoon() { document.getElementById('cs-overlay').classList.remove('active'); }
+
       try {
         const data = await window.API.getPrograms();
         const container = document.getElementById('courses-container');
@@ -156,8 +170,12 @@
           container.innerHTML = '<p style="color:var(--text-2);padding:40px;text-align:center">Курсы скоро появятся</p>';
           return;
         }
-        container.innerHTML = data.programs.map(p => `
-          <a href="course.html?slug=${p.slug}" class="course-card reveal">
+        container.innerHTML = data.programs.map(p => {
+          const isGeshtalt = p.slug === 'geshtalt';
+          const href = isGeshtalt ? `geshtalt.html` : '#';
+          const onclick = isGeshtalt ? '' : `onclick="event.preventDefault(); showComingSoon();"`;
+          return `
+          <a href="${href}" ${onclick} class="course-card reveal">
             <div class="course-image">
               <img src="${p.image_url || 'assets/default-course.png'}" alt="${p.title}" loading="lazy" />
             </div>
@@ -177,7 +195,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
           </a>
-        `).join('');
+        `;}).join('');
       } catch (e) {
         document.getElementById('courses-container').innerHTML = '<p style="color:var(--text-2);padding:40px;text-align:center">Не удалось загрузить курсы. Попробуйте позже.</p>';
       }
@@ -195,7 +213,7 @@
 
       const weeksGrid = document.getElementById('weeks-grid');
       weeksGrid.innerHTML = weeks.map(w => `
-        <a href="week.html?program=dermer&w=${w.num}" class="week-card" style="display:block;text-decoration:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,.07)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.transform='translateY(0)'">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="week-card" style="display:block;text-decoration:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,.07)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,.04)';this.style.transform='translateY(0)'">
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
             <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#a78bfa,#6d28d9);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;">${w.num}</div>
             <h3 style="color:#fff;font-size:18px;font-weight:600;margin:0;">${w.title}</h3>
@@ -205,5 +223,15 @@
       `).join('');
     })();
   </script>
+
+  <!-- Coming Soon Modal -->
+  <div class="cs-overlay" id="cs-overlay" onclick="if(event.target===this) hideComingSoon()">
+    <div class="cs-box">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <h3>Раздел в разработке</h3>
+      <p>Этот раздел скоро будет доступен. Следите за обновлениями.</p>
+      <button onclick="hideComingSoon()">Понятно</button>
+    </div>
+  </div>
 </body>
 </html>

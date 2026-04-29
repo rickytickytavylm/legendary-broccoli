@@ -91,7 +91,7 @@
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="therapy.html" class="bento-card reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card reveal card-hover">
           <div class="card-bg" style="background: url('assets/theraphy.jpg') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -104,7 +104,7 @@
         </a>
 
         <!-- Row 2: small left + wide right -->
-        <a href="courses.html" class="bento-card reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card reveal card-hover">
           <div class="card-bg" style="background: url('assets/geshtalt.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -116,7 +116,7 @@
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="webinars.html" class="bento-card wide reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card wide reveal card-hover">
           <div class="card-bg" style="background: url('assets/speaker.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -129,7 +129,7 @@
         </a>
 
         <!-- Row 3: wide left + small right -->
-        <a href="#" class="bento-card wide reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card wide reveal card-hover">
           <div class="card-bg" style="background: url('assets/psysomatic.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -154,7 +154,7 @@
         </div>
 
         <!-- Row 4: small left + wide right -->
-        <a href="#" class="bento-card reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card reveal card-hover">
           <div class="card-bg" style="background: url('assets/hipno.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -166,7 +166,7 @@
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="marathons.html" class="bento-card wide reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card wide reveal card-hover">
           <div class="card-bg" style="background: url('assets/maraphones.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -179,7 +179,7 @@
         </a>
 
         <!-- Row 5: wide left + small right -->
-        <a href="#" class="bento-card wide reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card wide reveal card-hover">
           <div class="card-bg" style="background: url('assets/way_block.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -191,7 +191,7 @@
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="#" class="bento-card reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card reveal card-hover">
           <div class="card-bg" style="background: url('assets/supervision.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -204,7 +204,7 @@
         </a>
 
         <!-- Row 6: 3 small -->
-        <a href="#" class="bento-card reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card reveal card-hover">
           <div class="card-bg" style="background: url('assets/masterofcommication.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -216,7 +216,7 @@
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="#" class="bento-card reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card reveal card-hover">
           <div class="card-bg" style="background: url('assets/mini-yoga.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -228,7 +228,7 @@
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="#" class="bento-card reveal card-hover">
+        <a href="#" onclick="event.preventDefault(); showComingSoon();" class="bento-card reveal card-hover">
           <div class="card-bg" style="background: url('assets/antology.png') center/cover no-repeat;"></div>
           <div class="card-overlay"></div>
           <div class="card-content">
@@ -461,6 +461,19 @@
     if (window.API.isLoggedIn()) {
       window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
     }
+  </script>
+  <!-- Coming Soon Modal -->
+  <div class="cs-overlay" id="cs-overlay" onclick="if(event.target===this) hideComingSoon()">
+    <div class="cs-box">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <h3>Раздел в разработке</h3>
+      <p>Этот раздел скоро будет доступен. Следите за обновлениями.</p>
+      <button onclick="hideComingSoon()">Понятно</button>
+    </div>
+  </div>
+  <script>
+    function showComingSoon() { document.getElementById('cs-overlay').classList.add('active'); }
+    function hideComingSoon() { document.getElementById('cs-overlay').classList.remove('active'); }
   </script>
 </body>
 </html>
