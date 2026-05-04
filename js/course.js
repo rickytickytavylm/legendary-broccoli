@@ -2,10 +2,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get('slug');
   const lessonId = urlParams.get('lesson');
+  const bgParam = urlParams.get('bg');    // e.g. theraphy.jpg
+  const titleParam = urlParams.get('title'); // fallback title
 
   if (!slug) {
     window.location.href = 'courses.html';
     return;
+  }
+
+  // Apply hero background immediately from URL param
+  const heroEl = document.getElementById('course-hero');
+  if (heroEl && bgParam) {
+    heroEl.style.background = `linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('assets/${bgParam}') center/cover no-repeat`;
+  }
+  if (titleParam) {
+    const heroTitle = document.getElementById('hero-course-title');
+    if (heroTitle) heroTitle.textContent = decodeURIComponent(titleParam);
   }
 
   const lessonsList = document.getElementById('lessons-list');
@@ -26,6 +38,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     infoBlock.style.display = 'none';
   }
 
+  function renderSkeletons(n = 7) {
+    if (!lessonsList) return;
+    lessonsList.innerHTML = Array.from({ length: n }, () => `
+      <div class="skeleton-lesson">
+        <div class="skeleton-num skeleton-pulse"></div>
+        <div class="skeleton-info">
+          <div class="skeleton-title skeleton-pulse"></div>
+          <div class="skeleton-dur skeleton-pulse"></div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function showVideoLoader() {
+    let loader = document.getElementById('video-loader');
+    if (!loader) {
+      loader = document.createElement('div');
+      loader.id = 'video-loader';
+      loader.className = 'video-loader';
+      loader.innerHTML = `<div class="apple-spinner">${'<span></span>'.repeat(8)}</div>`;
+      videoContainer.appendChild(loader);
+    }
+    loader.classList.remove('hidden');
+  }
+
+  function hideVideoLoader() {
+    const loader = document.getElementById('video-loader');
+    if (loader) loader.classList.add('hidden');
+  }
+
+  function captureFirstFrame(video) {
+    video.addEventListener('loadedmetadata', () => {
+      video.currentTime = 0.1;
+    }, { once: true });
+    video.addEventListener('seeked', () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 1280;
+        canvas.height = video.videoHeight || 720;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const poster = canvas.toDataURL('image/jpeg', 0.8);
+        if (poster && poster.length > 100) video.poster = poster;
+      } catch (e) {}
+    }, { once: true });
+  }
+
   function destroyHls() {
     if (hls) { hls.destroy(); hls = null; }
   }
@@ -36,8 +94,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       hls = new Hls({ xhrSetup: (xhr) => { xhr.withCredentials = false; } });
       hls.loadSource(src);
       hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, hideVideoLoader);
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = src;
+      video.addEventListener('canplay', hideVideoLoader, { once: true });
     } else {
       showError('Ваш браузер не поддерживает HLS. Используйте Safari или Chrome.');
     }
@@ -67,21 +127,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function loadLesson(lesson, isFirst) {
     try {
+      showVideoLoader();
       const res = await window.API.getLesson(lesson.id);
       if (!res.lesson) throw new Error('No lesson data');
 
-      // Restore video element if replaced by locked overlay
       if (!document.getElementById('course-video')) {
-        videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;border-radius:16px"></video>';
+        videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;border-radius:16px" oncontextmenu="return false;"></video>';
       }
       const video = document.getElementById('course-video');
 
-      // Get streaming token
       const tokenRes = await window.API.getVideoToken(lesson.id);
       const streamUrl = tokenRes.stream_url || tokenRes.mp4_url;
       if (!streamUrl) throw new Error('No stream');
 
-      // Build absolute URL
       const videoUrl = streamUrl.startsWith('http')
         ? streamUrl
         : (window.API_BASE || '').replace('/api', '') + streamUrl;
@@ -91,18 +149,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         destroyHls();
         video.src = videoUrl;
+        video.addEventListener('canplay', hideVideoLoader, { once: true });
       }
+      captureFirstFrame(video);
 
       if (infoBlock) infoBlock.style.display = 'flex';
       if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
       if (lessonDescMain) lessonDescMain.textContent = lesson.description || '';
     } catch (err) {
-      if (err.status === 401 || err.status === 403) {
-        if (infoBlock) infoBlock.style.display = 'none';
-        showLockedOverlay(lesson, isFirst);
-      } else {
-        showError('Не удалось загрузить видео');
-      }
+      hideVideoLoader();
+      showError('Не удалось загрузить видео');
     }
   }
 
@@ -114,12 +170,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isActive = (activeLessonId ? l.id == activeLessonId : isFirst);
       el.className = 'lesson-item' + (isActive ? ' active' : '');
       el.innerHTML = `
-        <div class="lesson-number">${isFirst ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>' : (i + 1)}</div>
+        <div class="lesson-number">${i + 1}</div>
         <div class="lesson-info">
           <div class="lesson-title">${l.title}</div>
           <div class="lesson-dur">${l.duration || ''}</div>
         </div>
-        ${isFirst ? '' : '<div class="lesson-lock"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'}
       `;
       el.addEventListener('click', () => {
         document.querySelectorAll('.lesson-item').forEach(x => x.classList.remove('active'));
@@ -132,6 +187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Load program
   try {
+    renderSkeletons(8);
     const data = await window.API.getProgram(slug);
     program = data.program;
     lessons = data.lessons || [];
@@ -139,6 +195,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     courseTitle.textContent = program.title;
     courseDesc.textContent = program.description || '';
     lessonsCount.textContent = lessons.length + ' ' + (lessons.length === 1 ? 'урок' : lessons.length < 5 ? 'урока' : 'уроков');
+
+    // Update hero with real API data
+    const heroTitle = document.getElementById('hero-course-title');
+    const heroDesc = document.getElementById('hero-course-desc');
+    if (heroTitle) heroTitle.textContent = program.title;
+    if (heroDesc) heroDesc.textContent = program.description || '';
+    if (heroEl && program.image_url && !bgParam) {
+      heroEl.style.background = `linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('${program.image_url}') center/cover no-repeat`;
+    }
+    document.title = program.title + ' — Система Молодцова';
 
     renderLessonsList(lessonId);
 

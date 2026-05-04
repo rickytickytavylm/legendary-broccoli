@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <title>Гештальт — Система Молодцова</title>
-  <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
+  <title>Мини-курс Йога — Система Молодцова</title>
+  <meta name="description" content="Мини-курс по йоге. Базовые практики для начинающих." />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,7 +13,6 @@
   <style>
     .geshtalt-page { padding: 32px 24px 80px; max-width: 1280px; margin: 0 auto; }
 
-    /* Back button — iOS glass */
     .back-link-glass {
       display: inline-flex; align-items: center; gap: 8px;
       color: rgba(255,255,255,.7); text-decoration: none; font-size: 14px;
@@ -28,7 +27,6 @@
     }
     .back-link-glass:hover { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.25); }
 
-    /* Course layout: player left, list right */
     .course-layout { display: grid; grid-template-columns: 1fr 380px; gap: 28px; }
     .course-main { min-width: 0; }
     .video-container { position: relative; background: #000; border-radius: 16px; overflow: hidden; aspect-ratio: 16/9; }
@@ -36,16 +34,10 @@
     .watermark { position: absolute; top: 16px; left: 16px; z-index: 5; pointer-events: none; opacity: .55; }
     .watermark img { height: 28px; width: auto; filter: brightness(1.2); }
 
-    .course-author { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
-    .course-author-avatar-wrap { width: 56px; height: 56px; border-radius: 50%; overflow: hidden; background: rgba(255,255,255,.06); }
-    .course-author-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .course-author-name { color: #fff; font-size: 15px; font-weight: 600; }
-
     .course-details { margin-top: 20px; }
     .course-title { color: #fff; font-size: 28px; font-weight: 700; margin: 0 0 10px; }
     .course-desc { color: rgba(255,255,255,.6); font-size: 15px; line-height: 1.6; margin: 0; }
 
-    /* Sidebar */
     .course-sidebar { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 20px; height: fit-content; }
     .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .sidebar-header h3 { color: #fff; font-size: 16px; font-weight: 600; margin: 0; }
@@ -60,18 +52,6 @@
     .lesson-title { color: rgba(255,255,255,.85); font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .lesson-item.active .lesson-title { color: #fff; }
     .lesson-dur { color: rgba(255,255,255,.4); font-size: 12px; margin-top: 2px; }
-    .lesson-lock { color: rgba(255,255,255,.3); margin-left: auto; flex-shrink: 0; }
-
-
-    /* Player overlay modal (fallback for mobile / external click) */
-    .player-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.95); z-index: 1000; display:none; align-items:center; justify-content:center; padding: 20px; }
-    .player-overlay.active { display: flex; }
-    .player-box { width: 100%; max-width: 1100px; aspect-ratio: 16/9; position: relative; }
-    .player-close { position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.1); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
-    .player-close:hover { background: rgba(255,255,255,.2); }
-    .player-video-wrap { background: #000; border-radius: 16px; overflow: hidden; width: 100%; height: 100%; position: relative; }
-    .player-video-wrap video { width: 100%; height: 100%; display: block; }
-    .player-title { color: #fff; font-size: 20px; font-weight: 600; margin-top: 16px; text-align: center; }
 
     @media (max-width: 1024px) {
       .course-layout { grid-template-columns: 1fr; }
@@ -113,13 +93,12 @@
 
   <main class="main-content">
 
-    <!-- Hero Section для гештальта -->
-    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('assets/courses.png') center/cover no-repeat;">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('assets/mini-yoga.png') center/cover no-repeat;">
       <div class="hero-content text-left">
         <div class="hero-top-text fade-up">Обучение</div>
-        <h1 class="hero-title fade-up">Гештальт</h1>
+        <h1 class="hero-title fade-up">Мини-курс Йога</h1>
         <p class="hero-subtitle fade-up">
-          Гештальт-подход в психотерапии.<br>Изучайте теорию и практику изменения.
+          Базовые практики для начинающих.<br>Теория и движение в одном курсе.
         </p>
       </div>
     </section>
@@ -133,20 +112,13 @@
       <div class="course-layout">
         <div class="course-main">
           <div class="video-container" id="video-container">
-            <video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;">
-              <source src="" type="video/mp4">
-            </video>
+            <video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
             <div class="watermark"><img src="assets/logo2.png" alt=""></div>
           </div>
 
           <div class="course-details">
             <h1 id="course-title" class="course-title">Загрузка...</h1>
             <p id="course-desc" class="course-desc">Пожалуйста, подождите.</p>
-          </div>
-
-          <div class="lesson-info-block" id="lesson-info-block" style="display:none">
-            <h2 class="lesson-title-main" id="lesson-title-main"></h2>
-            <p class="lesson-desc-main" id="lesson-desc-main"></p>
           </div>
         </div>
 
@@ -161,20 +133,6 @@
     </div>
 
   </main>
-
-  <!-- Player Overlay -->
-  <div class="player-overlay" id="player-overlay">
-    <button class="player-close" id="player-close" aria-label="Закрыть">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-    <div class="player-box">
-      <div class="player-video-wrap">
-        <video id="player-video" controls preload="metadata" oncontextmenu="return false;"></video>
-        <div class="watermark"><img src="assets/logo2.png" alt=""></div>
-      </div>
-      <div class="player-title" id="player-title"></div>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -279,12 +237,9 @@
       const courseTitle = document.getElementById('course-title');
       const courseDesc = document.getElementById('course-desc');
       const lessonsCount = document.getElementById('course-lessons-count');
-      const infoBlock = document.getElementById('lesson-info-block');
-      const lessonTitleMain = document.getElementById('lesson-title-main');
-      const lessonDescMain = document.getElementById('lesson-desc-main');
       let lessons = [];
       let hlsInstance = null;
-      const COURSE_OVERVIEW = 'Гештальт — направление психотерапии о контакте человека с собой, другими и средой. В центре курса: осознавание потребностей, работа с эмоциями, границами, сопротивлениями и незавершёнными переживаниями. Материалы соединяют теорию, упражнения и разборы терапевтических сессий.';
+      const COURSE_OVERVIEW = 'Мини-курс с базовыми телесными и дыхательными практиками. Подходит как мягкий вход в работу с вниманием, саморегуляцией и ощущением тела: без гонки за результатом, через устойчивость, дыхание и постепенное возвращение контакта с собой.';
 
       function pluralLessons(n) {
         if (n === 1) return 'урок';
@@ -292,7 +247,7 @@
         return 'уроков';
       }
 
-      function renderSkeletons(n = 6) {
+      function renderSkeletons(n = 5) {
         lessonsList.innerHTML = Array.from({ length: n }, () => `
           <div class="skeleton-lesson">
             <div class="skeleton-num skeleton-pulse"></div>
@@ -340,16 +295,15 @@
           } catch (e) {}
         }, { once: true });
       }
+
       function showError(msg) {
         courseTitle.textContent = 'Ошибка';
         courseDesc.textContent = msg;
-        if (infoBlock) infoBlock.style.display = 'none';
       }
 
       function destroyHls() {
         if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
       }
-
 
       function restoreVideoEl() {
         if (!document.getElementById('course-video')) {
@@ -358,21 +312,17 @@
         return document.getElementById('course-video');
       }
 
-      async function loadLesson(lesson, isFirst) {
+      async function loadLesson(lesson) {
         try {
           showVideoLoader();
-
           const video = restoreVideoEl();
-
           await window.attachVideoSource(video, lesson.video_slug, hlsInstance, (next) => { hlsInstance = next; });
           video.addEventListener('loadedmetadata', hideVideoLoader, { once: true });
           video.addEventListener('canplay', hideVideoLoader, { once: true });
           hideVideoLoader();
           video.play().catch(() => {});
-
-          if (infoBlock) infoBlock.style.display = 'flex';
-          if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
-          if (lessonDescMain) lessonDescMain.textContent = COURSE_OVERVIEW;
+          courseTitle.textContent = lesson.title;
+          courseDesc.textContent = COURSE_OVERVIEW;
         } catch (err) {
           hideVideoLoader();
           showError('Не удалось загрузить видео');
@@ -381,7 +331,7 @@
 
       function renderLessonsList() {
         lessonsList.innerHTML = lessons.map((lesson, idx) => `
-          <div class="lesson-item ${idx === 0 ? 'active' : ''}" data-id="${lesson.id}">
+          <div class="lesson-item ${idx === 0 ? 'active' : ''}" data-idx="${idx}">
             <div class="lesson-number">${idx + 1}</div>
             <div class="lesson-info">
               <div class="lesson-title">${lesson.title}</div>
@@ -390,31 +340,27 @@
           </div>
         `).join('');
 
-        lessonsList.querySelectorAll('.lesson-item').forEach((item, idx) => {
+        lessonsList.querySelectorAll('.lesson-item').forEach((item) => {
           item.addEventListener('click', () => {
-            const lessonId = parseInt(item.dataset.id);
-            const lesson = lessons.find(l => l.id === lessonId);
-            if (lesson) {
-              lessonsList.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
-              item.classList.add('active');
-              loadLesson(lesson, idx === 0);
-            }
+            const idx = parseInt(item.dataset.idx);
+            lessonsList.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            loadLesson(lessons[idx]);
           });
         });
       }
 
       try {
-        renderSkeletons(8);
-        const lessons_data = await window.API.request('GET', '/content/geshtalt-lessons');
+        renderSkeletons(5);
+        const lessons_data = await window.API.request('GET', '/content/yoga-lessons');
         lessons = Array.isArray(lessons_data) ? lessons_data : [];
 
-        courseTitle.textContent = 'Гештальт';
-        courseDesc.textContent = 'Гештальт-подход в психотерапии. Теория и практика.';
+        courseTitle.textContent = 'Мини-курс Йога';
+        courseDesc.textContent = 'Базовые практики для начинающих. Теория и движение.';
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();
-
-        if (lessons[0]) loadLesson(lessons[0], true);
+        if (lessons[0]) loadLesson(lessons[0]);
       } catch (err) {
         showError('Курс не найден или недоступен');
       }

@@ -107,7 +107,6 @@
             <div class="l-title">${l.title}</div>
             <div class="l-dur">${l.duration || ''}</div>
           </div>
-          ${isFirst ? '' : '<div class="l-lock"><svg viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>'}
         `;
         row.addEventListener('click', () => {
           document.querySelectorAll('.lesson-row').forEach(r => r.classList.remove('active'));
@@ -129,15 +128,16 @@
   try {
     let lessons;
     if (programSlug === 'geshtalt') {
-      const res = await fetch('https://web-production-3cb7a.up.railway.app/api/content/geshtalt-lessons');
-      lessons = await res.json();
+      const data = await window.API.getProgram('geshtalt');
+      lessons = data.lessons || [];
+      document.title = (data.program && data.program.title) || 'Гештальт — Система Молодцова';
     } else {
       const data = await window.API.getProgram(programSlug);
       lessons = data.lessons || [];
+      document.title = (data.program && data.program.title) || 'Курс — Система Молодцова';
     }
 
     lessonsCount.textContent = lessons.length + ' ' + (lessons.length === 1 ? 'урок' : lessons.length < 5 ? 'урока' : 'уроков');
-    document.title = 'Гештальт — Система Молодцова';
 
     renderWeeks(lessons);
 

@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <title>Марафоны — Система Молодцова</title>
+  <title>Супервизия — Система Молодцова</title>
+  <meta name="description" content="Супервизия. Профессиональная поддержка психологов." />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,23 +27,19 @@
     }
     .back-link-glass:hover { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.25); }
 
-    /* Marathon section = one block with title + player + list */
     .marathon-section { margin-bottom: 64px; }
     .marathon-section:last-child { margin-bottom: 0; }
-
     .marathon-section-header { margin-bottom: 20px; }
     .marathon-section-title { color: #fff; font-size: 30px; font-weight: 700; letter-spacing: -.5px; margin: 0 0 6px; }
     .marathon-section-meta { color: rgba(255,255,255,.45); font-size: 13px; }
     .marathon-section-desc { max-width: 760px; color: rgba(255,255,255,.58); font-size: 15px; line-height: 1.65; margin: 12px 0 0; }
 
-    /* Player + sidebar layout */
     .course-layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
     .course-main { min-width: 0; }
     .video-container { position: relative; background: #000; border-radius: 16px; overflow: hidden; aspect-ratio: 16/9; }
     .video-container video { width: 100%; height: 100%; display: block; border-radius: 16px; }
     .watermark { position: absolute; top: 16px; left: 16px; z-index: 5; pointer-events: none; opacity: .55; }
     .watermark img { height: 26px; width: auto; filter: brightness(1.2); }
-
     .now-playing { color: rgba(255,255,255,.75); font-size: 14px; font-weight: 500; margin: 14px 0 0; min-height: 20px; }
 
     .course-sidebar { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 18px; height: fit-content; max-height: 420px; overflow-y: auto; }
@@ -60,16 +57,6 @@
     .lesson-item.active .lesson-title { color: #fff; }
     .lesson-dur { color: rgba(255,255,255,.4); font-size: 11px; margin-top: 2px; }
 
-    /* Skeleton */
-    .skeleton-lesson { display: flex; align-items: center; gap: 12px; padding: 11px 10px; }
-    .skeleton-num { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; background: rgba(255,255,255,.07); }
-    .skeleton-info { flex: 1; }
-    .skeleton-title { height: 13px; border-radius: 6px; background: rgba(255,255,255,.07); margin-bottom: 6px; width: 75%; }
-    .skeleton-dur { height: 11px; border-radius: 5px; background: rgba(255,255,255,.05); width: 40%; }
-    .skeleton-pulse { animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
-
-    /* Video loader overlay */
     .video-loader { position: absolute; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; border-radius: 16px; z-index: 10; transition: opacity .25s; }
     .video-loader.hidden { opacity: 0; pointer-events: none; }
     .apple-spinner { position: relative; width: 36px; height: 36px; }
@@ -84,7 +71,6 @@
     .apple-spinner span:nth-child(8){transform:rotate(315deg);animation-delay:-.125s}
     @keyframes spin-fade { 0%{opacity:1} 100%{opacity:0} }
 
-    /* Divider */
     .section-divider { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: 64px 0 0; }
 
     @media (max-width: 1024px) {
@@ -124,12 +110,12 @@
 
   <main class="main-content">
 
-    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('assets/maraphones.png') center/cover no-repeat;">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('assets/supervision.png') center/cover no-repeat;">
       <div class="hero-content text-left">
-        <div class="hero-top-text fade-up">Программы</div>
-        <h1 class="hero-title fade-up">Марафоны</h1>
+        <div class="hero-top-text fade-up">Для профессионалов</div>
+        <h1 class="hero-title fade-up">Супервизия</h1>
         <p class="hero-subtitle fade-up">
-          Интенсивные программы для глубокой проработки.<br>Каждый марафон — отдельная тема.
+          Профессиональная поддержка психологов.<br>Разборы случаев и практические сессии.
         </p>
       </div>
     </section>
@@ -140,10 +126,9 @@
         Назад
       </a>
 
-      <div id="marathons-container">
-        <!-- Секции генерируются JS -->
-        <div class="skeleton-lesson" style="padding:20px 0">
-          <div class="skeleton-title skeleton-pulse" style="height:28px;width:200px;border-radius:8px;background:rgba(255,255,255,.07)"></div>
+      <div id="superviziya-container">
+        <div style="padding:20px 0">
+          <div style="height:28px;width:200px;border-radius:8px;background:rgba(255,255,255,.07);animation:pulse 1.5s ease-in-out infinite"></div>
         </div>
       </div>
     </div>
@@ -215,7 +200,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Главная</span>
     </a>
-    <a href="courses.html" class="tab-item active">
+    <a href="courses.html" class="tab-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M8 21h8M12 17v4"/></svg>
       <span>Курсы</span>
     </a>
@@ -235,28 +220,17 @@
   <script src="js/nav.js?v=27"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
-    function pluralLessons(n) {
-      if (n === 1) return 'урок';
-      if (n >= 2 && n <= 4) return 'урока';
-      return 'уроков';
+    function pluralEvents(n) {
+      if (n === 1) return 'мероприятие';
+      if (n >= 2 && n <= 4) return 'мероприятия';
+      return 'мероприятий';
     }
 
     function getSectionDescription(section) {
-      const descriptions = {
-        stress: 'Марафон о том, как распознавать стресс, снижать внутреннее напряжение и возвращать себе ощущение управляемости. Подходит как практичный вход в тему саморегуляции и восстановления.',
-        samoocenka: 'Блок о самооценке, внутренней опоре и привычных способах оценивать себя через чужую реакцию. Помогает мягко пересобрать отношение к себе и увидеть, где самоценность подменяется доказательством.',
-        konflikty: 'Марафон о конфликтах, границах и способах говорить о сложном без разрушения контакта. Фокус на понимании своих реакций, позиции другого человека и более зрелой коммуникации.',
-        rezakina: 'Практический блок с отдельной авторской логикой и последовательностью уроков. Подходит для самостоятельной работы с конкретной темой через короткий формат.',
-        'om-marafon': 'Подборка марафонских материалов “Образ мысли” по стрессу, самооценке и конфликтам. Это быстрый способ вернуться к ключевым темам и выбрать точку входа под текущий запрос.',
-      };
-      return descriptions[section.id] || 'Короткая прикладная программа по отдельной психологической теме. Формат помогает быстро войти в материал и пройти несколько последовательных шагов.';
+      return 'Супервизионный блок для специалистов и тех, кто учится помогающей практике. Здесь важны профессиональный взгляд на случай, границы ответственности, терапевтическая позиция и качество мышления в работе с клиентом.';
     }
 
-    function spinnerHTML() {
-      return `<div class="apple-spinner">${'<span></span>'.repeat(8)}</div>`;
-    }
-
-    function initSection(section, idx, autoLoad) {
+    function initSection(section, autoLoad) {
       const secId = section.id;
       const lessons = section.lessons;
       const videoId = `video-${secId}`;
@@ -264,7 +238,6 @@
       const listId = `list-${secId}`;
       const loaderId = `loader-${secId}`;
       const nowId = `now-${secId}`;
-
       let hlsInstance = null;
 
       function showLoader() {
@@ -337,9 +310,9 @@
     }
 
     async function init() {
-      const container = document.getElementById('marathons-container');
+      const container = document.getElementById('superviziya-container');
       try {
-        const data = await window.API.request('GET', '/content/marathons-lessons');
+        const data = await window.API.request('GET', '/content/superviziya-lessons');
         if (!Array.isArray(data) || data.length === 0) throw new Error('No data');
 
         container.innerHTML = data.map((section, idx) => `
@@ -347,7 +320,7 @@
           <div class="marathon-section" id="section-${section.id}">
             <div class="marathon-section-header">
               <h2 class="marathon-section-title">${section.title}</h2>
-              <div class="marathon-section-meta">${section.lessons.length} ${pluralLessons(section.lessons.length)} · Марафон</div>
+              <div class="marathon-section-meta">${section.lessons.length} ${pluralEvents(section.lessons.length)} · Супервизия</div>
               <p class="marathon-section-desc">${getSectionDescription(section)}</p>
             </div>
             <div class="course-layout">
@@ -355,14 +328,16 @@
                 <div class="video-container" id="container-${section.id}">
                   <video id="video-${section.id}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
                   <div class="watermark"><img src="assets/logo2.png" alt=""></div>
-                  <div class="video-loader" id="loader-${section.id}">${'<span></span>'.repeat(8).replace(/<span><\/span>/g, '') || ''}<div class="apple-spinner">${'<span></span>'.repeat(8)}</div></div>
+                  <div class="video-loader" id="loader-${section.id}">
+                    <div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                  </div>
                 </div>
                 <div class="now-playing" id="now-${section.id}"></div>
               </div>
               <div class="course-sidebar">
                 <div class="sidebar-header">
-                  <h3>Уроки</h3>
-                  <span class="lessons-count">${section.lessons.length} ${pluralLessons(section.lessons.length)}</span>
+                  <h3>Мероприятия</h3>
+                  <span class="lessons-count">${section.lessons.length} ${pluralEvents(section.lessons.length)}</span>
                 </div>
                 <div id="list-${section.id}"></div>
               </div>
@@ -370,9 +345,9 @@
           </div>
         `).join('');
 
-        data.forEach((section, idx) => initSection(section, idx, idx === 0));
+        data.forEach((section, idx) => initSection(section, idx === 0));
       } catch (e) {
-        container.innerHTML = '<p style="color:rgba(255,255,255,.5);padding:40px 0">Не удалось загрузить марафоны</p>';
+        container.innerHTML = '<p style="color:rgba(255,255,255,.5);padding:40px 0">Не удалось загрузить данные</p>';
       }
     }
 

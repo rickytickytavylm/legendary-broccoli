@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>Shorts — Система Молодцова</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .placeholder-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px 120px;
+      text-align: center;
+    }
+    .placeholder-icon {
+      width: 72px; height: 72px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+    }
+    .placeholder-icon svg { width: 32px; height: 32px; color: rgba(255,255,255,.7); }
+    .placeholder-tag {
+      display: inline-block;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.5);
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 2px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .placeholder-title {
+      color: #fff;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin: 0 0 16px;
+    }
+    .placeholder-desc {
+      color: rgba(255,255,255,.45);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 400px;
+      margin: 0 auto 36px;
+    }
+    .placeholder-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding: 12px 20px;
+      color: rgba(255,255,255,.5);
+      font-size: 14px;
+    }
+    .placeholder-badge svg { width: 16px; height: 16px; }
+  </style>
+</head>
+<body class="dark-theme">
+  <main>
+    <div class="placeholder-page">
+      <div class="placeholder-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M10 8l6 4-6 4V8z"/></svg>
+      </div>
+      <span class="placeholder-tag">Скоро</span>
+      <h1 class="placeholder-title">Shorts</h1>
+      <p class="placeholder-desc">
+        Короткие видео с ключевыми идеями и инсайтами — для тех, кто ценит своё время.
+      </p>
+      <div class="placeholder-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        В разработке
+      </div>
+    </div>
+  </main>
+  <script src="js/config.js"></script>
+  <script src="js/api.js?v=9"></script>
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/nav.js?v=27"></script>
+</body>
+</html>

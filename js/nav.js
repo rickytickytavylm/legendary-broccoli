@@ -1,0 +1,342 @@
+/**
+ * nav.js — Global navigation (sidebar + tabbar)
+ * Injected into every page. Handles scroll-triggered reveal via GPU transform only.
+ */
+(function initNav() {
+  // ── Inject CSS ─────────────────────────────────────────
+  if (!document.querySelector('link[href*="nav.css"]')) {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'css/nav.css?v=27';
+    document.head.appendChild(link);
+  }
+
+  // ── Nav items config ────────────────────────────────────
+  var NAV_ITEMS = [
+    {
+      id: 'home',
+      href: 'index.html',
+      label: 'Главная',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>'
+    },
+    {
+      id: 'feed',
+      href: 'feed.html',
+      label: 'Лента',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 9h10M4 13h16M4 17h10"/></svg>'
+    },
+    {
+      id: 'shorts',
+      href: 'shorts.html',
+      label: 'Shorts',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M10 8l6 4-6 4V8z"/></svg>'
+    },
+    {
+      id: 'ai',
+      href: 'ai.html',
+      label: 'AI-помощник',
+      labelShort: 'AI',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"/><path d="M19 16l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9.9-2.6z" opacity=".5"/></svg>'
+    }
+  ];
+
+  var BOTTOM_ITEMS = [
+    {
+      id: 'profile',
+      href: 'account.html',
+      label: 'Профиль',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>'
+    }
+  ];
+
+  var ALL_ITEMS = NAV_ITEMS.concat(BOTTOM_ITEMS);
+
+  // ── Active page detection ───────────────────────────────
+  var currentFile = location.pathname.split('/').pop() || 'index.html';
+  if (currentFile === '') currentFile = 'index.html';
+
+  function isActive(href) {
+    return currentFile === href;
+  }
+
+  function makeIcon(svgStr) {
+    return '<span class="sidebar-icon">' + svgStr + '</span>';
+  }
+
+  function makeTabIcon(svgStr) {
+    return '<span class="tabbar-icon-wrap">' + svgStr + '</span>';
+  }
+
+  // ── Build sidebar ───────────────────────────────────────
+  var sidebar = document.createElement('aside');
+  sidebar.id = 'app-sidebar';
+  sidebar.className = 'app-sidebar';
+
+  var navItemsHTML = NAV_ITEMS.map(function(item) {
+    return '<a href="' + item.href + '" class="sidebar-item' + (isActive(item.href) ? ' active' : '') + '">' +
+      makeIcon(item.icon) +
+      '<span class="sidebar-label">' + item.label + '</span>' +
+      '</a>';
+  }).join('');
+
+  var bottomItemsHTML = BOTTOM_ITEMS.map(function(item) {
+    return '<a href="' + item.href + '" class="sidebar-item' + (isActive(item.href) ? ' active' : '') + '">' +
+      makeIcon(item.icon) +
+      '<span class="sidebar-label">' + item.label + '</span>' +
+      '</a>';
+  }).join('');
+
+  sidebar.innerHTML =
+    '<div class="sidebar-head">' +
+      '<a href="index.html" class="sidebar-brand">' +
+        '<img src="assets/logo2-Photoroom.png" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
+      '</a>' +
+    '</div>' +
+    '<nav class="sidebar-nav">' + navItemsHTML + '</nav>' +
+    '<div class="sidebar-flex-grow"></div>' +
+    '<div class="sidebar-footer">' +
+      bottomItemsHTML +
+      '<div class="sidebar-promo">' +
+        '<p class="sidebar-promo-title">Продолжайте путь</p>' +
+        '<p class="sidebar-promo-desc">Дисциплина — это выбор,<br>который вы делаете каждый день.</p>' +
+      '</div>' +
+    '</div>';
+
+  // ── Build tabbar ────────────────────────────────────────
+  var tabbar = document.createElement('nav');
+  tabbar.id = 'app-tabbar';
+  tabbar.className = 'app-tabbar';
+
+  tabbar.innerHTML = NAV_ITEMS.map(function(item) {
+    return '<a href="' + item.href + '" class="tabbar-item' + (isActive(item.href) ? ' active' : '') + '">' +
+      makeTabIcon(item.icon) +
+      '<span class="tabbar-label">' + (item.labelShort || item.label) + '</span>' +
+      '</a>';
+  }).join('');
+
+  // ── Build mobile header ─────────────────────────────────
+  var mobileHeader = document.createElement('header');
+  mobileHeader.id = 'app-mobile-header';
+  mobileHeader.className = 'app-mobile-header';
+  var isLoggedIn = !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
+
+  mobileHeader.innerHTML =
+    '<a href="index.html" class="mobile-header-brand">' +
+      '<img src="assets/logo2-Photoroom.png" alt="Система" class="mobile-header-logo">' +
+    '</a>' +
+    '<div class="mobile-header-actions">' +
+      (isLoggedIn
+        ? '<a href="account.html" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>'
+        : '<button type="button" class="mobile-login-btn" id="mobile-login-btn">Войти</button>') +
+    '</div>';
+
+  // ── Insert into DOM ─────────────────────────────────────
+  document.body.insertBefore(sidebar, document.body.firstChild);
+  document.body.insertBefore(mobileHeader, sidebar.nextSibling);
+  document.body.appendChild(tabbar);
+
+  var mobileLoginBtn = document.getElementById('mobile-login-btn');
+  if (mobileLoginBtn) {
+    mobileLoginBtn.addEventListener('click', function() {
+      if (window.openAuthModal) window.openAuthModal('login');
+      else window.location.href = 'account.html';
+    });
+  }
+
+  var accessState = isLoggedIn ? 'unknown' : 'guest';
+
+  function getLessonIndex(lesson) {
+    if (lesson.dataset.idx != null) return parseInt(lesson.dataset.idx, 10) || 0;
+    var siblings = Array.prototype.filter.call(lesson.parentNode ? lesson.parentNode.children : [], function(node) {
+      return node.classList && node.classList.contains('lesson-item');
+    });
+    return Math.max(0, siblings.indexOf(lesson));
+  }
+
+  function updateLessonLocks(root) {
+    if (accessState === 'unknown') return;
+    Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-item'), function(item) {
+      var idx = getLessonIndex(item);
+      var locked = accessState !== 'pro' && idx > 0;
+      item.classList.toggle('locked', locked);
+      if (!locked) {
+        Array.prototype.forEach.call(item.querySelectorAll('.lesson-lock-note'), function(note) {
+          note.remove();
+        });
+      }
+      if (locked && !item.querySelector('.lesson-lock-note')) {
+        var info = item.querySelector('.lesson-info') || item;
+        var note = document.createElement('div');
+        note.className = 'lesson-lock-note';
+        note.textContent = 'Система Pro';
+        info.appendChild(note);
+      }
+    });
+  }
+
+  if (isLoggedIn && window.API) {
+    window.API.getSubscription()
+      .then(function(data) {
+        var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
+        accessState = data && data.subscription_active && (!expiresAt || expiresAt > Date.now()) ? 'pro' : 'free';
+        updateLessonLocks(document);
+      })
+      .catch(function() {
+        accessState = 'free';
+        updateLessonLocks(document);
+      });
+  } else {
+    updateLessonLocks(document);
+  }
+
+  window.showAccessPrompt = function(code) {
+    if (document.getElementById('access-prompt')) return;
+    var isLoginRequired = code === 'LOGIN_REQUIRED';
+    var overlay = document.createElement('div');
+    overlay.id = 'access-prompt';
+    overlay.className = 'access-prompt';
+    overlay.innerHTML =
+      '<div class="access-prompt-card">' +
+        '<button class="access-prompt-close" type="button" aria-label="Закрыть">×</button>' +
+        '<div class="access-prompt-kicker">Система Pro</div>' +
+        '<h3>' + (isLoginRequired ? 'Войдите, чтобы продолжить' : 'Урок доступен по подписке') + '</h3>' +
+        '<p>' + (isLoginRequired
+          ? 'Первые видео открыты всем. Для продолжения войдите в аккаунт и оформите доступ.'
+          : 'В Pro открывается весь видеоконтент, закрытый Telegram и 50 сообщений с AI.') + '</p>' +
+        '<button class="access-prompt-primary" type="button">' + (isLoginRequired ? 'Войти' : 'Оформить Pro') + '</button>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('.access-prompt-close').addEventListener('click', function() {
+      overlay.remove();
+    });
+    overlay.addEventListener('click', function(event) {
+      if (event.target === overlay) overlay.remove();
+    });
+    overlay.querySelector('.access-prompt-primary').addEventListener('click', function() {
+      if (isLoginRequired && window.openAuthModal) {
+        overlay.remove();
+        window.openAuthModal('login');
+      } else {
+        window.location.href = isLoginRequired ? 'account.html' : 'subscription.html';
+      }
+    });
+  };
+
+  document.addEventListener('click', function(event) {
+    var lesson = event.target.closest('.lesson-item');
+    if (!lesson || accessState === 'pro' || accessState === 'unknown') return;
+    if (getLessonIndex(lesson) === 0) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    window.showAccessPrompt(accessState === 'guest' ? 'LOGIN_REQUIRED' : 'NO_SUBSCRIPTION');
+  }, true);
+
+  // ── Hide legacy nav elements ────────────────────────────
+  var oldNavbar = document.querySelector('.navbar');
+  var oldTabbar = document.querySelector('.glass-tab-bar');
+  if (oldNavbar) oldNavbar.style.cssText = 'display:none!important';
+  if (oldTabbar) oldTabbar.style.cssText = 'display:none!important';
+
+  // ── Scroll-triggered reveal ─────────────────────────────
+  var hasHero = !!(document.querySelector('.hero') || document.querySelector('.profiling-hero'));
+  document.body.classList.add(hasHero ? 'has-app-hero' : 'no-app-hero');
+  var SCROLL_THRESHOLD = 72; // px from top before nav appears
+
+  function setVisible(visible) {
+    if (visible) {
+      sidebar.classList.add('nav-visible');
+      tabbar.classList.add('nav-visible');
+      document.body.classList.add('sidebar-active');
+    } else {
+      sidebar.classList.remove('nav-visible');
+      tabbar.classList.remove('nav-visible');
+      document.body.classList.remove('sidebar-active');
+    }
+  }
+
+  if (!hasHero) {
+    // Inner pages — show immediately
+    setVisible(true);
+  } else {
+    // Hero pages — appear on scroll, hide when back at top
+    var ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          setVisible(window.scrollY > SCROLL_THRESHOLD);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Set initial state (e.g. if page reloaded mid-scroll)
+    setVisible(window.scrollY > SCROLL_THRESHOLD);
+  }
+
+  // ── Video hardening (no casual download / context menu) ──
+  function protectVideo(video) {
+    if (!video || video.dataset.protectedVideo === 'true') return;
+    video.dataset.protectedVideo = 'true';
+    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
+    video.setAttribute('disablePictureInPicture', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('draggable', 'false');
+    video.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    video.addEventListener('dragstart', function(e) { e.preventDefault(); });
+  }
+
+  function protectAllVideos(root) {
+    Array.prototype.forEach.call((root || document).querySelectorAll('video'), protectVideo);
+  }
+
+  protectAllVideos(document);
+
+  var videoObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      Array.prototype.forEach.call(mutation.addedNodes || [], function(node) {
+        if (!node || node.nodeType !== 1) return;
+        if (node.tagName === 'VIDEO') protectVideo(node);
+        protectAllVideos(node);
+        updateLessonLocks(node);
+      });
+    });
+  });
+  videoObserver.observe(document.body, { childList: true, subtree: true });
+
+  // Mobile UX: after selecting a lesson below the player, return to the player.
+  document.addEventListener('click', function(event) {
+    var lesson = event.target.closest('.lesson-item');
+    if (!lesson || window.innerWidth > 768) return;
+
+    var scope = lesson.closest('.course-layout') || document;
+    var player = scope.querySelector('.video-container, .single-video-wrap, .player-video-wrap');
+    if (!player) player = document.querySelector('.video-container, .single-video-wrap, .player-video-wrap');
+    if (!player) return;
+
+    function scrollToPlayer() {
+      var headerOffset = 170;
+      var top = player.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
+
+    setTimeout(scrollToPlayer, 80);
+    setTimeout(scrollToPlayer, 360);
+  });
+
+  function updateMobileScrollState() {
+    if (window.innerWidth <= 768 && window.scrollY > 80) {
+      document.body.classList.add('mobile-scrolled');
+    } else {
+      document.body.classList.remove('mobile-scrolled');
+    }
+  }
+
+  window.addEventListener('scroll', updateMobileScrollState, { passive: true });
+  window.addEventListener('resize', updateMobileScrollState);
+  updateMobileScrollState();
+})();

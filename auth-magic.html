@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Вход — Система Молодцова</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    body{min-height:100vh;background:#050507;color:#fff;font-family:Inter,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden}
+    body::before{content:"";position:fixed;inset:-18%;background:radial-gradient(circle at 24% 18%,rgba(255,255,255,.14),transparent 24%),radial-gradient(circle at 78% 24%,rgba(152,118,255,.16),transparent 28%),radial-gradient(circle at 52% 88%,rgba(255,255,255,.08),transparent 30%);filter:blur(8px);pointer-events:none}
+    body::after{content:"";position:fixed;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.035),transparent 42%),repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 88px);mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);pointer-events:none}
+    .magic-shell{position:relative;width:min(100%,500px)}
+    .magic-logo-card{width:132px;height:82px;margin:0 auto 18px;border-radius:26px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.045));border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 70px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.18);backdrop-filter:blur(26px);display:flex;align-items:center;justify-content:center}
+    .magic-logo-card img{width:102px;max-height:56px;object-fit:contain;filter:drop-shadow(0 12px 28px rgba(0,0,0,.35))}
+    .magic-card{position:relative;width:100%;background:linear-gradient(180deg,rgba(255,255,255,.082),rgba(255,255,255,.038));border:1px solid rgba(255,255,255,.12);border-radius:34px;padding:34px 32px 32px;box-shadow:0 28px 100px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14);backdrop-filter:blur(30px);text-align:center;overflow:hidden}
+    .magic-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.12),transparent 38%);pointer-events:none}
+    .magic-card > *{position:relative}
+    .magic-kicker{display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.045);border-radius:999px;padding:7px 12px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.52);margin-bottom:18px}
+    .magic-icon{width:66px;height:66px;border-radius:22px;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.11);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+    .magic-icon svg{width:30px;height:30px}
+    h1{font-size:30px;line-height:1.08;margin:0 0 12px;letter-spacing:-.055em}
+    p{font-size:15px;line-height:1.65;color:rgba(255,255,255,.6);margin:0 0 26px}
+    .magic-actions{display:flex;flex-direction:column;gap:10px}
+    .magic-btn{border:0;border-radius:16px;padding:14px 18px;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;transition:.2s}
+    .magic-btn:hover{transform:translateY(-1px)}
+    .magic-btn.primary{background:#fff;color:#050507}
+    .magic-btn.secondary{background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.09);color:#fff}
+    .magic-btn:disabled{opacity:.55;cursor:not-allowed}
+    .magic-input{width:100%;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:14px 16px;color:#fff;font-size:15px;outline:none;margin-bottom:10px}
+    .magic-input::placeholder{color:rgba(255,255,255,.3)}
+    .magic-input:focus{border-color:rgba(255,255,255,.32)}
+    .magic-small{font-size:12px;color:rgba(255,255,255,.36);margin-top:16px;margin-bottom:0}
+    @media(max-width:520px){body{padding:18px}.magic-logo-card{width:118px;height:74px;border-radius:24px}.magic-logo-card img{width:92px}.magic-card{border-radius:28px;padding:30px 22px}h1{font-size:27px}}
+  </style>
+</head>
+<body>
+  <div class="magic-shell">
+    <a class="magic-logo-card" href="index.html" aria-label="Система Молодцова">
+      <img src="assets/logo2-Photoroom.png" alt="Система Молодцова">
+    </a>
+    <main class="magic-card">
+      <div class="magic-kicker">Безопасный вход</div>
+      <div class="magic-icon" id="magic-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-6.2-8.56"/><path d="M21 3v6h-6"/></svg>
+      </div>
+      <h1 id="magic-title">Проверяем ссылку</h1>
+      <p id="magic-text">Это займёт пару секунд. Если всё в порядке, мы сразу откроем личный кабинет.</p>
+      <form id="resend-form" class="magic-actions" style="display:none">
+        <input class="magic-input" type="email" id="email" placeholder="Ваша почта" autocomplete="email">
+        <button class="magic-btn primary" type="submit" id="resend-btn">Отправить новую ссылку</button>
+        <a class="magic-btn secondary" href="index.html">На главную</a>
+      </form>
+      <div id="done-actions" class="magic-actions" style="display:none">
+        <a class="magic-btn primary" href="account.html">Открыть профиль</a>
+        <button class="magic-btn secondary" type="button" onclick="window.openAuthModal && window.openAuthModal('login')">Запросить новую ссылку</button>
+      </div>
+      <p class="magic-small" id="magic-small"></p>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js?v=9"></script>
+  <script src="js/auth.js?v=5"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token') || '';
+    const rawReturnTo = params.get('returnTo') || '';
+    const returnTo = rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//') ? rawReturnTo : '';
+    const title = document.getElementById('magic-title');
+    const text = document.getElementById('magic-text');
+    const small = document.getElementById('magic-small');
+    const resendForm = document.getElementById('resend-form');
+    const doneActions = document.getElementById('done-actions');
+    const emailInput = document.getElementById('email');
+
+    function showResend(state, email) {
+      const isExpired = state === 'expired';
+      title.textContent = isExpired ? 'Ссылка устарела' : 'Ссылка недействительна';
+      text.textContent = isExpired
+        ? 'Для безопасности ссылка действует ограниченное время. Введите почту, и мы пришлём новую.'
+        : 'Эта ссылка уже использована или повреждена. Запросите новую ссылку для входа.';
+      if (email) emailInput.value = email;
+      resendForm.style.display = 'flex';
+      small.textContent = 'Новая ссылка будет действовать 15 минут.';
+    }
+
+    async function verify() {
+      if (!token) {
+        showResend('invalid');
+        return;
+      }
+      try {
+        const res = await window.API.verifyMagicLink(token);
+        window.API.setTokens(res.tokens);
+        history.replaceState({}, document.title, 'auth-magic.html');
+        window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: res.user } }));
+        title.textContent = 'Готово, вы вошли';
+        text.textContent = 'Сейчас перенаправим вас дальше.';
+        const target = returnTo || res.redirect_to || 'account.html';
+        setTimeout(() => { window.location.href = target; }, 500);
+      } catch (err) {
+        history.replaceState({}, document.title, 'auth-magic.html');
+        showResend(err.status === 410 ? 'expired' : 'invalid', err.email);
+      }
+    }
+
+    resendForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const btn = document.getElementById('resend-btn');
+      btn.disabled = true;
+      try {
+        await window.API.requestMagicLink({ email: emailInput.value.trim(), returnTo });
+        title.textContent = 'Письмо отправлено';
+        text.textContent = 'Проверьте почту. Если письма нет во входящих, загляните в «Спам».';
+        resendForm.style.display = 'none';
+        doneActions.style.display = 'flex';
+        small.textContent = '';
+      } catch (err) {
+        text.textContent = err.error || 'Не получилось отправить письмо. Попробуйте ещё раз.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    verify();
+  </script>
+</body>
+</html>

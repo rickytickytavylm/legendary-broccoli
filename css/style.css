@@ -3,6 +3,94 @@
    Style: Framer / Rork / Apple (Dark Mode)
    ============================================================ */
 
+/* Prevent flash of legacy/raw navigation before nav.js/nav.css initializes */
+.navbar,
+.glass-tab-bar {
+  display: none !important;
+}
+
+.app-sidebar,
+.app-tabbar,
+.app-mobile-header {
+  visibility: hidden;
+}
+
+/* ── Apple-style Activity Indicator ── */
+.apple-spinner {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+.apple-spinner span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 9px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.85);
+  transform-origin: center 18px;
+  animation: apple-spin 1s linear infinite;
+}
+.apple-spinner span:nth-child(1)  { transform: rotate(0deg)   translateY(-18px); animation-delay: -0.875s; }
+.apple-spinner span:nth-child(2)  { transform: rotate(45deg)  translateY(-18px); animation-delay: -0.75s; }
+.apple-spinner span:nth-child(3)  { transform: rotate(90deg)  translateY(-18px); animation-delay: -0.625s; }
+.apple-spinner span:nth-child(4)  { transform: rotate(135deg) translateY(-18px); animation-delay: -0.5s; }
+.apple-spinner span:nth-child(5)  { transform: rotate(180deg) translateY(-18px); animation-delay: -0.375s; }
+.apple-spinner span:nth-child(6)  { transform: rotate(225deg) translateY(-18px); animation-delay: -0.25s; }
+.apple-spinner span:nth-child(7)  { transform: rotate(270deg) translateY(-18px); animation-delay: -0.125s; }
+.apple-spinner span:nth-child(8)  { transform: rotate(315deg) translateY(-18px); animation-delay: 0s; }
+@keyframes apple-spin {
+  0%   { opacity: 1; }
+  100% { opacity: 0.12; }
+}
+
+/* Hide native browser video loading spinner */
+video::-webkit-media-controls-overlay-play-button { display: none; }
+video::cue { background: transparent; }
+video::-internal-media-interstitial-panel { display: none !important; }
+
+/* Video loading overlay */
+.video-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  border-radius: 16px;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.video-loader.hidden { opacity: 0; pointer-events: none; }
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+.skeleton-pulse {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.05) 0%,
+    rgba(255,255,255,0.12) 50%,
+    rgba(255,255,255,0.05) 100%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+.skeleton-lesson {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+}
+.skeleton-num  { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; }
+.skeleton-info { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.skeleton-title { height: 14px; width: 75%; }
+.skeleton-dur   { height: 11px; width: 40%; }
+
 :root {
   /* Colors */
   --bg-main: #000000;
@@ -87,7 +175,7 @@ h1, h2, h3 {
 }
 
 .section-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 12px;
 }
 
@@ -329,7 +417,7 @@ h1, h2, h3 {
 }
 
 .hero-title {
-  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-size: clamp(2.2rem, 5.5vw, 3.75rem);
   letter-spacing: -0.04em;
   margin-bottom: 24px;
 }
@@ -351,7 +439,7 @@ h1, h2, h3 {
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 420px;
+  grid-auto-rows: 340px;
   gap: 24px;
 }
 
@@ -360,7 +448,7 @@ h1, h2, h3 {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
-  padding: 40px;
+  padding: 28px;
   text-decoration: none;
   color: var(--text-1);
   overflow: hidden;
@@ -408,14 +496,14 @@ h1, h2, h3 {
 }
 
 .card-text h3 {
-  font-size: 1.75rem;
-  margin-bottom: 8px;
+  font-size: 1.4rem;
+  margin-bottom: 6px;
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 .card-text p {
   color: rgba(255,255,255,0.8);
-  font-size: 1rem;
+  font-size: 0.875rem;
   text-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
 
@@ -432,6 +520,24 @@ h1, h2, h3 {
   transform: scale(0.8) translate(-10px, 10px);
   transition: all 0.4s var(--ease);
   z-index: 3;
+}
+
+/* Glass badge for bento cards */
+.card-badge-glass {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 13px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.9);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  margin-bottom: 12px;
+  width: fit-content;
 }
 
 .card-arrow svg { width: 20px; height: 20px; }
@@ -762,11 +868,51 @@ h1, h2, h3 {
 .video-container {
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #0a0a0a;
-  border-radius: var(--r-md);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)),
+    #050506;
+  border-radius: 22px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.58),
+    0 0 54px rgba(255, 255, 255, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    inset 0 -40px 70px rgba(0, 0, 0, 0.32);
+  position: relative;
+  isolation: isolate;
+}
+
+.video-container::before,
+.single-video-wrap::before,
+.player-video-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.045),
+    inset 0 0 48px rgba(0,0,0,.55),
+    inset 0 -92px 90px rgba(0,0,0,.56);
+}
+
+.video-container::after,
+.single-video-wrap::after,
+.player-video-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: .18;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.15), transparent 18%),
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: auto, 100% 3px;
+  mix-blend-mode: screen;
 }
 
 .video-container video {
@@ -775,6 +921,9 @@ h1, h2, h3 {
   object-fit: contain;
   outline: none;
   display: block;
+  position: relative;
+  z-index: 1;
+  border-radius: inherit !important;
 }
 
 .course-author {
@@ -815,7 +964,7 @@ h1, h2, h3 {
 }
 
 .course-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -904,8 +1053,12 @@ h1, h2, h3 {
 }
 
 .lesson-item.active {
-  background: rgba(255, 255, 255, 0.05);
-  border-left: 3px solid var(--text-1);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.035));
+  border-left: 1px solid rgba(255,255,255,.72);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 0 28px rgba(255,255,255,.045);
 }
 
 .lesson-number {
@@ -923,8 +1076,9 @@ h1, h2, h3 {
 }
 
 .lesson-item.active .lesson-number {
-  background: var(--text-1);
+  background: #fff;
   color: var(--bg-main);
+  box-shadow: 0 0 18px rgba(255,255,255,.22);
 }
 
 .lesson-info {
@@ -1269,24 +1423,24 @@ h1, h2, h3 {
 .footer {
   background: #0c0c0f;
   border-top: 1px solid rgba(255,255,255,0.06);
-  padding: 48px 0 0;
-  margin-top: 48px;
+  padding: 72px 0 0;
+  margin-top: 64px;
 }
 
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 0 64px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 48px;
+  gap: 72px;
 }
 
 .footer-col {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 .footer-about {
@@ -1312,7 +1466,7 @@ h1, h2, h3 {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .footer-list a {
@@ -1398,8 +1552,8 @@ h1, h2, h3 {
 
 .footer-bottom {
   max-width: 1200px;
-  margin: 48px auto 0;
-  padding: 24px 48px;
+  margin: 56px auto 0;
+  padding: 28px 64px;
   border-top: 1px solid rgba(255,255,255,0.06);
   display: flex;
   justify-content: space-between;
@@ -1504,7 +1658,7 @@ h1, h2, h3 {
     grid-column: span 2;
   }
 
-  .section-title { font-size: 2rem; }
+  .section-title { font-size: 1.75rem; }
 }
 
 @media (max-width: 768px) {
@@ -1636,7 +1790,7 @@ h1, h2, h3 {
   }
 
   .course-title {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 
   .video-container {

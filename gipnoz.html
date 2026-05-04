@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>Гипноз — Система Молодцова</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .video-container { position: relative; }
+    .watermark { position: absolute; top: 16px; left: 16px; z-index: 5; pointer-events: none; opacity: .45; }
+    .watermark img { height: 26px; width: auto; filter: brightness(1.2); }
+
+    /* Week accordion */
+    .week-group { border-bottom: 1px solid rgba(255,255,255,.07); }
+    .week-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; cursor: pointer; user-select: none;
+      transition: background .15s;
+    }
+    .week-header:hover { background: rgba(255,255,255,.04); }
+    .week-header-left { display: flex; align-items: center; gap: 10px; }
+    .week-badge {
+      font-size: 11px; font-weight: 600; letter-spacing: .04em;
+      color: rgba(255,255,255,.45); text-transform: uppercase;
+      background: rgba(255,255,255,.07); padding: 3px 9px; border-radius: 20px;
+    }
+    .week-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.9); }
+    .week-count { font-size: 12px; color: rgba(255,255,255,.35); }
+    .week-chevron {
+      width: 16px; height: 16px; color: rgba(255,255,255,.3);
+      transition: transform .2s; flex-shrink: 0;
+    }
+    .week-group.open .week-chevron { transform: rotate(180deg); }
+    .week-lessons { display: none; padding-bottom: 4px; }
+    .week-group.open .week-lessons { display: block; }
+  </style>
+</head>
+<body class="dark-theme">
+
+  <!-- Навигация -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand brand-outlined">
+        <img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img" />
+      </a>
+      <div class="nav-links desktop-only">
+        <a href="courses.html" class="nav-link" style="color:var(--text-1)">Обучение</a>
+        <a href="index.html#channels" class="nav-link">Каналы</a>
+        <a href="index.html#support" class="nav-link">Поддержка</a>
+      </div>
+      <div class="nav-actions">
+        <a href="https://t.me/obrazmisl" target="_blank" class="btn-nav-outline desktop-only">
+          Вступить в клуб
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </a>
+        <button id="nav-auth-btn" class="btn-nav-outline" onclick="window.openAuthModal('login')">Войти</button>
+        <a id="nav-account-link" href="account.html" class="btn-nav-outline" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero hero-courses" style="background:linear-gradient(to bottom,rgba(0,0,0,.45) 0%,rgba(0,0,0,.82) 70%,var(--bg-main) 100%),url('assets/hipno.png') center/cover no-repeat;">
+    <div class="hero-content text-left">
+      <div class="hero-top-text fade-up">Обучение</div>
+      <h1 class="hero-title fade-up">Гипноз</h1>
+      <p class="hero-subtitle fade-up">5 модулей. <span id="total-count"></span></p>
+    </div>
+  </section>
+
+  <main class="main-content" style="padding-top:0">
+
+    <div style="padding:28px 24px 0;max-width:1280px;margin:0 auto;">
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;padding:10px 18px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);margin-bottom:28px;transition:all .2s;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Назад
+      </a>
+    </div>
+
+    <div style="padding:0 24px 100px;max-width:1280px;margin:0 auto;">
+      <div class="course-layout">
+
+        <!-- Плеер -->
+        <div class="course-main">
+          <div class="video-container" id="video-container">
+            <video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
+            <div class="watermark"><img src="assets/logo2.png" alt=""></div>
+          </div>
+
+          <div class="lesson-info-block" id="lesson-info-block" style="display:none">
+            <h2 class="lesson-title-main" id="lesson-title-main"></h2>
+            <p class="lesson-desc-main" id="lesson-desc-main"></p>
+          </div>
+        </div>
+
+        <!-- Сайдбар с неделями -->
+        <div class="course-sidebar">
+          <div class="sidebar-header">
+            <h3>Содержание курса</h3>
+            <span id="course-lessons-count" class="lessons-count"></span>
+          </div>
+          <div id="lessons-list" class="lessons-list">
+            <!-- Скелетоны / недели -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-col footer-about">
+        <img src="assets/logo2.png" alt="Система" class="footer-logo" />
+        <p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>
+        <p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-heading">О проекте</h4>
+        <ul class="footer-list">
+          <li><a href="about.html">О сообществе</a></li>
+          <li><a href="author.html">Об авторе</a></li>
+          <li><a href="#">Партнёрам</a></li>
+          <li><a href="#">Контакты</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-heading">Обучение</h4>
+        <ul class="footer-list">
+          <li><a href="courses.html">Все курсы</a></li>
+          <li><a href="index.html#channels">Каналы</a></li>
+          <li><a href="#">Библиотека</a></li>
+          <li><a href="therapy.html">Практики</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-heading">Поддержка</h4>
+        <ul class="footer-list">
+          <li><a href="#">Вопросы и ответы</a></li>
+          <li><a href="#">Условия использования</a></li>
+          <li><a href="#">Политика конфиденциальности</a></li>
+          <li><a href="#">Возврат средств</a></li>
+        </ul>
+      </div>
+      <div class="footer-col footer-cta">
+        <h4 class="footer-heading">Будьте в курсе</h4>
+        <p class="footer-desc">Получайте важные материалы<br>и анонсы прямо в Telegram.</p>
+        <a href="https://t.me/obrazmisl" target="_blank" class="btn-footer-telegram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          Подписаться в Telegram
+        </a>
+        <div class="footer-socials">
+          <a href="https://t.me/obrazmisl" target="_blank" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-trust">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Ваши данные под надёжной защитой.
+      </div>
+      <div class="footer-craft">Сделано с вниманием к деталям
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Glass Tab Bar -->
+  <nav class="glass-tab-bar">
+    <a href="index.html" class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Главная</span>
+    </a>
+    <a href="courses.html" class="tab-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M8 21h8M12 17v4"/></svg>
+      <span>Курсы</span>
+    </a>
+    <a href="subscription.html" class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span>Подписка</span>
+    </a>
+    <a href="index.html#channels" class="tab-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Каналы</span>
+    </a>
+  </nav>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js?v=9"></script>
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/nav.js?v=27"></script>
+  <script>
+    window.refreshAuthUI = function(user) {
+      const btn = document.getElementById('nav-auth-btn');
+      const link = document.getElementById('nav-account-link');
+      if (user || window.API.isLoggedIn()) {
+        if (btn) btn.style.display = 'none';
+        if (link) link.style.display = 'inline-flex';
+      }
+    };
+    if (window.API.isLoggedIn()) {
+      window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
+    }
+  </script>
+  <script>
+    (async () => {
+      const videoContainer = document.getElementById('video-container');
+      const lessonsList    = document.getElementById('lessons-list');
+      const infoBlock      = document.getElementById('lesson-info-block');
+      const lessonTitleEl  = document.getElementById('lesson-title-main');
+      const lessonDescEl   = document.getElementById('lesson-desc-main');
+      const COURSE_OVERVIEW = 'Курс о гипнозе как способе работы с вниманием, внушением и изменёнными состояниями сознания. Материалы помогают понять принципы транса, терапевтическое применение гипнотических техник и границы безопасной практики.';
+      const countEl        = document.getElementById('course-lessons-count');
+      const totalCountEl   = document.getElementById('total-count');
+
+      // ── Loader helpers ──
+      function showVideoLoader() {
+        const vid = document.getElementById('course-video');
+        if (vid) vid.removeAttribute('controls');
+        let loader = document.getElementById('video-loader');
+        if (!loader) {
+          loader = document.createElement('div');
+          loader.id = 'video-loader';
+          loader.className = 'video-loader';
+          loader.innerHTML = '<div class="apple-spinner">' + '<span></span>'.repeat(8) + '</div>';
+          videoContainer.appendChild(loader);
+        }
+        loader.classList.remove('hidden');
+      }
+      function hideVideoLoader() {
+        const loader = document.getElementById('video-loader');
+        if (loader) loader.classList.add('hidden');
+        const vid = document.getElementById('course-video');
+        if (vid) vid.setAttribute('controls', '');
+      }
+
+      function captureFirstFrame(video) {
+        video.addEventListener('loadedmetadata', () => {
+          video.currentTime = 0.1;
+        }, { once: true });
+        video.addEventListener('seeked', () => {
+          try {
+            const c = document.createElement('canvas');
+            c.width = video.videoWidth || 1280;
+            c.height = video.videoHeight || 720;
+            c.getContext('2d').drawImage(video, 0, 0);
+            const poster = c.toDataURL('image/jpeg', 0.8);
+            if (poster && poster.length > 100) video.poster = poster;
+          } catch(e) {}
+        }, { once: true });
+      }
+
+      // ── Load lesson ──
+      async function loadLesson(lesson) {
+        showVideoLoader();
+        try {
+          const video = document.getElementById('course-video');
+          await window.attachVideoSource(video, lesson.video_slug);
+          video.addEventListener('loadedmetadata', hideVideoLoader, { once: true });
+          video.addEventListener('canplay', hideVideoLoader, { once: true });
+          hideVideoLoader();
+          video.play().catch(() => {});
+          if (infoBlock) infoBlock.style.display = 'flex';
+          if (lessonTitleEl) lessonTitleEl.textContent = lesson.title;
+          if (lessonDescEl) lessonDescEl.textContent = COURSE_OVERVIEW;
+        } catch(e) {
+          hideVideoLoader();
+        }
+      }
+
+      // ── Render weeks ──
+      function renderWeeks(weeks, firstLesson) {
+        let totalLessons = 0;
+        weeks.forEach(w => totalLessons += w.lessons.length);
+        countEl.textContent = totalLessons + ' ' + (totalLessons === 1 ? 'урок' : totalLessons < 5 ? 'урока' : 'уроков');
+        totalCountEl.textContent = totalLessons + ' уроков';
+
+        lessonsList.innerHTML = '';
+        weeks.forEach((week, wi) => {
+          const group = document.createElement('div');
+          group.className = 'week-group' + (wi === 0 ? ' open' : '');
+
+          group.innerHTML = `
+            <div class="week-header">
+              <div class="week-header-left">
+                <span class="week-badge">Модуль ${week.week}</span>
+                <span class="week-title">${week.title}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="week-count">${week.lessons.length} ур.</span>
+                <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+            </div>
+            <div class="week-lessons"></div>
+          `;
+
+          const weekLessonsEl = group.querySelector('.week-lessons');
+          week.lessons.forEach((lesson, li) => {
+            const isFirst = wi === 0 && li === 0;
+            const item = document.createElement('div');
+            item.className = 'lesson-item' + (isFirst ? ' active' : '');
+            item.dataset.id = lesson.id;
+            item.innerHTML = `
+              <div class="lesson-number">${li + 1}</div>
+              <div class="lesson-info">
+                <div class="lesson-title">${lesson.title}</div>
+                <div class="lesson-dur">${lesson.duration || ''}</div>
+              </div>
+            `;
+            item.addEventListener('click', () => {
+              document.querySelectorAll('.lesson-item').forEach(x => x.classList.remove('active'));
+              item.classList.add('active');
+              loadLesson(lesson);
+            });
+            weekLessonsEl.appendChild(item);
+          });
+
+          group.querySelector('.week-header').addEventListener('click', () => {
+            group.classList.toggle('open');
+          });
+
+          lessonsList.appendChild(group);
+        });
+      }
+
+      // ── Boot ──
+      try {
+        // Skeleton
+        lessonsList.innerHTML = Array.from({length: 6}, () => `
+          <div class="skeleton-lesson">
+            <div class="skeleton-num skeleton-pulse"></div>
+            <div class="skeleton-info">
+              <div class="skeleton-title skeleton-pulse"></div>
+              <div class="skeleton-dur skeleton-pulse"></div>
+            </div>
+          </div>
+        `).join('');
+
+        const weeks = await window.API.request('GET', '/content/gipnoz-lessons');
+        renderWeeks(weeks);
+
+        // Auto-load first lesson
+        if (weeks[0] && weeks[0].lessons[0]) {
+          loadLesson(weeks[0].lessons[0]);
+        }
+      } catch(e) {
+        lessonsList.innerHTML = '<p style="padding:20px;color:rgba(255,255,255,.4);font-size:14px;">Не удалось загрузить уроки</p>';
+      }
+    })();
+  </script>
+</body>
+</html>

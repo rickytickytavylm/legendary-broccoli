@@ -1,155 +1,742 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
-  <title>Личный кабинет — Система Молодцова</title>
-  <meta name="description" content="Ваш профиль, подписка и прогресс" />
+  <title>Профиль — Система Молодцова</title>
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Layout ─────────────────────────────────────── */
+    body { background: #0a0a0f; min-height: 100vh; overflow-x: hidden; }
+    .profile-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 28px 80px;
+    }
+
+    /* ─── Not-auth screen ───────────────────────────── */
+    .auth-gate {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 80vh;
+    }
+    .auth-gate-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 24px;
+      padding: 56px 48px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    .auth-gate-icon {
+      width: 72px; height: 72px;
+      margin: 0 auto 24px;
+      background: rgba(255,255,255,.06);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .auth-gate-card h2 { font-size: 1.5rem; margin: 0 0 10px; }
+    .auth-gate-card p { color: rgba(255,255,255,.5); font-size: 0.93rem; margin: 0 0 28px; }
+    .btn-enter {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: #000;
+      padding: 13px 28px;
+      border-radius: 100px;
+      font-weight: 600; font-size: 15px;
+      text-decoration: none;
+      border: none; cursor: pointer;
+      transition: opacity .2s;
+    }
+    .btn-enter:hover { opacity: .88; }
+
+    /* ─── Dashboard header ─────────────────────────── */
+    .dash-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 16px;
+    }
+    .dash-greeting h1 {
+      font-size: 1.9rem; font-weight: 700;
+      margin: 0 0 4px;
+    }
+    .dash-greeting p { color: rgba(255,255,255,.45); font-size: 0.9rem; margin: 0; }
+    .dash-header-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .streak-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 100px;
+      padding: 8px 16px;
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,.8);
+    }
+    .streak-badge svg { color: #f97316; }
+    .avatar-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      border: 1.5px solid rgba(255,255,255,.12);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; overflow: hidden;
+    }
+    .avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ─── Grid rows ────────────────────────────────── */
+    .dash-row { display: grid; gap: 16px; margin-bottom: 16px; }
+    .dash-row-2 { grid-template-columns: 1fr 1fr; }
+    .dash-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .dash-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+    /* ─── Glass card base ──────────────────────────── */
+    .g-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .g-card-label {
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,.35);
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .g-card-val {
+      font-size: 2.4rem; font-weight: 700;
+      color: #fff; margin: 0;
+      line-height: 1.1;
+    }
+    .g-card-sub {
+      font-size: 0.82rem; color: rgba(255,255,255,.38);
+      margin: 6px 0 0;
+    }
+
+    /* ─── Big progress card ────────────────────────── */
+    .progress-card {
+      grid-column: span 2;
+      display: flex; gap: 0;
+      padding: 0; overflow: hidden;
+      min-height: 160px;
+    }
+    .progress-card-content {
+      flex: 1; padding: 28px 28px 24px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .progress-card-img {
+      width: 280px; flex-shrink: 0;
+      background-size: cover; background-position: center;
+      position: relative;
+    }
+    .progress-card-img::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, #0a0a0f 0%, transparent 100%);
+    }
+    .progress-title { font-size: 1rem; font-weight: 600; margin: 0 0 6px; }
+    .progress-pct {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 14px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+    .progress-bar-wrap {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .progress-bar-track {
+      flex: 1; height: 5px;
+      background: rgba(255,255,255,.1);
+      border-radius: 3px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,.5), rgba(255,255,255,.9));
+      border-radius: 3px;
+      transition: width .6s ease;
+    }
+    .progress-bar-labels {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: rgba(255,255,255,.3);
+      margin-top: 6px;
+    }
+
+    /* ─── Continue learning section ─────────────────── */
+    .continue-section { margin-bottom: 16px; }
+    .section-head {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .section-head h3 { font-size: 1rem; font-weight: 600; margin: 0; }
+    .section-head a { font-size: 13px; color: rgba(255,255,255,.4); text-decoration: none; }
+    .lessons-scroll {
+      display: flex; gap: 12px;
+      overflow-x: auto; padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .lessons-scroll::-webkit-scrollbar { display: none; }
+    .lesson-card-sm {
+      flex-shrink: 0;
+      width: 170px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .2s, transform .2s;
+      cursor: pointer;
+    }
+    .lesson-card-sm:hover { border-color: rgba(255,255,255,.18); transform: translateY(-2px); }
+    .lesson-card-sm-thumb {
+      height: 100px;
+      background: rgba(255,255,255,.06) center/cover;
+      position: relative;
+    }
+    .lesson-card-sm-num {
+      position: absolute; top: 8px; left: 8px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(8px);
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.7);
+    }
+    .lesson-card-sm-done {
+      position: absolute; top: 8px; right: 8px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(74,222,128,.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lesson-card-sm-info { padding: 10px 12px; }
+    .lesson-card-sm-title {
+      font-size: 12px; font-weight: 600;
+      margin: 0 0 4px;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .lesson-card-sm-dur { font-size: 11px; color: rgba(255,255,255,.35); }
+
+    /* ─── Diary card ────────────────────────────────── */
+    .diary-card {
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+    }
+    .diary-card-img {
+      width: 100%; height: 100px;
+      background: center/cover no-repeat;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      position: relative; overflow: hidden;
+    }
+    .diary-card-img::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(0,0,0,.6));
+    }
+    .diary-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 14px;
+      font-size: 13px; font-weight: 600;
+      color: rgba(255,255,255,.6);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .diary-btn:hover { color: #fff; }
+
+    /* ─── Mood card ─────────────────────────────────── */
+    .mood-emojis {
+      display: flex; justify-content: space-between;
+      margin: 14px 0 10px;
+    }
+    .mood-btn {
+      font-size: 22px; cursor: pointer;
+      background: none; border: none;
+      padding: 6px 8px; border-radius: 10px;
+      transition: background .15s, transform .15s;
+      line-height: 1;
+    }
+    .mood-btn:hover { background: rgba(255,255,255,.08); transform: scale(1.15); }
+    .mood-btn.selected { background: rgba(255,255,255,.12); transform: scale(1.15); }
+    .mood-last { font-size: 11.5px; color: rgba(255,255,255,.28); margin-top: 8px; }
+
+    /* ─── Practice time card ────────────────────────── */
+    .practice-val { font-size: 1.9rem; font-weight: 700; margin: 4px 0 12px; }
+    .bar-chart {
+      display: flex; align-items: flex-end;
+      gap: 5px; height: 40px; margin-top: 4px;
+    }
+    .bar-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .bar-fill {
+      width: 100%; border-radius: 4px 4px 0 0;
+      background: rgba(255,255,255,.15);
+      min-height: 3px;
+      transition: height .4s ease;
+    }
+    .bar-fill.active { background: rgba(255,255,255,.5); }
+    .bar-lbl { font-size: 9px; color: rgba(255,255,255,.25); }
+
+    /* ─── Small stat cards ──────────────────────────── */
+    .stat-icon {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,.06);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+    }
+    .mini-chart {
+      display: inline-block;
+      vertical-align: middle;
+      opacity: .6;
+    }
+    .reminders-empty {
+      font-size: 12px; color: rgba(255,255,255,.3);
+      margin-top: 4px; line-height: 1.5;
+    }
+
+    /* ─── Logout btn ────────────────────────────────── */
+    .logout-row {
+      margin-top: 24px;
+      display: flex; justify-content: flex-end;
+    }
+    .btn-logout {
+      background: none; border: 1px solid rgba(255,255,255,.1);
+      color: rgba(255,255,255,.4); font-size: 13px;
+      padding: 9px 18px; border-radius: 100px;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-logout:hover { border-color: rgba(255,255,255,.25); color: rgba(255,255,255,.7); }
+
+    /* ─── Responsive ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .dash-row-3, .dash-row-4 { grid-template-columns: 1fr 1fr; }
+      .progress-card { grid-column: span 1; }
+      .progress-card-img { display: none; }
+      .dash-row-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .profile-wrap { padding: 20px 16px 100px; }
+      .dash-row-3, .dash-row-4 { grid-template-columns: 1fr 1fr; }
+      .dash-greeting h1 { font-size: 1.4rem; }
+    }
+  </style>
 </head>
 <body class="dark-theme">
 
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="brand brand-outlined">
-        <img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img" />
-      </a>
-      <div class="nav-links desktop-only">
-        <a href="courses.html" class="nav-link">Обучение</a>
-        <a href="index.html#channels" class="nav-link">Каналы</a>
-        <a href="index.html#support" class="nav-link">Поддержка</a>
+  <!-- ─── NOT LOGGED IN ─────────────────────────────────── -->
+  <div id="auth-gate" class="auth-gate" style="display:none">
+    <div class="auth-gate-card">
+      <div class="auth-gate-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
       </div>
-      <div class="nav-actions">
-        <button class="btn-nav-outline" onclick="logout()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-          <span class="desktop-only">Выйти</span>
-        </button>
-      </div>
+      <h2>Личный кабинет</h2>
+      <p>Войдите, чтобы видеть свой прогресс,<br>дневник и статистику обучения.</p>
+      <button class="btn-enter" id="gate-login-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        Войти в систему
+      </button>
     </div>
-  </nav>
+  </div>
 
-  <main class="main-content" style="padding-top:120px">
-    <div class="section" style="max-width:720px;margin:0 auto">
-      <a href="index.html" class="back-link-glass" style="margin-bottom:20px;display:inline-flex">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Назад
-      </a>
+  <!-- ─── DASHBOARD ─────────────────────────────────────── -->
+  <div id="dashboard" style="display:none">
+    <div class="profile-wrap">
 
-      <!-- Профиль -->
-      <div class="bento-card reveal" style="padding:32px;margin-bottom:20px;flex-direction:column;align-items:flex-start">
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-          <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+      <!-- Header -->
+      <div class="dash-header">
+        <div class="dash-greeting">
+          <h1 id="dash-greeting">Добрый день</h1>
+          <p id="dash-sub">Продолжайте движение к своим целям</p>
+        </div>
+        <div class="dash-header-right">
+          <div class="streak-badge" id="streak-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/></svg>
+            <span id="streak-val">0 дней</span>
+          </div>
+          <div class="avatar-btn" id="avatar-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 1: Progress + Streak days -->
+      <div class="dash-row dash-row-2" style="margin-bottom:16px">
+        <!-- Big progress card -->
+        <div class="g-card progress-card">
+          <div class="progress-card-content">
+            <div>
+            <div class="g-card-label">Ваш доступ</div>
+              <div class="progress-pct" id="prog-pct">0%</div>
+              <p style="font-size:13px;color:rgba(255,255,255,.4);margin:0 0 16px" id="access-desc">Первые видео всех разделов доступны для знакомства.</p>
+            </div>
+            <div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-track" style="flex:1">
+                  <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="progress-bar-labels"><span>Free</span><span>Профиль</span><span>Pro</span></div>
+            </div>
+          </div>
+          <div class="progress-card-img" id="prog-img" style="background-image:url('assets/waygone.png')"></div>
+        </div>
+
+        <!-- Streak / login info -->
+        <div class="g-card" style="display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <div class="g-card-label">Статус подписки</div>
+            <div class="g-card-val" id="streak-big">Free</div>
+            <div class="g-card-sub" id="member-since">Первые уроки открыты</div>
+          </div>
+          <div id="streak-dots" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:16px"></div>
+          <a href="subscription.html" class="diary-btn" style="margin-top:16px" id="pro-cta">Оформить Система Pro</a>
+        </div>
+      </div>
+
+      <!-- Continue learning -->
+      <div class="continue-section">
+        <div class="section-head">
+          <h3>Продолжить обучение</h3>
+          <a href="index.html">Все курсы →</a>
+        </div>
+        <div class="lessons-scroll" id="lessons-scroll">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Row 2: Diary, Mood, Practice -->
+      <div class="dash-row dash-row-3">
+        <!-- Diary -->
+        <div class="g-card diary-card">
+          <div>
+            <div class="g-card-label">Telegram</div>
+            <div class="diary-card-img" style="background-image:url('assets/notebook.png')"></div>
+            <p style="font-size:13px;color:rgba(255,255,255,.45);margin:0" id="telegram-desc">Открытый канал доступен всем. Закрытый канал входит в Система Pro.</p>
           </div>
           <div>
-            <h2 id="acc-name" style="margin:0;font-size:20px;color:#fff;font-weight:700">Загрузка...</h2>
-            <p id="acc-email" style="margin:4px 0 0;font-size:14px;color:var(--text-2)"></p>
+            <div id="diary-last" class="mood-last"></div>
+            <a href="#" class="diary-btn" id="open-diary-btn">
+              Открыть Telegram
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
           </div>
         </div>
-        <div id="acc-tg" style="display:none;align-items:center;gap:8px;font-size:13px;color:var(--text-2);background:rgba(34,158,217,.1);padding:8px 14px;border-radius:10px;border:1px solid rgba(34,158,217,.15)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#229ed9"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          <span id="acc-tg-name"></span>
+
+        <!-- Mood / Emotional state -->
+        <div class="g-card">
+          <div class="g-card-label">AI-помощник</div>
+          <div class="g-card-val" id="ai-usage-card" style="font-size:2rem">0 / 5</div>
+          <p style="font-size:13px;color:rgba(255,255,255,.4);margin:10px 0 18px" id="ai-usage-desc">5 сообщений без подписки, 50 сообщений в Pro.</p>
+          <a href="ai.html" class="diary-btn">Открыть AI</a>
+        </div>
+
+        <!-- Practice time -->
+        <div class="g-card">
+          <div class="g-card-label">Активность</div>
+          <div class="g-card-sub" style="margin:0 0 4px">обучение за неделю</div>
+          <div class="practice-val" id="practice-time">0 мин</div>
+          <div class="bar-chart" id="bar-chart">
+            <!-- populated by JS -->
+          </div>
         </div>
       </div>
 
-      <!-- Подписка -->
-      <div class="bento-card reveal" style="padding:32px;margin-bottom:20px;flex-direction:column;align-items:flex-start">
-        <h3 style="margin:0 0 12px;font-size:18px;color:#fff">Подписка</h3>
-        <div id="sub-status" style="margin-bottom:16px">
-          <span class="badge" style="background:rgba(255,255,255,.08);color:var(--text-2);padding:6px 14px;border-radius:20px;font-size:13px">Проверка...</span>
+      <!-- Row 3: Stats -->
+      <div class="dash-row dash-row-4" style="margin-top:16px">
+        <!-- Mindfulness -->
+        <div class="g-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div class="g-card-label">Открыто бесплатно</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:6px">первые видео, лента, Shorts</div>
+          <div class="g-card-val" id="mindfulness-pct" style="font-size:1.8rem">Free</div>
         </div>
-        <p id="sub-expires" style="margin:0 0 16px;font-size:14px;color:var(--text-2)"></p>
-        <a href="subscription.html" class="btn btn-primary" style="font-size:14px;padding:12px 20px">Продлить или сменить тариф</a>
+
+        <!-- Gratitude -->
+        <div class="g-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+          </div>
+          <div class="g-card-label">Закрыто в Pro</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:6px">все уроки и закрытый TG</div>
+          <div class="g-card-val" id="gratitude-cnt" style="font-size:1.8rem">0</div>
+        </div>
+
+        <!-- Weekly goal -->
+        <div class="g-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+          </div>
+          <div class="g-card-label">Просмотрено</div>
+          <div class="g-card-val" style="font-size:1.3rem">
+            <span id="goal-done">0</span> <span style="font-size:1rem;color:rgba(255,255,255,.35)">из <span id="goal-target">5</span> дней</span>
+          </div>
+          <div class="g-card-sub" id="goal-desc">уроков в системе</div>
+        </div>
+
+        <!-- Reminders -->
+        <div class="g-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div class="g-card-label">Быстрый переход</div>
+          <div class="reminders-empty" id="reminders-text">
+            Продолжайте с любого раздела<br>или откройте ленту.
+          </div>
+        </div>
       </div>
 
-      <!-- Прогресс -->
-      <div class="bento-card reveal" style="padding:32px;margin-bottom:20px;flex-direction:column;align-items:flex-start">
-        <h3 style="margin:0 0 16px;font-size:18px;color:#fff">Прогресс обучения</h3>
-        <div id="progress-list" style="width:100%;display:flex;flex-direction:column;gap:12px">
-          <p style="color:var(--text-2);font-size:14px">Загрузка прогресса...</p>
-        </div>
+      <!-- Logout -->
+      <div class="logout-row">
+        <button class="btn-logout" onclick="doLogout()">Выйти из аккаунта</button>
       </div>
 
     </div>
-  </main>
+  </div>
 
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-brand"><img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img small"/></div>
-      <div class="footer-links"><a href="about.html">О сообществе</a><a href="author.html">Об авторе</a></div>
-      <div class="footer-copy">2026 Все права защищены.</div>
+  <!-- ─── DIARY MODAL ──────────────────────────────────── -->
+  <div id="diary-modal" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+    <div style="background:#12121a;border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:32px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="margin:0;font-size:1.2rem">Дневник</h3>
+        <button onclick="closeDiary()" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:20px">×</button>
+      </div>
+      <textarea id="diary-input" placeholder="Что у вас на уме сегодня?..." 
+        style="width:100%;min-height:120px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-family:Inter,sans-serif;font-size:14px;resize:vertical;box-sizing:border-box;outline:none"></textarea>
+      <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end">
+        <button onclick="closeDiary()" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:10px 20px;border-radius:100px;cursor:pointer;font-size:14px">Отмена</button>
+        <button onclick="saveDiary()" style="background:#fff;color:#000;padding:10px 24px;border-radius:100px;border:none;cursor:pointer;font-weight:600;font-size:14px">Сохранить</button>
+      </div>
+      <div id="diary-entries" style="margin-top:24px;display:flex;flex-direction:column;gap:10px"></div>
     </div>
-  </footer>
-
-  <nav class="glass-tab-bar">
-    <a href="index.html" class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Главная</span></a>
-    <a href="courses.html" class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M8 21h8M12 17v4"/></svg><span>Курсы</span></a>
-    <a href="subscription.html" class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Подписка</span></a>
-    <a href="index.html#channels" class="tab-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Каналы</span></a>
-  </nav>
+  </div>
 
   <script src="js/config.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/api.js?v=9"></script>
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/nav.js?v=27"></script>
   <script>
-    (async () => {
-      if (!window.API.isLoggedIn()) {
-        window.location.href = 'index.html';
-        return;
-      }
-      try {
-        const { user } = await window.API.me();
-        document.getElementById('acc-name').textContent = user.first_name || user.telegram_username || 'Пользователь';
-        document.getElementById('acc-email').textContent = user.email || ('ID: ' + user.id);
-        if (user.telegram_username) {
-          document.getElementById('acc-tg').style.display = 'inline-flex';
-          document.getElementById('acc-tg-name').textContent = '@' + user.telegram_username;
-        }
+  window.addEventListener('auth:change', () => {
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard();
+  });
+  window.refreshAuthUI = () => {
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard();
+  };
 
-        const sub = await window.API.getSubscription();
-        const statusEl = document.getElementById('sub-status');
-        const expiresEl = document.getElementById('sub-expires');
-        if (sub.subscription_active) {
-          statusEl.innerHTML = '<span class="badge" style="background:rgba(74,222,128,.15);color:#4ade80;padding:6px 14px;border-radius:20px;font-size:13px">Активна</span>';
-          if (sub.expires_at) {
-            const d = new Date(sub.expires_at);
-            expiresEl.textContent = 'Действует до ' + d.toLocaleDateString('ru-RU');
-          }
-        } else {
-          statusEl.innerHTML = '<span class="badge" style="background:rgba(255,255,255,.08);color:var(--text-2);padding:6px 14px;border-radius:20px;font-size:13px">Не оформлена</span>';
-          expiresEl.textContent = 'Оформите подписку для доступа ко всем материалам.';
-        }
+  async function initProfile() {
+    const isLoggedIn = window.API && window.API.isLoggedIn();
 
-        const prog = await window.API.request('GET', '/content/progress');
-        const list = document.getElementById('progress-list');
-        if (prog.progress && prog.progress.length > 0) {
-          list.innerHTML = prog.progress.map(p => `
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-              <span style="font-size:14px;color:#fff">Урок ${p.lesson_id}</span>
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="width:100px;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden">
-                  <div style="width:${p.progress_percent}%;height:100%;background:#4ade80;border-radius:2px;transition:width .3s"></div>
-                </div>
-                <span style="font-size:12px;color:var(--text-2);min-width:36px;text-align:right">${p.progress_percent}%</span>
-              </div>
-            </div>
-          `).join('');
-        } else {
-          list.innerHTML = '<p style="color:var(--text-2);font-size:14px">Начните обучение — прогресс появится здесь.</p>';
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-
-    function logout() {
-      window.API.logout();
-      window.location.href = 'index.html';
+    if (!isLoggedIn) {
+      document.getElementById('auth-gate').style.display = 'flex';
+      document.getElementById('gate-login-btn').addEventListener('click', () => {
+        // trigger auth modal from auth.js
+        if (window.openAuthModal) window.openAuthModal();
+        else window.location.href = 'index.html';
+      });
+      return;
     }
+
+    document.getElementById('dashboard').style.display = 'block';
+    await loadDashboard();
+  }
+
+  async function loadDashboard() {
+    try {
+      const data = await window.API.request('GET', '/profile/dashboard');
+      const { user, stats, recent_activity, diary, daily_chart, ai_usage, access, courses } = data;
+      const isPro = access && access.status === 'pro';
+
+      // Greeting
+      const hour = new Date().getHours();
+      const greet = hour < 12 ? 'Доброе утро' : hour < 18 ? 'Добрый день' : 'Добрый вечер';
+      const emailName = user.email ? user.email.split('@')[0] : '';
+      const phoneName = user.phone ? user.phone.replace(/^\+7/, '+7 ') : '';
+      const name = user.display_name || user.first_name || emailName || phoneName || 'друг';
+      document.getElementById('dash-greeting').textContent = greet + ', ' + name;
+
+      document.getElementById('dash-sub').textContent = isPro
+        ? 'У вас открыт весь контент, закрытый Telegram и расширенный AI.'
+        : 'Первые видео открыты. Остальное доступно в Система Pro.';
+
+      // Streak
+      const streak = stats.streak_days || 0;
+      document.getElementById('streak-val').textContent = streak + ' ' + pluralDays(streak);
+      document.getElementById('streak-big').textContent = isPro ? 'Pro' : 'Free';
+      document.getElementById('member-since').textContent = isPro
+        ? (user.subscription_expires_at ? 'Активно до ' + new Date(user.subscription_expires_at).toLocaleDateString('ru-RU') : 'Подписка активна')
+        : 'Первые уроки открыты';
+      document.getElementById('pro-cta').textContent = isPro ? 'Управлять подпиской' : 'Оформить Система Pro';
+
+      // Streak dots (last 7 days)
+      const dotsEl = document.getElementById('streak-dots');
+      const days7 = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+      const activeDates = new Set(daily_chart.map(d => d.day ? d.day.split('T')[0] : ''));
+      const today = new Date();
+      dotsEl.innerHTML = days7.map((d, i) => {
+        const dt = new Date(today);
+        const dayOfWeek = today.getDay(); // 0=sun
+        const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        dt.setDate(today.getDate() - mondayOffset + i);
+        const ds = dt.toISOString().split('T')[0];
+        const active = activeDates.has(ds);
+        const isToday = ds === today.toISOString().split('T')[0];
+        return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div style="width:28px;height:28px;border-radius:50%;background:${active ? 'rgba(255,255,255,.5)' : 'rgba(255,255,255,.07)'};border:${isToday ? '2px solid rgba(255,255,255,.4)' : 'none'};"></div>
+          <span style="font-size:9px;color:rgba(255,255,255,.25)">${d}</span>
+        </div>`;
+      }).join('');
+
+      // Access status
+      const pct = isPro ? 100 : 35;
+      document.getElementById('prog-pct').textContent = access ? access.label : (isPro ? 'Система Pro' : 'Бесплатный доступ');
+      document.getElementById('prog-bar').style.width = pct + '%';
+      document.getElementById('access-desc').textContent = isPro
+        ? 'Открыт весь видеоконтент, закрытый Telegram и 50 сообщений с AI.'
+        : 'Доступны первые видео всех разделов, лента, Shorts, открытый Telegram и 5 сообщений с AI.';
+
+      // Practice time
+      const mins = stats.practice_minutes || 0;
+      const h = Math.floor(mins / 60), m = mins % 60;
+      document.getElementById('practice-time').textContent =
+        h > 0 ? `${h} ч ${m} мин` : `${m} мин`;
+
+      // Bar chart
+      const barEl = document.getElementById('bar-chart');
+      const maxAct = Math.max(...daily_chart.map(d => parseInt(d.actions, 10) || 0), 1);
+      barEl.innerHTML = days7.map((lbl, i) => {
+        const dt = new Date(today);
+        const dayOfWeek = today.getDay();
+        const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        dt.setDate(today.getDate() - mondayOffset + i);
+        const ds = dt.toISOString().split('T')[0];
+        const entry = daily_chart.find(d => (d.day || '').split('T')[0] === ds);
+        const val = entry ? parseInt(entry.actions, 10) : 0;
+        const heightPct = Math.max(8, Math.round((val / maxAct) * 100));
+        const isToday = ds === today.toISOString().split('T')[0];
+        return `<div class="bar-day">
+          <div class="bar-fill ${isToday ? 'active' : ''}" style="height:${heightPct}%"></div>
+          <span class="bar-lbl">${lbl}</span>
+        </div>`;
+      }).join('');
+
+      // Goal (active days this week)
+      document.getElementById('goal-done').textContent = stats.active_days_this_week || 0;
+
+      // Product access cards
+      window.profileAccessStatus = isPro ? 'pro' : 'free';
+      document.getElementById('diary-last').textContent = isPro ? 'Закрытый канал доступен по подписке' : 'Открытый канал доступен всем';
+      document.getElementById('open-diary-btn').textContent = isPro ? 'Получить ссылку Pro-канала' : 'Открыть Telegram';
+      document.getElementById('ai-usage-card').textContent = `${ai_usage?.used || 0} / ${ai_usage?.limit || (isPro ? 50 : 5)}`;
+      document.getElementById('ai-usage-desc').textContent = isPro
+        ? `${ai_usage?.remaining ?? 50} сообщений осталось в этом периоде.`
+        : `${ai_usage?.remaining ?? 5} сообщений осталось. В Pro будет 50.`;
+      document.getElementById('gratitude-cnt').textContent = isPro ? 'Все' : (courses ? Math.max(courses.length - 1, 0) : 0);
+      document.getElementById('goal-done').textContent = stats.completed_lessons || 0;
+      document.getElementById('goal-target').textContent = courses ? courses.length : 11;
+
+      // Continue learning — show static course cards (extend later from API)
+      const courseItems = Array.isArray(courses) ? courses : [];
+      document.getElementById('lessons-scroll').innerHTML = courseItems.map((c, i) => `
+        <a class="lesson-card-sm" href="${c.href}">
+          <div class="lesson-card-sm-thumb" style="background-image:url('${c.thumb}')">
+            <div class="lesson-card-sm-num">${String(i+1).padStart(2,'0')}</div>
+            ${isPro ? '<div class="lesson-card-sm-done">✓</div>' : i === 0 ? '' : '<div class="lesson-card-sm-done">⌁</div>'}
+          </div>
+          <div class="lesson-card-sm-info">
+            <div class="lesson-card-sm-title">${c.title}</div>
+            <div class="lesson-card-sm-dur">${isPro ? 'Полный доступ' : 'Первый урок открыт'}</div>
+          </div>
+        </a>
+      `).join('');
+
+    } catch (e) {
+      console.error('Dashboard load error', e);
+    }
+
+    // Log page view
+    try { await window.API.request('POST', '/profile/activity', { event_type: 'page_view', entity_type: 'page', entity_id: 'profile' }); } catch {}
+  }
+
+  initProfile();
+
+  // Mood buttons
+  document.querySelectorAll('.mood-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const mood = parseInt(btn.dataset.mood);
+      const emojis = ['','😔','😐','🙂','😊','😄'];
+      document.getElementById('mood-last-text').textContent = 'Выбрано: ' + emojis[mood];
+      try { await window.API.request('POST', '/profile/mood', { mood }); } catch {}
+    });
+  });
+
+  // Diary modal
+  document.getElementById('open-diary-btn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (window.profileAccessStatus === 'pro') {
+      alert('Ссылку на закрытый Telegram-канал подключим на этапе реальной подписки.');
+    } else {
+      alert('Ссылку на открытый Telegram-канал добавим после финального подключения каналов.');
+    }
+    return;
+    const modal = document.getElementById('diary-modal');
+    modal.style.display = 'flex';
+    // Load entries
+    try {
+      const data = await window.API.request('GET', '/profile/diary');
+      const entriesEl = document.getElementById('diary-entries');
+      if (data.entries && data.entries.length > 0) {
+        const moodEmoji = ['','😔','😐','🙂','😊','😄'];
+        entriesEl.innerHTML = data.entries.map(e => `
+          <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:14px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:11px;color:rgba(255,255,255,.3)">${new Date(e.created_at).toLocaleDateString('ru-RU')}</span>
+              ${e.mood ? `<span style="font-size:16px">${moodEmoji[e.mood]}</span>` : ''}
+            </div>
+            <p style="margin:0;font-size:13px;color:rgba(255,255,255,.7);line-height:1.5">${e.content || ''}</p>
+          </div>
+        `).join('');
+      } else {
+        entriesEl.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,.3);font-size:13px">Пока нет записей</p>';
+      }
+    } catch {}
+  });
+  function closeDiary() {
+    document.getElementById('diary-modal').style.display = 'none';
+  }
+  async function saveDiary() {
+    const content = document.getElementById('diary-input').value.trim();
+    if (!content) return;
+    try {
+      await window.API.request('POST', '/profile/diary', { content });
+      document.getElementById('diary-input').value = '';
+      document.getElementById('diary-last').textContent = 'Последняя запись: сегодня';
+      closeDiary();
+    } catch (e) { console.error(e); }
+  }
+
+  function doLogout() {
+    window.API.logout();
+    window.location.href = 'index.html';
+  }
+
+  function pluralDays(n) {
+    if (n % 10 === 1 && n % 100 !== 11) return 'день';
+    if ([2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100)) return 'дня';
+    return 'дней';
+  }
   </script>
 </body>
 </html>

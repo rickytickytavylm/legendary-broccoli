@@ -1,0 +1,480 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>AI-помощник — Система Молодцова</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { background: #050506; }
+
+    .ai-page {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px 80px;
+    }
+
+    .ai-shell {
+      width: 100%;
+      max-width: 980px;
+      min-height: min(760px, calc(100dvh - 140px));
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ai-hero {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .ai-kicker {
+      color: rgba(255,255,255,.35);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .ai-title {
+      color: #fff;
+      font-size: clamp(32px, 4.6vw, 56px);
+      font-weight: 760;
+      letter-spacing: -2px;
+      line-height: 1.02;
+      margin: 0 0 14px;
+    }
+
+    .ai-desc {
+      max-width: 620px;
+      margin: 0 auto;
+      color: rgba(255,255,255,.52);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .ai-usage-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.09);
+      color: rgba(255,255,255,.62);
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .ai-chat-panel {
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0;
+      position: relative;
+      overflow: visible;
+    }
+
+    .ai-chat-panel::before {
+      display: none;
+    }
+
+    .ai-chat-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ai-conversation {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 0 22px;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .ai-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .ai-message.user {
+      justify-content: flex-end;
+    }
+
+    .ai-bubble {
+      max-width: min(560px, 82%);
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.085);
+      border-radius: 18px;
+      padding: 16px 18px;
+      color: rgba(255,255,255,.78);
+      font-size: 15px;
+      line-height: 1.62;
+      box-shadow:
+        0 14px 34px rgba(0,0,0,.24),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      white-space: pre-wrap;
+    }
+
+    .ai-message.user .ai-bubble {
+      background: rgba(255,255,255,.075);
+      color: rgba(255,255,255,.86);
+      border-color: rgba(255,255,255,.10);
+    }
+
+    .ai-message.assistant.streaming .ai-bubble::after {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 1.1em;
+      margin-left: 3px;
+      vertical-align: -2px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.62);
+      animation: aiCursor 1s steps(2, start) infinite;
+    }
+
+    @keyframes aiCursor {
+      50% { opacity: .15; }
+    }
+
+    .ai-name {
+      display: block;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .ai-time {
+      margin-left: 14px;
+      color: rgba(255,255,255,.28);
+      font-size: 12px;
+      white-space: nowrap;
+      align-self: flex-end;
+      padding-bottom: 4px;
+    }
+
+    .ai-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .ai-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.055);
+      color: rgba(255,255,255,.72);
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 12px;
+      text-decoration: none;
+      transition: background .18s, color .18s, border-color .18s;
+    }
+
+    .ai-chip:hover {
+      background: rgba(255,255,255,.095);
+      color: #fff;
+      border-color: rgba(255,255,255,.16);
+    }
+
+    .ai-input-bar {
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(5,5,6,.72);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 24px;
+      padding: 10px 12px 10px 18px;
+      box-shadow:
+        0 18px 50px rgba(0,0,0,.32),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .ai-input-bar input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: rgba(255,255,255,.86);
+      font: 500 15px/1.4 Inter, sans-serif;
+      padding: 10px 0;
+    }
+
+    .ai-input-bar input::placeholder {
+      color: rgba(255,255,255,.34);
+    }
+
+    .ai-tune,
+    .ai-send {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: transform .18s, opacity .18s, background .18s;
+    }
+
+    .ai-tune {
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.62);
+    }
+
+    .ai-send {
+      background: #fff;
+      color: #050506;
+    }
+
+    .ai-tune:hover,
+    .ai-send:hover {
+      transform: translateY(-1px);
+      opacity: .92;
+    }
+
+    .ai-footnote {
+      text-align: center;
+      color: rgba(255,255,255,.32);
+      font-size: 12px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 768px) {
+      html, body { height: 100%; overflow: hidden; }
+      .ai-main { height: 100dvh; overflow: hidden; }
+      .ai-page {
+        height: 100dvh;
+        min-height: 100dvh;
+        padding: 104px 14px 118px;
+        justify-content: flex-start;
+        overflow: hidden;
+      }
+      .ai-shell {
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      .ai-hero {
+        flex-shrink: 0;
+        margin-bottom: 14px;
+      }
+      .ai-chat-panel {
+        flex: 1;
+        min-height: 0;
+        padding: 0;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .ai-conversation {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 0 0 22px;
+        overscroll-behavior: contain;
+      }
+      .ai-input-bar {
+        position: fixed;
+        left: 14px;
+        right: 14px;
+        bottom: calc(74px + env(safe-area-inset-bottom));
+        width: auto;
+        max-width: none;
+        z-index: 50;
+        flex-shrink: 0;
+      }
+      .ai-footnote { display: none; }
+      .ai-bubble { max-width: 88%; font-size: 14px; }
+      .ai-title { letter-spacing: -1.2px; }
+      .ai-back-mobile {
+        position: fixed !important;
+        top: 112px !important;
+        left: 22px !important;
+        margin: 0 !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: none !important;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .ai-back-mobile {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="dark-theme">
+  <main class="main-content ai-main">
+    <div class="ai-page">
+      <div class="ai-shell">
+        <a href="index.html" class="back-link-glass ai-back-mobile" aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Назад
+        </a>
+
+        <div class="ai-hero">
+          <div class="ai-kicker">AI-помощник</div>
+          <h1 class="ai-title">Спокойный навигатор<br>по материалам системы</h1>
+          <p class="ai-desc">
+            Поможет найти нужный курс, подобрать практику и разобраться в вопросе без лишнего шума.
+          </p>
+          <div class="ai-usage-pill" id="ai-usage-pill">Войдите, чтобы использовать AI</div>
+        </div>
+
+        <section class="ai-chat-panel" aria-label="Чат с AI">
+          <div class="ai-conversation" id="ai-conversation"></div>
+
+          <div class="ai-input-bar">
+            <input id="ai-input" type="text" placeholder="Задайте вопрос..." aria-label="Задайте вопрос" autocomplete="off">
+            <button class="ai-tune" type="button" aria-label="Настройки">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M8 17h12M4 17h2"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+            </button>
+            <button class="ai-send" type="button" aria-label="Отправить" id="ai-send">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            </button>
+          </div>
+
+          <p class="ai-footnote">AI может ошибаться. Проверяйте важную информацию.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script src="js/config.js"></script>
+  <script src="js/api.js?v=9"></script>
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/nav.js?v=27"></script>
+  <script>
+    const aiInput = document.getElementById('ai-input');
+    const aiSend = document.getElementById('ai-send');
+    const aiConversation = document.getElementById('ai-conversation');
+
+    function addMessage(text, role = 'user') {
+      const msg = document.createElement('div');
+      msg.className = 'ai-message ' + role;
+      const bubble = document.createElement('div');
+      bubble.className = 'ai-bubble';
+      const name = document.createElement('span');
+      name.className = 'ai-name';
+      name.textContent = role === 'user' ? 'Вы' : 'AI-помощник';
+      const content = document.createElement('span');
+      content.className = 'ai-content';
+      content.textContent = text;
+      bubble.append(name, content);
+      const time = document.createElement('span');
+      time.className = 'ai-time';
+      time.textContent = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      msg.append(bubble, time);
+      aiConversation.appendChild(msg);
+      aiConversation.scrollTop = aiConversation.scrollHeight;
+      return { msg, content };
+    }
+
+    async function loadAiUsage() {
+      if (!window.API || !window.API.isLoggedIn()) return;
+      try {
+        const data = await window.API.getAiUsage();
+        updateUsage(data.usage);
+      } catch {}
+    }
+
+    async function loadAiHistory() {
+      if (!window.API || !window.API.isLoggedIn()) return;
+      try {
+        const data = await window.API.getAiHistory(80);
+        aiConversation.innerHTML = '';
+        (data.messages || []).forEach((message) => {
+          addMessage(message.content || '', message.role === 'assistant' ? 'assistant' : 'user');
+        });
+      } catch {}
+    }
+
+    function updateUsage(usage) {
+      if (!usage) return;
+      document.getElementById('ai-usage-pill').textContent =
+        `AI сообщения: ${usage.used} из ${usage.limit} · осталось ${usage.remaining}`;
+    }
+
+    async function submitQuestion() {
+      const value = aiInput.value.trim();
+      if (!value) return;
+      if (!window.API || !window.API.isLoggedIn()) {
+        if (window.openAuthModal) window.openAuthModal('login');
+        else window.location.href = 'account.html';
+        return;
+      }
+
+      addMessage(value, 'user');
+      aiInput.value = '';
+      aiSend.disabled = true;
+      aiInput.disabled = true;
+      const assistant = addMessage('', 'assistant');
+      assistant.msg.classList.add('streaming');
+      try {
+        await window.API.streamAiMessage(value, {
+          onDelta(text) {
+            assistant.content.textContent += text;
+            aiConversation.scrollTop = aiConversation.scrollHeight;
+          },
+          onUsage(usage) {
+            updateUsage(usage);
+          },
+          onDone(data) {
+            updateUsage(data.usage);
+          },
+        });
+        if (!assistant.content.textContent.trim()) {
+          assistant.content.textContent = 'Ответ не пришел. Попробуйте еще раз.';
+        }
+      } catch (err) {
+        assistant.msg.remove();
+        if (err.code === 'AI_LIMIT_REACHED') {
+          updateUsage(err.usage);
+          addMessage('Лимит сообщений закончился. В Система Pro доступно 50 сообщений с AI.', 'assistant');
+        } else {
+          addMessage('Не удалось отправить сообщение. Попробуйте еще раз.', 'assistant');
+        }
+      } finally {
+        assistant.msg.classList.remove('streaming');
+        aiSend.disabled = false;
+        aiInput.disabled = false;
+        aiInput.focus();
+      }
+    }
+
+    loadAiUsage();
+    loadAiHistory();
+    aiSend.addEventListener('click', submitQuestion);
+    aiInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') submitQuestion();
+    });
+  </script>
+</body>
+</html>

@@ -4,15 +4,55 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <title>Неделя — Система Молодцова</title>
+  <title>Профайлинг — Система Молодцова</title>
+  <meta name="description" content="Курс по распознаванию личности. Приложение Way." />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .week-page { padding: 32px 24px 80px; max-width: 1280px; margin: 0 auto; }
+    .profiling-hero {
+      position: relative;
+      min-height: 420px;
+      display: flex;
+      align-items: flex-end;
+      padding: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.85) 65%, var(--bg-main) 100%),
+                  url('assets/way_block.png') center/cover no-repeat;
+    }
+    .profiling-hero-content {
+      padding: 0 24px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .profiling-hero-content .hero-top-text {
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .profiling-hero-content h1 {
+      color: #fff;
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin: 0 0 12px;
+    }
+    .profiling-hero-content p {
+      color: rgba(255,255,255,.65);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0;
+    }
 
-    /* iOS glass back button */
+    .profiling-page {
+      padding: 32px 24px 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
     .back-link-glass {
       display: inline-flex; align-items: center; gap: 8px;
       color: rgba(255,255,255,.7); text-decoration: none; font-size: 14px;
@@ -22,95 +62,110 @@
       background: rgba(255,255,255,.06);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      margin-bottom: 28px;
+      margin-bottom: 48px;
       transition: all .2s;
     }
     .back-link-glass:hover { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.25); }
 
-    .week-hero { padding: 0 0 24px; }
-    .week-hero .top-text { color: rgba(255,255,255,.55); font-size: 12px; letter-spacing: 2px; font-weight: 600; margin-bottom: 12px; }
-    .week-hero h1 { color: #fff; font-size: 32px; font-weight: 700; letter-spacing: -1px; margin: 0 0 8px; }
-    .week-hero p { color: rgba(255,255,255,.6); font-size: 15px; line-height: 1.5; max-width: 640px; }
-
-    /* Layout: player left, weeks accordion right */
-    .course-layout { display: grid; grid-template-columns: 1fr 380px; gap: 28px; }
-    .course-main { min-width: 0; }
-    .video-container { position: relative; background: #000; border-radius: 16px; overflow: hidden; aspect-ratio: 16/9; }
-    .video-container video { width: 100%; height: 100%; display: block; border-radius: 16px; }
-    .watermark { position: absolute; top: 16px; left: 16px; z-index: 5; pointer-events: none; opacity: .55; }
-    .watermark img { height: 28px; width: auto; filter: brightness(1.2); }
-
-    .course-meta { margin-top: 16px; color: rgba(255,255,255,.6); font-size: 14px; }
-
-    .sidebar { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 20px; height: fit-content; }
-    .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .sidebar-header h3 { color: #fff; font-size: 16px; font-weight: 600; margin: 0; }
-    .lessons-count { color: rgba(255,255,255,.5); font-size: 13px; }
-
-    /* Accordion */
-    .week-group { margin-bottom: 8px; }
-    .week-toggle {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 100%; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
-      border-radius: 12px; padding: 12px 14px; color: #fff; font-size: 14px; font-weight: 600;
-      cursor: pointer; transition: all .15s;
+    .way-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 72px;
+      align-items: center;
     }
-    .week-toggle:hover { background: rgba(255,255,255,.07); }
-    .week-toggle svg { width: 16px; height: 16px; color: rgba(255,255,255,.5); transition: transform .2s; }
-    .week-toggle.open svg { transform: rotate(180deg); }
-    .week-content { display: none; padding: 6px 4px; }
-    .week-content.open { display: block; }
-
-    .lesson-row {
-      display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px;
-      cursor: pointer; transition: all .12s; border: 1px solid transparent;
+    .way-promo-img {
+      width: 100%;
+      border-radius: 24px;
+      display: block;
+      box-shadow: 0 32px 80px rgba(0,0,0,.6);
     }
-    .lesson-row:hover { background: rgba(255,255,255,.04); }
-    .lesson-row.active { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.1); }
-    .lesson-row .l-num {
-      width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,.08);
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,.7); font-size: 12px; font-weight: 600; flex-shrink: 0;
+    .way-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
     }
-    .lesson-row.active .l-num { background: #7c3aed; color: #fff; }
-    .lesson-row .l-info { min-width: 0; }
-    .lesson-row .l-title { color: rgba(255,255,255,.85); font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .lesson-row.active .l-title { color: #fff; }
-    .lesson-row .l-dur { color: rgba(255,255,255,.4); font-size: 11px; margin-top: 1px; }
-    .lesson-row .l-lock { color: rgba(255,255,255,.3); margin-left: auto; flex-shrink: 0; }
+    .way-label {
+      display: inline-block;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      color: rgba(255,255,255,.7);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .way-title {
+      color: #fff;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin: 0;
+      line-height: 1.15;
+    }
+    .way-desc {
+      color: rgba(255,255,255,.55);
+      font-size: 16px;
+      line-height: 1.75;
+      margin: 0;
+    }
+    .store-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .btn-store {
+      display: inline-flex;
+      align-items: center;
+      gap: 13px;
+      text-decoration: none;
+      padding: 13px 24px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all .2s;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+      min-width: 195px;
+    }
+    .btn-store-inner { display: flex; flex-direction: column; line-height: 1.3; }
+    .btn-store-sub { font-size: 10px; font-weight: 400; opacity: .75; letter-spacing: .3px; }
+    .btn-store-name { font-size: 16px; font-weight: 700; }
+    .btn-appstore { background: #fff; color: #000; }
+    .btn-appstore:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,.5); background: #f0f0f0; }
+    .btn-appstore svg { width: 26px; height: 26px; flex-shrink: 0; }
+    .btn-googleplay { background: #fff; color: #000; }
+    .btn-googleplay:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,.5); background: #f0f0f0; }
+    .btn-googleplay svg { width: 24px; height: 24px; flex-shrink: 0; }
 
-    /* Locked overlay */
-    .video-locked { display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:240px;background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border-radius:16px;padding:32px;text-align:center;border:1px solid rgba(255,255,255,.06) }
-
-    /* Player overlay modal */
-    .player-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.95); z-index: 1000; display:none; align-items:center; justify-content:center; padding: 20px; }
-    .player-overlay.active { display: flex; }
-    .player-box { width: 100%; max-width: 1100px; aspect-ratio: 16/9; position: relative; }
-    .player-close { position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.1); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
-    .player-close:hover { background: rgba(255,255,255,.2); }
-    .player-video-wrap { background: #000; border-radius: 16px; overflow: hidden; width: 100%; height: 100%; position: relative; }
-    .player-video-wrap video { width: 100%; height: 100%; display: block; }
-    .player-title { color: #fff; font-size: 20px; font-weight: 600; margin-top: 16px; text-align: center; }
-
-    @media (max-width: 1024px) {
-      .course-layout { grid-template-columns: 1fr; }
-      .sidebar { order: 2; }
+    @media (max-width: 860px) {
+      .way-layout {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+      .way-promo-img { max-width: 360px; margin: 0 auto; }
+      .way-text { align-items: center; text-align: center; }
+      .way-title { font-size: 26px; }
     }
     @media (max-width: 600px) {
-      .week-page { padding: 24px 16px 60px; }
-      .week-hero h1 { font-size: 26px; }
+      .profiling-hero-content h1 { font-size: 30px; }
+      .way-title { font-size: 22px; }
     }
   </style>
 </head>
 <body class="dark-theme">
 
+  <!-- Навигация -->
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="brand brand-outlined">
         <img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img" />
       </a>
       <div class="nav-links desktop-only">
-        <a href="courses.html" class="nav-link">Обучение</a>
+        <a href="courses.html" class="nav-link" style="color: var(--text-1);">Обучение</a>
         <a href="index.html#channels" class="nav-link">Каналы</a>
         <a href="index.html#support" class="nav-link">Поддержка</a>
       </div>
@@ -128,35 +183,59 @@
   </nav>
 
   <main class="main-content">
-    <div class="week-page">
-      <a href="courses.html" class="back-link-glass">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+
+    <!-- Hero -->
+    <section class="profiling-hero">
+      <div class="profiling-hero-content">
+        <div class="hero-top-text">Обучение</div>
+        <h1>Профайлинг</h1>
+        <p>Курс по распознаванию личности — доступен в приложении Way</p>
+      </div>
+    </section>
+
+    <div class="profiling-page">
+      <a href="index.html" class="back-link-glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Назад
       </a>
 
-      <div class="course-layout">
-        <div class="course-main">
-          <div class="video-container" id="video-container">
-            <video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;"></video>
-            <div class="watermark"><img src="assets/logo2.png" alt=""></div>
+      <div class="way-layout">
+        <img src="assets/waypromo.jpg" alt="Приложение Way" class="way-promo-img" />
+
+        <div class="way-text">
+          <span class="way-label">Приложение</span>
+          <h2 class="way-title">Попробуйте<br>приложение Way</h2>
+          <p class="way-desc">
+            Курс по профайлингу и распознаванию личности доступен в приложении <strong style="color:#fff;">Way</strong> — психологическом инструменте для глубокого самопознания и анализа других людей.
+          </p>
+          <div class="store-btns">
+            <a href="https://apps.apple.com/ru/app/who-are-you/id1619314732" target="_blank" rel="noopener" class="btn-store btn-appstore">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+              <div class="btn-store-inner">
+                <span class="btn-store-sub">Загрузить в</span>
+                <span class="btn-store-name">App Store</span>
+              </div>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.brainspaceprofile.way&hl=ru" target="_blank" rel="noopener" class="btn-store btn-googleplay">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.18 1.09C2.76 1.54 2.5 2.24 2.5 3.14v17.72c0 .9.26 1.6.68 2.05l.11.1 9.93-9.93v-.23L3.29 2.99l-.11.1z" fill="#4285F4"/>
+                <path d="M16.54 16.41l-3.31-3.32v-.23l3.31-3.32.07.04 3.92 2.23c1.12.63 1.12 1.67 0 2.31l-3.92 2.23-.07.06z" fill="#FBBC04"/>
+                <path d="M16.61 16.35L13.22 12.95 3.18 22.91c.37.39.98.44 1.67.05l11.76-6.61" fill="#34A853"/>
+                <path d="M16.61 7.65L4.85 1.04C4.16.65 3.55.7 3.18 1.09l10.04 9.86 3.39-3.3z" fill="#EA4335"/>
+              </svg>
+              <div class="btn-store-inner">
+                <span class="btn-store-sub">Доступно в</span>
+                <span class="btn-store-name">Google Play</span>
+              </div>
+            </a>
           </div>
-          <div class="course-meta" id="course-meta"></div>
-          <div class="lesson-info-block" id="lesson-info-block" style="display:none">
-            <h2 class="lesson-title-main" id="lesson-title-main"></h2>
-            <p class="lesson-desc-main" id="lesson-desc-main"></p>
-          </div>
-        </div>
-        <div class="sidebar">
-          <div class="sidebar-header">
-            <h3>Программа курса</h3>
-            <span id="lessons-count" class="lessons-count">0 уроков</span>
-          </div>
-          <div id="weeks-accordion"></div>
         </div>
       </div>
     </div>
+
   </main>
 
+  <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-col footer-about">
@@ -246,7 +325,10 @@
   <script src="js/api.js?v=9"></script>
   <script src="js/auth.js?v=5"></script>
   <script src="js/nav.js?v=27"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
-  <script src="js/week.js"></script>
+  <script>
+    if (window.API.isLoggedIn()) {
+      window.API.me().then(r => window.refreshAuthUI && window.refreshAuthUI(r.user)).catch(() => {});
+    }
+  </script>
 </body>
 </html>

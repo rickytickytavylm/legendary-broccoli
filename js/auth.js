@@ -1,5 +1,5 @@
 /**
- * Auth Modal — вход / регистрация для Система Молодцова
+ * Auth Modal — phone OTP вход для Система Молодцова
  * Создаёт DOM-модалку при вызове openAuthModal()
  */
 (function() {
@@ -11,8 +11,9 @@
     .auth-overlay.active .auth-modal{transform:translateY(0) scale(1)}
     .auth-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.06);color:var(--text-2,#888);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
     .auth-close:hover{background:rgba(255,255,255,.12);color:#fff}
-    .auth-title{font-size:24px;font-weight:700;color:var(--text-1,#fff);margin:0 0 4px;text-align:center;letter-spacing:-.3px}
-    .auth-subtitle{font-size:13px;color:var(--text-2,#888);text-align:center;margin:0 0 28px}
+    .auth-title{font-size:24px;font-weight:700;color:var(--text-1,#fff);margin:0 0 8px;text-align:center;letter-spacing:-.3px}
+    .auth-subtitle{font-size:13px;line-height:1.5;color:var(--text-2,#888);text-align:center;margin:0 0 26px}
+    .auth-phone-preview{display:none;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:11px 14px;color:rgba(255,255,255,.72);font-size:13px;text-align:center;margin-bottom:14px}
     .auth-socials{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
     .auth-social{display:flex;align-items:center;justify-content:center;gap:10px;border:none;border-radius:14px;padding:13px 16px;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;width:100%}
     .auth-social:hover{transform:translateY(-1px);opacity:.95}
@@ -27,12 +28,17 @@
     .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
     .auth-form{display:flex;flex-direction:column;gap:12px}
     .auth-input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;color:#fff;font-size:15px;outline:none;transition:.2s}
+    .auth-input.code{text-align:center;font-size:22px;letter-spacing:8px;font-weight:700}
     .auth-input:focus{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)}
     .auth-input::placeholder{color:rgba(255,255,255,.3)}
     .auth-btn{background:#fff;color:#000;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;margin-top:4px}
     .auth-btn:hover{opacity:.92;transform:translateY(-1px)}
     .auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
     .auth-error{color:#ff6b6b;font-size:13px;text-align:center;margin:0}
+    .auth-success{background:rgba(88,214,141,.1);border:1px solid rgba(88,214,141,.22);color:#b8f7cd;border-radius:16px;padding:14px 16px;font-size:13px;line-height:1.5;text-align:left;margin:0 0 14px}
+    .auth-note{font-size:12px;line-height:1.45;color:rgba(255,255,255,.38);text-align:center;margin:2px 0 0}
+    .auth-secondary{background:transparent;color:rgba(255,255,255,.62);border:0;font-size:13px;cursor:pointer;padding:8px 0}
+    .auth-secondary:hover{color:#fff}
     .auth-switch{text-align:center;color:var(--text-2,#888);font-size:13px;margin-top:20px}
     .auth-switch a{color:#fff;text-decoration:none;cursor:pointer;font-weight:500;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:1px}
     .auth-switch a:hover{border-color:#fff}
@@ -47,21 +53,17 @@
     if (overlay) overlay.remove();
     overlay = document.createElement('div');
     overlay.className = 'auth-overlay';
-    const appleSvg = `<svg class="auth-apple-icon" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.3q0 39.2 15.4 81.5c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 45.3-12.4 69.5-34.3z"/></svg>`;
     const tgSvg = `<svg class="auth-tg-icon" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
     overlay.innerHTML = `
       <div class="auth-modal">
         <button class="auth-close" onclick="window.closeAuthModal()" aria-label="Закрыть">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
-        <h2 class="auth-title">${type === 'login' ? 'Вход в Систему' : 'Регистрация'}</h2>
-        <p class="auth-subtitle">${type === 'login' ? 'Войдите для доступа ко всем материалам' : 'Создайте аккаунт для полного доступа'}</p>
+        <h2 class="auth-title">Вход в Систему</h2>
+        <p class="auth-subtitle" id="auth-subtitle">Введите номер телефона — пришлём SMS-код для входа.</p>
+        <div class="auth-phone-preview" id="auth-phone-preview"></div>
 
         <div class="auth-socials">
-          <button class="auth-social auth-apple" onclick="alert('Вход через Apple ID в разработке')">
-            ${appleSvg}
-            Войти через Apple
-          </button>
           <a href="https://t.me/YourBot?start=auth" class="auth-social auth-tg" id="auth-tg-btn">
             ${tgSvg}
             Войти через Telegram
@@ -71,31 +73,50 @@
         <div class="auth-divider"><span>или</span></div>
 
         <form class="auth-form" id="auth-form">
-          ${type === 'register' ? '<input type="text" class="auth-input" name="name" placeholder="Ваше имя" required>' : ''}
-          <input type="email" class="auth-input" name="email" placeholder="Email" required autocomplete="email">
-          <input type="password" class="auth-input" name="password" placeholder="Пароль" required autocomplete="${type === 'login' ? 'current-password' : 'new-password'}">
+          <input type="tel" class="auth-input" name="phone" placeholder="+7 999 123-45-67" required autocomplete="tel" inputmode="tel">
           <p class="auth-error" id="auth-error" style="display:none"></p>
-          <button type="submit" class="auth-btn" id="auth-submit">${type === 'login' ? 'Продолжить' : 'Создать аккаунт'}</button>
+          <button type="submit" class="auth-btn" id="auth-submit">Получить код</button>
+          <p class="auth-note" id="auth-note">Код действует 5 минут. Пароль не нужен.</p>
         </form>
-
-        <p class="auth-switch">
-          ${type === 'login'
-            ? 'Нет аккаунта? <a onclick="window.openAuthModal(\'register\')">Зарегистрироваться</a>'
-            : 'Уже есть аккаунт? <a onclick="window.openAuthModal(\'login\')">Войти</a>'}
-        </p>
       </div>
     `;
     document.body.appendChild(overlay);
     requestAnimationFrame(() => overlay.classList.add('active'));
 
-    overlay.addEventListener('click', e => {
-      if (e.target === overlay) window.closeAuthModal();
-    });
-
-    document.getElementById('auth-form').addEventListener('submit', e => handleSubmit(e, type));
+    document.getElementById('auth-form').addEventListener('submit', handleSubmit);
   }
 
-  async function handleSubmit(e, type) {
+  let authStep = 'phone';
+  let pendingPhone = '';
+
+  function normalizePhoneInput(value) {
+    const digits = String(value || '').replace(/\D/g, '');
+    if (digits.length === 11 && digits.startsWith('8')) return '+7' + digits.slice(1);
+    if (digits.length === 11 && digits.startsWith('7')) return '+' + digits;
+    if (digits.length === 10 && digits.startsWith('9')) return '+7' + digits;
+    return '';
+  }
+
+  function showCodeStep(phone) {
+    authStep = 'code';
+    pendingPhone = phone;
+    document.getElementById('auth-subtitle').textContent = 'Введите 6 цифр из SMS. Мы сразу откроем доступ.';
+    const preview = document.getElementById('auth-phone-preview');
+    preview.textContent = phone;
+    preview.style.display = 'block';
+    document.getElementById('auth-form').innerHTML = `
+      <input type="text" class="auth-input code" name="code" placeholder="000000" required autocomplete="one-time-code" inputmode="numeric" maxlength="6">
+      <p class="auth-error" id="auth-error" style="display:none"></p>
+      <button type="submit" class="auth-btn" id="auth-submit">Войти</button>
+      <button type="button" class="auth-secondary" id="auth-back">Изменить номер</button>
+      <p class="auth-note" id="auth-note">Если код не пришёл, проверьте номер и запросите новый через минуту.</p>
+    `;
+    document.getElementById('auth-back').addEventListener('click', () => createModal('login'));
+    document.getElementById('auth-form').addEventListener('submit', handleSubmit);
+    document.querySelector('.auth-input.code').focus();
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
     const btn = document.getElementById('auth-submit');
     const errEl = document.getElementById('auth-error');
@@ -103,19 +124,21 @@
     errEl.style.display = 'none';
 
     const fd = new FormData(e.target);
-    const data = {
-      email: fd.get('email').trim().toLowerCase(),
-      password: fd.get('password'),
-    };
-    if (type === 'register' && fd.get('name')) data.telegram_username = fd.get('name');
 
     try {
-      const endpoint = type === 'login' ? '/auth/login' : '/auth/register';
-      const res = await window.API.request('POST', endpoint, data);
+      if (authStep === 'phone') {
+        const phone = normalizePhoneInput(fd.get('phone'));
+        if (!phone) throw { error: 'Введите номер в формате +7 999 123-45-67' };
+        await window.API.requestPhoneCode({ phone });
+        showCodeStep(phone);
+        return;
+      }
+
+      const code = String(fd.get('code') || '').replace(/\D/g, '');
+      const res = await window.API.verifyPhoneCode({ phone: pendingPhone, code });
       window.API.setTokens(res.tokens);
       window.closeAuthModal();
       window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: res.user } }));
-      // Reload page to reflect auth state, or call refreshUI()
       if (window.refreshAuthUI) window.refreshAuthUI(res.user);
     } catch (err) {
       errEl.textContent = err.error || 'Ошибка. Попробуйте позже.';
