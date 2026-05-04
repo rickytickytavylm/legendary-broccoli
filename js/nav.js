@@ -278,6 +278,39 @@
   }
 
   // ── Video hardening (no casual download / context menu) ──
+  function exitNativeFullscreen(video) {
+    try {
+      if (video && video.webkitDisplayingFullscreen && video.webkitExitFullscreen) {
+        video.webkitExitFullscreen();
+      }
+    } catch (e) {}
+    try {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    } catch (e) {}
+  }
+
+  function stopVideo(video) {
+    if (!video) return;
+    exitNativeFullscreen(video);
+    try { video.pause(); } catch (e) {}
+    try { video.removeAttribute('src'); } catch (e) {}
+    try {
+      Array.prototype.forEach.call(video.querySelectorAll('source'), function(source) {
+        source.removeAttribute('src');
+      });
+    } catch (e) {}
+    try { video.load(); } catch (e) {}
+  }
+
+  function stopHiddenVideos() {
+    Array.prototype.forEach.call(document.querySelectorAll('video'), function(video) {
+      var overlay = video.closest('.player-overlay');
+      if (overlay && !overlay.classList.contains('active')) stopVideo(video);
+    });
+  }
+
   function protectVideo(video) {
     if (!video || video.dataset.protectedVideo === 'true') return;
     video.dataset.protectedVideo = 'true';
@@ -285,9 +318,17 @@
     video.setAttribute('disablePictureInPicture', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('x-webkit-airplay', 'deny');
     video.setAttribute('draggable', 'false');
     video.addEventListener('contextmenu', function(e) { e.preventDefault(); });
     video.addEventListener('dragstart', function(e) { e.preventDefault(); });
+    video.addEventListener('webkitendfullscreen', function() {
+      document.body.classList.remove('video-fullscreen-active');
+      stopHiddenVideos();
+    });
+    video.addEventListener('webkitbeginfullscreen', function() {
+      document.body.classList.add('video-fullscreen-active');
+    });
   }
 
   function protectAllVideos(root) {
@@ -307,6 +348,31 @@
     });
   });
   videoObserver.observe(document.body, { childList: true, subtree: true });
+
+  document.addEventListener('click', function(event) {
+    var close = event.target.closest('.player-close, [data-close-player]');
+    if (!close) return;
+    var overlay = close.closest('.player-overlay');
+    if (overlay) {
+      Array.prototype.forEach.call(overlay.querySelectorAll('video'), stopVideo);
+      overlay.classList.remove('active');
+      overlay.style.display = 'none';
+    }
+  }, true);
+
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      Array.prototype.forEach.call(document.querySelectorAll('video'), function(video) {
+        exitNativeFullscreen(video);
+      });
+    } else {
+      stopHiddenVideos();
+    }
+  });
+
+  window.addEventListener('pagehide', function() {
+    Array.prototype.forEach.call(document.querySelectorAll('video'), stopVideo);
+  });
 
   // Mobile UX: after selecting a lesson below the player, return to the player.
   document.addEventListener('click', function(event) {

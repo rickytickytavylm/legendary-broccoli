@@ -5,9 +5,9 @@
 (function() {
   const style = document.createElement('style');
   style.textContent = `
-    .auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .35s cubic-bezier(.4,0,.2,1)}
+    .auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .35s cubic-bezier(.4,0,.2,1);padding:18px}
     .auth-overlay.active{opacity:1}
-    .auth-modal{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:24px;width:100%;max-width:400px;padding:36px 32px;position:relative;transform:translateY(16px) scale(.98);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:0 24px 80px rgba(0,0,0,.5)}
+    .auth-modal{background:linear-gradient(180deg,rgba(24,24,27,.98),rgba(9,9,11,.96));border:1px solid rgba(255,255,255,.14);border-radius:24px;width:100%;max-width:400px;padding:36px 32px;position:relative;transform:translateY(16px) scale(.98);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:0 24px 80px rgba(0,0,0,.72)}
     .auth-overlay.active .auth-modal{transform:translateY(0) scale(1)}
     .auth-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.06);color:var(--text-2,#888);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
     .auth-close:hover{background:rgba(255,255,255,.12);color:#fff}
@@ -44,6 +44,13 @@
     .auth-switch a:hover{border-color:#fff}
     .auth-apple-icon{fill:currentColor}
     .auth-tg-icon{fill:currentColor}
+    @media (max-width:560px){
+      .auth-overlay{align-items:flex-end;background:rgba(0,0,0,.86);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
+      .auth-modal{max-width:none;padding:30px 22px 24px;border-radius:26px;background:linear-gradient(180deg,rgba(27,27,31,.99),rgba(5,5,7,.98));box-shadow:0 -18px 80px rgba(0,0,0,.82)}
+      .auth-title{font-size:23px}
+      .auth-subtitle{color:rgba(255,255,255,.66)}
+      .auth-input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+    }
   `;
   document.head.appendChild(style);
 
