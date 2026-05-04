@@ -253,9 +253,14 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
     } else {
       const Hls = await window.ensureHlsJs();
       if (!Hls || !Hls.isSupported()) throw new Error('HLS is not supported');
-      const hls = new Hls({ enableWorker: true, autoStartLoad: true });
+      const hls = new Hls({ enableWorker: true, autoStartLoad: false });
       video._hlsInstance = hls;
       if (setHls) setHls(hls);
+      video.addEventListener('play', () => {
+        if (video._hlsInstance && typeof video._hlsInstance.startLoad === 'function') {
+          video._hlsInstance.startLoad(-1);
+        }
+      }, { once: true });
       await new Promise((resolve, reject) => {
         let settled = false;
         const done = () => {
@@ -267,7 +272,6 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
           hls.loadSource(stream.url);
         });
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          hls.startLoad(0);
           done();
         });
         hls.on(Hls.Events.ERROR, (event, data) => {

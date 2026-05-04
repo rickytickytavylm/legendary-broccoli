@@ -8,6 +8,7 @@
   const infoBlock = document.getElementById('lesson-info-block');
   const lessonTitleMain = document.getElementById('lesson-title-main');
   const lessonDescMain = document.getElementById('lesson-desc-main');
+  let hlsInstance = null;
 
   function showError(msg) {
     courseMeta.textContent = msg;
@@ -40,31 +41,7 @@
         videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;"></video><div class="watermark"><img src="assets/logo2.png" alt=""></div>';
       }
       const video = document.getElementById('course-video');
-
-      let url;
-      if (lesson.url) {
-        // Static JSON (geshtalt) — direct URL
-        url = lesson.url;
-      } else {
-        // API mode (other programs)
-        const res = await window.API.getLesson(lesson.id);
-        if (!res.lesson) throw new Error('No lesson data');
-        const tokenRes = await window.API.getVideoToken(lesson.id);
-        const streamUrl = tokenRes.stream_url || tokenRes.mp4_url;
-        if (!streamUrl) throw new Error('No stream');
-        url = streamUrl.startsWith('http')
-          ? streamUrl
-          : (window.API_BASE || '').replace('/api', '') + streamUrl;
-      }
-
-      if (url.includes('.m3u8') && typeof Hls !== 'undefined' && Hls.isSupported()) {
-        const hls = new Hls({ xhrSetup: (xhr) => { xhr.withCredentials = false; } });
-        hls.loadSource(url);
-        hls.attachMedia(video);
-      } else {
-        video.src = url;
-      }
-      video.play().catch(() => {});
+      await window.attachVideoSource(video, lesson.video_slug || lesson.url, hlsInstance, (next) => { hlsInstance = next; });
 
       if (infoBlock) infoBlock.style.display = 'flex';
       if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';

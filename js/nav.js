@@ -7,7 +7,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'css/nav.css?v=29';
+    link.href = '/css/nav.css?v=30';
     document.head.appendChild(link);
   }
 
@@ -15,25 +15,25 @@
   var NAV_ITEMS = [
     {
       id: 'home',
-      href: 'index.html',
+      href: '/',
       label: 'Главная',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>'
     },
     {
       id: 'feed',
-      href: 'feed.html',
+      href: '/feed/',
       label: 'Лента',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 9h10M4 13h16M4 17h10"/></svg>'
     },
     {
       id: 'shorts',
-      href: 'shorts.html',
+      href: '/shorts/',
       label: 'Shorts',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M10 8l6 4-6 4V8z"/></svg>'
     },
     {
       id: 'ai',
-      href: 'ai.html',
+      href: '/ai/',
       label: 'AI-помощник',
       labelShort: 'AI',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z"/><path d="M19 16l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9.9-2.6z" opacity=".5"/></svg>'
@@ -43,7 +43,7 @@
   var BOTTOM_ITEMS = [
     {
       id: 'profile',
-      href: 'account.html',
+      href: '/account/',
       label: 'Профиль',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>'
     }
@@ -52,11 +52,11 @@
   var ALL_ITEMS = NAV_ITEMS.concat(BOTTOM_ITEMS);
 
   // ── Active page detection ───────────────────────────────
-  var currentFile = location.pathname.split('/').pop() || 'index.html';
-  if (currentFile === '') currentFile = 'index.html';
+  var currentPath = location.pathname;
 
   function isActive(href) {
-    return currentFile === href;
+    if (href === '/') return currentPath === '/' || currentPath.endsWith('/index.html');
+    return currentPath === href || currentPath.endsWith(href.replace(/^\/|\/$/g, '') + '.html');
   }
 
   function makeIcon(svgStr) {
@@ -88,8 +88,8 @@
 
   sidebar.innerHTML =
     '<div class="sidebar-head">' +
-      '<a href="index.html" class="sidebar-brand">' +
-        '<img src="assets/logo2-Photoroom.png" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
+      '<a href="/" class="sidebar-brand">' +
+        '<img src="/assets/logo2-Photoroom.png" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
       '</a>' +
     '</div>' +
     '<nav class="sidebar-nav">' + navItemsHTML + '</nav>' +
@@ -121,12 +121,12 @@
   var isLoggedIn = !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
 
   mobileHeader.innerHTML =
-    '<a href="index.html" class="mobile-header-brand">' +
-      '<img src="assets/logo2-Photoroom.png" alt="Система" class="mobile-header-logo">' +
+    '<a href="/" class="mobile-header-brand">' +
+      '<img src="/assets/logo2-Photoroom.png" alt="Система" class="mobile-header-logo">' +
     '</a>' +
     '<div class="mobile-header-actions">' +
       (isLoggedIn
-        ? '<a href="account.html" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>'
+        ? '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>'
         : '<button type="button" class="mobile-login-btn" id="mobile-login-btn">Войти</button>') +
     '</div>';
 
@@ -139,7 +139,7 @@
   if (mobileLoginBtn) {
     mobileLoginBtn.addEventListener('click', function() {
       if (window.openAuthModal) window.openAuthModal('login');
-      else window.location.href = 'account.html';
+      else window.location.href = '/account/';
     });
   }
 
@@ -192,7 +192,7 @@
   window.showAccessPrompt = function(code) {
     if (code === 'LOGIN_REQUIRED') {
       if (window.openAuthModal) window.openAuthModal('login');
-      else window.location.href = 'account.html';
+      else window.location.href = '/account/';
       return;
     }
     if (document.getElementById('access-prompt')) return;
@@ -216,7 +216,7 @@
       if (event.target === overlay) overlay.remove();
     });
     overlay.querySelector('.access-prompt-primary').addEventListener('click', function() {
-      window.location.href = 'subscription.html';
+      window.location.href = '/subscription/';
     });
   };
 
@@ -317,10 +317,11 @@
   function protectVideo(video) {
     if (!video || video.dataset.protectedVideo === 'true') return;
     video.dataset.protectedVideo = 'true';
-    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
+    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
     video.setAttribute('disablePictureInPicture', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('preload', 'metadata');
     video.setAttribute('x-webkit-airplay', 'deny');
     video.setAttribute('draggable', 'false');
     video.addEventListener('contextmenu', function(e) { e.preventDefault(); });

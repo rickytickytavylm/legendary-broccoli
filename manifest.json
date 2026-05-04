@@ -1,21 +1,21 @@
-{
+﻿{
   "name": "Система Молодцова",
   "short_name": "Система",
   "description": "Авторский канал Руслана Молодцова",
-  "start_url": "/index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#09090F",
   "theme_color": "#09090F",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "assets/icon-192.png",
+      "src": "/assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "assets/icon-512.png",
+      "src": "/assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
