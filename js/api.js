@@ -243,7 +243,9 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
   video.load();
 
   if (stream.type === 'hls') {
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    const ua = navigator.userAgent || '';
+    const isAppleNativeHls = /iPad|iPhone|iPod/.test(ua) || (/Safari/.test(ua) && !/Chrome|Chromium|CriOS|YaBrowser|Edg|OPR|Firefox/.test(ua));
+    if (isAppleNativeHls && video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = stream.url;
       video.load();
     } else {
