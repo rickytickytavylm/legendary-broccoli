@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#000000" />
   <title>Профайлинг — Система Молодцова</title>
   <meta name="description" content="Курс по распознаванию личности. Приложение Way." />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -144,15 +144,24 @@
     @media (max-width: 860px) {
       .way-layout {
         grid-template-columns: 1fr;
-        gap: 36px;
+        gap: 24px;
       }
-      .way-promo-img { max-width: 360px; margin: 0 auto; }
+      .way-promo-img {
+        width: min(62vw, 220px);
+        max-width: 220px;
+        margin: 0 auto;
+        border-radius: 22px;
+        box-shadow: 0 22px 60px rgba(0,0,0,.58);
+      }
       .way-text { align-items: center; text-align: center; }
       .way-title { font-size: 26px; }
+      .store-btns { justify-content: center; width: 100%; }
     }
     @media (max-width: 600px) {
+      .profiling-page { padding-top: 16px; }
       .profiling-hero-content h1 { font-size: 30px; }
       .way-title { font-size: 22px; }
+      .btn-store { min-width: min(100%, 220px); justify-content: center; }
     }
   </style>
 </head>
@@ -162,7 +171,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="brand brand-outlined">
-        <img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img" />
+        <img src="assets/logo2.png" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
       </a>
       <div class="nav-links desktop-only">
         <a href="courses.html" class="nav-link" style="color: var(--text-1);">Обучение</a>
@@ -200,7 +209,7 @@
       </a>
 
       <div class="way-layout">
-        <img src="assets/waypromo.jpg" alt="Приложение Way" class="way-promo-img" />
+        <img src="assets/waypromo.jpg" alt="Приложение Way" loading="lazy" decoding="async" class="way-promo-img" />
 
         <div class="way-text">
           <span class="way-label">Приложение</span>
@@ -239,7 +248,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-col footer-about">
-        <img src="assets/logo2.png" alt="Система" class="footer-logo" />
+        <img src="assets/logo2.png" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
         <p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>
         <p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>
       </div>
@@ -322,9 +331,9 @@
   </nav>
 
   <script src="js/config.js"></script>
-  <script src="js/api.js?v=10"></script>
-  <script src="js/auth.js?v=6"></script>
-  <script src="js/nav.js?v=28"></script>
+  <script src="js/api.js?v=11"></script>
+  <script src="js/auth.js?v=7"></script>
+  <script src="js/nav.js?v=30"></script>
   <script>
     if (window.API.isLoggedIn()) {
       window.API.me().then(r => window.refreshAuthUI && window.refreshAuthUI(r.user)).catch(() => {});

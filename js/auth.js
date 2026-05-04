@@ -5,13 +5,16 @@
 (function() {
   const style = document.createElement('style');
   style.textContent = `
-    .auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .35s cubic-bezier(.4,0,.2,1);padding:18px}
+    .auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:2300;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .28s cubic-bezier(.4,0,.2,1);padding:18px}
     .auth-overlay.active{opacity:1}
-    .auth-modal{background:linear-gradient(180deg,rgba(24,24,27,.98),rgba(9,9,11,.96));border:1px solid rgba(255,255,255,.14);border-radius:24px;width:100%;max-width:400px;padding:36px 32px;position:relative;transform:translateY(16px) scale(.98);transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:0 24px 80px rgba(0,0,0,.72)}
+    .auth-modal{background:linear-gradient(180deg,rgba(28,38,58,.58),rgba(7,9,15,.88));border:1px solid rgba(255,255,255,.14);border-radius:24px;width:100%;max-width:400px;min-height:410px;padding:34px 30px 30px;position:relative;overflow:hidden;transform:translateY(10px) scale(.985);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 28px 90px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.14);backdrop-filter:blur(34px) saturate(150%);-webkit-backdrop-filter:blur(34px) saturate(150%)}
+    .auth-modal::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 24% 0%,rgba(107,145,255,.14),transparent 36%),radial-gradient(circle at 88% 92%,rgba(255,255,255,.06),transparent 34%);pointer-events:none}
     .auth-overlay.active .auth-modal{transform:translateY(0) scale(1)}
     .auth-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.06);color:var(--text-2,#888);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
     .auth-close:hover{background:rgba(255,255,255,.12);color:#fff}
-    .auth-title{font-size:24px;font-weight:700;color:var(--text-1,#fff);margin:0 0 8px;text-align:center;letter-spacing:-.3px}
+    .auth-brand{position:relative;z-index:1;display:flex;justify-content:center;margin:0 0 20px}
+    .auth-brand img{width:132px;height:auto;display:block;filter:brightness(1.16)}
+    .auth-title{position:relative;z-index:1;font-size:24px;font-weight:700;color:var(--text-1,#fff);margin:0 0 8px;text-align:center;letter-spacing:-.3px}
     .auth-subtitle{font-size:13px;line-height:1.5;color:var(--text-2,#888);text-align:center;margin:0 0 26px}
     .auth-phone-preview{display:none;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:11px 14px;color:rgba(255,255,255,.72);font-size:13px;text-align:center;margin-bottom:14px}
     .auth-socials{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
@@ -26,7 +29,7 @@
     .auth-email:hover{background:rgba(255,255,255,.1)}
     .auth-divider{display:flex;align-items:center;gap:14px;margin:20px 0;color:rgba(255,255,255,.3);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
     .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
-    .auth-form{display:flex;flex-direction:column;gap:12px}
+    .auth-form{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px}
     .auth-input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;color:#fff;font-size:15px;outline:none;transition:.2s}
     .auth-input.code{text-align:center;font-size:22px;letter-spacing:8px;font-weight:700}
     .auth-input:focus{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.06)}
@@ -46,7 +49,8 @@
     .auth-tg-icon{fill:currentColor}
     @media (max-width:560px){
       .auth-overlay{align-items:flex-end;background:rgba(0,0,0,.86);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
-      .auth-modal{max-width:none;padding:30px 22px 24px;border-radius:26px;background:linear-gradient(180deg,rgba(27,27,31,.99),rgba(5,5,7,.98));box-shadow:0 -18px 80px rgba(0,0,0,.82)}
+      .auth-modal{max-width:none;min-height:420px;padding:30px 22px 24px;border-radius:26px;background:linear-gradient(180deg,rgba(28,38,58,.64),rgba(7,9,15,.92));box-shadow:0 -18px 80px rgba(0,0,0,.82)}
+      .auth-brand img{width:126px}
       .auth-title{font-size:23px}
       .auth-subtitle{color:rgba(255,255,255,.66)}
       .auth-input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
@@ -60,24 +64,17 @@
     if (overlay) overlay.remove();
     overlay = document.createElement('div');
     overlay.className = 'auth-overlay';
-    const tgSvg = `<svg class="auth-tg-icon" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
     overlay.innerHTML = `
       <div class="auth-modal">
         <button class="auth-close" onclick="window.closeAuthModal()" aria-label="Закрыть">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
+        <div class="auth-brand">
+          <img src="assets/logo2-Photoroom.png" alt="Система Молодцова">
+        </div>
         <h2 class="auth-title">Вход в Систему</h2>
         <p class="auth-subtitle" id="auth-subtitle">Введите номер телефона — пришлём SMS-код для входа.</p>
         <div class="auth-phone-preview" id="auth-phone-preview"></div>
-
-        <div class="auth-socials">
-          <a href="https://t.me/YourBot?start=auth" class="auth-social auth-tg" id="auth-tg-btn">
-            ${tgSvg}
-            Войти через Telegram
-          </a>
-        </div>
-
-        <div class="auth-divider"><span>или</span></div>
 
         <form class="auth-form" id="auth-form">
           <input type="tel" class="auth-input" name="phone" placeholder="+7 999 123-45-67" required autocomplete="tel" inputmode="tel">

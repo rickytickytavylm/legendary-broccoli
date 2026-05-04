@@ -37,7 +37,7 @@
       if (map[slug]) { location.replace(map[slug]); }
     })();
   </script>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,7 +54,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="index.html" class="brand brand-outlined">
-        <img src="assets/logo2.png" alt="Система Молодцова" class="brand-logo-img" />
+        <img src="assets/logo2.png" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
       </a>
       
       <div class="nav-links desktop-only">
@@ -89,8 +89,8 @@
       </div>
     </section>
 
-    <div style="padding:32px 24px 0;max-width:1280px;margin:0 auto;">
-      <a href="index.html" class="back-link-glass" id="back-link" style="display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.7);text-decoration:none;font-size:14px;padding:10px 18px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);margin-bottom:28px;transition:all .2s;">
+    <div class="course-back-wrap">
+      <a href="index.html" class="back-link-glass" id="back-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         Назад
       </a>
@@ -105,12 +105,12 @@
             <source src="" type="video/mp4">
             Ваш браузер не поддерживает видео.
           </video>
-          <div class="watermark"><img src="assets/logo2.png" alt=""></div>
+          <div class="watermark"><img src="assets/logo2.png" alt="" loading="lazy" decoding="async"></div>
         </div>
 
         <div class="course-author">
           <div class="course-author-avatar-wrap">
-            <img src="assets/ruslan_promo.jpg" alt="" class="course-author-avatar" width="56" height="56" />
+            <img src="assets/ruslan_promo.jpg" alt="" loading="lazy" decoding="async" class="course-author-avatar" width="56" height="56" />
           </div>
           <span class="course-author-name">Руслан Молодцов</span>
         </div>
@@ -146,7 +146,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-col footer-about">
-        <img src="assets/logo2.png" alt="Система" class="footer-logo" />
+        <img src="assets/logo2.png" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
         <p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>
         <p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>
       </div>
@@ -229,9 +229,9 @@
   </nav>
 
   <script src="js/config.js"></script>
-  <script src="js/api.js?v=10"></script>
-  <script src="js/auth.js?v=6"></script>
-  <script src="js/nav.js?v=28"></script>
+  <script src="js/api.js?v=11"></script>
+  <script src="js/auth.js?v=7"></script>
+  <script src="js/nav.js?v=30"></script>
   <script src="js/course.js"></script>
   <script>
     // Auth UI state

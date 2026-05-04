@@ -102,9 +102,5 @@ if (installBtn) {
 
 // ── Page Load Animation ───────────────────────────────────────
 window.addEventListener('load', () => {
-  document.body.style.opacity = '0';
-  setTimeout(() => {
-    document.body.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-    document.body.style.opacity = '1';
-  }, 50);
+  document.body.style.opacity = '1';
 });

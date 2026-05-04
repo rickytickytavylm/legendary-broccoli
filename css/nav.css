@@ -253,6 +253,7 @@
   position: relative;
   border-radius: 26px;
   padding: 30px;
+  min-height: 300px;
   background:
     linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.045)),
     rgba(8,8,12,.82);
@@ -344,6 +345,17 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .2px;
+}
+
+.watermark {
+  left: auto !important;
+  right: 14px !important;
+  top: 14px !important;
+  opacity: .38 !important;
+}
+
+.watermark img {
+  height: 22px !important;
 }
 
 .tabbar-item {
@@ -579,15 +591,16 @@
   }
 
   .hero-courses {
-    min-height: 48vh !important;
-    padding-top: 116px !important;
-    padding-bottom: 58px !important;
+    min-height: 38vh !important;
+    padding-top: 100px !important;
+    padding-bottom: 34px !important;
   }
 
   .hero:not(.hero-courses) {
-    padding-top: 132px !important;
-    padding-bottom: 72px !important;
-    min-height: 56vh !important;
+    padding-top: 144px !important;
+    padding-bottom: 92px !important;
+    min-height: 72vh !important;
+    background-position: center top !important;
   }
 
   .hero-content,
@@ -599,7 +612,7 @@
   /* Mobile video/course layout: player first, lessons as normal content */
   .geshtalt-page,
   .marathon-page {
-    padding: 18px 14px 112px !important;
+    padding: 12px 14px 112px !important;
     max-width: none !important;
     margin: 0 !important;
   }
@@ -786,5 +799,21 @@
     display: block !important;
     margin: 0 !important;
     transform: none !important;
+  }
+
+  .access-prompt {
+    align-items: flex-end;
+    padding: 16px 12px calc(16px + env(safe-area-inset-bottom));
+    background: rgba(0,0,0,.76);
+  }
+
+  .access-prompt-card {
+    width: 100%;
+    min-height: 330px;
+    padding: 32px 24px 24px;
+    border-radius: 26px;
+    background:
+      linear-gradient(180deg, rgba(27,27,31,.99), rgba(5,5,7,.98));
+    box-shadow: 0 -18px 80px rgba(0,0,0,.72);
   }
 }

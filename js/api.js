@@ -3,6 +3,7 @@
  * JWT auth, automatic refresh, video streaming
  */
 const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.sistema-molodtsov.ru/api');
+const API_ORIGIN = new URL(API_BASE, location.href).origin;
 
 class ApiClient {
   constructor() {
@@ -243,6 +244,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
   video.load();
 
   if (stream.type === 'hls') {
+    stream.url = new URL(stream.url, API_ORIGIN).href;
     const ua = navigator.userAgent || '';
     const isAppleNativeHls = /iPad|iPhone|iPod/.test(ua) || (/Safari/.test(ua) && !/Chrome|Chromium|CriOS|YaBrowser|Edg|OPR|Firefox/.test(ua));
     if (isAppleNativeHls && video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -279,7 +281,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
       });
     }
   } else {
-    video.src = stream.url;
+    video.src = new URL(stream.url, API_ORIGIN).href;
     video.load();
   }
 

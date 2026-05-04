@@ -7,7 +7,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'css/nav.css?v=27';
+    link.href = 'css/nav.css?v=29';
     document.head.appendChild(link);
   }
 
@@ -190,8 +190,12 @@
   }
 
   window.showAccessPrompt = function(code) {
+    if (code === 'LOGIN_REQUIRED') {
+      if (window.openAuthModal) window.openAuthModal('login');
+      else window.location.href = 'account.html';
+      return;
+    }
     if (document.getElementById('access-prompt')) return;
-    var isLoginRequired = code === 'LOGIN_REQUIRED';
     var overlay = document.createElement('div');
     overlay.id = 'access-prompt';
     overlay.className = 'access-prompt';
@@ -199,11 +203,9 @@
       '<div class="access-prompt-card">' +
         '<button class="access-prompt-close" type="button" aria-label="Закрыть">×</button>' +
         '<div class="access-prompt-kicker">Система Pro</div>' +
-        '<h3>' + (isLoginRequired ? 'Войдите, чтобы продолжить' : 'Урок доступен по подписке') + '</h3>' +
-        '<p>' + (isLoginRequired
-          ? 'Первые видео открыты всем. Для продолжения войдите в аккаунт и оформите доступ.'
-          : 'В Pro открывается весь видеоконтент, закрытый Telegram и 50 сообщений с AI.') + '</p>' +
-        '<button class="access-prompt-primary" type="button">' + (isLoginRequired ? 'Войти' : 'Оформить Pro') + '</button>' +
+        '<h3>Урок доступен по подписке</h3>' +
+        '<p>В Pro открывается весь видеоконтент, закрытый Telegram и 50 сообщений с AI.</p>' +
+        '<button class="access-prompt-primary" type="button">Оформить Pro</button>' +
       '</div>';
     document.body.appendChild(overlay);
 
@@ -214,12 +216,7 @@
       if (event.target === overlay) overlay.remove();
     });
     overlay.querySelector('.access-prompt-primary').addEventListener('click', function() {
-      if (isLoginRequired && window.openAuthModal) {
-        overlay.remove();
-        window.openAuthModal('login');
-      } else {
-        window.location.href = isLoginRequired ? 'account.html' : 'subscription.html';
-      }
+      window.location.href = 'subscription.html';
     });
   };
 
@@ -294,6 +291,12 @@
   function stopVideo(video) {
     if (!video) return;
     exitNativeFullscreen(video);
+    try {
+      if (video._hlsInstance && typeof video._hlsInstance.destroy === 'function') {
+        video._hlsInstance.destroy();
+      }
+      video._hlsInstance = null;
+    } catch (e) {}
     try { video.pause(); } catch (e) {}
     try { video.removeAttribute('src'); } catch (e) {}
     try {
@@ -373,6 +376,17 @@
   window.addEventListener('pagehide', function() {
     Array.prototype.forEach.call(document.querySelectorAll('video'), stopVideo);
   });
+
+  document.addEventListener('click', function(event) {
+    var link = event.target.closest('a[href]');
+    if (!link) return;
+    var href = link.getAttribute('href') || '';
+    if (!href || href.charAt(0) === '#' || link.target === '_blank' || link.hasAttribute('download')) return;
+    var url;
+    try { url = new URL(href, location.href); } catch (e) { return; }
+    if (url.origin !== location.origin || url.href === location.href) return;
+    Array.prototype.forEach.call(document.querySelectorAll('video'), stopVideo);
+  }, true);
 
   // Mobile UX: after selecting a lesson below the player, return to the player.
   document.addEventListener('click', function(event) {

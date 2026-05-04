@@ -549,6 +549,22 @@ h1, h2, h3 {
   color: var(--bg-primary);
 }
 
+.bento-card .card-arrow {
+  opacity: 1;
+  transform: scale(1) translate(0, 0);
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fff;
+  box-shadow: 0 12px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.16);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.bento-card:hover .card-arrow {
+  background: rgba(255,255,255,0.92);
+  color: #050506;
+}
+
 /* Disabled / Coming Soon */
 .bento-card.disabled {
   cursor: default;
@@ -850,6 +866,50 @@ h1, h2, h3 {
 
 .back-link--glass:hover svg {
   transform: translateX(-3px);
+}
+
+.back-link-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,.76);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 18px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255,255,255,.14), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  -webkit-backdrop-filter: blur(16px) saturate(135%);
+  backdrop-filter: blur(16px) saturate(135%);
+  box-shadow: 0 12px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+  margin-bottom: 24px;
+  transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+}
+
+.back-link-glass:hover {
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  border-color: rgba(255,255,255,.25);
+}
+
+.back-link-glass svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.course-back-wrap {
+  padding: 18px 24px 0;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .course-back-wrap {
+    padding: 8px 14px 0;
+  }
 }
 
 .course-layout {
@@ -1671,8 +1731,9 @@ h1, h2, h3 {
   }
 
   .hero {
-    padding: 120px 0 64px;
-    min-height: min(68vh, 620px);
+    padding: 136px 0 86px;
+    min-height: min(78vh, 720px);
+    background-position: center top;
   }
 
   .hero .hero-content {
@@ -1713,8 +1774,8 @@ h1, h2, h3 {
   }
 
   .hero-courses {
-    min-height: 50vh;
-    padding: 120px 0 60px;
+    min-height: 42vh;
+    padding: 104px 0 38px;
   }
 
   .course-card {
