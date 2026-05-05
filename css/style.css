@@ -9,10 +9,52 @@
   display: none !important;
 }
 
-.app-sidebar,
-.app-tabbar,
+.app-tabbar {
+  visibility: visible;
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px;
+  border-radius: 24px;
+  background: rgba(7, 9, 15, .74);
+  -webkit-backdrop-filter: blur(26px) saturate(140%);
+  backdrop-filter: blur(26px) saturate(140%);
+  border: 1px solid rgba(255,255,255,.12);
+  transform: translateY(110%);
+}
+
 .app-mobile-header {
+  visibility: visible;
+}
+
+.app-sidebar {
   visibility: hidden;
+}
+
+.tabbar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: rgba(255,255,255,.48);
+}
+
+.tabbar-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabbar-icon-wrap svg {
+  display: block;
 }
 
 /* ── Apple-style Activity Indicator ── */
@@ -81,6 +123,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
   background-position: center;
   background-size: cover;
   overflow: hidden;
+  transition: opacity .22s ease, transform .22s ease;
 }
 
 .video-preview-overlay::before {
@@ -98,23 +141,46 @@ video::-internal-media-interstitial-panel { display: none !important; }
 
 .video-preview-play {
   position: relative;
-  width: 74px;
-  height: 74px;
+  width: clamp(68px, 16vw, 92px);
+  height: clamp(68px, 16vw, 92px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,.18);
-  border: 1px solid rgba(255,255,255,.24);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
-  box-shadow: 0 18px 44px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.18);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.34), rgba(255,255,255,.12)),
+    rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.34);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.48),
+    0 0 0 8px rgba(255,255,255,.07),
+    inset 0 1px 0 rgba(255,255,255,.36);
+  transform: translateZ(0);
+  transition: transform .18s ease, opacity .18s ease;
 }
 
 .video-preview-play svg {
-  width: 30px;
-  height: 30px;
-  margin-left: 3px;
+  width: 38%;
+  height: 38%;
+  margin-left: 4px;
+  color: #fff;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
+}
+
+.video-preview-overlay:hover .video-preview-play,
+.video-preview-overlay:focus-visible .video-preview-play {
+  transform: scale(1.04) translateZ(0);
+}
+
+.video-preview-overlay.loading {
+  cursor: wait;
+}
+
+.video-preview-overlay.loading .video-preview-play {
+  opacity: .72;
+  transform: scale(.96) translateZ(0);
 }
 
 /* Skeleton shimmer */
@@ -421,9 +487,11 @@ h1, h2, h3 {
   background: 
     linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%),
     url('../assets/webp/hero_course.webp') center/cover no-repeat;
-  min-height: 60vh;
+  min-height: clamp(360px, 52vh, 560px);
   align-items: flex-start;
   text-align: left;
+  padding-top: clamp(140px, 18vh, 190px);
+  padding-bottom: clamp(54px, 8vh, 92px);
 }
 
 .hero-courses .hero-content {
@@ -1842,8 +1910,18 @@ h1, h2, h3 {
   }
 
   .hero-courses {
-    min-height: 42vh;
-    padding: 104px 0 38px;
+    min-height: clamp(250px, 35vh, 360px);
+    padding: calc(86px + env(safe-area-inset-top, 0px)) 0 24px;
+    justify-content: flex-start;
+    background-position: center top;
+  }
+
+  .hero-courses .hero-title {
+    margin-bottom: 14px;
+  }
+
+  .hero-courses .hero-subtitle {
+    margin-bottom: 0;
   }
 
   .course-card {
@@ -1910,7 +1988,7 @@ h1, h2, h3 {
 
   .course-layout {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 20px;
   }
 
   .course-sidebar {
@@ -1931,6 +2009,25 @@ h1, h2, h3 {
     min-height: clamp(218px, 58vw, 330px);
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+  }
+
+  .geshtalt-page,
+  .marathon-page {
+    padding-top: 14px !important;
+    padding-bottom: 36px !important;
+  }
+
+  .course-back-wrap {
+    margin-bottom: 14px;
+  }
+
+  .course-sidebar {
+    margin-bottom: 0;
+  }
+
+  .footer {
+    padding-top: 36px;
+    margin-top: 24px;
   }
 
   .video-container video,

@@ -265,6 +265,19 @@ class ApiClient {
 
 window.API = new ApiClient();
 
+function isIosWebKitVideo() {
+  return /iP(hone|od|ad)/.test(navigator.platform) ||
+    (navigator.userAgent.includes('Macintosh') && navigator.maxTouchPoints > 1);
+}
+
+function shouldPreferMp4OnIos(slug) {
+  return isIosWebKitVideo() && /^(Гештальт|Готовые Соза)\//i.test(String(slug || ''));
+}
+
+function shouldPreferMp4ForSlug(slug) {
+  return /^Телесные практики\//i.test(String(slug || '')) || shouldPreferMp4OnIos(slug);
+}
+
 window.ensureHlsJs = function ensureHlsJs() {
   if (window.Hls) return Promise.resolve(window.Hls);
   return new Promise((resolve, reject) => {
@@ -285,6 +298,21 @@ window.ensureHlsJs = function ensureHlsJs() {
 };
 
 window.attachVideoSource = async function attachVideoSource(video, slug, currentHls, setHls) {
+  if (shouldPreferMp4ForSlug(slug)) {
+    const previousHls = currentHls || video._hlsInstance;
+    if (previousHls && typeof previousHls.destroy === 'function') previousHls.destroy();
+    video._hlsInstance = null;
+    if (setHls) setHls(null);
+    if (video.getAttribute('src')) video.removeAttribute('src');
+
+    const mp4 = await window.API.getVideoPresign(slug);
+    video.dataset.streamFallback = 'ios-mp4';
+    video.dataset.streamType = 'mp4';
+    video.src = new URL(mp4.url, API_ORIGIN).href;
+    video.load();
+    return { type: 'mp4', url: video.src, expires_in: mp4.expires_in };
+  }
+
   const stream = await window.API.getVideoStream(slug);
   const previousHls = currentHls || video._hlsInstance;
   if (previousHls && typeof previousHls.destroy === 'function') previousHls.destroy();

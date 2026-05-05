@@ -485,7 +485,7 @@
     preview.setAttribute('aria-label', 'Смотреть видео');
     if (options.poster) preview.style.backgroundImage = "url('" + options.poster + "')";
     preview.innerHTML =
-      '<span class="video-preview-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>';
+      '<span class="video-preview-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 6.8v10.4c0 .8.86 1.3 1.55.89l8.2-5.2a1.05 1.05 0 0 0 0-1.78l-8.2-5.2A1.03 1.03 0 0 0 9 6.8z"/></svg></span>';
 
     container.appendChild(preview);
 
@@ -493,8 +493,31 @@
     function start() {
       if (loadStarted) return;
       loadStarted = true;
-      preview.classList.add('hidden');
-      if (typeof options.onStart === 'function') options.onStart(video, preview);
+      preview.classList.add('loading');
+
+      var started = typeof options.onStart === 'function'
+        ? options.onStart(video, preview)
+        : null;
+
+      Promise.resolve(started).then(function() {
+        video.setAttribute('controls', '');
+        video.removeAttribute('poster');
+
+        var playPromise = video.play ? video.play() : null;
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise
+            .then(function() { preview.classList.add('hidden'); })
+            .catch(function() {
+              preview.classList.remove('loading');
+              loadStarted = false;
+            });
+        } else {
+          preview.classList.add('hidden');
+        }
+      }).catch(function() {
+        preview.classList.remove('loading');
+        loadStarted = false;
+      });
     }
 
     preview.addEventListener('click', start);

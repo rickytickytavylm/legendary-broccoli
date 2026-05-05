@@ -4,10 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app; manifest-src 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Мастер Коммуникаций — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=6" />
+  <link rel="stylesheet" href="/css/style.css?v=8" />
+  <link rel="stylesheet" href="/css/nav.css?v=35" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -179,29 +180,10 @@
   </footer>
 
   <!-- Glass Tab Bar -->
-  <nav class="glass-tab-bar">
-    <a href="/" class="tab-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Главная</span>
-    </a>
-    <a href="/courses/" class="tab-item active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="3"/><path d="M8 21h8M12 17v4"/></svg>
-      <span>Курсы</span>
-    </a>
-    <a href="/subscription/" class="tab-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      <span>Подписка</span>
-    </a>
-    <a href="/#channels" class="tab-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span>Каналы</span>
-    </a>
-  </nav>
-
-  <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=23"></script>
+<script src="/js/config.js"></script>
+  <script src="/js/api.js?v=25"></script>
   <script src="/js/auth.js?v=9"></script>
-  <script src="/js/nav.js?v=38"></script>
+  <script src="/js/nav.js?v=41"></script>
   <script>
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');
