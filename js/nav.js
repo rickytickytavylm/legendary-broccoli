@@ -7,8 +7,14 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=31';
+    link.href = '/css/nav.css?v=32';
     document.head.appendChild(link);
+  }
+
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').catch(function() {});
+    }, { once: true });
   }
 
   // ── Nav items config ────────────────────────────────────
@@ -409,6 +415,35 @@
     } catch (e) {}
     Array.prototype.forEach.call(document.querySelectorAll('video'), stopVideo);
   }, true);
+
+  var prefetchedLinks = {};
+  function prefetchInternalLink(link) {
+    if (!link || !('requestIdleCallback' in window || 'fetch' in window)) return;
+    var href = link.getAttribute('href') || '';
+    if (!href || href.charAt(0) === '#' || link.target === '_blank' || link.hasAttribute('download')) return;
+
+    var url;
+    try { url = new URL(href, location.href); } catch (e) { return; }
+    if (url.origin !== location.origin || url.pathname === location.pathname) return;
+
+    var key = url.pathname + url.search;
+    if (prefetchedLinks[key]) return;
+    prefetchedLinks[key] = true;
+
+    var run = function() {
+      fetch(url.href, { credentials: 'same-origin', cache: 'force-cache' }).catch(function() {});
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1200 });
+    else setTimeout(run, 120);
+  }
+
+  document.addEventListener('pointerover', function(event) {
+    prefetchInternalLink(event.target.closest('a[href]'));
+  }, { passive: true });
+
+  document.addEventListener('touchstart', function(event) {
+    prefetchInternalLink(event.target.closest('a[href]'));
+  }, { passive: true });
 
   // Mobile UX: after selecting a lesson below the player, return to the player.
   document.addEventListener('click', function(event) {

@@ -298,6 +298,18 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
         setTimeout(done, 2500);
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl') || video.canPlayType('application/x-mpegURL')) {
+      let fallbackStarted = false;
+      const fallbackToMp4 = async () => {
+        if (fallbackStarted || video.dataset.streamFallback === 'mp4') return;
+        fallbackStarted = true;
+        try {
+          const mp4 = await window.API.getVideoPresign(slug);
+          video.dataset.streamFallback = 'mp4';
+          video.src = new URL(mp4.url, API_ORIGIN).href;
+          video.load();
+        } catch (err) {}
+      };
+      video.addEventListener('error', fallbackToMp4, { once: true });
       video.src = stream.url;
       video.load();
     } else {

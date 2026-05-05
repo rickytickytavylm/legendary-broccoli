@@ -1516,6 +1516,10 @@ h1, h2, h3 {
   gap: 24px;
 }
 
+.footer-content > .footer-col:not(.footer-about):not(.footer-cta) {
+  display: none;
+}
+
 .footer-about {
   max-width: 220px;
 }
@@ -1910,10 +1914,6 @@ h1, h2, h3 {
     gap: 28px;
     text-align: left;
     padding: 0 24px;
-  }
-
-  .footer-content > .footer-col:not(.footer-about):not(.footer-cta) {
-    display: none;
   }
 
   .footer-about {
