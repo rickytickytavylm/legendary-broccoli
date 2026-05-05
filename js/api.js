@@ -307,7 +307,12 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
   video.setAttribute('playsinline', '');
   video.setAttribute('webkit-playsinline', '');
 
-  if (shouldPreferMp4ForSlug(slug)) {
+  const container = video.closest('.video-container, .single-video-wrap, .player-video-wrap');
+  const forceSignedMp4 = video.dataset.forceMp4 === 'true' ||
+    (container && container.dataset.forceMp4 === 'true') ||
+    window.FORCE_SIGNED_MP4_VIDEO === true;
+
+  if (forceSignedMp4 || shouldPreferMp4ForSlug(slug)) {
     const previousHls = currentHls || video._hlsInstance;
     if (previousHls && typeof previousHls.destroy === 'function') previousHls.destroy();
     video._hlsInstance = null;
@@ -319,8 +324,8 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
     video.dataset.streamType = 'mp4';
     video.src = new URL(mp4.url, API_ORIGIN).href;
     video.load();
-    if (isAppleTouchVideoDevice()) {
-      console.info('[video] using signed mp4 for Apple device', { path: location.pathname, slug });
+    if (forceSignedMp4 || isAppleTouchVideoDevice()) {
+      console.info('[video] using signed mp4', { forced: forceSignedMp4, path: location.pathname, slug });
     }
     return { type: 'mp4', url: video.src, expires_in: mp4.expires_in };
   }

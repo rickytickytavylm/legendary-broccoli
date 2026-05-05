@@ -207,7 +207,7 @@
     </div>
   </footer>
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=32"></script>
+  <script src="/js/api.js?v=33"></script>
   <script src="/js/auth.js?v=11"></script>
   <script src="/js/nav.js?v=49"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
@@ -326,8 +326,8 @@
             </div>
             <div class="course-layout">
               <div class="course-main">
-                <div class="video-container" id="container-${section.id}">
-                  <video id="video-${section.id}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
+                <div class="video-container" id="container-${section.id}" data-force-mp4="true">
+                  <video id="video-${section.id}" data-force-mp4="true" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
                   <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
                   <div class="video-loader hidden" id="loader-${section.id}"><div class="apple-spinner">${'<span></span>'.repeat(8)}</div></div>
                 </div>
