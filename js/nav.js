@@ -485,7 +485,7 @@
     preview.setAttribute('aria-label', 'Смотреть видео');
     if (options.poster) preview.style.backgroundImage = "url('" + options.poster + "')";
     preview.innerHTML =
-      '<span class="video-preview-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 6.8v10.4c0 .8.86 1.3 1.55.89l8.2-5.2a1.05 1.05 0 0 0 0-1.78l-8.2-5.2A1.03 1.03 0 0 0 9 6.8z"/></svg></span>';
+      '<span class="video-preview-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.5 7.6v8.8c0 .72.78 1.17 1.4.8l7.05-4.4a.95.95 0 0 0 0-1.6L10.9 6.8a.93.93 0 0 0-1.4.8z"/></svg></span>';
 
     container.appendChild(preview);
 
@@ -493,7 +493,7 @@
     function start() {
       if (loadStarted) return;
       loadStarted = true;
-      preview.classList.add('loading');
+      preview.classList.add('hidden');
 
       var started = typeof options.onStart === 'function'
         ? options.onStart(video, preview)
@@ -506,16 +506,16 @@
         var playPromise = video.play ? video.play() : null;
         if (playPromise && typeof playPromise.then === 'function') {
           playPromise
-            .then(function() { preview.classList.add('hidden'); })
+            .then(function() {})
             .catch(function() {
-              preview.classList.remove('loading');
+              preview.classList.remove('hidden');
               loadStarted = false;
             });
         } else {
           preview.classList.add('hidden');
         }
       }).catch(function() {
-        preview.classList.remove('loading');
+        preview.classList.remove('hidden');
         loadStarted = false;
       });
     }

@@ -606,16 +606,18 @@
   }
 
   .hero-courses {
-    min-height: 38vh !important;
-    padding-top: 100px !important;
-    padding-bottom: 34px !important;
+    min-height: clamp(210px, 29vh, 300px) !important;
+    padding-top: calc(82px + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 18px !important;
   }
 
   .hero:not(.hero-courses) {
-    padding-top: 144px !important;
-    padding-bottom: 92px !important;
-    min-height: 72vh !important;
-    background-position: center top !important;
+    padding-top: 132px !important;
+    padding-bottom: 52px !important;
+    min-height: min(62vh, 560px) !important;
+    background-position: center top, center top !important;
+    background-size: auto, auto 142% !important;
+    background-repeat: no-repeat !important;
   }
 
   .hero-content,
@@ -627,9 +629,15 @@
   /* Mobile video/course layout: player first, lessons as normal content */
   .geshtalt-page,
   .marathon-page {
-    padding: 12px 14px 112px !important;
+    padding: 6px 14px 36px !important;
     max-width: none !important;
     margin: 0 !important;
+  }
+
+  .week-page,
+  .main-content > div[style*="max-width:1280px"] {
+    padding-top: 6px !important;
+    padding-bottom: 36px !important;
   }
 
   .course-layout {

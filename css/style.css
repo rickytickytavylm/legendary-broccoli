@@ -141,8 +141,8 @@ video::-internal-media-interstitial-panel { display: none !important; }
 
 .video-preview-play {
   position: relative;
-  width: clamp(68px, 16vw, 92px);
-  height: clamp(68px, 16vw, 92px);
+  width: clamp(64px, 15vw, 84px);
+  height: clamp(64px, 15vw, 84px);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -162,9 +162,9 @@ video::-internal-media-interstitial-panel { display: none !important; }
 }
 
 .video-preview-play svg {
-  width: 38%;
-  height: 38%;
-  margin-left: 4px;
+  width: 30%;
+  height: 30%;
+  margin-left: 3px;
   color: #fff;
   filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
 }
@@ -1867,9 +1867,11 @@ h1, h2, h3 {
   }
 
   .hero {
-    padding: 136px 0 86px;
-    min-height: min(78vh, 720px);
-    background-position: center top;
+    padding: 132px 0 52px;
+    min-height: min(62vh, 560px);
+    background-position: center top, center top;
+    background-size: auto, auto 142%;
+    background-repeat: no-repeat;
   }
 
   .hero .hero-content {
@@ -1910,8 +1912,8 @@ h1, h2, h3 {
   }
 
   .hero-courses {
-    min-height: clamp(250px, 35vh, 360px);
-    padding: calc(86px + env(safe-area-inset-top, 0px)) 0 24px;
+    min-height: clamp(210px, 29vh, 300px);
+    padding: calc(82px + env(safe-area-inset-top, 0px)) 0 18px;
     justify-content: flex-start;
     background-position: center top;
   }
@@ -2013,7 +2015,13 @@ h1, h2, h3 {
 
   .geshtalt-page,
   .marathon-page {
-    padding-top: 14px !important;
+    padding-top: 6px !important;
+    padding-bottom: 36px !important;
+  }
+
+  .week-page,
+  .main-content > div[style*="max-width:1280px"] {
+    padding-top: 6px !important;
     padding-bottom: 36px !important;
   }
 
