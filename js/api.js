@@ -244,19 +244,27 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
 
   if (stream.type === 'hls') {
     stream.url = new URL(stream.url, API_ORIGIN).href;
-    const ua = navigator.userAgent || '';
-    const isAppleNativeHls = /iPad|iPhone|iPod/.test(ua) || (/Safari/.test(ua) && !/Chrome|Chromium|CriOS|YaBrowser|Edg|OPR|Firefox/.test(ua));
-    if (isAppleNativeHls && video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = stream.url;
-      video.load();
-    } else {
-      const Hls = await window.ensureHlsJs();
-      if (!Hls || !Hls.isSupported()) throw new Error('HLS is not supported');
-      const hls = new Hls({ enableWorker: true, autoStartLoad: true });
+    const Hls = await window.ensureHlsJs().catch(() => null);
+    if (Hls && Hls.isSupported()) {
+      const hls = new Hls({
+        enableWorker: false,
+        autoStartLoad: true,
+        lowLatencyMode: false,
+        backBufferLength: 30,
+        maxBufferLength: 60,
+        maxMaxBufferLength: 120,
+        manifestLoadingTimeOut: 12000,
+        manifestLoadingMaxRetry: 2,
+        manifestLoadingRetryDelay: 700,
+        fragLoadingTimeOut: 20000,
+        fragLoadingMaxRetry: 4,
+        fragLoadingRetryDelay: 700,
+      });
       video._hlsInstance = hls;
       if (setHls) setHls(hls);
       await new Promise((resolve, reject) => {
         let settled = false;
+        let mediaRecoveryTried = false;
         const done = () => {
           if (settled) return;
           settled = true;
@@ -270,14 +278,30 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
           done();
         });
         hls.on(Hls.Events.ERROR, (event, data) => {
-          if (data && data.fatal) {
-            console.error('HLS fatal error', data);
-            reject(new Error(data.details || data.type || 'HLS error'));
+          if (!data || !data.fatal) return;
+
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            hls.startLoad();
+            return;
           }
+
+          if (data.type === Hls.ErrorTypes.MEDIA_ERROR && !mediaRecoveryTried) {
+            mediaRecoveryTried = true;
+            hls.recoverMediaError();
+            return;
+          }
+
+          console.error('HLS fatal error', data);
+          reject(new Error(data.details || data.type || 'HLS error'));
         });
         hls.attachMedia(video);
         setTimeout(done, 2500);
       });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl') || video.canPlayType('application/x-mpegURL')) {
+      video.src = stream.url;
+      video.load();
+    } else {
+      throw new Error('HLS is not supported');
     }
   } else {
     video.src = new URL(stream.url, API_ORIGIN).href;
