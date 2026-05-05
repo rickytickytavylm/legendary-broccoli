@@ -3,91 +3,301 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#000000" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="theme-color" content="#050506" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-<title>Лента — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=10" />
-  <link rel="stylesheet" href="/css/nav.css?v=37" />
+  <title>Лента — Система Молодцова</title>
+  <link rel="stylesheet" href="/css/style.css?v=12" />
+  <link rel="stylesheet" href="/css/nav.css?v=38" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    .placeholder-page {
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #050506;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #fff;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .feed-container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 24px 16px 120px;
+    }
+
+    .feed-header {
+      padding: 16px 0 28px;
+    }
+
+    .feed-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    .post-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .post-author {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+    }
+
+    .post-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 24px 120px;
-      text-align: center;
-    }
-    .placeholder-icon {
-      width: 72px; height: 72px;
-      border-radius: 22px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 28px;
-    }
-    .placeholder-icon svg { width: 32px; height: 32px; color: rgba(255,255,255,.7); }
-    .placeholder-tag {
-      display: inline-block;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.1);
-      color: rgba(255,255,255,.5);
-      font-size: 11px; font-weight: 600;
-      letter-spacing: 2px;
-      padding: 5px 14px;
-      border-radius: 999px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .placeholder-title {
+      font-size: 13px;
+      font-weight: 600;
       color: #fff;
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin: 0 0 16px;
+      flex-shrink: 0;
     }
-    .placeholder-desc {
-      color: rgba(255,255,255,.45);
-      font-size: 16px;
-      line-height: 1.7;
-      max-width: 400px;
-      margin: 0 auto 36px;
+
+    .post-author-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
-    .placeholder-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 12px;
-      padding: 12px 20px;
-      color: rgba(255,255,255,.5);
+
+    .post-author-name {
       font-size: 14px;
+      font-weight: 600;
+      color: #fff;
     }
-    .placeholder-badge svg { width: 16px; height: 16px; }
+
+    .post-time {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .post-image {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 14px 18px 8px;
+    }
+
+    .post-action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
+    }
+
+    .post-action-btn:hover {
+      opacity: 0.7;
+    }
+
+    .post-action-btn svg {
+      width: 24px;
+      height: 24px;
+      color: rgba(255, 255, 255, 0.85);
+      stroke: currentColor;
+      fill: none;
+    }
+
+    .post-likes {
+      padding: 4px 18px 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .post-caption {
+      padding: 0 18px 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .post-caption strong {
+      color: #fff;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .post-comments-link {
+      display: block;
+      padding: 0 18px 16px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.35);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .post-comments-link:hover {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 580px) {
+      .feed-container {
+        padding: 16px 12px 100px;
+      }
+
+      .post-card {
+        border-radius: 16px;
+        margin-bottom: 18px;
+      }
+
+      .feed-header h1 {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
 <body class="dark-theme">
   <main>
-    <div class="placeholder-page">
-      <div class="placeholder-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 5h16M4 9h10M4 13h16M4 17h10"/></svg>
+    <div class="feed-container">
+      <div class="feed-header">
+        <h1>Лента</h1>
       </div>
-      <span class="placeholder-tag">Скоро</span>
-      <h1 class="placeholder-title">Лента новостей</h1>
-      <p class="placeholder-desc">
-        Актуальные материалы, статьи и обновления от Руслана Молодцова — всё в одном месте.
-      </p>
-      <div class="placeholder-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        В разработке
-      </div>
+
+      <!-- Post 1 -->
+      <article class="post-card">
+        <div class="post-author">
+          <div class="post-avatar">РМ</div>
+          <div class="post-author-info">
+            <span class="post-author-name">Руслан Молодцов</span>
+            <span class="post-time">2 часа назад</span>
+          </div>
+        </div>
+        <img class="post-image" src="/assets/webp/new_geshtalt.webp" alt="Гештальт-подход" />
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарий">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes">Нравится: 156</div>
+        <div class="post-caption">
+          <strong>Руслан Молодцов</strong>Когда мы говорим «я не могу», часто это значит «я не хочу платить цену». Осознание этого — первый шаг к честности с собой. Гештальт-подход учит замечать, где мы прерываем контакт с собственными потребностями.
+        </div>
+        <a class="post-comments-link">Показать комментарии</a>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="post-card">
+        <div class="post-author">
+          <div class="post-avatar">РМ</div>
+          <div class="post-author-info">
+            <span class="post-author-name">Руслан Молодцов</span>
+            <span class="post-time">5 часов назад</span>
+          </div>
+        </div>
+        <img class="post-image" src="/assets/webp/theraphy.webp" alt="Телесная терапия" />
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарий">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes">Нравится: 89</div>
+        <div class="post-caption">
+          <strong>Руслан Молодцов</strong>Тело помнит то, что разум предпочитает забыть. Телесная терапия помогает услышать эти сообщения — без анализа, через ощущение и движение.
+        </div>
+        <a class="post-comments-link">Показать комментарии</a>
+      </article>
+
+      <!-- Post 3 -->
+      <article class="post-card">
+        <div class="post-author">
+          <div class="post-avatar">РМ</div>
+          <div class="post-author-info">
+            <span class="post-author-name">Руслан Молодцов</span>
+            <span class="post-time">1 день назад</span>
+          </div>
+        </div>
+        <img class="post-image" src="/assets/webp/supervision.webp" alt="Супервизия" />
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарий">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes">Нравится: 124</div>
+        <div class="post-caption">
+          <strong>Руслан Молодцов</strong>Супервизия — это не про «правильные ответы». Это про способность выдерживать незнание и оставаться рядом с человеком в его процессе.
+        </div>
+        <a class="post-comments-link">Показать комментарии</a>
+      </article>
+
+      <!-- Post 4 -->
+      <article class="post-card">
+        <div class="post-author">
+          <div class="post-avatar">РМ</div>
+          <div class="post-author-info">
+            <span class="post-author-name">Руслан Молодцов</span>
+            <span class="post-time">2 дня назад</span>
+          </div>
+        </div>
+        <img class="post-image" src="/assets/webp/hero_course.webp" alt="Выгорание и практика" />
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарий">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться">
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes">Нравится: 67</div>
+        <div class="post-caption">
+          <strong>Руслан Молодцов</strong>Выгорание — не результат работы. Это результат длительного игнорирования себя. Практика начинается с простого: заметить, что вы устали, до того как тело заставит вас остановиться.
+        </div>
+        <a class="post-comments-link">Показать комментарии</a>
+      </article>
+
     </div>
   </main>
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=25"></script>
+  <script src="/js/api.js?v=26"></script>
   <script src="/js/auth.js?v=9"></script>
-  <script src="/js/nav.js?v=42"></script>
+  <script src="/js/nav.js?v=44"></script>
 </body>
 </html>

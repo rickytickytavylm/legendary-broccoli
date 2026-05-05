@@ -477,7 +477,6 @@
     container.dataset.previewReady = 'true';
     video.removeAttribute('controls');
     video.setAttribute('preload', 'none');
-    if (options.poster) video.setAttribute('poster', options.poster);
 
     var preview = document.createElement('button');
     preview.type = 'button';
@@ -485,7 +484,7 @@
     preview.setAttribute('aria-label', 'Смотреть видео');
     if (options.poster) preview.style.backgroundImage = "url('" + options.poster + "')";
     preview.innerHTML =
-      '<span class="video-preview-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.5 7.6v8.8c0 .72.78 1.17 1.4.8l7.05-4.4a.95.95 0 0 0 0-1.6L10.9 6.8a.93.93 0 0 0-1.4.8z"/></svg></span>';
+      '<span class="video-preview-play" aria-hidden="true"></span>';
 
     container.appendChild(preview);
 
@@ -501,7 +500,6 @@
 
       Promise.resolve(started).then(function() {
         video.setAttribute('controls', '');
-        video.removeAttribute('poster');
 
         var playPromise = video.play ? video.play() : null;
         if (playPromise && typeof playPromise.then === 'function') {

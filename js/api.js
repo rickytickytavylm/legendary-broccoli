@@ -265,17 +265,8 @@ class ApiClient {
 
 window.API = new ApiClient();
 
-function isIosWebKitVideo() {
-  return /iP(hone|od|ad)/.test(navigator.platform) ||
-    (navigator.userAgent.includes('Macintosh') && navigator.maxTouchPoints > 1);
-}
-
-function shouldPreferMp4OnIos(slug) {
-  return isIosWebKitVideo() && /^(Гештальт|Готовые Соза)\//i.test(String(slug || ''));
-}
-
 function shouldPreferMp4ForSlug(slug) {
-  return /^Телесные практики\//i.test(String(slug || '')) || shouldPreferMp4OnIos(slug);
+  return /^Телесные практики\//i.test(String(slug || ''));
 }
 
 window.ensureHlsJs = function ensureHlsJs() {

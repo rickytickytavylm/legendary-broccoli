@@ -161,11 +161,14 @@ video::-internal-media-interstitial-panel { display: none !important; }
   transition: transform .18s ease, opacity .18s ease;
 }
 
-.video-preview-play svg {
-  width: 30%;
-  height: 30%;
-  margin-left: 3px;
-  color: #fff;
+.video-preview-play::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: clamp(10px, 2.5vw, 14px) solid transparent;
+  border-bottom: clamp(10px, 2.5vw, 14px) solid transparent;
+  border-left: clamp(16px, 3.8vw, 22px) solid #fff;
+  transform: translateX(2px);
   filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
 }
 
@@ -1912,8 +1915,8 @@ h1, h2, h3 {
   }
 
   .hero-courses {
-    min-height: clamp(210px, 29vh, 300px);
-    padding: calc(82px + env(safe-area-inset-top, 0px)) 0 18px;
+    min-height: clamp(220px, 32vh, 320px);
+    padding: calc(96px + env(safe-area-inset-top, 0px)) 0 20px;
     justify-content: flex-start;
     background-position: center top;
   }

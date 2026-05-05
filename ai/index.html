@@ -7,8 +7,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>AI-помощник — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=10" />
-  <link rel="stylesheet" href="/css/nav.css?v=37" />
+  <link rel="stylesheet" href="/css/style.css?v=12" />
+  <link rel="stylesheet" href="/css/nav.css?v=38" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -268,14 +268,19 @@
     }
 
     @media (max-width: 768px) {
-      html, body { height: 100%; overflow: hidden; }
-      .ai-main { height: 100dvh; overflow: hidden; }
+      .ai-main { 
+        height: calc(100dvh - env(safe-area-inset-bottom, 0px)); 
+        overflow: hidden; 
+        display: flex;
+        flex-direction: column;
+      }
       .ai-page {
-        height: 100dvh;
-        min-height: 100dvh;
-        padding: 104px 14px 118px;
+        height: 100%;
+        min-height: 0;
+        padding: calc(84px + env(safe-area-inset-top, 0px)) 14px 0;
         justify-content: flex-start;
         overflow: hidden;
+        flex: 1;
       }
       .ai-shell {
         min-height: 0;
@@ -285,8 +290,11 @@
       }
       .ai-hero {
         flex-shrink: 0;
-        margin-bottom: 14px;
+        margin-bottom: 10px;
       }
+      .ai-hero .ai-title { font-size: 26px; margin-bottom: 8px; }
+      .ai-hero .ai-desc { font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .ai-hero .ai-usage-pill { margin-top: 10px; font-size: 11px; }
       .ai-chat-panel {
         flex: 1;
         min-height: 0;
@@ -300,31 +308,33 @@
         flex: 1;
         min-height: 0;
         overflow-y: auto;
-        padding: 0 0 22px;
+        padding: 0 0 14px;
         overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
       .ai-input-bar {
-        position: fixed;
-        left: 14px;
-        right: 14px;
-        bottom: calc(74px + env(safe-area-inset-bottom));
-        width: auto;
-        max-width: none;
-        z-index: 50;
+        position: relative;
         flex-shrink: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0 0 calc(72px + env(safe-area-inset-bottom, 0px));
+        z-index: 50;
       }
       .ai-footnote { display: none; }
       .ai-bubble { max-width: 88%; font-size: 14px; }
       .ai-title { letter-spacing: -1.2px; }
       .ai-back-mobile {
         position: fixed !important;
-        top: 112px !important;
+        top: calc(84px + env(safe-area-inset-top, 0px) + 8px) !important;
         left: 22px !important;
         margin: 0 !important;
         opacity: 1 !important;
         pointer-events: auto !important;
         transform: none !important;
+        z-index: 100;
       }
+      .ai-suggestions { gap: 6px; }
+      .ai-chip { font-size: 11px; padding: 7px 11px; }
     }
 
     @media (min-width: 769px) {
@@ -371,9 +381,9 @@
     </div>
   </main>
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=25"></script>
+  <script src="/js/api.js?v=26"></script>
   <script src="/js/auth.js?v=9"></script>
-  <script src="/js/nav.js?v=42"></script>
+  <script src="/js/nav.js?v=44"></script>
   <script>
     const aiInput = document.getElementById('ai-input');
     const aiSend = document.getElementById('ai-send');

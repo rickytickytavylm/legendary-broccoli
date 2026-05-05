@@ -606,9 +606,9 @@
   }
 
   .hero-courses {
-    min-height: clamp(210px, 29vh, 300px) !important;
-    padding-top: calc(82px + env(safe-area-inset-top, 0px)) !important;
-    padding-bottom: 18px !important;
+    min-height: clamp(220px, 32vh, 320px) !important;
+    padding-top: calc(96px + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 20px !important;
   }
 
   .hero:not(.hero-courses) {
