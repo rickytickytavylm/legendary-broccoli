@@ -477,6 +477,15 @@
     container.dataset.previewReady = 'true';
     video.removeAttribute('controls');
     video.setAttribute('preload', 'none');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    function isAppleTouchVideoDevice() {
+      var ua = navigator.userAgent || '';
+      var platform = navigator.platform || '';
+      return /iPad|iPhone|iPod/i.test(ua) ||
+        (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
 
     var preview = document.createElement('button');
     preview.type = 'button';
@@ -506,6 +515,11 @@
           playPromise
             .then(function() {})
             .catch(function() {
+              if (isAppleTouchVideoDevice() && (video.currentSrc || video.getAttribute('src'))) {
+                video.setAttribute('controls', '');
+                preview.classList.add('hidden');
+                return;
+              }
               preview.classList.remove('hidden');
               loadStarted = false;
             });

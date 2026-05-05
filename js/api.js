@@ -265,8 +265,17 @@ class ApiClient {
 
 window.API = new ApiClient();
 
+function isAppleTouchVideoDevice() {
+  const ua = navigator.userAgent || '';
+  const platform = navigator.platform || '';
+  return /iPad|iPhone|iPod/i.test(ua) ||
+    (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
 function shouldPreferMp4ForSlug(slug) {
-  return /^Телесные практики\//i.test(String(slug || ''));
+  const value = String(slug || '');
+  return /^Телесные практики\//i.test(value) ||
+    /^(Гештальт|Созависимость|Антология)\//i.test(value);
 }
 
 window.ensureHlsJs = function ensureHlsJs() {
@@ -289,6 +298,9 @@ window.ensureHlsJs = function ensureHlsJs() {
 };
 
 window.attachVideoSource = async function attachVideoSource(video, slug, currentHls, setHls) {
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+
   if (shouldPreferMp4ForSlug(slug)) {
     const previousHls = currentHls || video._hlsInstance;
     if (previousHls && typeof previousHls.destroy === 'function') previousHls.destroy();
@@ -297,7 +309,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
     if (video.getAttribute('src')) video.removeAttribute('src');
 
     const mp4 = await window.API.getVideoPresign(slug);
-    video.dataset.streamFallback = 'ios-mp4';
+    video.dataset.streamFallback = isAppleTouchVideoDevice() ? 'apple-mp4' : 'mp4';
     video.dataset.streamType = 'mp4';
     video.src = new URL(mp4.url, API_ORIGIN).href;
     video.load();
