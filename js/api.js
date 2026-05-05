@@ -240,8 +240,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
   if (previousHls && typeof previousHls.destroy === 'function') previousHls.destroy();
   video._hlsInstance = null;
   if (setHls) setHls(null);
-  video.removeAttribute('src');
-  video.load();
+  if (video.getAttribute('src')) video.removeAttribute('src');
 
   if (stream.type === 'hls') {
     stream.url = new URL(stream.url, API_ORIGIN).href;
@@ -271,8 +270,8 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
           done();
         });
         hls.on(Hls.Events.ERROR, (event, data) => {
-          console.warn('HLS error', data);
           if (data && data.fatal) {
+            console.error('HLS fatal error', data);
             reject(new Error(data.details || data.type || 'HLS error'));
           }
         });
