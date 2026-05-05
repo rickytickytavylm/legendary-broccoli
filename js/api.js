@@ -277,7 +277,10 @@ function shouldPreferMp4ForSlug(slug) {
   const isProblemIosRoute = isAppleTouchVideoDevice() &&
     /\/(geshtalt|sozavisimost|antologiya)(?:\/|\.html|$)/.test(path);
   const value = String(slug || '');
+  const isProblemIosSlug = isAppleTouchVideoDevice() &&
+    /(гештальт|созавис|готовые\s*соза|антолог|antolog|geshtalt|sozavisimost)/i.test(value);
   return isProblemIosRoute ||
+    isProblemIosSlug ||
     /^Телесные практики\//i.test(value);
 }
 
@@ -316,6 +319,9 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
     video.dataset.streamType = 'mp4';
     video.src = new URL(mp4.url, API_ORIGIN).href;
     video.load();
+    if (isAppleTouchVideoDevice()) {
+      console.info('[video] using signed mp4 for Apple device', { path: location.pathname, slug });
+    }
     return { type: 'mp4', url: video.src, expires_in: mp4.expires_in };
   }
 

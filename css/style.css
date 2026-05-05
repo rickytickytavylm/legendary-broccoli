@@ -101,7 +101,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(circle at 50% 42%, rgba(255,255,255,.09), transparent 27%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.09), transparent 27%),
     linear-gradient(110deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,.08) 44%, rgba(255,255,255,.025) 88%),
     rgba(5,5,6,.84);
   background-size: auto, 220% 100%, auto;
@@ -119,7 +119,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
   justify-content: center !important;
   padding-top: 0 !important;
   background:
-    radial-gradient(circle at 50% 42%, rgba(255,255,255,.09), transparent 27%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.09), transparent 27%),
     linear-gradient(110deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,.08) 44%, rgba(255,255,255,.025) 88%),
     rgba(5,5,6,.84) !important;
   background-size: auto, 220% 100%, auto !important;
@@ -139,7 +139,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
 .video-loader.hidden { opacity: 0; pointer-events: none; animation: none; }
 .video-loader .apple-spinner {
   z-index: 1;
-  transform: translateY(-10px);
+  transform: none;
 }
 @keyframes video-loader-shimmer {
   0% { background-position: center, 120% 0, center; }
@@ -1959,10 +1959,11 @@ h1, h2, h3 {
   }
 
   .hero-courses {
-    min-height: clamp(280px, 38vh, 370px);
-    padding: calc(166px + env(safe-area-inset-top, 0px)) 0 10px;
+    margin-top: calc(96px + env(safe-area-inset-top, 0px));
+    min-height: clamp(270px, 36vh, 360px);
+    padding: 42px 0 18px;
     justify-content: flex-start;
-    background-position: center top;
+    background-position: center center;
   }
 
   .hero-courses .hero-title {
@@ -2083,47 +2084,26 @@ h1, h2, h3 {
 
   .geshtalt-page,
   .marathon-page {
-    padding-top: 12px !important;
-    padding-bottom: 14px !important;
+    padding-top: 18px !important;
+    padding-bottom: 28px !important;
   }
 
   .week-page,
   .main-content > div[style*="max-width:1280px"] {
-    padding-top: 0 !important;
+    padding-top: 18px !important;
     padding-left: 12px !important;
     padding-right: 12px !important;
-    padding-bottom: 14px !important;
+    padding-bottom: 28px !important;
   }
 
-  .course-back-wrap {
-    position: sticky !important;
-    top: calc(88px + env(safe-area-inset-top));
-    z-index: 880;
-    width: auto !important;
-    max-width: none !important;
-    padding: 12px 14px 8px !important;
-    margin: 0 !important;
-    pointer-events: none;
-  }
-
-  .course-back-wrap .back-link-glass {
-    transform: none;
-    transform-origin: left top;
-    margin: 0 !important;
-    pointer-events: auto;
-  }
-
+  .course-back-wrap,
   .geshtalt-page > .back-link-glass,
   .marathon-page > .back-link-glass {
-    position: sticky;
-    top: calc(88px + env(safe-area-inset-top));
-    z-index: 880;
-    margin: 0 0 8px !important;
-    transform: none;
-    transform-origin: left top;
+    display: none !important;
   }
 
   .course-sidebar {
+    margin-top: 6px;
     margin-bottom: 0;
   }
 
