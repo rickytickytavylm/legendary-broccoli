@@ -7,7 +7,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=32';
+    link.href = '/css/nav.css?v=33';
     document.head.appendChild(link);
   }
 
@@ -58,6 +58,20 @@
   var ALL_ITEMS = NAV_ITEMS.concat(BOTTOM_ITEMS);
   var HOME_SCROLL_KEY = 'sistema:home-scroll-y';
   var RESTORE_HOME_SCROLL_KEY = 'sistema:restore-home-scroll';
+  var COURSE_PREFETCH = {
+    '/geshtalt/': { api: '/content/geshtalt-lessons', image: '/assets/courses.png' },
+    '/sozavisimost/': { api: '/content/sozavisimost-lessons', image: '/assets/coda2.png' },
+    '/psihosomatika/': { api: '/content/psihosomatika-lessons', image: '/assets/psysomatic.png' },
+    '/mj/': { api: '/content/mj-lessons', image: '/assets/man_woman.png' },
+    '/yoga/': { api: '/content/yoga-lessons', image: '/assets/mini-yoga.png' },
+    '/marathons/': { api: '/content/marathons-lessons', image: '/assets/maraphones.png' },
+    '/superviziya/': { api: '/content/superviziya-lessons', image: '/assets/supervision.png' },
+    '/antologiya/': { api: '/content/antologiya-lessons', image: '/assets/antology.png' },
+    '/terapiya/': { image: '/assets/theraphy.jpg' },
+    '/gipnoz/': { image: '/assets/hipno.png' },
+    '/master/': { image: '/assets/masterofcommication.png' },
+    '/dermer/': { image: '/assets/geshtalt.png' },
+  };
 
   // ── Active page detection ───────────────────────────────
   var currentPath = location.pathname;
@@ -432,6 +446,15 @@
 
     var run = function() {
       fetch(url.href, { credentials: 'same-origin', cache: 'force-cache' }).catch(function() {});
+      var meta = COURSE_PREFETCH[url.pathname];
+      if (meta && meta.image) {
+        var img = new Image();
+        img.decoding = 'async';
+        img.src = meta.image;
+      }
+      if (meta && meta.api && window.API && window.API.request) {
+        window.API.request('GET', meta.api).catch(function() {});
+      }
     };
     if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1200 });
     else setTimeout(run, 120);
@@ -444,6 +467,40 @@
   document.addEventListener('touchstart', function(event) {
     prefetchInternalLink(event.target.closest('a[href]'));
   }, { passive: true });
+
+  window.setupVideoPreview = function(container, options) {
+    if (!container || container.dataset.previewReady === 'true') return null;
+    var video = container.querySelector('video');
+    if (!video) return null;
+
+    options = options || {};
+    container.dataset.previewReady = 'true';
+    video.removeAttribute('controls');
+    video.setAttribute('preload', 'none');
+    if (options.poster) video.setAttribute('poster', options.poster);
+
+    var preview = document.createElement('button');
+    preview.type = 'button';
+    preview.className = 'video-preview-overlay';
+    preview.setAttribute('aria-label', 'Смотреть видео');
+    if (options.poster) preview.style.backgroundImage = "url('" + options.poster + "')";
+    preview.innerHTML =
+      '<span class="video-preview-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>';
+
+    container.appendChild(preview);
+
+    var loadStarted = false;
+    function start() {
+      if (loadStarted) return;
+      loadStarted = true;
+      preview.classList.add('hidden');
+      if (typeof options.onStart === 'function') options.onStart(video, preview);
+    }
+
+    preview.addEventListener('click', start);
+    video.addEventListener('play', start, { once: true });
+    return { start: start, preview: preview, video: video };
+  };
 
   // Mobile UX: after selecting a lesson below the player, return to the player.
   document.addEventListener('click', function(event) {

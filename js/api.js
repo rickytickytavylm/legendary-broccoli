@@ -4,6 +4,7 @@
  */
 const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.sistema-molodtsov.ru/api');
 const API_ORIGIN = new URL(API_BASE, location.href).origin;
+const CONTENT_CACHE_TTL = 5 * 60 * 1000;
 
 class ApiClient {
   constructor() {
@@ -18,8 +19,45 @@ class ApiClient {
     return h;
   }
 
+  getContentCacheKey(path) {
+    const authPart = this.accessToken ? this.accessToken.slice(-16) : 'guest';
+    return 'sistema:content-cache:' + authPart + ':' + path;
+  }
+
+  readContentCache(path) {
+    try {
+      const raw = sessionStorage.getItem(this.getContentCacheKey(path));
+      if (!raw) return null;
+      const cached = JSON.parse(raw);
+      if (!cached || Date.now() - cached.savedAt > CONTENT_CACHE_TTL) return null;
+      return cached.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  writeContentCache(path, data) {
+    try {
+      sessionStorage.setItem(this.getContentCacheKey(path), JSON.stringify({
+        savedAt: Date.now(),
+        data,
+      }));
+    } catch (e) {}
+  }
+
+  refreshContentCache(path, url, init) {
+    fetch(url, init)
+      .then((res) => (res.ok && res.status !== 204 ? res.json() : null))
+      .then((data) => {
+        if (data !== null) this.writeContentCache(path, data);
+      })
+      .catch(() => {});
+  }
+
   async request(method, path, body, opts = {}) {
     const url = this.base + path;
+    const canUseContentCache = method === 'GET' && path.startsWith('/content/');
+    const cachedContent = canUseContentCache ? this.readContentCache(path) : null;
     const init = {
       method,
       headers: { ...this.getAuthHeaders(), ...opts.headers },
@@ -30,6 +68,11 @@ class ApiClient {
       init.body = JSON.stringify(body);
     } else if (body) {
       init.body = body;
+    }
+
+    if (cachedContent !== null && !opts.fresh) {
+      this.refreshContentCache(path, url, init);
+      return cachedContent;
     }
 
     let res = await fetch(url, init);
@@ -52,7 +95,9 @@ class ApiClient {
       throw err;
     }
     if (res.status === 204) return null;
-    return res.json();
+    const data = await res.json();
+    if (canUseContentCache) this.writeContentCache(path, data);
+    return data;
   }
 
   async _doRefresh() {
@@ -91,6 +136,11 @@ class ApiClient {
     this.accessToken = null;
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    try {
+      Object.keys(sessionStorage)
+        .filter((key) => key.startsWith('sistema:content-cache:'))
+        .forEach((key) => sessionStorage.removeItem(key));
+    } catch (e) {}
   }
 
   isLoggedIn() {

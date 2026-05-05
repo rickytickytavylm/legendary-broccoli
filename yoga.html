@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Мини-курс Йога — Система Молодцова</title>
   <meta name="description" content="Мини-курс по йоге. Базовые практики для начинающих." />
-  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/style.css?v=5" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -228,9 +228,9 @@
   </nav>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=21"></script>
+  <script src="/js/api.js?v=23"></script>
   <script src="/js/auth.js?v=8"></script>
-  <script src="/js/nav.js?v=36"></script>
+  <script src="/js/nav.js?v=37"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
     (async function() {
@@ -361,7 +361,16 @@
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();
-        if (lessons[0]) loadLesson(lessons[0]);
+        if (lessons[0]) {
+          if (window.setupVideoPreview) {
+            window.setupVideoPreview(videoContainer, {
+              poster: '/assets/mini-yoga.png',
+              onStart: () => loadLesson(lessons[0]),
+            });
+          } else {
+            loadLesson(lessons[0]);
+          }
+        }
       } catch (err) {
         showError('Курс не найден или недоступен');
       }

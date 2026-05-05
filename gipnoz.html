@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гипноз — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/style.css?v=5" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -199,9 +199,9 @@
   </nav>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=21"></script>
+  <script src="/js/api.js?v=23"></script>
   <script src="/js/auth.js?v=8"></script>
-  <script src="/js/nav.js?v=36"></script>
+  <script src="/js/nav.js?v=37"></script>
   <script>
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');
@@ -351,9 +351,16 @@
         const weeks = await window.API.request('GET', '/content/gipnoz-lessons');
         renderWeeks(weeks);
 
-        // Auto-load first lesson
+        // Prepare first lesson without touching the video stream until play.
         if (weeks[0] && weeks[0].lessons[0]) {
-          loadLesson(weeks[0].lessons[0]);
+          if (window.setupVideoPreview) {
+            window.setupVideoPreview(videoContainer, {
+              poster: '/assets/hipno.png',
+              onStart: () => loadLesson(weeks[0].lessons[0]),
+            });
+          } else {
+            loadLesson(weeks[0].lessons[0]);
+          }
         }
       } catch(e) {
         lessonsList.innerHTML = '<p style="padding:20px;color:rgba(255,255,255,.4);font-size:14px;">Не удалось загрузить уроки</p>';
