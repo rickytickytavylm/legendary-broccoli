@@ -645,7 +645,15 @@
   }
 
   .course-back-wrap {
-    display: none !important;
+    display: inline-flex !important;
+    position: sticky !important;
+    top: calc(96px + env(safe-area-inset-top, 0px)) !important;
+    z-index: 900 !important;
+    width: auto !important;
+    max-width: none !important;
+    padding: 0 14px !important;
+    margin: 0 0 14px !important;
+    pointer-events: none !important;
   }
 
   .course-back-wrap .back-link-glass {
@@ -763,7 +771,33 @@
   }
 
   .back-link-glass {
-    display: none !important;
+    display: inline-flex !important;
+    position: sticky !important;
+    top: calc(96px + env(safe-area-inset-top, 0px)) !important;
+    z-index: 900 !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    padding: 0 !important;
+    margin: 0 0 14px !important;
+    border-radius: 50% !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0 !important;
+    font-size: 0 !important;
+    color: rgba(255,255,255,.88) !important;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255,255,255,.16), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05)) !important;
+    border: 1px solid rgba(255,255,255,.15) !important;
+    box-shadow:
+      0 12px 34px rgba(0,0,0,.34),
+      inset 0 1px 0 rgba(255,255,255,.14) !important;
+    backdrop-filter: blur(22px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(140%) !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   body.mobile-scrolled .back-link-glass {
