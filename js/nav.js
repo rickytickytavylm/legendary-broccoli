@@ -547,10 +547,20 @@
     var videoShellTap = event.target.closest('.video-container, .single-video-wrap, .player-video-wrap');
     if (!videoTap && videoShellTap) videoTap = videoShellTap.querySelector('video');
     if (videoTap && window.innerWidth <= 768) {
+      var ua = navigator.userAgent || '';
+      var platform = navigator.platform || '';
+      var isAppleTouch = /iPad|iPhone|iPod/i.test(ua) ||
+        (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isAppleTouch) return;
+
       videoTap.setAttribute('controls', '');
-      if (videoTap.readyState > 0 && videoTap.paused && videoTap.currentSrc) {
-        var playAttempt = videoTap.play && videoTap.play();
-        if (playAttempt && typeof playAttempt.catch === 'function') playAttempt.catch(function() {});
+      if (videoTap.readyState > 0 && videoTap.currentSrc) {
+        if (videoTap.paused) {
+          var playAttempt = videoTap.play && videoTap.play();
+          if (playAttempt && typeof playAttempt.catch === 'function') playAttempt.catch(function() {});
+        } else {
+          videoTap.pause();
+        }
       }
       return;
     }
