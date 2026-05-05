@@ -381,6 +381,12 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
       video.addEventListener('error', fallbackToMp4, { once: true });
       video.src = stream.url;
       video.load();
+
+      const stalledTimer = setTimeout(() => {
+        if (video.readyState < 2 && !fallbackStarted) fallbackToMp4();
+      }, 6000);
+      video.addEventListener('playing', () => clearTimeout(stalledTimer), { once: true });
+      video.addEventListener('canplay', () => clearTimeout(stalledTimer), { once: true });
     } else {
       throw new Error('HLS is not supported');
     }

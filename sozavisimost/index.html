@@ -8,8 +8,8 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Созависимость — Система Молодцова</title>
   <meta name="description" content="Курс по созависимости." />
-  <link rel="stylesheet" href="/css/style.css?v=12" />
-  <link rel="stylesheet" href="/css/nav.css?v=38" />
+  <link rel="stylesheet" href="/css/style.css?v=13" />
+  <link rel="stylesheet" href="/css/nav.css?v=39" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -120,7 +120,7 @@
         <div class="hero-top-text fade-up">Обучение</div>
         <h1 class="hero-title fade-up">Созависимость</h1>
         <p class="hero-subtitle fade-up">
-          Курс по работе с созависимыми отношениями.
+          Про близость без слияния, заботу без контроля и возвращение собственной опоры.
         </p>
       </div>
     </section>
@@ -219,7 +219,7 @@
     </div>
   </footer>
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=26"></script>
+  <script src="/js/api.js?v=27"></script>
   <script src="/js/auth.js?v=9"></script>
   <script src="/js/nav.js?v=44"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
@@ -232,7 +232,7 @@
       const lessonsCount = document.getElementById('course-lessons-count');
       let lessons = [];
       let hlsInstance = null;
-      const COURSE_OVERVIEW = 'Курс о созависимых отношениях, эмоциональной зависимости, границах и возвращении собственной опоры. Материалы помогают отличать заботу от контроля, близость от слияния и постепенно выстраивать более взрослый способ быть в отношениях.';
+      const COURSE_OVERVIEW = 'Курс помогает распутывать отношения, где забота превращается в контроль, близость — в тревожное слияние, а любовь — в потерю себя. В фокусе: личные границы, эмоциональная зависимость, взрослая позиция и постепенное возвращение собственной опоры без войны с другим человеком.';
 
       function pluralLessons(n) {
         if (n === 1) return 'урок';
@@ -302,7 +302,7 @@
           video.addEventListener('canplay', hideVideoLoader, { once: true });
           hideVideoLoader();
           courseTitle.textContent = lesson.title;
-          courseDesc.textContent = 'Созависимость.';
+          courseDesc.textContent = COURSE_OVERVIEW;
         } catch (err) {
           hideVideoLoader();
           courseTitle.textContent = 'Ошибка';
@@ -337,7 +337,7 @@
         lessons = Array.isArray(lessons_data) ? lessons_data : [];
 
         courseTitle.textContent = 'Урок 1';
-        courseDesc.textContent = 'Созависимость.';
+        courseDesc.textContent = COURSE_OVERVIEW;
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();

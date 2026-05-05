@@ -8,8 +8,8 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Мужское и Женское — Система Молодцова</title>
   <meta name="description" content="Курс Мужское и Женское." />
-  <link rel="stylesheet" href="/css/style.css?v=12" />
-  <link rel="stylesheet" href="/css/nav.css?v=38" />
+  <link rel="stylesheet" href="/css/style.css?v=13" />
+  <link rel="stylesheet" href="/css/nav.css?v=39" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -219,7 +219,7 @@
     </div>
   </footer>
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=26"></script>
+  <script src="/js/api.js?v=27"></script>
   <script src="/js/auth.js?v=9"></script>
   <script src="/js/nav.js?v=44"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
@@ -232,7 +232,7 @@
       const lessonsCount = document.getElementById('course-lessons-count');
       let lessons = [];
       let hlsInstance = null;
-      const COURSE_OVERVIEW = 'Курс о динамике отношений мужчины и женщины: ожиданиях, близости, конфликтах, коммуникации и различиях в восприятии. Задача блока — помочь увидеть повторяющиеся сценарии и разговаривать о важном яснее, спокойнее и честнее.';
+      const COURSE_OVERVIEW = 'Курс о мужском и женском как о живой динамике отношений: ожиданиях, близости, притяжении, конфликтах и различиях в восприятии. Материалы помогают увидеть повторяющиеся сценарии и говорить о важном спокойнее, честнее и без игры в угадывание.';
 
       function pluralLessons(n) {
         if (n === 1) return 'урок';
@@ -302,7 +302,7 @@
           video.addEventListener('canplay', hideVideoLoader, { once: true });
           hideVideoLoader();
           courseTitle.textContent = lesson.title;
-          courseDesc.textContent = 'Мужское и Женское.';
+          courseDesc.textContent = COURSE_OVERVIEW;
         } catch (err) {
           hideVideoLoader();
           courseTitle.textContent = 'Ошибка';
@@ -337,7 +337,7 @@
         lessons = Array.isArray(lessons_data) ? lessons_data : [];
 
         courseTitle.textContent = lessons[0] ? lessons[0].title : 'Мужское и Женское';
-        courseDesc.textContent = 'Мужское и Женское.';
+        courseDesc.textContent = COURSE_OVERVIEW;
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();

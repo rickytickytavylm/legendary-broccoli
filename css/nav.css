@@ -606,9 +606,9 @@
   }
 
   .hero-courses {
-    min-height: clamp(220px, 32vh, 320px) !important;
-    padding-top: calc(96px + env(safe-area-inset-top, 0px)) !important;
-    padding-bottom: 20px !important;
+    min-height: clamp(250px, 34vh, 340px) !important;
+    padding-top: calc(122px + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 8px !important;
   }
 
   .hero:not(.hero-courses) {
@@ -629,26 +629,26 @@
   /* Mobile video/course layout: player first, lessons as normal content */
   .geshtalt-page,
   .marathon-page {
-    padding: 6px 14px 36px !important;
+    padding: 0 14px 14px !important;
     max-width: none !important;
     margin: 0 !important;
   }
 
   .week-page,
   .main-content > div[style*="max-width:1280px"] {
-    padding-top: 6px !important;
-    padding-bottom: 36px !important;
+    padding-top: 0 !important;
+    padding-bottom: 14px !important;
   }
 
   .course-layout {
     display: grid !important;
     grid-template-columns: 1fr !important;
-    gap: 18px !important;
+    gap: 10px !important;
   }
 
   .course-main {
     min-width: 0 !important;
-    gap: 14px !important;
+    gap: 10px !important;
   }
 
   .video-container,
@@ -656,6 +656,9 @@
   .player-video-wrap {
     border-radius: 20px !important;
     width: 100% !important;
+    overflow: hidden !important;
+    clip-path: inset(0 round 20px) !important;
+    -webkit-mask-image: -webkit-radial-gradient(#fff, #000) !important;
   }
 
   .video-loader {
@@ -671,7 +674,7 @@
     max-height: none !important;
     height: auto !important;
     overflow: visible !important;
-    padding: 14px !important;
+    padding: 12px !important;
     border-radius: 22px !important;
     background:
       linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)) !important;
@@ -684,8 +687,8 @@
   }
 
   .sidebar-header {
-    padding: 4px 2px 12px !important;
-    margin-bottom: 8px !important;
+    padding: 2px 2px 10px !important;
+    margin-bottom: 6px !important;
     border-bottom: 1px solid rgba(255,255,255,.07) !important;
     background: transparent !important;
   }

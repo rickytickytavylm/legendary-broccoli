@@ -8,8 +8,8 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=12" />
-  <link rel="stylesheet" href="/css/nav.css?v=38" />
+  <link rel="stylesheet" href="/css/style.css?v=13" />
+  <link rel="stylesheet" href="/css/nav.css?v=39" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -120,9 +120,9 @@
     <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('/assets/webp/courses.webp') center/cover no-repeat;">
       <div class="hero-content text-left">
         <div class="hero-top-text fade-up">Обучение</div>
-        <h1 class="hero-title fade-up">Гештальт</h1>
+        <h1 class="hero-title fade-up">Гештальт-подход</h1>
         <p class="hero-subtitle fade-up">
-          Гештальт-подход в психотерапии.<br>Изучайте теорию и практику изменения.
+          Живой курс о контакте, границах, эмоциях и честном возвращении к себе.
         </p>
       </div>
     </section>
@@ -250,7 +250,7 @@
 
   <!-- iOS Glass Tab Bar (Mobile Only) -->
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=26"></script>
+  <script src="/js/api.js?v=27"></script>
   <script src="/js/auth.js?v=9"></script>
   <script src="/js/nav.js?v=44"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
@@ -266,7 +266,7 @@
       const lessonDescMain = document.getElementById('lesson-desc-main');
       let lessons = [];
       let hlsInstance = null;
-      const COURSE_OVERVIEW = 'Гештальт — направление психотерапии о контакте человека с собой, другими и средой. В центре курса: осознавание потребностей, работа с эмоциями, границами, сопротивлениями и незавершёнными переживаниями. Материалы соединяют теорию, упражнения и разборы терапевтических сессий.';
+      const COURSE_OVERVIEW = 'Гештальт-подход помогает увидеть, как человек теряет контакт с собой, прячет потребности, обрывает чувства и повторяет незавершённые сценарии. Внутри курса — теория, практика и терапевтические разборы, которые переводят осознавание из красивого слова в рабочий инструмент: яснее чувствовать, точнее выбирать и честнее строить отношения.';
 
       function pluralLessons(n) {
         if (n === 1) return 'урок';
@@ -389,8 +389,8 @@
         const lessons_data = await window.API.request('GET', '/content/geshtalt-lessons');
         lessons = Array.isArray(lessons_data) ? lessons_data : [];
 
-        courseTitle.textContent = 'Гештальт';
-        courseDesc.textContent = 'Гештальт-подход в психотерапии. Теория и практика.';
+        courseTitle.textContent = 'Гештальт-подход';
+        courseDesc.textContent = COURSE_OVERVIEW;
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();

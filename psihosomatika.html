@@ -8,8 +8,8 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Психосоматика — Система Молодцова</title>
   <meta name="description" content="Психосоматика. Болезнь 21 века — авторский курс лекций." />
-  <link rel="stylesheet" href="/css/style.css?v=12" />
-  <link rel="stylesheet" href="/css/nav.css?v=38" />
+  <link rel="stylesheet" href="/css/style.css?v=13" />
+  <link rel="stylesheet" href="/css/nav.css?v=39" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -120,7 +120,7 @@
         <div class="hero-top-text fade-up">Обучение</div>
         <h1 class="hero-title fade-up">Психосоматика</h1>
         <p class="hero-subtitle fade-up">
-          Болезнь 21 века.<br>Лекции по телесно-ориентированной терапии.
+          Как эмоции, стресс и привычные реакции становятся языком тела.
         </p>
       </div>
     </section>
@@ -219,7 +219,7 @@
     </div>
   </footer>
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=26"></script>
+  <script src="/js/api.js?v=27"></script>
   <script src="/js/auth.js?v=9"></script>
   <script src="/js/nav.js?v=44"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
@@ -232,7 +232,7 @@
       const lessonsCount = document.getElementById('course-lessons-count');
       let lessons = [];
       let hlsInstance = null;
-      const COURSE_OVERVIEW = 'Курс о связи эмоций, стресса, телесных симптомов и способов психологической регуляции. Он помогает внимательнее рассматривать тело не как “поломку”, а как часть целостной системы переживаний, привычных реакций и внутреннего напряжения.';
+      const COURSE_OVERVIEW = 'Психосоматика здесь рассматривается без мистики и упрощений: как связь напряжения, подавленных эмоций, стресса и телесных симптомов. Курс помогает читать сигналы тела внимательнее, видеть повторяющиеся реакции и находить более зрелые способы регуляции вместо борьбы с собой.';
 
       function pluralLessons(n) {
         if (n === 1) return 'урок';
@@ -307,7 +307,7 @@
           video.addEventListener('canplay', hideVideoLoader, { once: true });
           hideVideoLoader();
           courseTitle.textContent = lesson.title;
-          courseDesc.textContent = 'Психосоматика. Болезнь 21 века.';
+          courseDesc.textContent = COURSE_OVERVIEW;
         } catch (err) {
           hideVideoLoader();
           showError('Не удалось загрузить видео');
@@ -341,7 +341,7 @@
         lessons = Array.isArray(lessons_data) ? lessons_data : [];
 
         courseTitle.textContent = 'Урок 1';
-        courseDesc.textContent = 'Психосоматика. Болезнь 21 века.';
+        courseDesc.textContent = COURSE_OVERVIEW;
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();

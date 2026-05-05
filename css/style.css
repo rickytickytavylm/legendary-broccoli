@@ -290,6 +290,10 @@ h1, h2, h3 {
   position: relative;
 }
 
+.hero + .section {
+  padding-top: 26px;
+}
+
 .section-header {
   margin-bottom: 40px;
 }
@@ -1076,6 +1080,8 @@ h1, h2, h3 {
     inset 0 -40px 70px rgba(0, 0, 0, 0.32);
   position: relative;
   isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(#fff, #000);
+  clip-path: inset(0 round 22px);
 }
 
 .video-container::before,
@@ -1088,9 +1094,9 @@ h1, h2, h3 {
   pointer-events: none;
   border-radius: inherit;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.045),
-    inset 0 0 48px rgba(0,0,0,.55),
-    inset 0 -92px 90px rgba(0,0,0,.56);
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    inset 0 0 36px rgba(0,0,0,.45),
+    inset 0 -72px 70px rgba(0,0,0,.46);
 }
 
 .video-container::after,
@@ -1102,7 +1108,7 @@ h1, h2, h3 {
   z-index: 4;
   pointer-events: none;
   border-radius: inherit;
-  opacity: .18;
+  opacity: .08;
   background-image:
     radial-gradient(circle at 20% 20%, rgba(255,255,255,.15), transparent 18%),
     linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
@@ -1915,8 +1921,8 @@ h1, h2, h3 {
   }
 
   .hero-courses {
-    min-height: clamp(220px, 32vh, 320px);
-    padding: calc(96px + env(safe-area-inset-top, 0px)) 0 20px;
+    min-height: clamp(250px, 34vh, 340px);
+    padding: calc(122px + env(safe-area-inset-top, 0px)) 0 8px;
     justify-content: flex-start;
     background-position: center top;
   }
@@ -1964,6 +1970,10 @@ h1, h2, h3 {
   }
 
   .bento-card { padding: 32px; }
+
+  .hero + .section {
+    padding-top: 14px;
+  }
   
   .bento-card.wide {
     grid-column: span 1;
@@ -2018,18 +2028,30 @@ h1, h2, h3 {
 
   .geshtalt-page,
   .marathon-page {
-    padding-top: 6px !important;
-    padding-bottom: 36px !important;
+    padding-top: 0 !important;
+    padding-bottom: 14px !important;
   }
 
   .week-page,
   .main-content > div[style*="max-width:1280px"] {
-    padding-top: 6px !important;
-    padding-bottom: 36px !important;
+    padding-top: 0 !important;
+    padding-bottom: 14px !important;
   }
 
   .course-back-wrap {
-    margin-bottom: 14px;
+    padding-top: 0 !important;
+    margin-bottom: 0;
+  }
+
+  .geshtalt-page > .back-link-glass,
+  .marathon-page > .back-link-glass {
+    position: fixed;
+    top: calc(82px + env(safe-area-inset-top));
+    left: 14px;
+    z-index: 880;
+    margin: 0 !important;
+    transform: scale(.92);
+    transform-origin: left top;
   }
 
   .course-sidebar {
@@ -2037,8 +2059,8 @@ h1, h2, h3 {
   }
 
   .footer {
-    padding-top: 36px;
-    margin-top: 24px;
+    padding-top: 22px;
+    margin-top: 8px;
   }
 
   .video-container video,
