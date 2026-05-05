@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="stylesheet" href="/css/style.css?v=6" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -91,7 +91,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="/" class="brand brand-outlined">
-        <img src="/assets/logo2.png" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
+        <img src="/assets/webp/logo2.webp" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
       </a>
       
       <div class="nav-links desktop-only">
@@ -116,7 +116,7 @@
   <main class="main-content">
 
     <!-- Hero Section для гештальта -->
-    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('/assets/courses.png') center/cover no-repeat;">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('/assets/webp/courses.webp') center/cover no-repeat;">
       <div class="hero-content text-left">
         <div class="hero-top-text fade-up">Обучение</div>
         <h1 class="hero-title fade-up">Гештальт</h1>
@@ -136,7 +136,7 @@
         <div class="course-main">
           <div class="video-container" id="video-container">
             <video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;" oncontextmenu="return false;"></video>
-            <div class="watermark"><img src="/assets/logo2.png" alt="" loading="lazy" decoding="async"></div>
+            <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
           </div>
 
           <div class="course-details">
@@ -170,7 +170,7 @@
     <div class="player-box">
       <div class="player-video-wrap">
         <video id="player-video" controls preload="metadata" oncontextmenu="return false;"></video>
-        <div class="watermark"><img src="/assets/logo2.png" alt="" loading="lazy" decoding="async"></div>
+        <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
       </div>
       <div class="player-title" id="player-title"></div>
     </div>
@@ -180,7 +180,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-col footer-about">
-        <img src="/assets/logo2.png" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
+        <img src="/assets/webp/logo2.webp" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
         <p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>
         <p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>
       </div>
@@ -269,8 +269,8 @@
 
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=23"></script>
-  <script src="/js/auth.js?v=8"></script>
-  <script src="/js/nav.js?v=37"></script>
+  <script src="/js/auth.js?v=9"></script>
+  <script src="/js/nav.js?v=38"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
     (async function() {
@@ -353,7 +353,7 @@
 
       function restoreVideoEl() {
         if (!document.getElementById('course-video')) {
-          videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video><div class="watermark"><img src="/assets/logo2.png" alt="" loading="lazy" decoding="async"></div>';
+          videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video><div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>';
         }
         return document.getElementById('course-video');
       }
@@ -416,7 +416,7 @@
         if (lessons[0]) {
           if (window.setupVideoPreview) {
             window.setupVideoPreview(videoContainer, {
-              poster: '/assets/courses.png',
+              poster: '/assets/webp/courses.webp',
               onStart: () => loadLesson(lessons[0], true),
             });
           } else {

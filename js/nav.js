@@ -59,18 +59,18 @@
   var HOME_SCROLL_KEY = 'sistema:home-scroll-y';
   var RESTORE_HOME_SCROLL_KEY = 'sistema:restore-home-scroll';
   var COURSE_PREFETCH = {
-    '/geshtalt/': { api: '/content/geshtalt-lessons', image: '/assets/courses.png' },
-    '/sozavisimost/': { api: '/content/sozavisimost-lessons', image: '/assets/coda2.png' },
-    '/psihosomatika/': { api: '/content/psihosomatika-lessons', image: '/assets/psysomatic.png' },
-    '/mj/': { api: '/content/mj-lessons', image: '/assets/man_woman.png' },
-    '/yoga/': { api: '/content/yoga-lessons', image: '/assets/mini-yoga.png' },
-    '/marathons/': { api: '/content/marathons-lessons', image: '/assets/maraphones.png' },
-    '/superviziya/': { api: '/content/superviziya-lessons', image: '/assets/supervision.png' },
-    '/antologiya/': { api: '/content/antologiya-lessons', image: '/assets/antology.png' },
-    '/terapiya/': { image: '/assets/theraphy.jpg' },
-    '/gipnoz/': { image: '/assets/hipno.png' },
-    '/master/': { image: '/assets/masterofcommication.png' },
-    '/dermer/': { image: '/assets/geshtalt.png' },
+    '/geshtalt/': { api: '/content/geshtalt-lessons', image: '/assets/webp/courses.webp' },
+    '/sozavisimost/': { api: '/content/sozavisimost-lessons', image: '/assets/webp/coda2.webp' },
+    '/psihosomatika/': { api: '/content/psihosomatika-lessons', image: '/assets/webp/psysomatic.webp' },
+    '/mj/': { api: '/content/mj-lessons', image: '/assets/webp/man_woman.webp' },
+    '/yoga/': { api: '/content/yoga-lessons', image: '/assets/webp/mini-yoga.webp' },
+    '/marathons/': { api: '/content/marathons-lessons', image: '/assets/webp/maraphones.webp' },
+    '/superviziya/': { api: '/content/superviziya-lessons', image: '/assets/webp/supervision.webp' },
+    '/antologiya/': { api: '/content/antologiya-lessons', image: '/assets/webp/antology.webp' },
+    '/terapiya/': { image: '/assets/webp/theraphy.webp' },
+    '/gipnoz/': { image: '/assets/webp/hipno.webp' },
+    '/master/': { image: '/assets/webp/masterofcommication.webp' },
+    '/dermer/': { image: '/assets/webp/geshtalt.webp' },
   };
 
   // ── Active page detection ───────────────────────────────
@@ -111,7 +111,7 @@
   sidebar.innerHTML =
     '<div class="sidebar-head">' +
       '<a href="/" class="sidebar-brand">' +
-        '<img src="/assets/logo2-Photoroom.png" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
+        '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
       '</a>' +
     '</div>' +
     '<nav class="sidebar-nav">' + navItemsHTML + '</nav>' +
@@ -144,7 +144,7 @@
 
   mobileHeader.innerHTML =
     '<a href="/" class="mobile-header-brand">' +
-      '<img src="/assets/logo2-Photoroom.png" alt="Система" class="mobile-header-logo">' +
+      '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="mobile-header-logo">' +
     '</a>' +
     '<div class="mobile-header-actions">' +
       (isLoggedIn

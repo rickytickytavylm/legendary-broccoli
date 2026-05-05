@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Профайлинг — Система Молодцова</title>
   <meta name="description" content="Курс по распознаванию личности. Приложение Way." />
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="stylesheet" href="/css/style.css?v=6" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
       align-items: flex-end;
       padding: 0;
       background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.85) 65%, var(--bg-main) 100%),
-                  url('/assets/way_block.png') center/cover no-repeat;
+                  url('/assets/webp/way_block.webp') center/cover no-repeat;
     }
     .profiling-hero-content {
       padding: 0 24px 48px;
@@ -173,7 +173,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="/" class="brand brand-outlined">
-        <img src="/assets/logo2.png" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
+        <img src="/assets/webp/logo2.webp" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
       </a>
       <div class="nav-links desktop-only">
         <a href="/courses/" class="nav-link" style="color: var(--text-1);">Обучение</a>
@@ -211,7 +211,7 @@
       </a>
 
       <div class="way-layout">
-        <img src="/assets/waypromo.jpg" alt="Приложение Way" loading="lazy" decoding="async" class="way-promo-img" />
+        <img src="/assets/webp/waypromo.webp" alt="Приложение Way" loading="lazy" decoding="async" class="way-promo-img" />
 
         <div class="way-text">
           <span class="way-label">Приложение</span>
@@ -250,7 +250,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-col footer-about">
-        <img src="/assets/logo2.png" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
+        <img src="/assets/webp/logo2.webp" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
         <p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>
         <p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>
       </div>
@@ -334,8 +334,8 @@
 
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=23"></script>
-  <script src="/js/auth.js?v=8"></script>
-  <script src="/js/nav.js?v=37"></script>
+  <script src="/js/auth.js?v=9"></script>
+  <script src="/js/nav.js?v=38"></script>
   <script>
     if (window.API.isLoggedIn()) {
       window.API.me().then(r => window.refreshAuthUI && window.refreshAuthUI(r.user)).catch(() => {});

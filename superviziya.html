@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Супервизия — Система Молодцова</title>
   <meta name="description" content="Супервизия. Профессиональная поддержка психологов." />
-  <link rel="stylesheet" href="/css/style.css?v=5" />
+  <link rel="stylesheet" href="/css/style.css?v=6" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -95,7 +95,7 @@
   <nav class="navbar">
     <div class="nav-container">
       <a href="/" class="brand brand-outlined">
-        <img src="/assets/logo2.png" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
+        <img src="/assets/webp/logo2.webp" alt="Система Молодцова" loading="lazy" decoding="async" class="brand-logo-img" />
       </a>
       <div class="nav-links desktop-only">
         <a href="/courses/" class="nav-link">Обучение</a>
@@ -117,7 +117,7 @@
 
   <main class="main-content">
 
-    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('/assets/supervision.png') center/cover no-repeat;">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('/assets/webp/supervision.webp') center/cover no-repeat;">
       <div class="hero-content text-left">
         <div class="hero-top-text fade-up">Для профессионалов</div>
         <h1 class="hero-title fade-up">Супервизия</h1>
@@ -146,7 +146,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-col footer-about">
-        <img src="/assets/logo2.png" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
+        <img src="/assets/webp/logo2.webp" alt="Система" loading="lazy" decoding="async" class="footer-logo" />
         <p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>
         <p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>
       </div>
@@ -223,8 +223,8 @@
 
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=23"></script>
-  <script src="/js/auth.js?v=8"></script>
-  <script src="/js/nav.js?v=37"></script>
+  <script src="/js/auth.js?v=9"></script>
+  <script src="/js/nav.js?v=38"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
     function pluralEvents(n) {
@@ -323,7 +323,7 @@
       if (autoLoad) {
         if (window.setupVideoPreview) {
           window.setupVideoPreview(document.getElementById(containerId), {
-            poster: '/assets/supervision.png',
+            poster: '/assets/webp/supervision.webp',
             onStart: () => loadLesson(lessons[0]),
           });
         } else {
@@ -350,8 +350,8 @@
               <div class="course-main">
                 <div class="video-container" id="container-${section.id}">
                   <video id="video-${section.id}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
-                  <div class="watermark"><img src="/assets/logo2.png" alt="" loading="lazy" decoding="async"></div>
-                  <button class="video-placeholder ${idx === 0 ? 'hidden' : ''}" id="placeholder-${section.id}" type="button" style="background-image:url('/assets/supervision.png')" aria-label="Открыть видео">
+                  <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
+                  <button class="video-placeholder ${idx === 0 ? 'hidden' : ''}" id="placeholder-${section.id}" type="button" style="background-image:url('/assets/webp/supervision.webp')" aria-label="Открыть видео">
                     <span class="video-placeholder-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
                   </button>
                   <div class="video-loader ${idx === 0 ? '' : 'hidden'}" id="loader-${section.id}">

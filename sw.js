@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v2';
+const CACHE_NAME = 'sistema-static-v3';
 const SAME_ORIGIN_TYPES = new Set(['document', 'style', 'script', 'image', 'font', 'manifest']);
 
 function shouldCache(request) {
@@ -33,13 +33,13 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll([
       '/',
-      '/css/style.css?v=5',
+      '/css/style.css?v=6',
       '/js/config.js',
       '/js/api.js?v=23',
-      '/js/auth.js?v=8',
-      '/js/nav.js?v=37',
-      '/assets/logo2.png',
-      '/assets/logo2-Photoroom.png',
+      '/js/auth.js?v=9',
+      '/js/nav.js?v=38',
+      '/assets/webp/logo2.webp',
+      '/assets/webp/logo2-Photoroom.webp',
       '/manifest.json',
     ]).catch(() => {}))
   );

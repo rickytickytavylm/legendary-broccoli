@@ -414,13 +414,13 @@ h1, h2, h3 {
   margin-left: calc(-50vw + 50%);
   background: 
     linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 70%, var(--bg-main) 100%),
-    url('../assets/hero.jpg') center/cover no-repeat;
+    url('../assets/webp/hero.webp') center/cover no-repeat;
 }
 
 .hero-courses {
   background: 
     linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%),
-    url('../assets/hero_course.png') center/cover no-repeat;
+    url('../assets/webp/hero_course.webp') center/cover no-repeat;
   min-height: 60vh;
   align-items: flex-start;
   text-align: left;

@@ -38,7 +38,7 @@
   async function loadLesson(lesson, isFirst) {
     try {
       if (!document.getElementById('course-video')) {
-        videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;"></video><div class="watermark"><img src="/assets/logo2.png" alt=""></div>';
+        videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;"></video><div class="watermark"><img src="/assets/webp/logo2.webp" alt=""></div>';
       }
       const video = document.getElementById('course-video');
       await window.attachVideoSource(video, lesson.video_slug || lesson.url, hlsInstance, (next) => { hlsInstance = next; });
