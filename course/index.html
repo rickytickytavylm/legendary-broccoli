@@ -6,12 +6,14 @@
   <meta name="theme-color" content="#000000" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="robots" content="noindex,follow" />
 <title>Урок — Система Молодцова</title>
   <meta name="description" content="Просмотр урока" />
   <script>
     (function () {
       var params = new URLSearchParams(location.search);
       var slug = (params.get('slug') || '').toLowerCase();
+      if (!slug) location.replace('/courses/');
       var map = {
         'marafony': '/marathons/',
         'marathon': '/marathons/',
@@ -39,8 +41,8 @@
       if (map[slug]) { location.replace(map[slug]); }
     })();
   </script>
-  <link rel="stylesheet" href="/css/style.css?v=17" />
-  <link rel="stylesheet" href="/css/nav.css?v=43" />
+  <link rel="stylesheet" href="/css/style.css?v=20" />
+  <link rel="stylesheet" href="/css/nav.css?v=45" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -212,9 +214,9 @@
 
   <!-- iOS Glass Tab Bar (Mobile Only) -->
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=30"></script>
+  <script src="/js/api.js?v=31"></script>
   <script src="/js/auth.js?v=11"></script>
-  <script src="/js/nav.js?v=45"></script>
+  <script src="/js/nav.js?v=46"></script>
   <script src="/js/course.js"></script>
   <script>
     // Auth UI state

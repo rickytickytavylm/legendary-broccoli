@@ -539,6 +539,18 @@
 
   // Mobile UX: after selecting a lesson below the player, return to the player.
   document.addEventListener('click', function(event) {
+    var videoTap = event.target.closest('.video-container video, .single-video-wrap video, .player-video-wrap video');
+    var videoShellTap = event.target.closest('.video-container, .single-video-wrap, .player-video-wrap');
+    if (!videoTap && videoShellTap) videoTap = videoShellTap.querySelector('video');
+    if (videoTap && window.innerWidth <= 768) {
+      videoTap.setAttribute('controls', '');
+      if (videoTap.readyState > 0 && videoTap.paused && videoTap.currentSrc) {
+        var playAttempt = videoTap.play && videoTap.play();
+        if (playAttempt && typeof playAttempt.catch === 'function') playAttempt.catch(function() {});
+      }
+      return;
+    }
+
     var lesson = event.target.closest('.lesson-item');
     if (!lesson || window.innerWidth > 768) return;
 

@@ -612,11 +612,11 @@
   }
 
   .hero:not(.hero-courses) {
-    padding-top: 132px !important;
-    padding-bottom: 52px !important;
-    min-height: min(62vh, 560px) !important;
+    padding-top: 150px !important;
+    padding-bottom: 68px !important;
+    min-height: clamp(500px, 70vh, 660px) !important;
     background-position: center top, center top !important;
-    background-size: auto, auto 142% !important;
+    background-size: auto, auto 152% !important;
     background-repeat: no-repeat !important;
   }
 
@@ -629,7 +629,7 @@
   /* Mobile video/course layout: player first, lessons as normal content */
   .geshtalt-page,
   .marathon-page {
-    padding: 0 14px 14px !important;
+    padding: 12px 14px 14px !important;
     max-width: none !important;
     margin: 0 !important;
   }
@@ -643,18 +643,18 @@
   }
 
   .course-back-wrap {
-    position: fixed !important;
-    top: calc(82px + env(safe-area-inset-top)) !important;
-    left: 14px !important;
+    position: sticky !important;
+    top: calc(88px + env(safe-area-inset-top)) !important;
     z-index: 880 !important;
     width: auto !important;
-    padding: 0 !important;
+    max-width: none !important;
+    padding: 12px 14px 8px !important;
     margin: 0 !important;
     pointer-events: none !important;
   }
 
   .course-back-wrap .back-link-glass {
-    transform: scale(.92) !important;
+    transform: none !important;
     transform-origin: left top !important;
     margin: 0 !important;
     pointer-events: auto !important;
@@ -675,10 +675,10 @@
   .single-video-wrap,
   .player-video-wrap {
     border-radius: 20px !important;
-    width: 100% !important;
+    width: calc(100% + 12px) !important;
     max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin-left: -6px !important;
+    margin-right: -6px !important;
     transform: translateZ(0) !important;
     -webkit-transform: translateZ(0) !important;
     overflow: hidden !important;
@@ -769,14 +769,14 @@
 
   .back-link-glass {
     position: sticky !important;
-    top: 126px !important;
+    top: calc(88px + env(safe-area-inset-top)) !important;
     z-index: 899 !important;
     width: 42px !important;
     height: 42px !important;
     min-width: 42px !important;
     padding: 0 !important;
-    margin-top: 28px !important;
-    margin-bottom: 16px !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
     border-radius: 50% !important;
     justify-content: center !important;
     align-items: center !important;
@@ -792,9 +792,9 @@
     -webkit-backdrop-filter: blur(22px) saturate(140%) !important;
     font-size: 0 !important;
     color: rgba(255,255,255,.86) !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transform: translateY(-8px) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
     transition: opacity .24s ease, transform .24s ease, background .2s ease !important;
   }
 

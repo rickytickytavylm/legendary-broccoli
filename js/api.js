@@ -273,9 +273,12 @@ function isAppleTouchVideoDevice() {
 }
 
 function shouldPreferMp4ForSlug(slug) {
+  const path = (location.pathname || '').toLowerCase();
+  const isProblemIosRoute = isAppleTouchVideoDevice() &&
+    /\/(geshtalt|sozavisimost|antologiya)(?:\/|\.html|$)/.test(path);
   const value = String(slug || '');
-  return /^Телесные практики\//i.test(value) ||
-    /^(Гештальт|Созависимость|Антология)\//i.test(value);
+  return isProblemIosRoute ||
+    /^Телесные практики\//i.test(value);
 }
 
 window.ensureHlsJs = function ensureHlsJs() {

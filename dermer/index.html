@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#000000" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-<title>Курс Дермер — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=17" />
-  <link rel="stylesheet" href="/css/nav.css?v=43" />
+<title>Работа с травмами — Система Молодцова</title>
+  <link rel="stylesheet" href="/css/style.css?v=20" />
+  <link rel="stylesheet" href="/css/nav.css?v=45" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -72,8 +72,8 @@
   <section class="hero hero-courses" style="background:linear-gradient(to bottom,rgba(0,0,0,.45) 0%,rgba(0,0,0,.82) 70%,var(--bg-main) 100%),url('/assets/webp/geshtalt.webp') center/cover no-repeat;">
     <div class="hero-content text-left">
       <div class="hero-top-text fade-up">Обучение</div>
-      <h1 class="hero-title fade-up">Курс Дермер</h1>
-      <p class="hero-subtitle fade-up">7 недель практики. <span id="total-count"></span></p>
+      <h1 class="hero-title fade-up">Работа с травмами</h1>
+      <p class="hero-subtitle fade-up">Практический курс о травме, кризисах и восстановлении опоры. <span id="total-count"></span></p>
     </div>
   </section>
 
@@ -91,9 +91,9 @@
             <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
           </div>
 
-          <div class="lesson-info-block" id="lesson-info-block" style="display:none">
-            <h2 class="lesson-title-main" id="lesson-title-main"></h2>
-            <p class="lesson-desc-main" id="lesson-desc-main"></p>
+          <div class="lesson-info-block" id="lesson-info-block" style="display:flex">
+            <h2 class="lesson-title-main" id="lesson-title-main">Работа с травмами</h2>
+            <p class="lesson-desc-main" id="lesson-desc-main">Практический курс о кризисах, травматическом опыте и восстановлении внутренней опоры. Материалы помогают понять, как формируются защитные реакции, где человек застревает после сильных переживаний и как выстраивать бережный путь возвращения к устойчивости, ясности и живому контакту с собой.</p>
           </div>
         </div>
 
@@ -181,9 +181,9 @@
 
   <!-- Glass Tab Bar -->
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=30"></script>
+  <script src="/js/api.js?v=31"></script>
   <script src="/js/auth.js?v=11"></script>
-  <script src="/js/nav.js?v=45"></script>
+  <script src="/js/nav.js?v=46"></script>
   <script>
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');
@@ -204,7 +204,7 @@
       const infoBlock      = document.getElementById('lesson-info-block');
       const lessonTitleEl  = document.getElementById('lesson-title-main');
       const lessonDescEl   = document.getElementById('lesson-desc-main');
-      const COURSE_OVERVIEW = 'Курс Дермер — это собранная система работы с кризисами, травматическим опытом и состояниями, где человеку нужна не мотивация, а опора. Уроки помогают понять логику кризиса, увидеть защитные реакции и выстроить бережный путь восстановления: через ясность, устойчивость и практические шаги.';
+      const COURSE_OVERVIEW = 'Практический курс о кризисах, травматическом опыте и восстановлении внутренней опоры. Материалы помогают понять, как формируются защитные реакции, где человек застревает после сильных переживаний и как выстраивать бережный путь возвращения к устойчивости, ясности и живому контакту с собой.';
       const FIRST_LESSON_POSTER = '/assets/webp/dermer_prew.webp';
       const countEl        = document.getElementById('course-lessons-count');
       const totalCountEl   = document.getElementById('total-count');
