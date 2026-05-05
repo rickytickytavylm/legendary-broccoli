@@ -70,7 +70,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div class="auth-brand">
-          <img src="assets/logo2-Photoroom.png" alt="Система Молодцова">
+          <img src="/assets/logo2-Photoroom.png" alt="Система Молодцова">
         </div>
         <h2 class="auth-title">Вход в Систему</h2>
         <p class="auth-subtitle" id="auth-subtitle">Введите номер телефона — пришлём SMS-код для входа.</p>
@@ -158,6 +158,13 @@
     overlay.classList.remove('active');
     setTimeout(() => { if (overlay) { overlay.remove(); overlay = null; } }, 300);
   };
+
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-auth-open]');
+    if (!trigger) return;
+    event.preventDefault();
+    window.openAuthModal(trigger.getAttribute('data-auth-open') || 'login');
+  });
 
   // Telegram Web App auto-auth
   if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initData) {

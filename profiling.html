@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <title>Профайлинг — Система Молодцова</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+<title>Профайлинг — Система Молодцова</title>
   <meta name="description" content="Курс по распознаванию личности. Приложение Way." />
   <link rel="stylesheet" href="/css/style.css?v=3" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -179,11 +181,11 @@
         <a href="/#support" class="nav-link">Поддержка</a>
       </div>
       <div class="nav-actions">
-        <a href="https://t.me/obrazmisl" target="_blank" class="btn-nav-outline desktop-only">
+        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-nav-outline desktop-only">
           Вступить в клуб
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </a>
-        <button id="nav-auth-btn" class="btn-nav-outline" onclick="window.openAuthModal('login')">Войти</button>
+        <button id="nav-auth-btn" class="btn-nav-outline" data-auth-open="login">Войти</button>
         <a id="nav-account-link" href="/account/" class="btn-nav-outline" style="display:none">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
         </a>
@@ -218,14 +220,14 @@
             Курс по профайлингу и распознаванию личности доступен в приложении <strong style="color:#fff;">Way</strong> — психологическом инструменте для глубокого самопознания и анализа других людей.
           </p>
           <div class="store-btns">
-            <a href="https://apps.apple.com/ru/app/who-are-you/id1619314732" target="_blank" rel="noopener" class="btn-store btn-appstore">
+            <a href="https://apps.apple.com/ru/app/who-are-you/id1619314732" target="_blank" rel="noopener noreferrer" class="btn-store btn-appstore">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
               <div class="btn-store-inner">
                 <span class="btn-store-sub">Загрузить в</span>
                 <span class="btn-store-name">App Store</span>
               </div>
             </a>
-            <a href="https://play.google.com/store/apps/details?id=com.brainspaceprofile.way&hl=ru" target="_blank" rel="noopener" class="btn-store btn-googleplay">
+            <a href="https://play.google.com/store/apps/details?id=com.brainspaceprofile.way&hl=ru" target="_blank" rel="noopener noreferrer" class="btn-store btn-googleplay">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3.18 1.09C2.76 1.54 2.5 2.24 2.5 3.14v17.72c0 .9.26 1.6.68 2.05l.11.1 9.93-9.93v-.23L3.29 2.99l-.11.1z" fill="#4285F4"/>
                 <path d="M16.54 16.41l-3.31-3.32v-.23l3.31-3.32.07.04 3.92 2.23c1.12.63 1.12 1.67 0 2.31l-3.92 2.23-.07.06z" fill="#FBBC04"/>
@@ -282,12 +284,12 @@
       <div class="footer-col footer-cta">
         <h4 class="footer-heading">Будьте в курсе</h4>
         <p class="footer-desc">Получайте важные материалы<br>и анонсы прямо в Telegram.</p>
-        <a href="https://t.me/obrazmisl" target="_blank" class="btn-footer-telegram">
+        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-footer-telegram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           Подписаться в Telegram
         </a>
         <div class="footer-socials">
-          <a href="https://t.me/obrazmisl" target="_blank" aria-label="Telegram">
+          <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </a>
           <a href="#" aria-label="YouTube">
@@ -331,9 +333,9 @@
   </nav>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=12"></script>
+  <script src="/js/api.js?v=13"></script>
   <script src="/js/auth.js?v=7"></script>
-  <script src="/js/nav.js?v=33"></script>
+  <script src="/js/nav.js?v=34"></script>
   <script>
     if (window.API.isLoggedIn()) {
       window.API.me().then(r => window.refreshAuthUI && window.refreshAuthUI(r.user)).catch(() => {});

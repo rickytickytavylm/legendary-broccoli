@@ -317,7 +317,7 @@
   function protectVideo(video) {
     if (!video || video.dataset.protectedVideo === 'true') return;
     video.dataset.protectedVideo = 'true';
-    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
+    video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
     video.setAttribute('disablePictureInPicture', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');

@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const titleParam = urlParams.get('title'); // fallback title
 
   if (!slug) {
-    window.location.href = 'courses.html';
+    window.location.href = '/courses/';
     return;
   }
 
   // Apply hero background immediately from URL param
   const heroEl = document.getElementById('course-hero');
   if (heroEl && bgParam) {
-    heroEl.style.background = `linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('assets/${bgParam}') center/cover no-repeat`;
+    heroEl.style.background = `linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 70%, var(--bg-main) 100%), url('/assets/${bgParam}') center/cover no-repeat`;
   }
   if (titleParam) {
     const heroTitle = document.getElementById('hero-course-title');
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     document.getElementById('btn-auth-or-sub').addEventListener('click', () => {
       if (isFirst) window.openAuthModal('login');
-      else window.location.href = 'subscription.html';
+      else window.location.href = '/subscription/';
     });
   }
 

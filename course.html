@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <title>Урок — Система Молодцова</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+<title>Урок — Система Молодцова</title>
   <meta name="description" content="Просмотр урока" />
   <script>
     (function () {
@@ -64,11 +66,11 @@
       </div>
 
       <div class="nav-actions">
-        <a href="https://t.me/obrazmisl" target="_blank" class="btn-nav-outline desktop-only">
+        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-nav-outline desktop-only">
           Вступить в клуб
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </a>
-        <button id="nav-auth-btn" class="btn-nav-outline" onclick="window.openAuthModal('login')">
+        <button id="nav-auth-btn" class="btn-nav-outline" data-auth-open="login">
           Войти
         </button>
         <a id="nav-account-link" href="/account/" class="btn-nav-outline" style="display:none">
@@ -180,12 +182,12 @@
       <div class="footer-col footer-cta">
         <h4 class="footer-heading">Будьте в курсе</h4>
         <p class="footer-desc">Получайте важные материалы<br>и анонсы прямо в Telegram.</p>
-        <a href="https://t.me/obrazmisl" target="_blank" class="btn-footer-telegram">
+        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-footer-telegram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           Подписаться в Telegram
         </a>
         <div class="footer-socials">
-          <a href="https://t.me/obrazmisl" target="_blank" aria-label="Telegram">
+          <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </a>
           <a href="#" aria-label="YouTube">
@@ -229,9 +231,9 @@
   </nav>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=12"></script>
+  <script src="/js/api.js?v=13"></script>
   <script src="/js/auth.js?v=7"></script>
-  <script src="/js/nav.js?v=33"></script>
+  <script src="/js/nav.js?v=34"></script>
   <script src="/js/course.js"></script>
   <script>
     // Auth UI state

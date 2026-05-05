@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-  <title>Созависимость — Система Молодцова</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+<title>Созависимость — Система Молодцова</title>
   <meta name="description" content="Курс по созависимости." />
   <link rel="stylesheet" href="/css/style.css?v=3" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -98,11 +100,11 @@
         <a href="/#support" class="nav-link">Поддержка</a>
       </div>
       <div class="nav-actions">
-        <a href="https://t.me/obrazmisl" target="_blank" class="btn-nav-outline desktop-only">
+        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-nav-outline desktop-only">
           Вступить в клуб
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </a>
-        <button id="nav-auth-btn" class="btn-nav-outline" onclick="window.openAuthModal('login')">Войти</button>
+        <button id="nav-auth-btn" class="btn-nav-outline" data-auth-open="login">Войти</button>
         <a id="nav-account-link" href="/account/" class="btn-nav-outline" style="display:none">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
         </a>
@@ -194,12 +196,12 @@
       <div class="footer-col footer-cta">
         <h4 class="footer-heading">Будьте в курсе</h4>
         <p class="footer-desc">Получайте важные материалы<br>и анонсы прямо в Telegram.</p>
-        <a href="https://t.me/obrazmisl" target="_blank" class="btn-footer-telegram">
+        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-footer-telegram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           Подписаться в Telegram
         </a>
         <div class="footer-socials">
-          <a href="https://t.me/obrazmisl" target="_blank" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></a>
+          <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></a>
           <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>
           <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
         </div>
@@ -236,9 +238,9 @@
   </nav>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=12"></script>
+  <script src="/js/api.js?v=13"></script>
   <script src="/js/auth.js?v=7"></script>
-  <script src="/js/nav.js?v=33"></script>
+  <script src="/js/nav.js?v=34"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
     (async function() {
