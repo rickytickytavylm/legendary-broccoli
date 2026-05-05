@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v15';
+const CACHE_NAME = 'sistema-static-v16';
 const SAME_ORIGIN_TYPES = new Set(['document', 'style', 'script', 'image', 'font', 'manifest']);
 
 function shouldCache(request) {
@@ -11,50 +11,62 @@ function shouldCache(request) {
 
   return SAME_ORIGIN_TYPES.has(request.destination) ||
     request.mode === 'navigate' ||
-    /\.(?:html|css|js|json|png|jpg|jpeg|webp|svg|woff2?)$/i.test(url.pathname);
+    /\.(?:html|css|js|json|png|jpg|jpeg|webp|svg|woff2?|ico)$/i.test(url.pathname);
+}
+
+function offlineFallback() {
+  return new Response('', { status: 503, statusText: 'Service Unavailable' });
 }
 
 async function staleWhileRevalidate(request) {
-  const cache = await caches.open(CACHE_NAME);
-  const cached = await cache.match(request);
+  let cache;
+  try {
+    cache = await caches.open(CACHE_NAME);
+  } catch (e) {
+    try { return await fetch(request); } catch (err) { return offlineFallback(); }
+  }
 
-  const networkPromise = fetch(request)
-    .then((response) => {
-      if (response && response.ok) cache.put(request, response.clone());
-      return response;
-    })
-    .catch(() => cached);
+  const cached = await cache.match(request).catch(() => null);
 
-  return cached || networkPromise;
+  const networkFetch = fetch(request).then((response) => {
+    if (response && response.ok && response.type === 'basic') {
+      try { cache.put(request, response.clone()); } catch (e) {}
+    }
+    return response;
+  });
+
+  if (cached) {
+    networkFetch.catch(() => {});
+    return cached;
+  }
+
+  try {
+    const fresh = await networkFetch;
+    return fresh || offlineFallback();
+  } catch (e) {
+    return offlineFallback();
+  }
 }
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll([
-      '/',
-      '/css/style.css?v=16',
-      '/css/nav.css?v=42',
-      '/js/config.js',
-      '/js/api.js?v=28',
-      '/js/auth.js?v=11',
-      '/js/nav.js?v=45',
-      '/assets/webp/logo2.webp',
-      '/assets/webp/logo2-Photoroom.webp',
-      '/manifest.json',
-    ]).catch(() => {}))
-  );
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
+  event.waitUntil((async () => {
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)));
+    } catch (e) {}
+    try { await self.clients.claim(); } catch (e) {}
+  })());
 });
 
 self.addEventListener('fetch', (event) => {
   if (!shouldCache(event.request)) return;
-  event.respondWith(staleWhileRevalidate(event.request));
+
+  event.respondWith(
+    staleWhileRevalidate(event.request)
+      .catch(() => fetch(event.request).catch(() => offlineFallback()))
+  );
 });

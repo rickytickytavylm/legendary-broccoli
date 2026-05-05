@@ -642,6 +642,24 @@
     padding-bottom: 14px !important;
   }
 
+  .course-back-wrap {
+    position: fixed !important;
+    top: calc(82px + env(safe-area-inset-top)) !important;
+    left: 14px !important;
+    z-index: 880 !important;
+    width: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .course-back-wrap .back-link-glass {
+    transform: scale(.92) !important;
+    transform-origin: left top !important;
+    margin: 0 !important;
+    pointer-events: auto !important;
+  }
+
   .course-layout {
     display: grid !important;
     grid-template-columns: 1fr !important;
@@ -669,8 +687,9 @@
   }
 
   .video-loader {
-    align-items: flex-start !important;
-    padding-top: 23% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-top: 0 !important;
     box-sizing: border-box !important;
   }
 
