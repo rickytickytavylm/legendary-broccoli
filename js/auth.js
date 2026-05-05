@@ -5,7 +5,7 @@
 (function() {
   const style = document.createElement('style');
   style.textContent = `
-    .auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:2300;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .28s cubic-bezier(.4,0,.2,1);padding:18px}
+    .auth-overlay{position:fixed;inset:0;width:100vw;height:100dvh;min-height:100dvh;background:rgba(0,0,0,.78);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:2300;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .28s cubic-bezier(.4,0,.2,1);padding:18px;overflow:hidden;overscroll-behavior:contain}
     .auth-overlay.active{opacity:1}
     .auth-modal{background:linear-gradient(180deg,rgba(28,38,58,.58),rgba(7,9,15,.88));border:1px solid rgba(255,255,255,.14);border-radius:24px;width:100%;max-width:400px;min-height:410px;padding:34px 30px 30px;position:relative;overflow:hidden;transform:translateY(10px) scale(.985);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 28px 90px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.14);backdrop-filter:blur(34px) saturate(150%);-webkit-backdrop-filter:blur(34px) saturate(150%)}
     .auth-modal::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 24% 0%,rgba(107,145,255,.14),transparent 36%),radial-gradient(circle at 88% 92%,rgba(255,255,255,.06),transparent 34%);pointer-events:none}
@@ -47,11 +47,10 @@
     .auth-switch a:hover{border-color:#fff}
     .auth-apple-icon{fill:currentColor}
     .auth-tg-icon{fill:currentColor}
-    html.auth-scroll-lock,body.auth-scroll-lock{overflow:hidden;overscroll-behavior:none;touch-action:none}
-    body.auth-scroll-lock{position:fixed;width:100%}
+    html.auth-scroll-lock,body.auth-scroll-lock{overflow:hidden;overscroll-behavior:none}
     @media (max-width:560px){
-      .auth-overlay{align-items:flex-end;background:rgba(0,0,0,.86);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
-      .auth-modal{max-width:none;min-height:420px;padding:30px 22px 24px;border-radius:26px;background:linear-gradient(180deg,rgba(28,38,58,.64),rgba(7,9,15,.92));box-shadow:0 -18px 80px rgba(0,0,0,.82)}
+      .auth-overlay{align-items:center;justify-content:center;background:rgba(0,0,0,.86);padding:calc(14px + env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom));touch-action:none}
+      .auth-modal{width:min(100%,390px);min-height:auto;max-height:calc(100dvh - 36px);overflow:auto;padding:30px 22px 24px;border-radius:26px;background:linear-gradient(180deg,rgba(28,38,58,.64),rgba(7,9,15,.92));box-shadow:0 24px 90px rgba(0,0,0,.82)}
       .auth-brand img{width:126px}
       .auth-title{font-size:23px}
       .auth-subtitle{color:rgba(255,255,255,.66)}
@@ -68,13 +67,11 @@
     scrollYBeforeAuth = window.scrollY || document.documentElement.scrollTop || 0;
     document.documentElement.classList.add('auth-scroll-lock');
     document.body.classList.add('auth-scroll-lock');
-    document.body.style.top = `-${scrollYBeforeAuth}px`;
   }
 
   function unlockPageScroll() {
     document.documentElement.classList.remove('auth-scroll-lock');
     document.body.classList.remove('auth-scroll-lock');
-    document.body.style.top = '';
     window.scrollTo(0, scrollYBeforeAuth);
   }
 
@@ -104,6 +101,9 @@
       </div>
     `;
     document.body.appendChild(overlay);
+    overlay.addEventListener('touchmove', (event) => {
+      if (!event.target.closest('.auth-modal')) event.preventDefault();
+    }, { passive: false });
     requestAnimationFrame(() => overlay.classList.add('active'));
 
     document.getElementById('auth-form').addEventListener('submit', handleSubmit);

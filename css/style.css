@@ -1921,8 +1921,8 @@ h1, h2, h3 {
   }
 
   .hero-courses {
-    min-height: clamp(250px, 34vh, 340px);
-    padding: calc(122px + env(safe-area-inset-top, 0px)) 0 8px;
+    min-height: clamp(280px, 38vh, 370px);
+    padding: calc(166px + env(safe-area-inset-top, 0px)) 0 10px;
     justify-content: flex-start;
     background-position: center top;
   }
@@ -2017,11 +2017,22 @@ h1, h2, h3 {
 
   .video-container {
     border-radius: var(--r-sm);
-    width: calc(100% + 20px);
-    margin-left: -10px;
-    margin-right: -10px;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
     aspect-ratio: 16 / 10;
-    min-height: clamp(218px, 58vw, 330px);
+    min-height: clamp(218px, 57vw, 330px);
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .single-video-wrap,
+  .player-video-wrap {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
   }
@@ -2035,6 +2046,8 @@ h1, h2, h3 {
   .week-page,
   .main-content > div[style*="max-width:1280px"] {
     padding-top: 0 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
     padding-bottom: 14px !important;
   }
 
