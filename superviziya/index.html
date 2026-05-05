@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Супервизия — Система Молодцова</title>
   <meta name="description" content="Супервизия. Профессиональная поддержка психологов." />
-  <link rel="stylesheet" href="/css/style.css?v=3" />
+  <link rel="stylesheet" href="/css/style.css?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -61,6 +61,11 @@
 
     .video-loader { position: absolute; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; border-radius: 16px; z-index: 10; transition: opacity .25s; }
     .video-loader.hidden { opacity: 0; pointer-events: none; }
+    .video-placeholder { position: absolute; inset: 0; z-index: 8; border: 0; border-radius: 16px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; overflow: hidden; }
+    .video-placeholder::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.66)); }
+    .video-placeholder.hidden { display: none; }
+    .video-placeholder-play { position: relative; width: 68px; height: 68px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.24); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: 0 18px 44px rgba(0,0,0,.35); }
+    .video-placeholder-play svg { width: 28px; height: 28px; margin-left: 3px; }
     .apple-spinner { position: relative; width: 36px; height: 36px; }
     .apple-spinner span { position: absolute; top: 0; left: 50%; width: 3px; height: 10px; margin-left: -1.5px; background: #fff; border-radius: 2px; transform-origin: 50% 18px; opacity: 0; animation: spin-fade 1s linear infinite; }
     .apple-spinner span:nth-child(1){transform:rotate(0deg);animation-delay:0s}
@@ -218,8 +223,8 @@
 
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=21"></script>
-  <script src="/js/auth.js?v=7"></script>
-  <script src="/js/nav.js?v=34"></script>
+  <script src="/js/auth.js?v=8"></script>
+  <script src="/js/nav.js?v=35"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
     function pluralEvents(n) {
@@ -240,6 +245,7 @@
       const listId = `list-${secId}`;
       const loaderId = `loader-${secId}`;
       const nowId = `now-${secId}`;
+      const placeholderId = `placeholder-${secId}`;
       let hlsInstance = null;
 
       function showLoader() {
@@ -277,11 +283,12 @@
           showLoader();
           const vid = document.getElementById(videoId);
           if (!vid) return;
+          const placeholder = document.getElementById(placeholderId);
+          if (placeholder) placeholder.classList.add('hidden');
           await window.attachVideoSource(vid, lesson.video_slug, hlsInstance, (next) => { hlsInstance = next; });
           vid.addEventListener('loadedmetadata', hideLoader, { once: true });
           vid.addEventListener('canplay', hideLoader, { once: true });
           hideLoader();
-          vid.play().catch(() => {});
           const nowEl = document.getElementById(nowId);
           if (nowEl) nowEl.textContent = lesson.title;
         } catch (e) {
@@ -308,6 +315,11 @@
         });
       });
 
+      const placeholder = document.getElementById(placeholderId);
+      if (placeholder) {
+        placeholder.addEventListener('click', () => loadLesson(lessons[0]));
+      }
+
       if (autoLoad) loadLesson(lessons[0]);
     }
 
@@ -330,7 +342,10 @@
                 <div class="video-container" id="container-${section.id}">
                   <video id="video-${section.id}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
                   <div class="watermark"><img src="/assets/logo2.png" alt="" loading="lazy" decoding="async"></div>
-                  <div class="video-loader" id="loader-${section.id}">
+                  <button class="video-placeholder ${idx === 0 ? 'hidden' : ''}" id="placeholder-${section.id}" type="button" style="background-image:url('/assets/supervision.png')" aria-label="Открыть видео">
+                    <span class="video-placeholder-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                  </button>
+                  <div class="video-loader ${idx === 0 ? '' : 'hidden'}" id="loader-${section.id}">
                     <div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
                   </div>
                 </div>

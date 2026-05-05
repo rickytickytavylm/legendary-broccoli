@@ -7,7 +7,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=30';
+    link.href = '/css/nav.css?v=31';
     document.head.appendChild(link);
   }
 
@@ -50,6 +50,8 @@
   ];
 
   var ALL_ITEMS = NAV_ITEMS.concat(BOTTOM_ITEMS);
+  var HOME_SCROLL_KEY = 'sistema:home-scroll-y';
+  var RESTORE_HOME_SCROLL_KEY = 'sistema:restore-home-scroll';
 
   // ── Active page detection ───────────────────────────────
   var currentPath = location.pathname;
@@ -134,6 +136,17 @@
   document.body.insertBefore(sidebar, document.body.firstChild);
   document.body.insertBefore(mobileHeader, sidebar.nextSibling);
   document.body.appendChild(tabbar);
+
+  try {
+    if ((location.pathname === '/' || location.pathname.endsWith('/index.html')) && sessionStorage.getItem(RESTORE_HOME_SCROLL_KEY) === '1') {
+      var savedHomeScroll = parseInt(sessionStorage.getItem(HOME_SCROLL_KEY) || '0', 10);
+      sessionStorage.removeItem(RESTORE_HOME_SCROLL_KEY);
+      if (savedHomeScroll > 0) {
+        requestAnimationFrame(function() { window.scrollTo(0, savedHomeScroll); });
+        setTimeout(function() { window.scrollTo(0, savedHomeScroll); }, 120);
+      }
+    }
+  } catch (e) {}
 
   var mobileLoginBtn = document.getElementById('mobile-login-btn');
   if (mobileLoginBtn) {
@@ -298,7 +311,7 @@
       video._hlsInstance = null;
     } catch (e) {}
     try { video.pause(); } catch (e) {}
-    try { video.removeAttribute('src'); } catch (e) {}
+    try { if (video.getAttribute('src')) video.removeAttribute('src'); } catch (e) {}
     try {
       Array.prototype.forEach.call(video.querySelectorAll('source'), function(source) {
         source.removeAttribute('src');
@@ -386,6 +399,14 @@
     var url;
     try { url = new URL(href, location.href); } catch (e) { return; }
     if (url.origin !== location.origin || url.href === location.href) return;
+    try {
+      if (location.pathname === '/' || location.pathname.endsWith('/index.html')) {
+        sessionStorage.setItem(HOME_SCROLL_KEY, String(window.scrollY || 0));
+      }
+      if (link.classList.contains('back-link-glass') && url.pathname === '/') {
+        sessionStorage.setItem(RESTORE_HOME_SCROLL_KEY, '1');
+      }
+    } catch (e) {}
     Array.prototype.forEach.call(document.querySelectorAll('video'), stopVideo);
   }, true);
 

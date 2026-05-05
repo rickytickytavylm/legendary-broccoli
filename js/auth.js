@@ -47,6 +47,8 @@
     .auth-switch a:hover{border-color:#fff}
     .auth-apple-icon{fill:currentColor}
     .auth-tg-icon{fill:currentColor}
+    html.auth-scroll-lock,body.auth-scroll-lock{overflow:hidden;overscroll-behavior:none;touch-action:none}
+    body.auth-scroll-lock{position:fixed;width:100%}
     @media (max-width:560px){
       .auth-overlay{align-items:flex-end;background:rgba(0,0,0,.86);padding:16px 12px calc(16px + env(safe-area-inset-bottom))}
       .auth-modal{max-width:none;min-height:420px;padding:30px 22px 24px;border-radius:26px;background:linear-gradient(180deg,rgba(28,38,58,.64),rgba(7,9,15,.92));box-shadow:0 -18px 80px rgba(0,0,0,.82)}
@@ -59,9 +61,26 @@
   document.head.appendChild(style);
 
   let overlay = null;
+  let scrollYBeforeAuth = 0;
+
+  function lockPageScroll() {
+    if (document.body.classList.contains('auth-scroll-lock')) return;
+    scrollYBeforeAuth = window.scrollY || document.documentElement.scrollTop || 0;
+    document.documentElement.classList.add('auth-scroll-lock');
+    document.body.classList.add('auth-scroll-lock');
+    document.body.style.top = `-${scrollYBeforeAuth}px`;
+  }
+
+  function unlockPageScroll() {
+    document.documentElement.classList.remove('auth-scroll-lock');
+    document.body.classList.remove('auth-scroll-lock');
+    document.body.style.top = '';
+    window.scrollTo(0, scrollYBeforeAuth);
+  }
 
   function createModal(type = 'login') {
     if (overlay) overlay.remove();
+    lockPageScroll();
     overlay = document.createElement('div');
     overlay.className = 'auth-overlay';
     overlay.innerHTML = `
@@ -70,7 +89,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
         <div class="auth-brand">
-          <img src="/assets/logo2-Photoroom.png" alt="Система Молодцова">
+          <img src="/assets/logo2-Photoroom.png" alt="Система Молодцова" width="132" height="132" decoding="async" onerror="this.onerror=null;this.src='/assets/logo2.png';">
         </div>
         <h2 class="auth-title">Вход в Систему</h2>
         <p class="auth-subtitle" id="auth-subtitle">Введите номер телефона — пришлём SMS-код для входа.</p>
@@ -156,6 +175,7 @@
   window.closeAuthModal = () => {
     if (!overlay) return;
     overlay.classList.remove('active');
+    unlockPageScroll();
     setTimeout(() => { if (overlay) { overlay.remove(); overlay = null; } }, 300);
   };
 
