@@ -2077,7 +2077,7 @@ h1, h2, h3 {
   .marathon-page > .back-link-glass {
     display: inline-flex !important;
     position: fixed !important;
-    top: calc(112px + env(safe-area-inset-top, 0px)) !important;
+    top: calc(132px + env(safe-area-inset-top, 0px)) !important;
     left: 14px !important;
     z-index: 980 !important;
     margin: 0 !important;
