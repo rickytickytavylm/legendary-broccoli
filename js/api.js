@@ -151,6 +151,7 @@ class ApiClient {
   register(data) { return this.request('POST', '/auth/register', data); }
   login(data)    { return this.request('POST', '/auth/login', data); }
   requestPhoneCode(data) { return this.request('POST', '/auth/phone/request', data); }
+  requestPhoneCall(data) { return this.request('POST', '/auth/phone/request-call', data); }
   verifyPhoneCode(data) { return this.request('POST', '/auth/phone/verify', data); }
   requestMagicLink(data) { return this.request('POST', '/auth/magic/request', data); }
   verifyMagicLink(token) { return this.request('POST', '/auth/magic/verify', { token }); }

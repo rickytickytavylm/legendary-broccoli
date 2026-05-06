@@ -78,6 +78,7 @@
   }
 
   function createModal(type = 'login') {
+    clearFallbackTimer();
     if (overlay) overlay.remove();
     lockPageScroll();
     overlay = document.createElement('div');
@@ -98,7 +99,7 @@
           <input type="tel" class="auth-input" name="phone" placeholder="+7 999 123-45-67" required autocomplete="tel" inputmode="tel">
           <p class="auth-error" id="auth-error" style="display:none"></p>
           <button type="submit" class="auth-btn" id="auth-submit">Получить код</button>
-          <p class="auth-note" id="auth-note">Код действует 5 минут. Пароль не нужен.</p>
+          <p class="auth-note" id="auth-note">Код действует 5 минут. Если SMS не придёт, через минуту можно запросить звонок с кодом.</p>
         </form>
       </div>
     `;
@@ -113,6 +114,23 @@
 
   let authStep = 'phone';
   let pendingPhone = '';
+  let pendingCodeLength = 6;
+  let fallbackTimer = null;
+  let fallbackUnlockAt = 0;
+
+  function clearFallbackTimer() {
+    if (fallbackTimer) {
+      clearInterval(fallbackTimer);
+      fallbackTimer = null;
+    }
+  }
+
+  function formatFallbackTime(ms) {
+    const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = String(totalSeconds % 60).padStart(2, '0');
+    return `${minutes}:${seconds}`;
+  }
 
   function normalizePhoneInput(value) {
     const digits = String(value || '').replace(/\D/g, '');
@@ -122,22 +140,70 @@
     return '';
   }
 
-  function showCodeStep(phone) {
+  function setupCallFallbackButton() {
+    const callBtn = document.getElementById('auth-call');
+    if (!callBtn) return;
+    const errEl = document.getElementById('auth-error');
+
+    const updateButton = () => {
+      const remaining = fallbackUnlockAt - Date.now();
+      if (remaining <= 0) {
+        clearFallbackTimer();
+        callBtn.disabled = false;
+        callBtn.textContent = 'Получить код звонком';
+        return;
+      }
+      callBtn.disabled = true;
+      callBtn.textContent = `Получить код звонком через ${formatFallbackTime(remaining)}`;
+    };
+
+    updateButton();
+    if (callBtn.disabled) fallbackTimer = setInterval(updateButton, 1000);
+
+    callBtn.addEventListener('click', async () => {
+      callBtn.disabled = true;
+      errEl.style.display = 'none';
+      try {
+        const res = await window.API.requestPhoneCall({ phone: pendingPhone });
+        showCodeStep(pendingPhone, {
+          channel: res.channel || 'call',
+          codeLength: res.code_length || 4,
+          message: res.message,
+        });
+      } catch (err) {
+        errEl.textContent = err.error || 'Не удалось запросить звонок. Попробуйте позже.';
+        errEl.style.display = 'block';
+        updateButton();
+      }
+    });
+  }
+
+  function showCodeStep(phone, options = {}) {
+    clearFallbackTimer();
     authStep = 'code';
     pendingPhone = phone;
-    document.getElementById('auth-subtitle').textContent = 'Введите 6 цифр из SMS. Мы сразу откроем доступ.';
+    pendingCodeLength = Number(options.codeLength || 6);
+    const isCall = (options.channel || 'sms') === 'call';
+    document.getElementById('auth-subtitle').textContent = isCall
+      ? 'Мы звоним вам. Введите 4 последние цифры номера входящего звонка.'
+      : 'Введите код из SMS. Если SMS не пришло, через минуту можно запросить код звонком.';
     const preview = document.getElementById('auth-phone-preview');
     preview.textContent = phone;
     preview.style.display = 'block';
     document.getElementById('auth-form').innerHTML = `
-      <input type="text" class="auth-input code" name="code" placeholder="000000" required autocomplete="one-time-code" inputmode="numeric" maxlength="6">
+      <input type="text" class="auth-input code" name="code" placeholder="${'0'.repeat(pendingCodeLength)}" required autocomplete="one-time-code" inputmode="numeric" maxlength="${pendingCodeLength}">
       <p class="auth-error" id="auth-error" style="display:none"></p>
       <button type="submit" class="auth-btn" id="auth-submit">Войти</button>
+      ${isCall ? '' : '<button type="button" class="auth-secondary" id="auth-call" disabled>Получить код звонком через 1:00</button>'}
       <button type="button" class="auth-secondary" id="auth-back">Изменить номер</button>
-      <p class="auth-note" id="auth-note">Если код не пришёл, проверьте номер и запросите новый через минуту.</p>
+      <p class="auth-note" id="auth-note">${options.message || (isCall ? 'Мы звоним вам. Введите 4 последние цифры номера, с которого поступит звонок.' : 'Если SMS не пришло, через минуту можно запросить звонок с кодом.')}</p>
     `;
     document.getElementById('auth-back').addEventListener('click', () => createModal('login'));
     document.getElementById('auth-form').addEventListener('submit', handleSubmit);
+    if (!isCall) {
+      fallbackUnlockAt = Date.now() + 60 * 1000;
+      setupCallFallbackButton();
+    }
     document.querySelector('.auth-input.code').focus();
   }
 
@@ -154,8 +220,12 @@
       if (authStep === 'phone') {
         const phone = normalizePhoneInput(fd.get('phone'));
         if (!phone) throw { error: 'Введите номер в формате +7 999 123-45-67' };
-        await window.API.requestPhoneCode({ phone });
-        showCodeStep(phone);
+        const res = await window.API.requestPhoneCode({ phone });
+        showCodeStep(phone, {
+          channel: res.channel || 'sms',
+          codeLength: res.code_length || 6,
+          message: res.message,
+        });
         return;
       }
 
@@ -176,6 +246,7 @@
   window.openAuthModal = (type = 'login') => createModal(type);
   window.closeAuthModal = () => {
     if (!overlay) return;
+    clearFallbackTimer();
     overlay.classList.remove('active');
     unlockPageScroll();
     setTimeout(() => { if (overlay) { overlay.remove(); overlay = null; } }, 300);
