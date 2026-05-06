@@ -8,8 +8,8 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=26" />
-  <link rel="stylesheet" href="/css/nav.css?v=50" />
+  <link rel="stylesheet" href="/css/style.css?v=27" />
+  <link rel="stylesheet" href="/css/nav.css?v=51" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -138,7 +138,7 @@
           <div class="video-container" id="video-container">
             <video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;" oncontextmenu="return false;"></video>
             <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
-            <div class="video-loader hidden" id="video-loader"><div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+            <div class="video-loader" id="video-loader"><div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
           </div>
 
           <div class="course-details">
@@ -398,6 +398,7 @@
 
         if (lessons[0]) {
           if (window.setupVideoPreview) {
+            hideVideoLoader();
             window.setupVideoPreview(videoContainer, {
               poster: '/assets/webp/courses.webp',
               onStart: () => loadLesson(lessons[0], true),
