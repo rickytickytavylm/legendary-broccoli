@@ -296,6 +296,7 @@ window.ensureHlsJs = function ensureHlsJs() {
 };
 
 window.attachVideoSource = async function attachVideoSource(video, slug, currentHls, setHls) {
+  video.setAttribute('controls', '');
   video.setAttribute('playsinline', '');
   video.setAttribute('webkit-playsinline', '');
 

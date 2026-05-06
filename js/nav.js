@@ -541,53 +541,13 @@
     return { start: start, preview: preview, video: video };
   };
 
-  function isAppleTouchVideoDevice() {
-    var ua = navigator.userAgent || '';
-    var platform = navigator.platform || '';
-    return /iPad|iPhone|iPod/i.test(ua) ||
-      (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  }
-
-  function toggleMobileVideo(video) {
-    if (!video || window.innerWidth > 768 || isAppleTouchVideoDevice()) return false;
-    video.setAttribute('controls', '');
-    if (video.readyState > 0 && video.currentSrc) {
-      if (video.paused) {
-        var playAttempt = video.play && video.play();
-        if (playAttempt && typeof playAttempt.catch === 'function') playAttempt.catch(function() {});
-      } else {
-        video.pause();
-      }
-      return true;
-    }
-    return false;
-  }
-
-  document.addEventListener('pointerup', function(event) {
-    var shell = event.target.closest('.video-container, .single-video-wrap, .player-video-wrap');
-    if (!shell || event.target.closest('.video-preview-overlay, button, a')) return;
-    if (toggleMobileVideo(shell.querySelector('video'))) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }, true);
-
-  document.addEventListener('touchend', function(event) {
-    var shell = event.target.closest('.video-container, .single-video-wrap, .player-video-wrap');
-    if (!shell || event.target.closest('.video-preview-overlay, button, a')) return;
-    if (toggleMobileVideo(shell.querySelector('video'))) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }, { capture: true, passive: false });
-
   // Mobile UX: after selecting a lesson below the player, return to the player.
   document.addEventListener('click', function(event) {
     var videoTap = event.target.closest('.video-container video, .single-video-wrap video, .player-video-wrap video');
     var videoShellTap = event.target.closest('.video-container, .single-video-wrap, .player-video-wrap');
     if (!videoTap && videoShellTap) videoTap = videoShellTap.querySelector('video');
     if (videoTap && window.innerWidth <= 768) {
-      toggleMobileVideo(videoTap);
+      videoTap.setAttribute('controls', '');
       return;
     }
 
