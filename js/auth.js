@@ -10,8 +10,9 @@
     .auth-modal{background:linear-gradient(180deg,rgba(28,38,58,.58),rgba(7,9,15,.88));border:1px solid rgba(255,255,255,.14);border-radius:24px;width:100%;max-width:400px;min-height:410px;padding:34px 30px 30px;position:relative;overflow:hidden;transform:translateY(10px) scale(.985);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 28px 90px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.14);backdrop-filter:blur(34px) saturate(150%);-webkit-backdrop-filter:blur(34px) saturate(150%)}
     .auth-modal::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 24% 0%,rgba(107,145,255,.14),transparent 36%),radial-gradient(circle at 88% 92%,rgba(255,255,255,.06),transparent 34%);pointer-events:none}
     .auth-overlay.active .auth-modal{transform:translateY(0) scale(1)}
-    .auth-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.06);color:var(--text-2,#888);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
-    .auth-close:hover{background:rgba(255,255,255,.12);color:#fff}
+    .auth-close{position:absolute;top:14px;right:14px;height:40px;min-width:40px;padding:0 13px;border-radius:999px;border:1px solid rgba(255,255,255,.13);background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.055));color:rgba(255,255,255,.76);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s;box-shadow:0 10px 28px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-size:13px;font-weight:600;line-height:1}
+    .auth-close::after{content:'Закрыть'}
+    .auth-close:hover{background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08));color:#fff;border-color:rgba(255,255,255,.22)}
     .auth-brand{position:relative;z-index:1;display:flex;justify-content:center;margin:0 0 20px}
     .auth-brand img{width:132px;height:auto;display:block;filter:brightness(1.16)}
     .auth-title{position:relative;z-index:1;font-size:24px;font-weight:700;color:var(--text-1,#fff);margin:0 0 8px;text-align:center;letter-spacing:-.3px}
@@ -55,6 +56,7 @@
       .auth-title{font-size:23px}
       .auth-subtitle{color:rgba(255,255,255,.66)}
       .auth-input{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+      .auth-close{top:12px;right:12px;height:42px;min-width:42px;padding:0 14px}
     }
   `;
   document.head.appendChild(style);

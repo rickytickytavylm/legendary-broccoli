@@ -606,11 +606,12 @@
   }
 
   .hero-courses {
-    margin-top: calc(96px + env(safe-area-inset-top, 0px)) !important;
-    min-height: clamp(270px, 36vh, 360px) !important;
-    padding-top: 42px !important;
-    padding-bottom: 18px !important;
-    background-position: center center !important;
+    margin-top: 0 !important;
+    min-height: clamp(330px, 43vh, 430px) !important;
+    padding-top: calc(138px + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 22px !important;
+    background-position: center top !important;
+    background-size: cover !important;
   }
 
   .hero:not(.hero-courses) {
@@ -646,14 +647,18 @@
 
   .course-back-wrap {
     display: inline-flex !important;
-    position: sticky !important;
-    top: calc(96px + env(safe-area-inset-top, 0px)) !important;
-    z-index: 900 !important;
+    position: fixed !important;
+    top: calc(112px + env(safe-area-inset-top, 0px)) !important;
+    left: 14px !important;
+    z-index: 980 !important;
     width: auto !important;
     max-width: none !important;
-    padding: 0 14px !important;
-    margin: 0 0 14px !important;
+    padding: 0 !important;
+    margin: 0 !important;
     pointer-events: none !important;
+    opacity: 0 !important;
+    transform: translateY(-8px) !important;
+    transition: opacity .22s ease, transform .22s ease !important;
   }
 
   .course-back-wrap .back-link-glass {
@@ -666,12 +671,12 @@
   .course-layout {
     display: grid !important;
     grid-template-columns: 1fr !important;
-    gap: 10px !important;
+    gap: 22px !important;
   }
 
   .course-main {
     min-width: 0 !important;
-    gap: 10px !important;
+    gap: 18px !important;
   }
 
   .video-container,
@@ -700,6 +705,7 @@
   .sidebar {
     order: 2 !important;
     position: static !important;
+    margin-top: 4px !important;
     max-height: none !important;
     height: auto !important;
     overflow: visible !important;
@@ -772,14 +778,15 @@
 
   .back-link-glass {
     display: inline-flex !important;
-    position: sticky !important;
-    top: calc(96px + env(safe-area-inset-top, 0px)) !important;
-    z-index: 900 !important;
+    position: fixed !important;
+    top: calc(112px + env(safe-area-inset-top, 0px)) !important;
+    left: 14px !important;
+    z-index: 980 !important;
     width: 42px !important;
     height: 42px !important;
     min-width: 42px !important;
     padding: 0 !important;
-    margin: 0 0 14px !important;
+    margin: 0 !important;
     border-radius: 50% !important;
     justify-content: center !important;
     align-items: center !important;
@@ -796,8 +803,9 @@
     backdrop-filter: blur(22px) saturate(140%) !important;
     -webkit-backdrop-filter: blur(22px) saturate(140%) !important;
     pointer-events: auto !important;
-    opacity: 1 !important;
-    transform: none !important;
+    opacity: 0 !important;
+    transform: translateY(-8px) !important;
+    transition: opacity .22s ease, transform .22s ease !important;
   }
 
   body.mobile-scrolled .back-link-glass {
