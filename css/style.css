@@ -88,8 +88,7 @@
   100% { opacity: 0.12; }
 }
 
-/* Hide native browser video loading spinner */
-video::-webkit-media-controls-overlay-play-button { display: none; }
+/* Keep native mobile play/pause controls visible. */
 video::cue { background: transparent; }
 video::-internal-media-interstitial-panel { display: none !important; }
 
