@@ -3,6 +3,8 @@
  * Создаёт DOM-модалку при вызове openAuthModal()
  */
 (function() {
+  const TELEGRAM_BOT_ID = '8290766485';
+
   const style = document.createElement('style');
   style.textContent = `
     .auth-overlay{position:fixed;inset:0;width:100vw;height:100dvh;min-height:100dvh;background:rgba(0,0,0,.78);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);z-index:2300;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .28s cubic-bezier(.4,0,.2,1);padding:18px;overflow:hidden;overscroll-behavior:contain}
@@ -24,8 +26,11 @@
     .auth-social svg{width:18px;height:18px}
     .auth-apple{background:#fff;color:#000}
     .auth-apple:hover{background:#f5f5f7}
-    .auth-tg{background:#2AABEE;color:#fff}
-    .auth-tg:hover{background:#229ED9}
+    .auth-tg{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(42,171,238,.95),rgba(18,109,201,.88));color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 42px rgba(42,171,238,.22),inset 0 1px 0 rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-weight:700}
+    .auth-tg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(255,255,255,.28),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.08),transparent);pointer-events:none}
+    .auth-tg:hover{background:linear-gradient(135deg,rgba(65,188,249,.98),rgba(21,121,218,.92));transform:translateY(-1px);box-shadow:0 20px 48px rgba(42,171,238,.28),inset 0 1px 0 rgba(255,255,255,.26)}
+    .auth-tg span,.auth-tg svg{position:relative;z-index:1}
+    .auth-telegram-widget{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .auth-email{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}
     .auth-email:hover{background:rgba(255,255,255,.1)}
     .auth-divider{display:flex;align-items:center;gap:14px;margin:20px 0;color:rgba(255,255,255,.3);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
@@ -92,14 +97,17 @@
           <img src="/assets/webp/logo2-Photoroom.webp" alt="Система Молодцова" width="132" height="132" decoding="async" onerror="this.onerror=null;this.src='/assets/webp/logo2.webp';">
         </div>
         <h2 class="auth-title">Вход в Систему</h2>
-        <p class="auth-subtitle" id="auth-subtitle">Введите номер телефона — пришлём SMS-код для входа.</p>
+        <p class="auth-subtitle" id="auth-subtitle">Войдите через Telegram — без SMS, пароля и ожидания кода.</p>
         <div class="auth-phone-preview" id="auth-phone-preview"></div>
 
         <form class="auth-form" id="auth-form">
-          <input type="tel" class="auth-input" name="phone" placeholder="+7 999 123-45-67" required autocomplete="tel" inputmode="tel">
+          <button type="button" class="auth-social auth-tg" id="auth-telegram-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 4.6 18.6 19.7c-.24 1.06-.86 1.32-1.74.82l-4.8-3.54-2.32 2.23c-.26.26-.47.47-.96.47l.34-4.88 8.9-8.04c.39-.34-.08-.53-.6-.19l-11 6.93-4.74-1.48c-1.03-.32-1.05-1.03.21-1.52L20.4 3.36c.86-.32 1.62.2 1.4 1.24z"/></svg>
+            <span>Войти через Telegram</span>
+          </button>
           <p class="auth-error" id="auth-error" style="display:none"></p>
-          <button type="submit" class="auth-btn" id="auth-submit">Получить код</button>
-          <p class="auth-note" id="auth-note">Код действует 5 минут. Если SMS не придёт, через минуту можно запросить звонок с кодом.</p>
+          <button type="button" class="auth-secondary" id="auth-sms-fallback">Войти по SMS-коду</button>
+          <p class="auth-note" id="auth-note">Telegram подтвердит профиль и сразу откроет доступ.</p>
         </form>
       </div>
     `;
@@ -110,6 +118,10 @@
     requestAnimationFrame(() => overlay.classList.add('active'));
 
     document.getElementById('auth-form').addEventListener('submit', handleSubmit);
+    const tgBtn = document.getElementById('auth-telegram-btn');
+    if (tgBtn) tgBtn.addEventListener('click', startTelegramLogin);
+    const smsBtn = document.getElementById('auth-sms-fallback');
+    if (smsBtn) smsBtn.addEventListener('click', showSmsPhoneStep);
   }
 
   let authStep = 'phone';
@@ -138,6 +150,91 @@
     if (digits.length === 11 && digits.startsWith('7')) return '+' + digits;
     if (digits.length === 10 && digits.startsWith('9')) return '+7' + digits;
     return '';
+  }
+
+  function showSmsPhoneStep() {
+    clearFallbackTimer();
+    authStep = 'phone';
+    document.getElementById('auth-subtitle').textContent = 'Введите номер телефона — пришлём SMS-код для входа.';
+    const preview = document.getElementById('auth-phone-preview');
+    preview.textContent = '';
+    preview.style.display = 'none';
+    document.getElementById('auth-form').innerHTML = `
+      <input type="tel" class="auth-input" name="phone" placeholder="+7 999 123-45-67" required autocomplete="tel" inputmode="tel">
+      <p class="auth-error" id="auth-error" style="display:none"></p>
+      <button type="submit" class="auth-btn" id="auth-submit">Получить код</button>
+      <button type="button" class="auth-secondary" id="auth-back-to-tg">Назад к Telegram</button>
+      <p class="auth-note" id="auth-note">Код действует 5 минут. Если SMS не придёт, через минуту можно запросить звонок с кодом.</p>
+    `;
+    document.getElementById('auth-back-to-tg').addEventListener('click', () => createModal('login'));
+    document.getElementById('auth-form').addEventListener('submit', handleSubmit);
+    document.querySelector('.auth-input[name="phone"]').focus();
+  }
+
+  function ensureTelegramWidgetScript() {
+    return new Promise((resolve, reject) => {
+      if (window.Telegram && window.Telegram.Login) return resolve();
+      const existing = document.querySelector('script[data-telegram-login-sdk="true"]');
+      if (existing) {
+        existing.addEventListener('load', resolve, { once: true });
+        existing.addEventListener('error', reject, { once: true });
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://telegram.org/js/telegram-widget.js?22';
+      script.async = true;
+      script.dataset.telegramLoginSdk = 'true';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  async function finishTelegramAuth(userData) {
+    const errEl = document.getElementById('auth-error');
+    try {
+      const res = await window.API.telegramLoginWidget(userData);
+      window.API.setTokens(res.tokens);
+      window.closeAuthModal();
+      window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: res.user } }));
+      if (window.refreshAuthUI) window.refreshAuthUI(res.user);
+    } catch (err) {
+      if (errEl) {
+        errEl.textContent = err.error || 'Не удалось войти через Telegram.';
+        errEl.style.display = 'block';
+      }
+    }
+  }
+
+  async function startTelegramLogin() {
+    const btn = document.getElementById('auth-telegram-btn');
+    const errEl = document.getElementById('auth-error');
+    if (btn) btn.disabled = true;
+    if (errEl) errEl.style.display = 'none';
+    try {
+      await ensureTelegramWidgetScript();
+      if (!window.Telegram || !window.Telegram.Login) throw new Error('Telegram Login SDK unavailable');
+      window.Telegram.Login.auth(
+        { bot_id: TELEGRAM_BOT_ID, request_access: true },
+        (user) => {
+          if (btn) btn.disabled = false;
+          if (!user) {
+            if (errEl) {
+              errEl.textContent = 'Вход через Telegram отменён.';
+              errEl.style.display = 'block';
+            }
+            return;
+          }
+          finishTelegramAuth(user);
+        }
+      );
+    } catch (err) {
+      if (btn) btn.disabled = false;
+      if (errEl) {
+        errEl.textContent = 'Не удалось открыть Telegram-вход. Попробуйте позже.';
+        errEl.style.display = 'block';
+      }
+    }
   }
 
   function setupCallFallbackButton() {

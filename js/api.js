@@ -158,6 +158,7 @@ class ApiClient {
   me()           { return this.request('GET', '/auth/me'); }
   logoutApi()    { return this.request('POST', '/auth/logout', { refreshToken: localStorage.getItem('refreshToken') }); }
   telegramAuth(initData) { return this.request('POST', '/telegram/auth', { initData }); }
+  telegramLoginWidget(data) { return this.request('POST', '/telegram/login-widget', data); }
 
   // --- Content ---
   getCategories()  { return this.request('GET', '/content/categories'); }
