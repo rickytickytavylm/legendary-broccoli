@@ -188,13 +188,15 @@ class ApiClient {
       throw err;
     }
   }
-  async getVideoStream(slug) {
+  async getVideoStream(slug, opts = {}) {
     try {
       const hls = await this.getHlsToken(slug);
       if (hls && hls.token) {
+        const qs = new URLSearchParams({ token: hls.token });
+        if (opts.delivery === 'proxy') qs.set('delivery', 'proxy');
         return {
           type: 'hls',
-          url: this.base + '/video/hls.m3u8?token=' + encodeURIComponent(hls.token),
+          url: this.base + '/video/hls.m3u8?' + qs.toString(),
           expires_in: hls.expires_in,
         };
       }
@@ -347,6 +349,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
         let settled = false;
         let mediaRecoveryTried = false;
         let tokenRefreshing = false;
+        let proxyFallbackTried = false;
         const done = () => {
           if (settled) return;
           settled = true;
@@ -385,6 +388,23 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
           if (!data.fatal) return;
 
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            if (!proxyFallbackTried) {
+              proxyFallbackTried = true;
+              window.API.getVideoStream(slug, { delivery: 'proxy' })
+                .then((proxyStream) => {
+                  if (proxyStream && proxyStream.url) {
+                    const currentTime = video.currentTime || 0;
+                    video.dataset.streamFallback = 'proxy-hls';
+                    hls.stopLoad();
+                    hls.loadSource(new URL(proxyStream.url, API_ORIGIN).href);
+                    hls.startLoad(currentTime);
+                  }
+                })
+                .catch(() => {
+                  hls.startLoad();
+                });
+              return;
+            }
             hls.startLoad();
             return;
           }

@@ -7,8 +7,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Лента — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=27" />
-  <link rel="stylesheet" href="/css/nav.css?v=51" />
+  <link rel="stylesheet" href="/css/style.css?v=28" />
+  <link rel="stylesheet" href="/css/nav.css?v=52" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -26,7 +26,7 @@
     .feed-container {
       max-width: 540px;
       margin: 0 auto;
-      padding: 118px 16px 120px;
+      padding: 96px 16px 120px;
     }
 
     .feed-header { display: none; }
@@ -142,22 +142,26 @@
       margin-right: 6px;
     }
 
-    .post-comments-link {
+    .post-expand-link {
       display: block;
       padding: 0 18px 16px;
       font-size: 13px;
       color: rgba(255, 255, 255, 0.35);
       text-decoration: none;
       cursor: pointer;
+      background: transparent;
+      border: 0;
+      text-align: left;
+      width: 100%;
     }
 
-    .post-comments-link:hover {
+    .post-expand-link:hover {
       color: rgba(255, 255, 255, 0.5);
     }
 
     @media (max-width: 580px) {
       .feed-container {
-        padding: calc(118px + env(safe-area-inset-top, 0px)) 12px 100px;
+        padding: calc(96px + env(safe-area-inset-top, 0px)) 12px 100px;
       }
 
       .post-card {
@@ -193,9 +197,6 @@
           <button class="post-action-btn" aria-label="Нравится">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарий">
-            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </button>
           <button class="post-action-btn" aria-label="Поделиться">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
@@ -204,7 +205,7 @@
         <div class="post-caption">
           <strong>Руслан Молодцов</strong>Когда мы говорим «я не могу», часто это значит «я не хочу платить цену». Осознание этого — первый шаг к честности с собой. Гештальт-подход учит замечать, где мы прерываем контакт с собственными потребностями.
         </div>
-        <a class="post-comments-link">Показать комментарии</a>
+        <button class="post-expand-link" type="button">Развернуть весь текст</button>
       </article>
 
       <!-- Post 2 -->
@@ -221,9 +222,6 @@
           <button class="post-action-btn" aria-label="Нравится">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарий">
-            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </button>
           <button class="post-action-btn" aria-label="Поделиться">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
@@ -232,7 +230,7 @@
         <div class="post-caption">
           <strong>Руслан Молодцов</strong>Тело помнит то, что разум предпочитает забыть. Телесная терапия помогает услышать эти сообщения — без анализа, через ощущение и движение.
         </div>
-        <a class="post-comments-link">Показать комментарии</a>
+        <button class="post-expand-link" type="button">Развернуть весь текст</button>
       </article>
 
       <!-- Post 3 -->
@@ -249,9 +247,6 @@
           <button class="post-action-btn" aria-label="Нравится">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарий">
-            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </button>
           <button class="post-action-btn" aria-label="Поделиться">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
@@ -260,7 +255,7 @@
         <div class="post-caption">
           <strong>Руслан Молодцов</strong>Супервизия — это не про «правильные ответы». Это про способность выдерживать незнание и оставаться рядом с человеком в его процессе.
         </div>
-        <a class="post-comments-link">Показать комментарии</a>
+        <button class="post-expand-link" type="button">Развернуть весь текст</button>
       </article>
 
       <!-- Post 4 -->
@@ -277,9 +272,6 @@
           <button class="post-action-btn" aria-label="Нравится">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарий">
-            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </button>
           <button class="post-action-btn" aria-label="Поделиться">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
@@ -288,14 +280,32 @@
         <div class="post-caption">
           <strong>Руслан Молодцов</strong>Выгорание — не результат работы. Это результат длительного игнорирования себя. Практика начинается с простого: заметить, что вы устали, до того как тело заставит вас остановиться.
         </div>
-        <a class="post-comments-link">Показать комментарии</a>
+        <button class="post-expand-link" type="button">Развернуть весь текст</button>
       </article>
 
     </div>
   </main>
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=37"></script>
+  <script src="/js/api.js?v=38"></script>
   <script src="/js/auth.js?v=13"></script>
-  <script src="/js/nav.js?v=51"></script>
+  <script src="/js/nav.js?v=52"></script>
+  <script>
+    document.querySelectorAll('.post-expand-link').forEach((button) => {
+      const caption = button.previousElementSibling;
+      if (!caption || !caption.classList.contains('post-caption')) return;
+      caption.style.display = '-webkit-box';
+      caption.style.webkitLineClamp = '3';
+      caption.style.webkitBoxOrient = 'vertical';
+      caption.style.overflow = 'hidden';
+      button.addEventListener('click', () => {
+        const expanded = button.dataset.expanded === 'true';
+        button.dataset.expanded = expanded ? 'false' : 'true';
+        caption.style.display = expanded ? '-webkit-box' : 'block';
+        caption.style.webkitLineClamp = expanded ? '3' : '';
+        caption.style.overflow = expanded ? 'hidden' : 'visible';
+        button.textContent = expanded ? 'Развернуть весь текст' : 'Свернуть текст';
+      });
+    });
+  </script>
 </body>
 </html>
