@@ -30,6 +30,9 @@
     .auth-tg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(255,255,255,.28),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.08),transparent);pointer-events:none}
     .auth-tg:hover{background:linear-gradient(135deg,rgba(65,188,249,.98),rgba(21,121,218,.92));transform:translateY(-1px);box-shadow:0 20px 48px rgba(42,171,238,.28),inset 0 1px 0 rgba(255,255,255,.26)}
     .auth-tg span,.auth-tg svg{position:relative;z-index:1}
+    .auth-yandex{background:linear-gradient(135deg,#fc3f1d,#d92b16);color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 42px rgba(252,63,29,.2),inset 0 1px 0 rgba(255,255,255,.18);font-weight:700}
+    .auth-yandex:hover{background:linear-gradient(135deg,#ff5135,#e53019);box-shadow:0 20px 48px rgba(252,63,29,.26),inset 0 1px 0 rgba(255,255,255,.22)}
+    .auth-yandex-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#fff;color:#fc3f1d;font-weight:900;font-family:Arial,sans-serif;line-height:1}
     .auth-telegram-widget{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .auth-email{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}
     .auth-email:hover{background:rgba(255,255,255,.1)}
@@ -105,6 +108,10 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 4.6 18.6 19.7c-.24 1.06-.86 1.32-1.74.82l-4.8-3.54-2.32 2.23c-.26.26-.47.47-.96.47l.34-4.88 8.9-8.04c.39-.34-.08-.53-.6-.19l-11 6.93-4.74-1.48c-1.03-.32-1.05-1.03.21-1.52L20.4 3.36c.86-.32 1.62.2 1.4 1.24z"/></svg>
             <span>Войти через Telegram</span>
           </button>
+          <button type="button" class="auth-social auth-yandex" id="auth-yandex-btn">
+            <span class="auth-yandex-mark">Я</span>
+            <span>Войти через Яндекс</span>
+          </button>
           <p class="auth-error" id="auth-error" style="display:none"></p>
           <p class="auth-note" id="auth-note">Telegram подтвердит профиль и сразу откроет доступ.</p>
         </form>
@@ -119,6 +126,8 @@
     document.getElementById('auth-form').addEventListener('submit', handleSubmit);
     const tgBtn = document.getElementById('auth-telegram-btn');
     if (tgBtn) tgBtn.addEventListener('click', startTelegramLogin);
+    const yandexBtn = document.getElementById('auth-yandex-btn');
+    if (yandexBtn) yandexBtn.addEventListener('click', startYandexLogin);
   }
 
   let authStep = 'phone';
@@ -255,6 +264,11 @@
       if (btn) btn.disabled = false;
       showTelegramUnavailableMessage();
     }
+  }
+
+  function startYandexLogin() {
+    if (!window.API || !window.API.yandexLoginUrl) return;
+    window.location.href = window.API.yandexLoginUrl();
   }
 
   function setupCallFallbackButton() {

@@ -173,6 +173,9 @@ class ApiClient {
   logoutApi()    { return this.request('POST', '/auth/logout', { refreshToken: localStorage.getItem('refreshToken') }); }
   telegramAuth(initData) { return this.request('POST', '/telegram/auth', { initData }); }
   telegramLoginWidget(data) { return this.request('POST', '/telegram/login-widget', data); }
+  yandexLoginUrl(returnTo = location.pathname + location.search + location.hash) {
+    return this.base + '/yandex/login?returnTo=' + encodeURIComponent(returnTo || '/');
+  }
 
   // --- Content ---
   getCategories()  { return this.request('GET', '/content/categories'); }
