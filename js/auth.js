@@ -106,7 +106,6 @@
             <span>Войти через Telegram</span>
           </button>
           <p class="auth-error" id="auth-error" style="display:none"></p>
-          <button type="button" class="auth-secondary" id="auth-sms-fallback">Войти по SMS-коду</button>
           <p class="auth-note" id="auth-note">Telegram подтвердит профиль и сразу откроет доступ.</p>
         </form>
       </div>
@@ -120,8 +119,6 @@
     document.getElementById('auth-form').addEventListener('submit', handleSubmit);
     const tgBtn = document.getElementById('auth-telegram-btn');
     if (tgBtn) tgBtn.addEventListener('click', startTelegramLogin);
-    const smsBtn = document.getElementById('auth-sms-fallback');
-    if (smsBtn) smsBtn.addEventListener('click', showSmsPhoneStep);
   }
 
   let authStep = 'phone';
@@ -129,6 +126,7 @@
   let pendingCodeLength = 6;
   let fallbackTimer = null;
   let fallbackUnlockAt = 0;
+  let telegramAuthOpenTimer = null;
 
   function clearFallbackTimer() {
     if (fallbackTimer) {
@@ -175,17 +173,22 @@
     return new Promise((resolve, reject) => {
       if (window.Telegram && window.Telegram.Login) return resolve();
       const existing = document.querySelector('script[data-telegram-login-sdk="true"]');
+      const timeout = setTimeout(() => reject(new Error('Telegram Login SDK timeout')), 8000);
+      const finish = (fn) => {
+        clearTimeout(timeout);
+        fn();
+      };
       if (existing) {
-        existing.addEventListener('load', resolve, { once: true });
-        existing.addEventListener('error', reject, { once: true });
+        existing.addEventListener('load', () => finish(resolve), { once: true });
+        existing.addEventListener('error', () => finish(() => reject(new Error('Telegram Login SDK failed'))), { once: true });
         return;
       }
       const script = document.createElement('script');
       script.src = 'https://telegram.org/js/telegram-widget.js?22';
       script.async = true;
       script.dataset.telegramLoginSdk = 'true';
-      script.onload = resolve;
-      script.onerror = reject;
+      script.onload = () => finish(resolve);
+      script.onerror = () => finish(() => reject(new Error('Telegram Login SDK failed')));
       document.head.appendChild(script);
     });
   }
@@ -206,17 +209,36 @@
     }
   }
 
+  function showTelegramUnavailableMessage() {
+    const errEl = document.getElementById('auth-error');
+    if (!errEl) return;
+    errEl.textContent = 'Не удалось открыть вход через Telegram. Возможно, сервис недоступен или заблокирован в вашей стране. Попробуйте включить VPN и повторить вход.';
+    errEl.style.display = 'block';
+  }
+
+  function clearTelegramAuthOpenTimer() {
+    if (!telegramAuthOpenTimer) return;
+    clearTimeout(telegramAuthOpenTimer);
+    telegramAuthOpenTimer = null;
+  }
+
   async function startTelegramLogin() {
     const btn = document.getElementById('auth-telegram-btn');
     const errEl = document.getElementById('auth-error');
     if (btn) btn.disabled = true;
     if (errEl) errEl.style.display = 'none';
+    clearTelegramAuthOpenTimer();
     try {
       await ensureTelegramWidgetScript();
       if (!window.Telegram || !window.Telegram.Login) throw new Error('Telegram Login SDK unavailable');
+      telegramAuthOpenTimer = setTimeout(() => {
+        if (btn) btn.disabled = false;
+        showTelegramUnavailableMessage();
+      }, 8000);
       window.Telegram.Login.auth(
         { bot_id: TELEGRAM_BOT_ID, request_access: true },
         (user) => {
+          clearTelegramAuthOpenTimer();
           if (btn) btn.disabled = false;
           if (!user) {
             if (errEl) {
@@ -229,11 +251,9 @@
         }
       );
     } catch (err) {
+      clearTelegramAuthOpenTimer();
       if (btn) btn.disabled = false;
-      if (errEl) {
-        errEl.textContent = 'Не удалось открыть Telegram-вход. Попробуйте позже.';
-        errEl.style.display = 'block';
-      }
+      showTelegramUnavailableMessage();
     }
   }
 

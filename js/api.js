@@ -126,6 +126,20 @@ class ApiClient {
     return this.refreshPromise;
   }
 
+  async restoreSession() {
+    if (!localStorage.getItem('refreshToken')) return null;
+    if (!this.accessToken) {
+      const refreshed = await this._doRefresh();
+      if (!refreshed) return null;
+    }
+    try {
+      const data = await this.me();
+      return data.user || null;
+    } catch (err) {
+      return null;
+    }
+  }
+
   setTokens(tokens) {
     this.accessToken = tokens.access;
     localStorage.setItem('accessToken', tokens.access);

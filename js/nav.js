@@ -172,15 +172,54 @@
     }
   } catch (e) {}
 
-  var mobileLoginBtn = document.getElementById('mobile-login-btn');
-  if (mobileLoginBtn) {
+  function bindMobileLoginButton() {
+    var mobileLoginBtn = document.getElementById('mobile-login-btn');
+    if (!mobileLoginBtn) return;
     mobileLoginBtn.addEventListener('click', function() {
       if (window.openAuthModal) window.openAuthModal('login');
       else window.location.href = '/account/';
     });
   }
 
+  function renderMobileAuthAction(loggedIn) {
+    var actions = mobileHeader.querySelector('.mobile-header-actions');
+    if (!actions) return;
+    actions.innerHTML = loggedIn
+      ? '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>'
+      : '<button type="button" class="mobile-login-btn" id="mobile-login-btn">Войти</button>';
+    bindMobileLoginButton();
+  }
+
+  bindMobileLoginButton();
+  window.addEventListener('auth:change', function(event) {
+    renderMobileAuthAction(!!(event.detail && event.detail.user) || !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn()));
+    accessState = 'unknown';
+    if (window.API && window.API.getSubscription) {
+      window.API.getSubscription()
+        .then(function(data) {
+          var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
+          accessState = data && data.subscription_active && (!expiresAt || expiresAt > Date.now()) ? 'pro' : 'free';
+          updateLessonLocks(document);
+        })
+        .catch(function() {
+          accessState = window.API && window.API.isLoggedIn && window.API.isLoggedIn() ? 'free' : 'guest';
+          updateLessonLocks(document);
+        });
+    }
+  });
+
   var accessState = isLoggedIn ? 'unknown' : 'guest';
+
+  if (window.API && window.API.restoreSession) {
+    window.API.restoreSession()
+      .then(function(user) {
+        if (!user) return;
+        renderMobileAuthAction(true);
+        window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: user } }));
+        if (window.refreshAuthUI) window.refreshAuthUI(user);
+      })
+      .catch(function() {});
+  }
 
   function getLessonIndex(lesson) {
     if (lesson.dataset.idx != null) return parseInt(lesson.dataset.idx, 10) || 0;
