@@ -346,6 +346,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
       await new Promise((resolve, reject) => {
         let settled = false;
         let mediaRecoveryTried = false;
+        let tokenRefreshing = false;
         const done = () => {
           if (settled) return;
           settled = true;
@@ -359,7 +360,29 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
           done();
         });
         hls.on(Hls.Events.ERROR, (event, data) => {
-          if (!data || !data.fatal) return;
+          if (!data) return;
+
+          // 401 on segment or manifest — token expired, refresh it
+          const is401 = data.response && (data.response.code === 401 || data.response.status === 401);
+          if (is401 && !tokenRefreshing) {
+            tokenRefreshing = true;
+            window.API.getVideoStream(slug)
+              .then((newStream) => {
+                if (newStream && newStream.url) {
+                  const currentTime = video.currentTime || 0;
+                  hls.stopLoad();
+                  hls.loadSource(new URL(newStream.url, API_ORIGIN).href);
+                  hls.startLoad(currentTime);
+                }
+                tokenRefreshing = false;
+              })
+              .catch(() => {
+                tokenRefreshing = false;
+              });
+            return;
+          }
+
+          if (!data.fatal) return;
 
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
             hls.startLoad();
