@@ -62,6 +62,7 @@
   var ALL_ITEMS = NAV_ITEMS.concat(BOTTOM_ITEMS);
   var HOME_SCROLL_KEY = 'sistema:home-scroll-y';
   var RESTORE_HOME_SCROLL_KEY = 'sistema:restore-home-scroll';
+  var VIDEO_ACCESS_BYPASS = window.VIDEO_ACCESS_BYPASS !== false;
   var COURSE_PREFETCH = {
     '/geshtalt/': { api: '/content/geshtalt-lessons', image: '/assets/webp/courses.webp' },
     '/sozavisimost/': { api: '/content/sozavisimost-lessons', image: '/assets/webp/coda2.webp' },
@@ -230,6 +231,15 @@
   }
 
   function updateLessonLocks(root) {
+    if (VIDEO_ACCESS_BYPASS) {
+      Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-item.locked'), function(item) {
+        item.classList.remove('locked');
+      });
+      Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-lock-note'), function(note) {
+        note.remove();
+      });
+      return;
+    }
     if (accessState === 'unknown') return;
     Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-item'), function(item) {
       var idx = getLessonIndex(item);
@@ -297,6 +307,7 @@
   };
 
   document.addEventListener('click', function(event) {
+    if (VIDEO_ACCESS_BYPASS) return;
     var lesson = event.target.closest('.lesson-item');
     if (!lesson || accessState === 'pro' || accessState === 'unknown') return;
     if (getLessonIndex(lesson) === 0) return;
