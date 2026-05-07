@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
-  <title>Р’С…РѕРґ С‡РµСЂРµР· РЇРЅРґРµРєСЃ вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°</title>
+<title>&#1042;&#1093;&#1086;&#1076; &#1095;&#1077;&#1088;&#1077;&#1079; &#1071;&#1085;&#1076;&#1077;&#1082;&#1089; - &#1057;&#1080;&#1089;&#1090;&#1077;&#1084;&#1072; &#1052;&#1086;&#1083;&#1086;&#1076;&#1094;&#1086;&#1074;&#1072;</title>
   <style>
     body{margin:0;min-height:100vh;display:grid;place-items:center;background:#05070d;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
     .card{width:min(360px,calc(100vw - 40px));padding:28px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.45)}
@@ -14,8 +14,8 @@
 </head>
 <body>
   <div class="card">
-    <h1>Р’С…РѕРґ РІС‹РїРѕР»РЅРµРЅ</h1>
-    <p id="status">РЎРµР№С‡Р°СЃ РІРµСЂРЅС‘Рј РІР°СЃ РЅР° РїР»Р°С‚С„РѕСЂРјСѓ.</p>
+    <h1>&#1042;&#1093;&#1086;&#1076; &#1074;&#1099;&#1087;&#1086;&#1083;&#1085;&#1077;&#1085;</h1>
+    <p id="status">&#1057;&#1077;&#1081;&#1095;&#1072;&#1089; &#1074;&#1077;&#1088;&#1085;&#1077;&#1084; &#1074;&#1072;&#1089; &#1085;&#1072; &#1087;&#1083;&#1072;&#1090;&#1092;&#1086;&#1088;&#1084;&#1091;.</p>
   </div>
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=42"></script>
@@ -30,7 +30,7 @@
       const status = document.getElementById('status');
 
       if (!access || !refresh || !window.API) {
-        status.textContent = 'РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РІРµСЂС€РёС‚СЊ РІС…РѕРґ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РµС‰С‘ СЂР°Р·.';
+        status.textContent = '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c \u0432\u0445\u043e\u0434. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0435 \u0440\u0430\u0437.';
         setTimeout(() => { window.location.replace('/'); }, 1200);
         return;
       }
