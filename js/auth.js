@@ -21,18 +21,18 @@
     .auth-subtitle{font-size:13px;line-height:1.5;color:var(--text-2,#888);text-align:center;margin:0 0 26px}
     .auth-phone-preview{display:none;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:11px 14px;color:rgba(255,255,255,.72);font-size:13px;text-align:center;margin-bottom:14px}
     .auth-socials{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
-    .auth-social{display:flex;align-items:center;justify-content:center;gap:10px;border:none;border-radius:14px;padding:13px 16px;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;width:100%}
-    .auth-social:hover{transform:translateY(-1px);opacity:.95}
-    .auth-social svg{width:18px;height:18px}
+    .auth-social{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:11px;width:100%;min-height:52px;border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:14px 16px;background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.055));color:rgba(255,255,255,.92);font-size:15px;font-weight:700;letter-spacing:-.12px;cursor:pointer;transition:transform .22s cubic-bezier(.2,.8,.2,1),border-color .22s,background .22s,box-shadow .22s;box-shadow:0 14px 36px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(255,255,255,.04);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%)}
+    .auth-social::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 18% 0%,rgba(255,255,255,.22),transparent 34%),linear-gradient(120deg,rgba(255,255,255,.09),transparent 42%);opacity:.86;pointer-events:none;z-index:-1}
+    .auth-social::after{content:'';position:absolute;inset:1px;border-radius:17px;border:1px solid rgba(255,255,255,.06);pointer-events:none}
+    .auth-social:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.075));box-shadow:0 18px 44px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.22)}
+    .auth-social:active{transform:translateY(0) scale(.99)}
+    .auth-social:disabled{opacity:.56;cursor:not-allowed;transform:none}
+    .auth-social svg{width:19px;height:19px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.22))}
     .auth-apple{background:#fff;color:#000}
     .auth-apple:hover{background:#f5f5f7}
-    .auth-tg{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(42,171,238,.95),rgba(18,109,201,.88));color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 42px rgba(42,171,238,.22),inset 0 1px 0 rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font-weight:700}
-    .auth-tg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(255,255,255,.28),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.08),transparent);pointer-events:none}
-    .auth-tg:hover{background:linear-gradient(135deg,rgba(65,188,249,.98),rgba(21,121,218,.92));transform:translateY(-1px);box-shadow:0 20px 48px rgba(42,171,238,.28),inset 0 1px 0 rgba(255,255,255,.26)}
+    .auth-tg{margin-top:2px}
     .auth-tg span,.auth-tg svg{position:relative;z-index:1}
-    .auth-yandex{background:linear-gradient(135deg,#fc3f1d,#d92b16);color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 42px rgba(252,63,29,.2),inset 0 1px 0 rgba(255,255,255,.18);font-weight:700}
-    .auth-yandex:hover{background:linear-gradient(135deg,#ff5135,#e53019);box-shadow:0 20px 48px rgba(252,63,29,.26),inset 0 1px 0 rgba(255,255,255,.22)}
-    .auth-yandex-mark{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#fff;color:#fc3f1d;font-weight:900;font-family:Arial,sans-serif;line-height:1}
+    .auth-yandex-mark{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;border-radius:50%;background:rgba(255,255,255,.9);color:#111;font-weight:900;font-family:Arial,sans-serif;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.9)}
     .auth-telegram-widget{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .auth-email{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff}
     .auth-email:hover{background:rgba(255,255,255,.1)}
