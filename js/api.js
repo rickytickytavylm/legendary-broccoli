@@ -11,6 +11,9 @@ class ApiClient {
     this.base = API_BASE;
     this.accessToken = localStorage.getItem('accessToken') || null;
     this.refreshPromise = null;
+    this.mePromise = null;
+    this.meCache = null;
+    this.meCacheAt = 0;
   }
 
   getAuthHeaders() {
@@ -22,6 +25,37 @@ class ApiClient {
   getContentCacheKey(path) {
     const authPart = this.accessToken ? this.accessToken.slice(-16) : 'guest';
     return 'sistema:content-cache:' + authPart + ':' + path;
+  }
+
+  getMeCacheKey() {
+    const authPart = this.accessToken ? this.accessToken.slice(-16) : 'guest';
+    return 'sistema:me-cache:' + authPart;
+  }
+
+  readMeCache(ttl) {
+    if (this.meCache && Date.now() - this.meCacheAt < ttl) return this.meCache;
+    try {
+      const raw = sessionStorage.getItem(this.getMeCacheKey());
+      if (!raw) return null;
+      const cached = JSON.parse(raw);
+      if (!cached || Date.now() - cached.savedAt > ttl) return null;
+      this.meCache = cached.data;
+      this.meCacheAt = cached.savedAt;
+      return cached.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  writeMeCache(data) {
+    this.meCache = data;
+    this.meCacheAt = Date.now();
+    try {
+      sessionStorage.setItem(this.getMeCacheKey(), JSON.stringify({
+        savedAt: this.meCacheAt,
+        data,
+      }));
+    } catch (e) {}
   }
 
   readContentCache(path) {
@@ -142,17 +176,26 @@ class ApiClient {
 
   setTokens(tokens) {
     this.accessToken = tokens.access;
+    this.mePromise = null;
+    this.meCache = null;
+    this.meCacheAt = 0;
     localStorage.setItem('accessToken', tokens.access);
     localStorage.setItem('refreshToken', tokens.refresh);
   }
 
   logout() {
     this.accessToken = null;
+    this.mePromise = null;
+    this.meCache = null;
+    this.meCacheAt = 0;
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     try {
       Object.keys(sessionStorage)
         .filter((key) => key.startsWith('sistema:content-cache:'))
+        .forEach((key) => sessionStorage.removeItem(key));
+      Object.keys(sessionStorage)
+        .filter((key) => key.startsWith('sistema:me-cache:'))
         .forEach((key) => sessionStorage.removeItem(key));
     } catch (e) {}
   }
@@ -169,7 +212,25 @@ class ApiClient {
   verifyPhoneCode(data) { return this.request('POST', '/auth/phone/verify', data); }
   requestMagicLink(data) { return this.request('POST', '/auth/magic/request', data); }
   verifyMagicLink(token) { return this.request('POST', '/auth/magic/verify', { token }); }
-  me()           { return this.request('GET', '/auth/me'); }
+  me(opts = {}) {
+    const ttl = opts.ttl || 60 * 1000;
+    const cached = !opts.fresh ? this.readMeCache(ttl) : null;
+    if (cached) return Promise.resolve(cached);
+    if (!opts.fresh && this.mePromise) return this.mePromise;
+    this.mePromise = this.request('GET', '/auth/me')
+      .then((data) => {
+        this.writeMeCache(data);
+        return data;
+      })
+      .catch((err) => {
+        if (err && err.status === 429 && this.meCache) return this.meCache;
+        throw err;
+      })
+      .finally(() => {
+        this.mePromise = null;
+      });
+    return this.mePromise;
+  }
   logoutApi()    { return this.request('POST', '/auth/logout', { refreshToken: localStorage.getItem('refreshToken') }); }
   telegramAuth(initData) { return this.request('POST', '/telegram/auth', { initData }); }
   telegramLoginWidget(data) { return this.request('POST', '/telegram/login-widget', data); }
