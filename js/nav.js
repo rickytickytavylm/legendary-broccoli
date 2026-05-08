@@ -547,7 +547,12 @@
     preview.setAttribute('aria-label', 'Смотреть видео');
     if (options.poster) preview.style.backgroundImage = "url('" + options.poster + "')";
     preview.innerHTML =
-      '<span class="video-preview-play" aria-hidden="true"></span>';
+      '<span class="video-preview-play" aria-hidden="true">' +
+        '<span class="video-preview-spinner">' +
+          '<span></span><span></span><span></span><span></span>' +
+          '<span></span><span></span><span></span><span></span>' +
+        '</span>' +
+      '</span>';
 
     container.appendChild(preview);
 

@@ -185,6 +185,46 @@ video::-internal-media-interstitial-panel { display: none !important; }
   filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
 }
 
+.video-preview-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  display: none;
+  pointer-events: none;
+}
+
+.video-preview-spinner span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 8px;
+  margin-left: -1.5px;
+  margin-top: -4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  transform-origin: 50% 16px;
+  animation: video-preview-spinner-fade .85s linear infinite;
+}
+
+.video-preview-spinner span:nth-child(1) { transform: rotate(0deg) translateY(-12px); animation-delay: -0.74375s; }
+.video-preview-spinner span:nth-child(2) { transform: rotate(45deg) translateY(-12px); animation-delay: -0.6375s; }
+.video-preview-spinner span:nth-child(3) { transform: rotate(90deg) translateY(-12px); animation-delay: -0.53125s; }
+.video-preview-spinner span:nth-child(4) { transform: rotate(135deg) translateY(-12px); animation-delay: -0.425s; }
+.video-preview-spinner span:nth-child(5) { transform: rotate(180deg) translateY(-12px); animation-delay: -0.31875s; }
+.video-preview-spinner span:nth-child(6) { transform: rotate(225deg) translateY(-12px); animation-delay: -0.2125s; }
+.video-preview-spinner span:nth-child(7) { transform: rotate(270deg) translateY(-12px); animation-delay: -0.10625s; }
+.video-preview-spinner span:nth-child(8) { transform: rotate(315deg) translateY(-12px); animation-delay: 0s; }
+
+@keyframes video-preview-spinner-fade {
+  0% { opacity: 1; }
+  100% { opacity: .16; }
+}
+
 .video-preview-overlay:hover .video-preview-play,
 .video-preview-overlay:focus-visible .video-preview-play {
   transform: scale(1.04) translateZ(0);
@@ -195,8 +235,15 @@ video::-internal-media-interstitial-panel { display: none !important; }
 }
 
 .video-preview-overlay.loading .video-preview-play {
-  opacity: .72;
   transform: scale(.96) translateZ(0);
+}
+
+.video-preview-overlay.loading .video-preview-play::before {
+  opacity: 0;
+}
+
+.video-preview-overlay.loading .video-preview-spinner {
+  display: block;
 }
 
 /* Skeleton shimmer */
@@ -1040,9 +1087,15 @@ h1, h2, h3 {
 }
 
 .course-back-wrap {
-  padding: 18px 24px 0;
+  padding: 32px 24px 0;
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 0 auto 4px;
+  box-sizing: border-box;
+}
+
+.course-back-wrap + div[style*="max-width:1280px"],
+.course-back-wrap + .therapy-inner {
+  padding-top: 0 !important;
 }
 
 @media (max-width: 768px) {
