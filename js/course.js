@@ -51,38 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     `).join('');
   }
 
-  function showVideoLoader() {
-    let loader = document.getElementById('video-loader');
-    if (!loader) {
-      loader = document.createElement('div');
-      loader.id = 'video-loader';
-      loader.className = 'video-loader';
-      loader.innerHTML = `<div class="apple-spinner">${'<span></span>'.repeat(8)}</div>`;
-      videoContainer.appendChild(loader);
-    }
-    loader.classList.remove('hidden');
-  }
+  function showVideoLoader() {}
 
-  function hideVideoLoader() {
-    const loader = document.getElementById('video-loader');
-    if (loader) loader.classList.add('hidden');
-  }
-
-  function captureFirstFrame(video) {
-    video.addEventListener('loadedmetadata', () => {
-      video.currentTime = 0.1;
-    }, { once: true });
-    video.addEventListener('seeked', () => {
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 1280;
-        canvas.height = video.videoHeight || 720;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        const poster = canvas.toDataURL('image/jpeg', 0.8);
-        if (poster && poster.length > 100) video.poster = poster;
-      } catch (e) {}
-    }, { once: true });
-  }
+  function hideVideoLoader() {}
 
   function destroyHls() {
     if (hls) { hls.destroy(); hls = null; }
@@ -151,8 +122,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         video.src = videoUrl;
         video.addEventListener('canplay', hideVideoLoader, { once: true });
       }
-      captureFirstFrame(video);
-
       if (infoBlock) infoBlock.style.display = 'flex';
       if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
       if (lessonDescMain) lessonDescMain.textContent = lesson.description || '';

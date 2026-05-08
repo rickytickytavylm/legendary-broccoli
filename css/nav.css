@@ -695,10 +695,7 @@
   }
 
   .video-loader {
-    align-items: center !important;
-    justify-content: center !important;
-    padding-top: 0 !important;
-    box-sizing: border-box !important;
+    display: none !important;
   }
 
   .course-sidebar,

@@ -42,6 +42,7 @@
       }
       const video = document.getElementById('course-video');
       await window.attachVideoSource(video, lesson.video_slug || lesson.url, hlsInstance, (next) => { hlsInstance = next; });
+      video.setAttribute('controls', '');
 
       if (infoBlock) infoBlock.style.display = 'flex';
       if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
@@ -120,7 +121,14 @@
 
     const targetLesson = lessons[0];
     if (targetLesson) {
-      loadLesson(targetLesson, true);
+      if (window.setupVideoPreview) {
+        window.setupVideoPreview(videoContainer, {
+          poster: '/assets/webp/geshtalt.webp',
+          onStart: () => loadLesson(targetLesson, true),
+        });
+      } else {
+        loadLesson(targetLesson, true);
+      }
     }
   } catch (err) {
     showError('Курс не найден или недоступен');

@@ -96,7 +96,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
 .video-loader {
   position: absolute;
   inset: 0;
-  display: flex;
+  display: none !important;
   align-items: center;
   justify-content: center;
   background: rgba(0,0,0,.6);

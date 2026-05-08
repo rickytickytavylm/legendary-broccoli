@@ -7,7 +7,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=33';
+    link.href = '/css/nav.css?v=34';
     document.head.appendChild(link);
   }
 
@@ -555,13 +555,15 @@
     function start() {
       if (loadStarted) return;
       loadStarted = true;
-      preview.classList.add('hidden');
+      preview.classList.add('loading');
 
       var started = typeof options.onStart === 'function'
         ? options.onStart(video, preview)
         : null;
 
       Promise.resolve(started).then(function() {
+        preview.classList.remove('loading');
+        preview.classList.add('hidden');
         video.setAttribute('controls', '');
 
         var playPromise = video.play ? video.play() : null;
@@ -575,6 +577,7 @@
                 return;
               }
               preview.classList.remove('hidden');
+              preview.classList.remove('loading');
               loadStarted = false;
             });
         } else {
@@ -582,6 +585,7 @@
         }
       }).catch(function() {
         preview.classList.remove('hidden');
+        preview.classList.remove('loading');
         loadStarted = false;
       });
     }
