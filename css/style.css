@@ -152,11 +152,12 @@ video::-internal-media-interstitial-panel { display: none !important; }
   display: none;
 }
 
-.video-preview-play {
+.video-preview-action {
   position: relative;
-  width: clamp(64px, 15vw, 84px);
+  min-width: clamp(64px, 15vw, 84px);
   height: clamp(64px, 15vw, 84px);
-  border-radius: 50%;
+  padding: 0 22px;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,6 +173,42 @@ video::-internal-media-interstitial-panel { display: none !important; }
     inset 0 1px 0 rgba(255,255,255,.36);
   transform: translateZ(0);
   transition: transform .18s ease, opacity .18s ease;
+}
+
+.video-preview-icon {
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: clamp(10px, 2.5vw, 14px) solid transparent;
+  border-bottom: clamp(10px, 2.5vw, 14px) solid transparent;
+  border-left: clamp(16px, 3.8vw, 22px) solid #fff;
+  transform: translateX(2px);
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
+}
+
+.video-preview-status {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.video-preview-ring {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.34);
+  border-top-color: #fff;
+  animation: video-preview-spin .8s linear infinite;
+}
+
+@keyframes video-preview-spin {
+  to { transform: rotate(360deg); }
 }
 
 .video-preview-play::before {
@@ -230,16 +267,27 @@ video::-internal-media-interstitial-panel { display: none !important; }
   transform: scale(1.04) translateZ(0);
 }
 
+.video-preview-overlay:hover .video-preview-action,
+.video-preview-overlay:focus-visible .video-preview-action {
+  transform: scale(1.04) translateZ(0);
+}
+
 .video-preview-overlay.loading {
   cursor: wait;
 }
 
+.video-preview-overlay.loading .video-preview-action,
 .video-preview-overlay.loading .video-preview-play {
   transform: scale(.96) translateZ(0);
 }
 
+.video-preview-overlay.loading .video-preview-icon,
 .video-preview-overlay.loading .video-preview-play::before {
-  opacity: 0;
+  display: none;
+}
+
+.video-preview-overlay.loading .video-preview-status {
+  display: inline-flex;
 }
 
 .video-preview-overlay.loading .video-preview-spinner {
@@ -1096,6 +1144,13 @@ h1, h2, h3 {
 .course-back-wrap + div[style*="max-width:1280px"],
 .course-back-wrap + .therapy-inner {
   padding-top: 0 !important;
+}
+
+.course-page-shell {
+  padding: 32px 24px 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -2112,6 +2167,8 @@ h1, h2, h3 {
   }
 
   .geshtalt-page,
+  .trauma-page,
+  .course-page-shell,
   .marathon-page {
     padding-top: 18px !important;
     padding-bottom: 28px !important;
@@ -2127,6 +2184,9 @@ h1, h2, h3 {
 
   .course-back-wrap,
   .geshtalt-page > .back-link-glass,
+  .trauma-page > .back-link-glass,
+  .course-page-shell > .back-link-glass,
+  .therapy-inner > .back-link-glass,
   .marathon-page > .back-link-glass {
     display: inline-flex !important;
     position: fixed !important;
@@ -2142,6 +2202,9 @@ h1, h2, h3 {
 
   body.mobile-scrolled .course-back-wrap,
   body.mobile-scrolled .geshtalt-page > .back-link-glass,
+  body.mobile-scrolled .trauma-page > .back-link-glass,
+  body.mobile-scrolled .course-page-shell > .back-link-glass,
+  body.mobile-scrolled .therapy-inner > .back-link-glass,
   body.mobile-scrolled .marathon-page > .back-link-glass {
     opacity: 1 !important;
     transform: translateY(0) !important;
@@ -2157,6 +2220,9 @@ h1, h2, h3 {
 
   .course-back-wrap .back-link-glass,
   .geshtalt-page > .back-link-glass,
+  .trauma-page > .back-link-glass,
+  .course-page-shell > .back-link-glass,
+  .therapy-inner > .back-link-glass,
   .marathon-page > .back-link-glass {
     width: 42px !important;
     height: 42px !important;
@@ -2182,6 +2248,9 @@ h1, h2, h3 {
 
   .course-back-wrap .back-link-glass svg,
   .geshtalt-page > .back-link-glass svg,
+  .trauma-page > .back-link-glass svg,
+  .course-page-shell > .back-link-glass svg,
+  .therapy-inner > .back-link-glass svg,
   .marathon-page > .back-link-glass svg {
     width: 20px !important;
     height: 20px !important;
