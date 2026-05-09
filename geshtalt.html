@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=32" />
+  <link rel="stylesheet" href="/css/style.css?v=33" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -150,6 +150,8 @@
             <h2 class="lesson-title-main" id="lesson-title-main"></h2>
             <p class="lesson-desc-main" id="lesson-desc-main"></p>
           </div>
+
+          <section class="ai-lesson-panel" id="ai-lesson-panel" aria-live="polite"></section>
         </div>
 
         <div class="course-sidebar">
@@ -265,6 +267,7 @@
       const infoBlock = document.getElementById('lesson-info-block');
       const lessonTitleMain = document.getElementById('lesson-title-main');
       const lessonDescMain = document.getElementById('lesson-desc-main');
+      const aiPanel = document.getElementById('ai-lesson-panel');
       let lessons = [];
       let hlsInstance = null;
       const COURSE_OVERVIEW = 'Гештальт-подход помогает увидеть, как человек теряет контакт с собой, прячет потребности, обрывает чувства и повторяет незавершённые сценарии. Внутри курса — теория, практика и терапевтические разборы, которые переводят осознавание из красивого слова в рабочий инструмент: яснее чувствовать, точнее выбирать и честнее строить отношения.';
@@ -341,6 +344,97 @@
         return document.getElementById('course-video');
       }
 
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        }[char]));
+      }
+
+      function lessonAiUrl(lesson) {
+        return `/data/ai/geshtalt/lesson-${String(lesson.id).padStart(2, '0')}.json?v=1`;
+      }
+
+      function jumpToAiChapter(seconds) {
+        const video = document.getElementById('course-video');
+        if (!video || !Number.isFinite(seconds)) return;
+        video.setAttribute('controls', '');
+        video.currentTime = Math.max(0, seconds);
+        const playPromise = video.play ? video.play() : null;
+        if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+        video.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function renderAiAnalysis(data) {
+        if (!aiPanel || !data || !data.ai) return;
+        const ai = data.ai;
+        const chapters = Array.isArray(ai.chapters) ? ai.chapters : [];
+        aiPanel.classList.add('visible');
+        aiPanel.classList.remove('expanded');
+        aiPanel.innerHTML = `
+          <div class="ai-lesson-inner">
+            <div class="ai-lesson-kicker">AI-разбор Руслана</div>
+            <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
+            <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
+            <div class="ai-lesson-actions">
+              <button type="button" class="ai-toggle-btn" id="ai-toggle-btn">Открыть разбор</button>
+              <button type="button" class="ai-outline-btn" id="ai-chapters-focus">Главы с таймкодами</button>
+            </div>
+            <div class="ai-expanded" id="ai-expanded">
+              <h4 class="ai-section-title">Саммари урока</h4>
+              <div class="ai-rich-text">${escapeHtml(ai.summary || '')}</div>
+              <h4 class="ai-section-title" style="margin-top:20px">Что важно вынести</h4>
+              <div class="ai-rich-text">${escapeHtml(ai.lesson_card && ai.lesson_card.why_watch ? ai.lesson_card.why_watch : '')}</div>
+              <h4 class="ai-section-title" style="margin-top:20px">Главы и переходы по видео</h4>
+              <div class="ai-chapters" id="ai-chapters">
+                ${chapters.map((chapter) => `
+                  <button type="button" class="ai-chapter-btn" data-seconds="${Number(chapter.start_seconds) || 0}">
+                    <span class="ai-chapter-time">${escapeHtml(chapter.start_time || '')}</span>
+                    <span class="ai-chapter-title">${escapeHtml(chapter.title || '')}</span>
+                    <span class="ai-chapter-desc">${escapeHtml(chapter.summary || '')}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+
+        const toggle = document.getElementById('ai-toggle-btn');
+        if (toggle) {
+          toggle.addEventListener('click', () => {
+            const expanded = aiPanel.classList.toggle('expanded');
+            toggle.textContent = expanded ? 'Свернуть разбор' : 'Открыть разбор';
+          });
+        }
+
+        const focus = document.getElementById('ai-chapters-focus');
+        if (focus) {
+          focus.addEventListener('click', () => {
+            aiPanel.classList.add('expanded');
+            if (toggle) toggle.textContent = 'Свернуть разбор';
+            document.getElementById('ai-chapters')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        }
+
+        aiPanel.querySelectorAll('.ai-chapter-btn').forEach((button) => {
+          button.addEventListener('click', () => jumpToAiChapter(Number(button.dataset.seconds)));
+        });
+      }
+
+      async function loadAiAnalysis(lesson) {
+        if (!aiPanel) return;
+        aiPanel.classList.remove('visible', 'expanded');
+        aiPanel.innerHTML = '';
+        try {
+          const res = await fetch(lessonAiUrl(lesson), { cache: 'force-cache' });
+          if (!res.ok) return;
+          renderAiAnalysis(await res.json());
+        } catch (e) {}
+      }
+
       async function loadLesson(lesson, isFirst) {
         try {
           showVideoLoader();
@@ -355,6 +449,7 @@
           if (infoBlock) infoBlock.style.display = 'flex';
           if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
           if (lessonDescMain) lessonDescMain.textContent = COURSE_OVERVIEW;
+          loadAiAnalysis(lesson);
         } catch (err) {
           hideVideoLoader();
           showError('Не удалось загрузить видео');

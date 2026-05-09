@@ -1185,6 +1185,211 @@ h1, h2, h3 {
   gap: 20px;
 }
 
+.ai-lesson-panel {
+  position: relative;
+  display: none;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(125, 92, 255, .16), transparent 34%),
+    radial-gradient(circle at 88% 10%, rgba(0, 210, 255, .12), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+  box-shadow: 0 24px 80px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.1);
+  padding: clamp(18px, 3vw, 26px);
+}
+
+.ai-lesson-panel.visible {
+  display: block;
+}
+
+.ai-lesson-panel::before {
+  content: '';
+  position: absolute;
+  inset: -45%;
+  pointer-events: none;
+  opacity: .42;
+  background:
+    conic-gradient(from 120deg, transparent, rgba(128, 93, 255, .36), transparent, rgba(0, 214, 255, .28), transparent);
+  filter: blur(34px);
+  animation: ai-aurora-drift 12s ease-in-out infinite alternate;
+}
+
+@keyframes ai-aurora-drift {
+  from { transform: translate3d(-3%, -2%, 0) rotate(0deg); }
+  to { transform: translate3d(3%, 2%, 0) rotate(18deg); }
+}
+
+.ai-lesson-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.ai-lesson-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: rgba(255,255,255,.72);
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.ai-lesson-kicker::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8edcff;
+  box-shadow: 0 0 18px rgba(142,220,255,.82);
+}
+
+.ai-lesson-title {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(20px, 3vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -.03em;
+}
+
+.ai-lesson-summary {
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.ai-lesson-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.ai-toggle-btn {
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  border-radius: 999px;
+  color: #071018;
+  background: linear-gradient(135deg, #fff, #bfefff);
+  font-weight: 800;
+  box-shadow: 0 14px 34px rgba(80, 190, 255, .18);
+}
+
+.ai-outline-btn {
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.82);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.ai-expanded {
+  display: none;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.ai-lesson-panel.expanded .ai-expanded {
+  display: block;
+}
+
+.ai-section-title {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.ai-rich-text {
+  color: rgba(255,255,255,.74);
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.ai-chapters {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.ai-chapter-btn {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 16px;
+  background: rgba(0,0,0,.18);
+  color: rgba(255,255,255,.86);
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  padding: 12px;
+  text-align: left;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.ai-chapter-btn:hover,
+.ai-chapter-btn:focus-visible {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.2);
+  transform: translateY(-1px);
+}
+
+.ai-chapter-time {
+  color: #9fe8ff;
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.ai-chapter-title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.ai-chapter-desc {
+  grid-column: 2;
+  margin-top: -6px;
+  color: rgba(255,255,255,.56);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .ai-lesson-panel {
+    border-radius: 20px;
+    padding: 18px;
+  }
+
+  .ai-chapter-btn {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .ai-chapter-desc {
+    grid-column: auto;
+    margin-top: 0;
+  }
+}
+
 .video-container {
   width: 100%;
   aspect-ratio: 16 / 9;
