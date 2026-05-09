@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=34" />
+  <link rel="stylesheet" href="/css/style.css?v=35" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -140,6 +140,7 @@
             <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
             <div class="video-loader hidden" id="video-loader"><div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
           </div>
+          <section class="ai-timeline-panel" id="ai-timeline-panel" aria-label="Таймкоды урока"></section>
 
           <div class="course-details">
             <h1 id="course-title" class="course-title">Загрузка...</h1>
@@ -267,6 +268,7 @@
       const infoBlock = document.getElementById('lesson-info-block');
       const lessonTitleMain = document.getElementById('lesson-title-main');
       const lessonDescMain = document.getElementById('lesson-desc-main');
+      const aiTimelinePanel = document.getElementById('ai-timeline-panel');
       const aiPanel = document.getElementById('ai-lesson-panel');
       let lessons = [];
       let hlsInstance = null;
@@ -369,17 +371,17 @@
       }
 
       function renderAiAnalysis(data) {
-        if (!aiPanel || !data || !data.ai) return;
+        if (!data || !data.ai) return;
         const ai = data.ai;
         const chapters = Array.isArray(ai.chapters) ? ai.chapters : [];
-        aiPanel.classList.add('visible');
-        aiPanel.classList.remove('expanded');
-        aiPanel.innerHTML = `
-          <div class="ai-lesson-inner">
-            <div class="ai-lesson-kicker">ИИ-разбор</div>
-            <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
-            <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
-            <div class="ai-lesson-timeline" aria-label="Таймкоды урока">
+        if (aiTimelinePanel) {
+          aiTimelinePanel.classList.add('visible');
+          aiTimelinePanel.innerHTML = `
+            <div class="ai-timeline-head">
+              <span>Таймкоды</span>
+              <small>Нажмите, чтобы перейти к моменту</small>
+            </div>
+            <div class="ai-lesson-timeline">
               ${chapters.map((chapter) => `
                 <button type="button" class="ai-time-chip" data-seconds="${Number(chapter.start_seconds) || 0}">
                   <span class="ai-time-chip-time">${escapeHtml(chapter.start_time || '')}</span>
@@ -387,6 +389,20 @@
                 </button>
               `).join('')}
             </div>
+          `;
+          aiTimelinePanel.querySelectorAll('.ai-time-chip').forEach((button) => {
+            button.addEventListener('click', () => jumpToAiChapter(Number(button.dataset.seconds)));
+          });
+        }
+
+        if (!aiPanel) return;
+        aiPanel.classList.add('visible');
+        aiPanel.classList.remove('expanded');
+        aiPanel.innerHTML = `
+          <div class="ai-lesson-inner">
+            <div class="ai-lesson-kicker">ИИ-разбор</div>
+            <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
+            <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
             <div class="ai-lesson-actions">
               <button type="button" class="ai-toggle-btn" id="ai-toggle-btn">Открыть разбор</button>
             </div>
@@ -417,18 +433,20 @@
           });
         }
 
-        aiPanel.querySelectorAll('.ai-time-chip').forEach((button) => {
-          button.addEventListener('click', () => jumpToAiChapter(Number(button.dataset.seconds)));
-        });
         aiPanel.querySelectorAll('.ai-chapter-btn').forEach((button) => {
           button.addEventListener('click', () => jumpToAiChapter(Number(button.dataset.seconds)));
         });
       }
 
       async function loadAiAnalysis(lesson) {
-        if (!aiPanel) return;
-        aiPanel.classList.remove('visible', 'expanded');
-        aiPanel.innerHTML = '';
+        if (aiTimelinePanel) {
+          aiTimelinePanel.classList.remove('visible');
+          aiTimelinePanel.innerHTML = '';
+        }
+        if (aiPanel) {
+          aiPanel.classList.remove('visible', 'expanded');
+          aiPanel.innerHTML = '';
+        }
         try {
           const res = await fetch(lessonAiUrl(lesson), { cache: 'force-cache' });
           if (!res.ok) return;
@@ -450,7 +468,6 @@
           if (infoBlock) infoBlock.style.display = 'flex';
           if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
           if (lessonDescMain) lessonDescMain.textContent = COURSE_OVERVIEW;
-          loadAiAnalysis(lesson);
         } catch (err) {
           hideVideoLoader();
           showError('Не удалось загрузить видео');
@@ -475,6 +492,7 @@
             if (lesson) {
               lessonsList.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
               item.classList.add('active');
+              loadAiAnalysis(lesson);
               loadLesson(lesson, idx === 0);
             }
           });
@@ -491,6 +509,7 @@
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();
+        if (lessons[0]) loadAiAnalysis(lessons[0]);
 
         if (lessons[0]) {
           if (window.setupVideoPreview) {

@@ -1189,14 +1189,16 @@ h1, h2, h3 {
   position: relative;
   display: none;
   overflow: hidden;
-  border-radius: 22px;
+  border-radius: 24px;
   border: 1px solid rgba(255,255,255,.12);
   background:
-    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.022)),
-    rgba(255,255,255,.025);
+    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035)),
+    rgba(8,10,16,.72);
+  -webkit-backdrop-filter: blur(26px) saturate(140%);
+  backdrop-filter: blur(26px) saturate(140%);
   box-shadow:
-    0 22px 70px rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.08);
+    0 18px 58px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.1);
   padding: clamp(16px, 2.6vw, 24px);
 }
 
@@ -1212,40 +1214,57 @@ h1, h2, h3 {
 .ai-lesson-kicker {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   margin-bottom: 10px;
-  padding: 7px 11px;
+  padding: 6px 10px;
   border-radius: 999px;
-  color: rgba(255,255,255,.72);
+  color: rgba(255,255,255,.58);
   background: rgba(255,255,255,.07);
   border: 1px solid rgba(255,255,255,.1);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: .04em;
   text-transform: uppercase;
 }
 
-.ai-lesson-kicker::before {
-  content: 'AI';
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  min-width: 22px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 6px;
-  color: rgba(255,255,255,.9);
-  background: rgba(255,255,255,.1);
+.ai-timeline-panel {
+  display: none;
+  margin-top: -8px;
+  overflow: hidden;
+  border-radius: 18px;
   border: 1px solid rgba(255,255,255,.1);
-  font-size: 9px;
-  letter-spacing: .03em;
-  box-shadow: none;
+  background: rgba(8,10,16,.62);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 0 14px 42px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
+  padding: 12px 12px 8px;
+}
+
+.ai-timeline-panel.visible {
+  display: block;
+}
+
+.ai-timeline-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 2px 10px;
+}
+
+.ai-timeline-head span {
+  color: rgba(255,255,255,.86);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ai-timeline-head small {
+  color: rgba(255,255,255,.42);
+  font-size: 12px;
 }
 
 .ai-lesson-timeline {
-  margin: 16px -4px 0;
-  padding: 2px 4px 10px;
+  margin: 0;
+  padding: 0 0 6px;
   display: flex;
   gap: 8px;
   overflow-x: auto;
@@ -1265,24 +1284,24 @@ h1, h2, h3 {
 
 .ai-time-chip {
   flex: 0 0 auto;
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 999px;
-  background: rgba(255,255,255,.045);
-  color: rgba(255,255,255,.86);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  background: rgba(255,255,255,.055);
+  color: rgba(255,255,255,.82);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  max-width: min(72vw, 360px);
-  padding: 9px 12px;
+  max-width: min(70vw, 320px);
+  padding: 10px 12px;
   text-align: left;
   transition: background .18s ease, border-color .18s ease, color .18s ease;
 }
 
 .ai-time-chip:hover,
 .ai-time-chip:focus-visible {
-  background: rgba(255,255,255,.08);
-  border-color: rgba(255,255,255,.2);
+  background: rgba(255,255,255,.095);
+  border-color: rgba(255,255,255,.18);
   color: #fff;
 }
 
@@ -1300,14 +1319,6 @@ h1, h2, h3 {
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.ai-lesson-kicker::after {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.38);
 }
 
 .ai-lesson-title {
@@ -1440,6 +1451,16 @@ h1, h2, h3 {
   .ai-lesson-panel {
     border-radius: 20px;
     padding: 16px;
+  }
+
+  .ai-timeline-panel {
+    margin-top: -10px;
+    border-radius: 16px;
+    padding: 11px 10px 7px;
+  }
+
+  .ai-timeline-head small {
+    display: none;
   }
 
   .ai-chapter-btn {
