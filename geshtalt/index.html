@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=35" />
+  <link rel="stylesheet" href="/css/style.css?v=36" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -142,16 +142,6 @@
           </div>
           <section class="ai-timeline-panel" id="ai-timeline-panel" aria-label="Таймкоды урока"></section>
 
-          <div class="course-details">
-            <h1 id="course-title" class="course-title">Загрузка...</h1>
-            <p id="course-desc" class="course-desc">Пожалуйста, подождите.</p>
-          </div>
-
-          <div class="lesson-info-block" id="lesson-info-block" style="display:none">
-            <h2 class="lesson-title-main" id="lesson-title-main"></h2>
-            <p class="lesson-desc-main" id="lesson-desc-main"></p>
-          </div>
-
           <section class="ai-lesson-panel" id="ai-lesson-panel" aria-live="polite"></section>
         </div>
 
@@ -273,6 +263,7 @@
       let lessons = [];
       let hlsInstance = null;
       const COURSE_OVERVIEW = 'Гештальт-подход помогает увидеть, как человек теряет контакт с собой, прячет потребности, обрывает чувства и повторяет незавершённые сценарии. Внутри курса — теория, практика и терапевтические разборы, которые переводят осознавание из красивого слова в рабочий инструмент: яснее чувствовать, точнее выбирать и честнее строить отношения.';
+      const aiLessonIndex = new Map();
 
       function pluralLessons(n) {
         if (n === 1) return 'урок';
@@ -329,8 +320,12 @@
         }, { once: true });
       }
       function showError(msg) {
-        courseTitle.textContent = 'Ошибка';
-        courseDesc.textContent = msg;
+        if (courseTitle) courseTitle.textContent = 'Ошибка';
+        if (courseDesc) courseDesc.textContent = msg;
+        if (aiPanel) {
+          aiPanel.classList.add('visible');
+          aiPanel.innerHTML = '<div class="ai-lesson-inner"><h3 class="ai-lesson-title">Ошибка</h3><p class="ai-lesson-summary">' + escapeHtml(msg) + '</p></div>';
+        }
         if (infoBlock) infoBlock.style.display = 'none';
       }
 
@@ -358,6 +353,32 @@
 
       function lessonAiUrl(lesson) {
         return `/data/ai/geshtalt/lesson-${String(lesson.id).padStart(2, '0')}.json?v=1`;
+      }
+
+      function lessonDisplayTitle(lesson) {
+        return lesson.ai_title || lesson.title || '';
+      }
+
+      async function loadAiIndex() {
+        try {
+          const res = await fetch('/data/ai/geshtalt/index.json?v=1', { cache: 'force-cache' });
+          if (!res.ok) return;
+          const data = await res.json();
+          (data.lessons || []).forEach((item) => {
+            if (item && item.id != null) aiLessonIndex.set(Number(item.id), item);
+          });
+        } catch (e) {}
+      }
+
+      function applyAiTitles() {
+        lessons = lessons.map((lesson) => {
+          const ai = aiLessonIndex.get(Number(lesson.id));
+          return ai && ai.has_ai ? {
+            ...lesson,
+            ai_title: ai.ai_title || lesson.title,
+            ai_short_summary: ai.short_summary || '',
+          } : lesson;
+        });
       }
 
       function jumpToAiChapter(seconds) {
@@ -411,16 +432,6 @@
               <div class="ai-rich-text">${escapeHtml(ai.summary || '')}</div>
               <h4 class="ai-section-title" style="margin-top:20px">Что важно вынести</h4>
               <div class="ai-rich-text">${escapeHtml(ai.lesson_card && ai.lesson_card.why_watch ? ai.lesson_card.why_watch : '')}</div>
-              <h4 class="ai-section-title" style="margin-top:20px">Главы и переходы по видео</h4>
-              <div class="ai-chapters" id="ai-chapters">
-                ${chapters.map((chapter) => `
-                  <button type="button" class="ai-chapter-btn" data-seconds="${Number(chapter.start_seconds) || 0}">
-                    <span class="ai-chapter-time">${escapeHtml(chapter.start_time || '')}</span>
-                    <span class="ai-chapter-title">${escapeHtml(chapter.title || '')}</span>
-                    <span class="ai-chapter-desc">${escapeHtml(chapter.summary || '')}</span>
-                  </button>
-                `).join('')}
-              </div>
             </div>
           </div>
         `;
@@ -433,9 +444,6 @@
           });
         }
 
-        aiPanel.querySelectorAll('.ai-chapter-btn').forEach((button) => {
-          button.addEventListener('click', () => jumpToAiChapter(Number(button.dataset.seconds)));
-        });
       }
 
       async function loadAiAnalysis(lesson) {
@@ -465,9 +473,6 @@
           video.addEventListener('canplay', hideVideoLoader, { once: true });
           hideVideoLoader();
 
-          if (infoBlock) infoBlock.style.display = 'flex';
-          if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
-          if (lessonDescMain) lessonDescMain.textContent = COURSE_OVERVIEW;
         } catch (err) {
           hideVideoLoader();
           showError('Не удалось загрузить видео');
@@ -479,7 +484,7 @@
           <div class="lesson-item ${idx === 0 ? 'active' : ''}" data-id="${lesson.id}">
             <div class="lesson-number">${idx + 1}</div>
             <div class="lesson-info">
-              <div class="lesson-title">${lesson.title}</div>
+              <div class="lesson-title">${lessonDisplayTitle(lesson)}</div>
               <div class="lesson-dur">${lesson.duration || ''}</div>
             </div>
           </div>
@@ -503,9 +508,11 @@
         renderSkeletons(8);
         const lessons_data = await window.API.request('GET', '/content/geshtalt-lessons');
         lessons = Array.isArray(lessons_data) ? lessons_data : [];
+        await loadAiIndex();
+        applyAiTitles();
 
-        courseTitle.textContent = 'Гештальт-подход';
-        courseDesc.textContent = COURSE_OVERVIEW;
+        if (courseTitle) courseTitle.textContent = 'Гештальт-подход';
+        if (courseDesc) courseDesc.textContent = COURSE_OVERVIEW;
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();

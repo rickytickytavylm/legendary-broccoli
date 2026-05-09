@@ -1230,13 +1230,13 @@ h1, h2, h3 {
   display: none;
   margin-top: -8px;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 20px;
   border: 1px solid rgba(255,255,255,.1);
   background: rgba(8,10,16,.62);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   backdrop-filter: blur(22px) saturate(140%);
   box-shadow: 0 14px 42px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
-  padding: 12px 12px 8px;
+  padding: 14px 14px 10px;
 }
 
 .ai-timeline-panel.visible {
@@ -1264,9 +1264,9 @@ h1, h2, h3 {
 
 .ai-lesson-timeline {
   margin: 0;
-  padding: 0 0 6px;
+  padding: 0 0 8px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
@@ -1283,17 +1283,21 @@ h1, h2, h3 {
 }
 
 .ai-time-chip {
-  flex: 0 0 auto;
+  flex: 0 0 min(72vw, 280px);
   border: 1px solid rgba(255,255,255,.1);
-  border-radius: 14px;
-  background: rgba(255,255,255,.055);
+  border-radius: 17px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035)),
+    rgba(255,255,255,.035);
   color: rgba(255,255,255,.82);
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  max-width: min(70vw, 320px);
-  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  min-height: 72px;
+  padding: 13px 15px;
   text-align: left;
   transition: background .18s ease, border-color .18s ease, color .18s ease;
 }
@@ -1306,19 +1310,22 @@ h1, h2, h3 {
 }
 
 .ai-time-chip-time {
-  color: rgba(255,255,255,.56);
+  color: rgba(255,255,255,.52);
   font-size: 12px;
   font-weight: 800;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
 .ai-time-chip-title {
   overflow: hidden;
   color: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .ai-lesson-title {
@@ -1456,11 +1463,16 @@ h1, h2, h3 {
   .ai-timeline-panel {
     margin-top: -10px;
     border-radius: 16px;
-    padding: 11px 10px 7px;
+    padding: 12px 10px 8px;
   }
 
   .ai-timeline-head small {
     display: none;
+  }
+
+  .ai-time-chip {
+    flex-basis: 76vw;
+    min-height: 76px;
   }
 
   .ai-chapter-btn {
