@@ -107,6 +107,7 @@
     }
 
     .ai-conversation {
+      flex: 1;
       display: flex;
       flex-direction: column;
       gap: 18px;
@@ -276,6 +277,25 @@
       margin-top: 16px;
     }
 
+    .ai-limit-actions {
+      display: flex;
+      margin-top: 14px;
+    }
+
+    .ai-limit-pro-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #fff;
+      color: #050506;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
     @media (max-width: 768px) {
       .ai-main { 
         max-width: none;
@@ -395,6 +415,22 @@
       .ai-back-mobile {
         display: none !important;
       }
+
+      .ai-shell {
+        min-height: min(760px, calc(100dvh - 120px));
+      }
+
+      .ai-chat-panel {
+        min-height: 520px;
+      }
+
+      .ai-input-bar {
+        flex: 0 0 auto;
+      }
+
+      .ai-footnote {
+        flex: 0 0 auto;
+      }
     }
   </style>
 </head>
@@ -449,7 +485,7 @@
       document.body.classList.toggle('ai-has-messages', hasMessages);
     }
 
-    function addMessage(text, role = 'user') {
+    function addMessage(text, role = 'user', options = {}) {
       const msg = document.createElement('div');
       msg.className = 'ai-message ' + role;
       const bubble = document.createElement('div');
@@ -461,6 +497,16 @@
       content.className = 'ai-content';
       content.textContent = text;
       bubble.append(name, content);
+      if (options.limitCta) {
+        const actions = document.createElement('div');
+        actions.className = 'ai-limit-actions';
+        const link = document.createElement('a');
+        link.className = 'ai-limit-pro-btn';
+        link.href = '/account/?pro=1';
+        link.textContent = 'Открыть Система Pro';
+        actions.appendChild(link);
+        bubble.appendChild(actions);
+      }
       const time = document.createElement('span');
       time.className = 'ai-time';
       time.textContent = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
@@ -532,7 +578,7 @@
         assistant.msg.remove();
         if (err.code === 'AI_LIMIT_REACHED') {
           updateUsage(err.usage);
-          addMessage('Лимит сообщений закончился. В Система Pro доступно 50 сообщений с AI.', 'assistant');
+          addMessage('Лимит сообщений закончился. В Система Pro доступно 50 сообщений с AI.', 'assistant', { limitCta: true });
         } else {
           addMessage('Не удалось отправить сообщение. Попробуйте еще раз.', 'assistant');
         }

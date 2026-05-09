@@ -24,9 +24,10 @@
     }
 
     .feed-container {
-      max-width: 540px;
+      width: min(100%, 680px);
+      max-width: calc(100vw - 320px);
       margin: 0 auto;
-      padding: 96px 16px 120px;
+      padding: 96px 20px 120px;
     }
 
     .feed-header { display: none; }
@@ -87,7 +88,7 @@
 
     .post-image {
       width: 100%;
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 1 / 1.08;
       object-fit: cover;
       display: block;
     }
@@ -167,8 +168,15 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
+    @media (max-width: 900px) {
+      .feed-container {
+        max-width: calc(100vw - 32px);
+      }
+    }
+
     @media (max-width: 580px) {
       .feed-container {
+        width: 100%;
         padding: calc(96px + env(safe-area-inset-top, 0px)) 12px 100px;
       }
 

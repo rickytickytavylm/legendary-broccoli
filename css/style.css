@@ -406,6 +406,11 @@ h1, h2, h3 {
   margin-bottom: 40px;
 }
 
+.bento-section .section-header {
+  margin-bottom: 34px;
+  text-align: center;
+}
+
 .section-title {
   font-size: 2rem;
   margin-bottom: 12px;
@@ -1055,8 +1060,8 @@ h1, h2, h3 {
 
 /* ── Program Search ─────────────────────────────────────── */
 .program-search-shell {
-  max-width: 860px;
-  margin: 24px auto 0;
+  width: min(100%, 920px);
+  margin: 0 auto 34px;
   position: relative;
 }
 
@@ -1064,17 +1069,20 @@ h1, h2, h3 {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 68px;
-  border-radius: 30px;
+  min-height: 66px;
+  border-radius: 28px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12)),
-    rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.2);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.16), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.035)),
+    rgba(9, 12, 18, .72);
+  border: 1px solid rgba(255,255,255,.135);
   box-shadow:
-    0 22px 70px rgba(0,0,0,.24),
-    inset 0 1px 0 rgba(255,255,255,.25);
-  -webkit-backdrop-filter: blur(28px) saturate(145%);
-  backdrop-filter: blur(28px) saturate(145%);
+    0 24px 70px rgba(0,0,0,.42),
+    0 1px 0 rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 -1px 0 rgba(255,255,255,.04);
+  -webkit-backdrop-filter: blur(32px) saturate(165%);
+  backdrop-filter: blur(32px) saturate(165%);
   overflow: hidden;
 }
 
@@ -1084,7 +1092,21 @@ h1, h2, h3 {
   inset: 1px;
   border-radius: inherit;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(255,255,255,.16), transparent 55%);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.13), transparent 54%),
+    linear-gradient(90deg, rgba(255,255,255,.045), transparent 28%, rgba(255,255,255,.05));
+}
+
+.program-search-box:focus-within {
+  border-color: rgba(255,255,255,.22);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.2), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.045)),
+    rgba(11, 15, 23, .8);
+  box-shadow:
+    0 28px 86px rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.04),
+    inset 0 1px 0 rgba(255,255,255,.2);
 }
 
 .program-search-box svg {
@@ -1115,11 +1137,11 @@ h1, h2, h3 {
 }
 
 .program-search-meta {
-  min-height: 20px;
-  margin-top: 10px;
-  color: rgba(255,255,255,.42);
-  font-size: 13px;
-  text-align: center;
+  display: none;
+}
+
+.program-search-shell + .section-title {
+  margin-top: 0;
 }
 
 .program-search-hidden {
@@ -1142,7 +1164,8 @@ h1, h2, h3 {
 
 @media (max-width: 640px) {
   .program-search-shell {
-    margin-top: 18px;
+    width: 100%;
+    margin-bottom: 26px;
   }
 
   .program-search-box {

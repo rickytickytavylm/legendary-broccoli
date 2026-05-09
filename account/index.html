@@ -682,7 +682,7 @@
     }
     @media (max-width: 600px) {
       .profile-wrap {
-        padding: calc(118px + env(safe-area-inset-top, 0px)) 16px 112px;
+        padding: calc(96px + env(safe-area-inset-top, 0px)) 16px 112px;
       }
       .profile-hero {
         grid-template-columns: 1fr;
@@ -975,6 +975,10 @@
         : 'Первые уроки открыты';
       document.getElementById('pro-cta').textContent = isPro ? 'Управлять подпиской' : 'Оформить Система Pro';
       document.getElementById('pro-cta').onclick = () => openProModal(isPro);
+      if (new URLSearchParams(location.search).get('pro') === '1') {
+        setTimeout(() => openProModal(isPro), 120);
+        history.replaceState(null, '', location.pathname);
+      }
 
       // Streak dots (last 7 days)
       const dotsEl = document.getElementById('streak-dots');
