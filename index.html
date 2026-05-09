@@ -9,8 +9,8 @@
 <title>Система — Руслан Молодцов</title>
   <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия и практики." />
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=39" />
-  <link rel="stylesheet" href="/css/nav.css?v=54" />
+  <link rel="stylesheet" href="/css/style.css?v=40" />
+  <link rel="stylesheet" href="/css/nav.css?v=55" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,9 +26,9 @@
       </a>
       
       <div class="nav-links desktop-only">
-        <a href="#learning" class="nav-link">Обучение</a>
+        <a href="/programs/" class="nav-link">Программы</a>
         <a href="#channels" class="nav-link">Каналы</a>
-        <a href="#support" class="nav-link">Поддержка</a>
+        <a href="#resources" class="nav-link">Ресурсы</a>
       </div>
 
       <div class="nav-actions">
@@ -58,8 +58,8 @@
           Пространство для развития, телесной терапии и построения личного сценария жизни.
         </p>
         <div class="hero-actions fade-up">
-          <a href="#learning" class="btn btn-primary btn-lg">
-            Начать обучение
+          <a href="/programs/" class="btn btn-primary btn-lg">
+            Смотреть программы
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <a href="#channels" class="btn btn-secondary btn-lg">
@@ -73,209 +73,79 @@
       <div class="hero-glow"></div>
     </section>
 
-    <!-- Bento Grid: Обучение -->
-    <section id="learning" class="section bento-section">
-      <div class="section-header reveal">
-        <div class="program-search-shell">
-          <label class="program-search-box" for="program-search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="M20 20l-3.5-3.5"></path>
-            </svg>
-            <input id="program-search" class="program-search-input" type="search" placeholder="Найти программу" autocomplete="off" />
-          </label>
-          <div class="program-search-meta" id="program-search-meta"></div>
+    <!-- Programs preview -->
+    <section id="learning" class="section home-hub-section home-programs-section">
+      <div class="hub-section-header reveal">
+        <div>
+          <p class="hub-kicker">Программы</p>
+          <h2 class="section-title">Выберите направление для работы</h2>
+          <p class="section-desc">Короткая витрина основных программ. Полный каталог и поиск — на отдельном экране.</p>
         </div>
-        <h2 class="section-title" id="program-section-title">Все программы</h2>
-        <p class="section-desc" id="program-section-desc">Фундаментальные программы и практики</p>
+        <a href="/programs/" class="hub-link">Все программы</a>
+      </div>
+      <div class="program-rail" id="home-program-rail" aria-label="Популярные программы"></div>
+    </section>
+
+    <!-- Product resources -->
+    <section id="resources" class="section home-hub-section">
+      <div class="hub-section-header reveal">
+        <div>
+          <p class="hub-kicker">Ресурсы</p>
+          <h2 class="section-title">Всё, что поддерживает путь</h2>
+          <p class="section-desc">Приложение, забота, AI-помощник и живой формат личной сессии.</p>
+        </div>
       </div>
 
-      <div class="bento-grid" id="program-grid">
-
-        <!-- Row 1: Психосоматика (wide) + Мини-йога -->
-        <a href="/psihosomatika/" class="bento-card wide reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/psysomatic.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Психосоматика</h3>
-              <p>Связь эмоций, стресса и телесных симптомов</p>
-            </div>
+      <div class="hub-feature-grid">
+        <a href="/ai/" class="hub-feature-card hub-feature-card-large reveal card-hover">
+          <div class="hub-feature-bg" style="background-image:url('/assets/webp/way_block.webp')"></div>
+          <div class="hub-feature-overlay"></div>
+          <div class="hub-feature-content">
+            <span class="hub-kicker">AI-помощник</span>
+            <h3>Подобрать урок, разобрать вопрос, не потеряться в материале</h3>
+            <p>Помощник знает структуру продукта и помогает собрать личную траекторию внутри Системы.</p>
           </div>
           <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="/yoga/" class="bento-card reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/mini-yoga.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Мини-йога</h3>
-              <p>Мягкие практики дыхания и движения</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <!-- Row 2: small left + wide right -->
-        <a href="/dermer/" class="bento-card reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/geshtalt.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Работа с травмами</h3>
-              <p>Практический курс о кризисах и восстановлении опоры</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <a href="/geshtalt/" class="bento-card wide reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/courses.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Гештальт-подход</h3>
-              <p>Контакт, границы, эмоции и возвращение к себе</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <div class="bento-card reveal card-hover disabled">
-          <span class="card-badge">Скоро</span>
-          <div class="card-bg" style="background: url('/assets/webp/scenario.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Сценарий</h3>
-              <p>Ваш личный план</p>
-            </div>
+        <div class="hub-feature-card reveal card-hover">
+          <div class="hub-feature-bg" style="background-image:url('/assets/webp/app.webp')"></div>
+          <div class="hub-feature-overlay"></div>
+          <div class="hub-feature-content">
+            <span class="hub-kicker">Приложение</span>
+            <h3>Система всегда под рукой</h3>
+            <p>Установите на экран телефона для быстрого доступа к урокам и AI.</p>
+            <button id="btn-install-pwa" class="btn-support-text mt-auto" type="button">Установить</button>
           </div>
         </div>
 
-        <!-- Row 4: small left + wide right -->
-        <a href="/gipnoz/" class="bento-card reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/hipno.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Гипноз</h3>
-              <p>Техники и практики гипнотерапии</p>
-            </div>
+        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="hub-feature-card reveal card-hover">
+          <div class="hub-feature-bg" style="background-image:url('/assets/webp/hope.webp')"></div>
+          <div class="hub-feature-overlay"></div>
+          <div class="hub-feature-content">
+            <span class="hub-kicker">Отдел заботы</span>
+            <h3>Поможем разобраться</h3>
+            <p>Вопросы по доступу, оплате, курсам и навигации можно задать в Telegram.</p>
           </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
 
-        <a href="/marathons/" class="bento-card wide reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/maraphones.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Марафоны</h3>
-              <p>Интенсивные программы трансформации</p>
-            </div>
+        <a href="/account/?pro=1" class="hub-feature-card hub-session-card reveal card-hover">
+          <div class="hub-feature-bg" style="background-image:url('/assets/webp/ruslan_promo.webp')"></div>
+          <div class="hub-feature-overlay"></div>
+          <div class="hub-feature-content">
+            <span class="hub-kicker">Сессии</span>
+            <h3>Сессия с психологом</h3>
+            <p>Заглушка будущей записи на личную консультацию внутри продукта.</p>
+            <strong>Назначить</strong>
           </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
         </a>
-
-        <!-- Row 5: wide left + small right -->
-        <a href="/profiling/" class="bento-card wide reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/way_block.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Профайлинг</h3>
-              <p>Курс по распознаванию личности</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <a href="/superviziya/" class="bento-card reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/supervision.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-badge-glass">Для профессионалов</div>
-            <div class="card-text">
-              <h3>Супервизия</h3>
-              <p>Профессиональная поддержка психологов</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <!-- Row 6: small left + wide right -->
-        <a href="/master/" class="bento-card reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/masterofcommication.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Мастер Коммуникаций</h3>
-              <p>Развитие навыков общения</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <a href="/terapiya/" class="bento-card wide reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/theraphy.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Телесная терапия</h3>
-              <p>Практики, которые возвращают внимание в тело</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <!-- Row 7: wide left + small right -->
-        <a href="/antologiya/" class="bento-card wide reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/antology.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Антология</h3>
-              <p>Сборник материалов и практик</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <a href="/sozavisimost/" class="bento-card reveal card-hover">
-          <div class="card-bg" style="background: url('/assets/webp/coda2.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Созависимость</h3>
-              <p>Работа с созависимыми отношениями</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <!-- Row 8: full-width -->
-        <a href="/mj/" class="bento-card reveal card-hover" style="grid-column: 1 / -1;">
-          <div class="card-bg" style="background: url('/assets/webp/man_woman.webp') center/cover no-repeat;"></div>
-          <div class="card-overlay"></div>
-          <div class="card-content">
-            <div class="card-text">
-              <h3>Мужское и Женское</h3>
-              <p>Психология отношений и природа полов</p>
-            </div>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
       </div>
-      <p class="program-search-empty" id="program-search-empty">Ничего не найдено. Попробуйте искать по теме, навыку или названию урока.</p>
     </section>
 
     <!-- Section: Каналы (Rork style lists) -->
     <section id="channels" class="section">
       <div class="section-header reveal">
-        <h2 class="section-title">Каналы & Комьюнити</h2>
+        <h2 class="section-title">Каналы и комьюнити</h2>
       </div>
 
       <div class="minimal-list">
@@ -315,51 +185,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
         </a>
-
-      </div>
-    </section>
-
-    <!-- Support & App -->
-    <section id="support" class="section">
-      <div class="support-grid">
-        
-        <!-- Отдел заботы -->
-        <div class="support-card reveal card-hover">
-          <div class="support-card-bg" style="background: url('/assets/webp/hope.webp') center/cover no-repeat;"></div>
-          <div class="support-card-overlay"></div>
-          <div class="support-card-content">
-            <div class="support-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            </div>
-            <div class="support-text">
-              <h3>Отдел Заботы</h3>
-              <p>Напишите нам — ответим на вопросы и поможем разобраться</p>
-            </div>
-            <a href="#" class="btn-support-outline mt-auto">
-              Написать в Telegram
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Установка PWA -->
-        <div class="support-card reveal card-hover">
-          <div class="support-card-bg" style="background: url('/assets/webp/app.webp') center/cover no-repeat;"></div>
-          <div class="support-card-overlay"></div>
-          <div class="support-card-content">
-            <div class="support-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-            </div>
-            <div class="support-text">
-              <h3>Приложение</h3>
-              <p>Установите Систему на экран телефона для быстрого доступа</p>
-            </div>
-            <button id="btn-install-pwa" class="btn-support-text mt-auto">
-              <span class="btn-support-text-label">Установить</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-        </div>
 
       </div>
     </section>
@@ -405,7 +230,7 @@
       <div class="footer-col">
         <h4 class="footer-heading">Обучение</h4>
         <ul class="footer-list">
-          <li><a href="/courses/">Все курсы</a></li>
+          <li><a href="/programs/">Все программы</a></li>
           <li><a href="#channels">Каналы</a></li>
           <li><a href="#">Библиотека</a></li>
           <li><a href="/terapiya/">Практики</a></li>
@@ -458,116 +283,11 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=43"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=58"></script>
+  <script src="/js/nav.js?v=59"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/program-catalog.js?v=1"></script>
   <script>
-    (function setupProgramSearch() {
-      const input = document.getElementById('program-search');
-      const meta = document.getElementById('program-search-meta');
-      const empty = document.getElementById('program-search-empty');
-      const title = document.getElementById('program-section-title');
-      const desc = document.getElementById('program-section-desc');
-      const cards = Array.from(document.querySelectorAll('#program-grid .bento-card'));
-      if (!input || !cards.length) return;
-
-      const endpointByHref = {
-        '/geshtalt/': '/content/geshtalt-lessons',
-        '/dermer/': '/content/dermer-lessons',
-        '/gipnoz/': '/content/gipnoz-lessons',
-        '/yoga/': '/content/yoga-lessons',
-        '/marathons/': '/content/marathons-lessons',
-        '/psihosomatika/': '/content/psihosomatika-lessons',
-        '/master/': '/content/master-lessons',
-        '/superviziya/': '/content/superviziya-lessons',
-        '/antologiya/': '/content/antologiya-lessons',
-        '/sozavisimost/': '/content/sozavisimost-lessons',
-        '/mj/': '/content/mj-lessons',
-      };
-
-      function normalize(value) {
-        return String(value || '')
-          .toLowerCase()
-          .replace(/ё/g, 'е')
-          .replace(/[^\p{L}\p{N}]+/gu, ' ')
-          .trim();
-      }
-
-      function flattenLessons(data) {
-        if (!Array.isArray(data)) return [];
-        if (data.every((item) => Array.isArray(item.lessons))) {
-          return data.flatMap((section) => section.lessons || []);
-        }
-        return data;
-      }
-
-      function hrefKey(card) {
-        const href = card.getAttribute('href') || '';
-        if (!href || href === '#') return '';
-        try {
-          return new URL(href, location.origin).pathname;
-        } catch (e) {
-          return href;
-        }
-      }
-
-      const searchItems = cards.map((card) => {
-        const title = card.querySelector('h3')?.textContent || '';
-        const desc = card.querySelector('p')?.textContent || '';
-        const item = {
-          card,
-          title,
-          desc,
-          haystack: normalize([title, desc].join(' ')),
-          lessonCount: 0,
-        };
-        card.dataset.searchBase = item.haystack;
-        return item;
-      });
-
-      function applySearch() {
-        const query = normalize(input.value);
-        let visible = 0;
-        searchItems.forEach((item) => {
-          const matches = !query || item.haystack.includes(query);
-          item.card.classList.toggle('program-search-hidden', !matches);
-          if (matches) visible += 1;
-        });
-        if (empty) empty.classList.toggle('visible', !!query && visible === 0);
-        if (title) title.textContent = query ? 'Подходящие программы' : 'Все программы';
-        if (desc) desc.textContent = query
-          ? (visible ? `Найдено программ: ${visible}` : 'Совпадений пока нет. Попробуйте другое слово или тему')
-          : 'Фундаментальные программы и практики';
-        if (meta) {
-          meta.textContent = '';
-        }
-      }
-
-      async function enrichWithLessons() {
-        if (!window.API || !window.API.request) return;
-        await Promise.all(searchItems.map(async (item) => {
-          const endpoint = endpointByHref[hrefKey(item.card)];
-          if (!endpoint) return;
-          try {
-            const data = await window.API.request('GET', endpoint);
-            const lessons = flattenLessons(data);
-            item.lessonCount = lessons.length;
-            const lessonText = lessons
-              .map((lesson) => [lesson.title, lesson.description, lesson.duration].filter(Boolean).join(' '))
-              .join(' ');
-            item.haystack = normalize([item.title, item.desc, lessonText].join(' '));
-          } catch (e) {}
-        }));
-        applySearch();
-      }
-
-      input.addEventListener('input', applySearch);
-      input.addEventListener('focus', () => document.body.classList.add('program-search-focused'));
-      input.addEventListener('blur', () => {
-        window.setTimeout(() => document.body.classList.remove('program-search-focused'), 80);
-      });
-      applySearch();
-      enrichWithLessons();
-    })();
+    if (window.ProgramCatalog) window.ProgramCatalog.renderRail('#home-program-rail', 4);
 
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');

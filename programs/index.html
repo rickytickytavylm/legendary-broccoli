@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Программы — Система Молодцова</title>
+  <meta name="description" content="Все программы Системы Молодцова: курсы, практики и направления с поиском по урокам." />
+  <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
+  <link rel="stylesheet" href="/css/style.css?v=40" />
+  <link rel="stylesheet" href="/css/nav.css?v=55" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="dark-theme programs-page">
+  <main class="main-content programs-main">
+    <section class="programs-hero">
+      <div class="programs-hero-copy">
+        <p class="hub-kicker">Каталог</p>
+        <h1>Программы Системы</h1>
+        <p>Найдите курс, практику или тему внутри уроков. Поиск учитывает названия программ и материалы внутри видео.</p>
+      </div>
+    </section>
+
+    <section class="section bento-section programs-catalog-section">
+      <div class="section-header reveal">
+        <div class="program-search-shell">
+          <label class="program-search-box" for="program-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M20 20l-3.5-3.5"></path>
+            </svg>
+            <input id="program-search" class="program-search-input" type="search" placeholder="Найти программу" autocomplete="off" />
+          </label>
+          <div class="program-search-meta" id="program-search-meta"></div>
+        </div>
+        <h2 class="section-title" id="program-section-title">Все программы</h2>
+        <p class="section-desc" id="program-section-desc">Каталог курсов, практик и программ Системы</p>
+      </div>
+
+      <div class="bento-grid" id="program-grid"></div>
+      <p class="program-search-empty" id="program-search-empty">Ничего не найдено. Попробуйте искать по теме, навыку или названию урока.</p>
+    </section>
+  </main>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js?v=43"></script>
+  <script src="/js/auth.js?v=18"></script>
+  <script src="/js/nav.js?v=59"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/program-catalog.js?v=1"></script>
+  <script>
+    if (window.ProgramCatalog) {
+      window.ProgramCatalog.renderGrid('#program-grid');
+      window.ProgramCatalog.setupSearch({
+        input: '#program-search',
+        grid: '#program-grid',
+        empty: '#program-search-empty',
+        title: '#program-section-title',
+        desc: '#program-section-desc',
+      });
+    }
+  </script>
+</body>
+</html>
