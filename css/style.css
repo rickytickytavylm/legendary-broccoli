@@ -1229,6 +1229,8 @@ h1, h2, h3 {
 .ai-timeline-panel {
   display: none;
   margin-top: -8px;
+  width: 100%;
+  box-sizing: border-box;
   overflow: hidden;
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,.1);
@@ -1283,7 +1285,7 @@ h1, h2, h3 {
 }
 
 .ai-time-chip {
-  flex: 0 0 min(72vw, 280px);
+  flex: 0 0 clamp(220px, 28vw, 340px);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 17px;
   background:
@@ -1471,7 +1473,7 @@ h1, h2, h3 {
   }
 
   .ai-time-chip {
-    flex-basis: 76vw;
+    flex-basis: min(68vw, 260px);
     min-height: 76px;
   }
 
