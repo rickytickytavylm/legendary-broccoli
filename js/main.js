@@ -63,15 +63,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // ── Navbar Blur Effect on Scroll ──────────────────────────────
 const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 50) {
-    navbar.style.background = 'rgba(0, 0, 0, 0.8)';
-    navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
-  } else {
-    navbar.style.background = 'rgba(0, 0, 0, 0.5)';
-    navbar.style.boxShadow = 'none';
-  }
-});
+if (navbar) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      navbar.style.background = 'rgba(0, 0, 0, 0.8)';
+      navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
+    } else {
+      navbar.style.background = 'rgba(0, 0, 0, 0.5)';
+      navbar.style.boxShadow = 'none';
+    }
+  });
+}
 
 // ── PWA Install Prompt ────────────────────────────────────────
 let deferredPrompt = null;

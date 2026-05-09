@@ -1061,11 +1061,16 @@ h1, h2, h3 {
 .programs-hero {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 48px 24px 26px;
+  padding: 34px 24px 26px;
 }
 
 .programs-hero-copy {
   max-width: 820px;
+}
+
+.programs-search-shell {
+  width: min(100%, 920px);
+  margin: 0 0 42px;
 }
 
 .programs-hero h1 {
@@ -1085,6 +1090,10 @@ h1, h2, h3 {
 
 .programs-catalog-section {
   padding-top: 18px;
+}
+
+.programs-catalog-section .section-header {
+  text-align: left;
 }
 
 /* ── Minimal List (Каналы) ────────────────────────────────── */

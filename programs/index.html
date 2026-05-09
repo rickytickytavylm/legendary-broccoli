@@ -18,6 +18,16 @@
 <body class="dark-theme programs-page">
   <main class="main-content programs-main">
     <section class="programs-hero">
+      <div class="program-search-shell programs-search-shell">
+        <label class="program-search-box" for="program-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="M20 20l-3.5-3.5"></path>
+          </svg>
+          <input id="program-search" class="program-search-input" type="search" placeholder="Найти программу" autocomplete="off" />
+        </label>
+        <div class="program-search-meta" id="program-search-meta"></div>
+      </div>
       <div class="programs-hero-copy">
         <p class="hub-kicker">Каталог</p>
         <h1>Программы Системы</h1>
@@ -27,16 +37,6 @@
 
     <section class="section bento-section programs-catalog-section">
       <div class="section-header reveal">
-        <div class="program-search-shell">
-          <label class="program-search-box" for="program-search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="M20 20l-3.5-3.5"></path>
-            </svg>
-            <input id="program-search" class="program-search-input" type="search" placeholder="Найти программу" autocomplete="off" />
-          </label>
-          <div class="program-search-meta" id="program-search-meta"></div>
-        </div>
         <h2 class="section-title" id="program-section-title">Все программы</h2>
         <p class="section-desc" id="program-section-desc">Каталог курсов, практик и программ Системы</p>
       </div>
@@ -50,8 +50,8 @@
   <script src="/js/api.js?v=43"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=59"></script>
-  <script src="/js/main.js"></script>
-  <script src="/js/program-catalog.js?v=1"></script>
+  <script src="/js/main.js?v=2"></script>
+  <script src="/js/program-catalog.js?v=2"></script>
   <script>
     if (window.ProgramCatalog) {
       window.ProgramCatalog.renderGrid('#program-grid');

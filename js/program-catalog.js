@@ -41,7 +41,6 @@
       mode === 'rail' ? 'program-rail-card' : 'bento-card',
       program.wide && mode !== 'rail' ? 'wide' : '',
       program.full && mode !== 'rail' ? 'program-card-full' : '',
-      'reveal',
       'card-hover',
       program.disabled ? 'disabled' : '',
     ].filter(Boolean).join(' ');
@@ -68,7 +67,7 @@
     const root = typeof target === 'string' ? document.querySelector(target) : target;
     if (!root) return;
     root.innerHTML = PROGRAMS.slice(0, limit || 4).map((program) => card(program, 'rail')).join('') +
-      `<a href="/programs/" class="program-rail-card program-rail-all reveal">
+      `<a href="/programs/" class="program-rail-card program-rail-all">
         <span>Все программы</span>
         <strong>Открыть каталог</strong>
         ${arrow()}
