@@ -337,6 +337,8 @@
   var SCROLL_THRESHOLD = 72; // px from top before nav appears
 
   function setVisible(visible) {
+    var footerVisible = document.body.classList.contains('footer-in-view');
+    visible = visible && !footerVisible;
     if (visible) {
       sidebar.classList.add('nav-visible');
       tabbar.classList.add('nav-visible');
@@ -366,6 +368,16 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     // Set initial state (e.g. if page reloaded mid-scroll)
     setVisible(window.scrollY > SCROLL_THRESHOLD);
+  }
+
+  var footer = document.querySelector('.footer');
+  if (footer && 'IntersectionObserver' in window) {
+    var footerObserver = new IntersectionObserver(function(entries) {
+      var visible = entries.some(function(entry) { return entry.isIntersecting; });
+      document.body.classList.toggle('footer-in-view', visible);
+      setVisible((!hasHero || window.scrollY > SCROLL_THRESHOLD) && !visible);
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.02 });
+    footerObserver.observe(footer);
   }
 
   // ── Video hardening (no casual download / context menu) ──

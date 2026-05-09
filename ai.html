@@ -7,8 +7,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>AI-помощник — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=43" />
-  <link rel="stylesheet" href="/css/nav.css?v=55" />
+  <link rel="stylesheet" href="/css/style.css?v=45" />
+  <link rel="stylesheet" href="/css/nav.css?v=56" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -314,7 +314,7 @@
         width: 100%;
         height: var(--ai-viewport-height, 100svh);
         min-height: var(--ai-viewport-height, 100svh);
-        padding: calc(88px + env(safe-area-inset-top, 0px)) 14px calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 18px + env(safe-area-inset-bottom, 0px));
+        padding: calc(56px + env(safe-area-inset-top, 0px)) 14px calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 18px + env(safe-area-inset-bottom, 0px));
         justify-content: flex-start;
         overflow: hidden;
       }
@@ -375,12 +375,12 @@
       .ai-time { display: none; }
       .ai-back-mobile {
         position: fixed !important;
-        top: calc(88px + env(safe-area-inset-top, 0px)) !important;
+        top: calc(66px + env(safe-area-inset-top, 0px)) !important;
         left: 14px !important;
         margin: 0 !important;
-        opacity: 1 !important;
+        opacity: 1;
         pointer-events: auto !important;
-        transform: scale(.92) !important;
+        transform: scale(.92);
         transform-origin: left top !important;
         z-index: 100;
       }
@@ -396,7 +396,13 @@
       }
       body.ai-input-focused .ai-page,
       body.ai-has-messages .ai-page {
-        padding-top: calc(88px + env(safe-area-inset-top, 0px));
+        padding-top: calc(56px + env(safe-area-inset-top, 0px));
+      }
+
+      body.ai-back-hidden .ai-back-mobile {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transform: translateY(-8px) scale(.92) !important;
       }
 
       body.ai-has-messages .ai-hero {
@@ -472,12 +478,13 @@
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=43"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=59"></script>
+  <script src="/js/nav.js?v=60"></script>
   <script>
     const aiInput = document.getElementById('ai-input');
     const aiSend = document.getElementById('ai-send');
     const aiConversation = document.getElementById('ai-conversation');
     const aiInputBar = document.querySelector('.ai-input-bar');
+    let aiBackTimer = null;
 
     function syncAiIntroState() {
       const hasMessages = !!aiConversation.querySelector('.ai-message');
@@ -487,7 +494,17 @@
     function scrollAiToBottom(delay = 0) {
       window.setTimeout(() => {
         aiConversation.scrollTop = aiConversation.scrollHeight;
+        hideAiBackTemporarily();
       }, delay);
+    }
+
+    function hideAiBackTemporarily() {
+      if (window.innerWidth > 768) return;
+      document.body.classList.add('ai-back-hidden');
+      clearTimeout(aiBackTimer);
+      aiBackTimer = setTimeout(() => {
+        document.body.classList.remove('ai-back-hidden');
+      }, 900);
     }
 
     function addMessage(text, role = 'user', options = {}) {
@@ -598,6 +615,7 @@
     loadAiUsage();
     loadAiHistory();
     aiSend.addEventListener('click', submitQuestion);
+    aiConversation.addEventListener('scroll', hideAiBackTemporarily, { passive: true });
     aiInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') submitQuestion();
     });

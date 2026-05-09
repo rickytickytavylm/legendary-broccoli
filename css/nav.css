@@ -839,12 +839,7 @@
   }
 
   body:has(.ai-main) .back-link-glass {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    transform: none !important;
     position: fixed !important;
-    top: 132px !important;
-    left: 22px !important;
     margin: 0 !important;
   }
 

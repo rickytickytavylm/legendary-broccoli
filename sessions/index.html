@@ -8,8 +8,8 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Сессии с психологом — Система Молодцова</title>
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=44" />
-  <link rel="stylesheet" href="/css/nav.css?v=55" />
+  <link rel="stylesheet" href="/css/style.css?v=45" />
+  <link rel="stylesheet" href="/css/nav.css?v=56" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -38,17 +38,25 @@
           <input name="client_name" type="text" placeholder="Как к вам обращаться" />
         </label>
         <div class="session-methods" role="radiogroup" aria-label="Способ связи">
-          <label><input type="radio" name="contact_method" value="phone" checked /> Звонок</label>
-          <label><input type="radio" name="contact_method" value="telegram" /> Telegram</label>
-          <label><input type="radio" name="contact_method" value="max" /> MAX</label>
+          <label>
+            <input type="radio" name="contact_method" value="phone" checked />
+            <span class="session-method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.7.6 2.5a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6.5 6.5l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.6.5 2.5.6a2 2 0 0 1 1.7 2z"/></svg></span>
+            Звонок
+          </label>
+          <label>
+            <input type="radio" name="contact_method" value="telegram" />
+            <span class="session-method-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.2 15.4 8.9 20c.5 0 .8-.2 1.1-.5l2.6-2.5 5.4 4c1 .6 1.7.3 2-1l3.6-16.8c.3-1.4-.5-2-1.5-1.6L1.1 9.7c-1.4.6-1.4 1.4-.2 1.7l5.4 1.7L18.8 5.2c.6-.4 1.1-.2.7.2L9.2 15.4z"/></svg></span>
+            Telegram
+          </label>
+          <label>
+            <input type="radio" name="contact_method" value="max" />
+            <span class="session-method-icon">M</span>
+            MAX
+          </label>
         </div>
         <label>
           <span id="session-contact-label">Телефон</span>
           <input name="contact_value" id="session-contact" type="text" placeholder="+7..." required />
-        </label>
-        <label>
-          <span>Комментарий</span>
-          <textarea name="comment" placeholder="Коротко опишите запрос или удобное время"></textarea>
         </label>
         <button class="btn btn-primary btn-lg" type="submit">Отправить заявку</button>
         <p class="session-form-status" id="session-status"></p>
@@ -59,7 +67,7 @@
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=43"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=59"></script>
+  <script src="/js/nav.js?v=60"></script>
   <script src="/js/main.js?v=2"></script>
   <script src="/js/sessions.js?v=1"></script>
   <script>
@@ -87,6 +95,7 @@
       document.getElementById('session-specialist-slug').value = specialist.slug;
       document.getElementById('session-specialist-name').value = specialist.name;
       statusEl.textContent = '';
+      document.body.classList.add('session-modal-open');
       modal.classList.add('visible');
       modal.setAttribute('aria-hidden', 'false');
     }
@@ -94,6 +103,7 @@
     function closeModal() {
       modal.classList.remove('visible');
       modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('session-modal-open');
     }
 
     grid.addEventListener('click', (event) => {
@@ -107,6 +117,9 @@
     modal.addEventListener('click', (event) => {
       if (event.target === modal) closeModal();
     });
+    modal.addEventListener('touchmove', (event) => {
+      event.preventDefault();
+    }, { passive: false });
 
     Array.from(form.elements.contact_method).forEach((radio) => {
       radio.addEventListener('change', () => {
