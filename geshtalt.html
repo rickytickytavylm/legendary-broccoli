@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=33" />
+  <link rel="stylesheet" href="/css/style.css?v=34" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -376,12 +376,19 @@
         aiPanel.classList.remove('expanded');
         aiPanel.innerHTML = `
           <div class="ai-lesson-inner">
-            <div class="ai-lesson-kicker">AI-разбор Руслана</div>
+            <div class="ai-lesson-kicker">ИИ-разбор</div>
             <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
             <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
+            <div class="ai-lesson-timeline" aria-label="Таймкоды урока">
+              ${chapters.map((chapter) => `
+                <button type="button" class="ai-time-chip" data-seconds="${Number(chapter.start_seconds) || 0}">
+                  <span class="ai-time-chip-time">${escapeHtml(chapter.start_time || '')}</span>
+                  <span class="ai-time-chip-title">${escapeHtml(chapter.title || '')}</span>
+                </button>
+              `).join('')}
+            </div>
             <div class="ai-lesson-actions">
               <button type="button" class="ai-toggle-btn" id="ai-toggle-btn">Открыть разбор</button>
-              <button type="button" class="ai-outline-btn" id="ai-chapters-focus">Главы с таймкодами</button>
             </div>
             <div class="ai-expanded" id="ai-expanded">
               <h4 class="ai-section-title">Саммари урока</h4>
@@ -410,15 +417,9 @@
           });
         }
 
-        const focus = document.getElementById('ai-chapters-focus');
-        if (focus) {
-          focus.addEventListener('click', () => {
-            aiPanel.classList.add('expanded');
-            if (toggle) toggle.textContent = 'Свернуть разбор';
-            document.getElementById('ai-chapters')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          });
-        }
-
+        aiPanel.querySelectorAll('.ai-time-chip').forEach((button) => {
+          button.addEventListener('click', () => jumpToAiChapter(Number(button.dataset.seconds)));
+        });
         aiPanel.querySelectorAll('.ai-chapter-btn').forEach((button) => {
           button.addEventListener('click', () => jumpToAiChapter(Number(button.dataset.seconds)));
         });
