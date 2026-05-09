@@ -136,6 +136,13 @@
       color: rgba(255, 255, 255, 0.75);
     }
 
+    .post-caption.is-collapsed {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+
     .post-caption strong {
       color: #fff;
       font-weight: 600;
@@ -144,7 +151,8 @@
 
     .post-expand-link {
       display: block;
-      padding: 0 18px 16px;
+      margin: -4px 18px 16px;
+      padding: 0;
       font-size: 13px;
       color: rgba(255, 255, 255, 0.35);
       text-decoration: none;
@@ -152,7 +160,7 @@
       background: transparent;
       border: 0;
       text-align: left;
-      width: 100%;
+      width: auto;
     }
 
     .post-expand-link:hover {
@@ -293,16 +301,11 @@
     document.querySelectorAll('.post-expand-link').forEach((button) => {
       const caption = button.previousElementSibling;
       if (!caption || !caption.classList.contains('post-caption')) return;
-      caption.style.display = '-webkit-box';
-      caption.style.webkitLineClamp = '3';
-      caption.style.webkitBoxOrient = 'vertical';
-      caption.style.overflow = 'hidden';
+      caption.classList.add('is-collapsed');
       button.addEventListener('click', () => {
         const expanded = button.dataset.expanded === 'true';
         button.dataset.expanded = expanded ? 'false' : 'true';
-        caption.style.display = expanded ? '-webkit-box' : 'block';
-        caption.style.webkitLineClamp = expanded ? '3' : '';
-        caption.style.overflow = expanded ? 'hidden' : 'visible';
+        caption.classList.toggle('is-collapsed', expanded);
         button.textContent = expanded ? 'Развернуть весь текст' : 'Свернуть текст';
       });
     });

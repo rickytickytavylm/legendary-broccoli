@@ -12,7 +12,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     body { background: #050506; }
+
+    body.ai-chat-page .app-tabbar {
+      display: none !important;
+    }
 
     .ai-page {
       min-height: 100dvh;
@@ -283,9 +292,9 @@
       }
       .ai-page {
         width: 100%;
-        height: 100dvh;
-        min-height: 100dvh;
-        padding: calc(118px + env(safe-area-inset-top, 0px)) 14px calc(108px + env(safe-area-inset-bottom, 0px));
+        height: 100svh;
+        min-height: 100svh;
+        padding: calc(88px + env(safe-area-inset-top, 0px)) 14px calc(var(--ai-composer-height, 74px) + 18px + env(safe-area-inset-bottom, 0px));
         justify-content: flex-start;
         overflow: hidden;
       }
@@ -302,8 +311,8 @@
         transition: opacity .18s ease, transform .18s ease, max-height .18s ease, margin .18s ease;
       }
       .ai-kicker { margin-bottom: 10px; }
-      .ai-hero .ai-title { font-size: 25px; margin-bottom: 8px; letter-spacing: -1.1px; }
-      .ai-hero .ai-desc { max-width: 21rem; font-size: 13.5px; line-height: 1.55; }
+      .ai-hero .ai-title { font-size: clamp(22px, 7vw, 28px); margin-bottom: 8px; letter-spacing: -.9px; }
+      .ai-hero .ai-desc { max-width: 21rem; font-size: 13px; line-height: 1.5; }
       .ai-hero .ai-usage-pill { margin-top: 12px; font-size: 11px; }
       .ai-chat-panel {
         flex: 1;
@@ -320,7 +329,7 @@
         min-height: 0;
         max-height: none;
         overflow-y: auto;
-        padding: 4px 0 92px;
+        padding: 4px 0 calc(var(--ai-composer-height, 74px) + 18px);
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
       }
@@ -328,7 +337,7 @@
         position: fixed;
         left: 14px;
         right: 14px;
-        bottom: calc(var(--ai-keyboard-offset, 0px) + 86px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(var(--ai-keyboard-offset, 0px) + max(10px, env(safe-area-inset-bottom, 0px)));
         width: calc(100vw - 28px);
         max-width: none;
         margin: 0 auto;
@@ -336,11 +345,11 @@
         border-radius: 22px;
         z-index: 1200;
       }
-      .ai-input-bar input { font-size: 16px; padding: 9px 0; }
+      .ai-input-bar input { font-size: 16px; line-height: 1.35; padding: 9px 0; }
       .ai-tune,
       .ai-send { width: 36px; height: 36px; }
       .ai-footnote { display: none; }
-      .ai-bubble { max-width: 88%; font-size: 13.5px; padding: 14px 15px; border-radius: 16px; }
+      .ai-bubble { max-width: 88%; font-size: 14px; line-height: 1.55; padding: 14px 15px; border-radius: 16px; }
       .ai-message { gap: 8px; }
       .ai-time { display: none; }
       .ai-back-mobile {
@@ -365,7 +374,7 @@
         pointer-events: none;
       }
       body.ai-input-focused .ai-page {
-        padding-top: calc(92px + env(safe-area-inset-top, 0px));
+        padding-top: calc(78px + env(safe-area-inset-top, 0px));
       }
     }
 
@@ -376,7 +385,7 @@
     }
   </style>
 </head>
-<body class="dark-theme">
+<body class="dark-theme ai-chat-page">
   <main class="main-content ai-main">
     <div class="ai-page">
       <div class="ai-shell">
@@ -420,6 +429,7 @@
     const aiInput = document.getElementById('ai-input');
     const aiSend = document.getElementById('ai-send');
     const aiConversation = document.getElementById('ai-conversation');
+    const aiInputBar = document.querySelector('.ai-input-bar');
 
     function addMessage(text, role = 'user') {
       const msg = document.createElement('div');
@@ -530,16 +540,23 @@
       document.body.classList.remove('ai-input-focused');
     });
 
-    function updateAiKeyboardOffset() {
-      if (!window.visualViewport || window.innerWidth > 768) return;
+    function updateAiLayoutMetrics() {
+      if (aiInputBar) {
+        document.documentElement.style.setProperty('--ai-composer-height', Math.ceil(aiInputBar.offsetHeight) + 'px');
+      }
+      if (!window.visualViewport || window.innerWidth > 768) {
+        document.documentElement.style.setProperty('--ai-keyboard-offset', '0px');
+        return;
+      }
       const keyboard = Math.max(0, window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop);
       document.documentElement.style.setProperty('--ai-keyboard-offset', keyboard + 'px');
     }
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateAiKeyboardOffset);
-      window.visualViewport.addEventListener('scroll', updateAiKeyboardOffset);
-      updateAiKeyboardOffset();
+      window.visualViewport.addEventListener('resize', updateAiLayoutMetrics);
+      window.visualViewport.addEventListener('scroll', updateAiLayoutMetrics);
     }
+    window.addEventListener('resize', updateAiLayoutMetrics);
+    updateAiLayoutMetrics();
   </script>
 </body>
 </html>
