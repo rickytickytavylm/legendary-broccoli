@@ -960,10 +960,10 @@ h1, h2, h3 {
   position: relative;
   z-index: 2;
   margin-top: 12px;
-  max-width: 180px;
-  font-size: 30px;
-  line-height: 1;
-  letter-spacing: -.04em;
+  max-width: 160px;
+  font-size: 22px;
+  line-height: 1.08;
+  letter-spacing: -.035em;
 }
 
 .hub-feature-grid {
@@ -1055,13 +1055,13 @@ h1, h2, h3 {
 
 /* ── Programs Page ─────────────────────────────────────── */
 .programs-main {
-  padding-top: 108px;
+  padding-top: 92px;
 }
 
 .programs-hero {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 34px 24px 26px;
+  padding: 18px 24px 12px;
 }
 
 .programs-hero-copy {
@@ -1070,7 +1070,7 @@ h1, h2, h3 {
 
 .programs-search-shell {
   width: min(100%, 920px);
-  margin: 0 0 42px;
+  margin: 0 0 18px;
 }
 
 .programs-hero h1 {
@@ -1089,11 +1089,12 @@ h1, h2, h3 {
 }
 
 .programs-catalog-section {
-  padding-top: 18px;
+  padding-top: 0;
 }
 
 .programs-catalog-section .section-header {
   text-align: left;
+  margin-bottom: 28px;
 }
 
 /* ── Minimal List (Каналы) ────────────────────────────────── */
@@ -1323,20 +1324,20 @@ h1, h2, h3 {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 66px;
-  border-radius: 28px;
+  min-height: 58px;
+  border-radius: 26px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.16), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.035)),
-    rgba(9, 12, 18, .72);
-  border: 1px solid rgba(255,255,255,.135);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.11), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.028)),
+    rgba(6, 8, 12, .82);
+  border: 1px solid rgba(255,255,255,.11);
   box-shadow:
-    0 24px 70px rgba(0,0,0,.42),
+    0 18px 54px rgba(0,0,0,.42),
     0 1px 0 rgba(255,255,255,.08),
-    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 1px 0 rgba(255,255,255,.13),
     inset 0 -1px 0 rgba(255,255,255,.04);
-  -webkit-backdrop-filter: blur(32px) saturate(165%);
-  backdrop-filter: blur(32px) saturate(165%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+  backdrop-filter: blur(30px) saturate(150%);
   overflow: hidden;
 }
 
@@ -1352,11 +1353,11 @@ h1, h2, h3 {
 }
 
 .program-search-box:focus-within {
-  border-color: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.18);
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.2), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.045)),
-    rgba(11, 15, 23, .8);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.14), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.032)),
+    rgba(7, 10, 15, .88);
   box-shadow:
     0 28px 86px rgba(0,0,0,.5),
     0 0 0 1px rgba(255,255,255,.04),
@@ -1366,10 +1367,10 @@ h1, h2, h3 {
 .program-search-box svg {
   position: relative;
   z-index: 1;
-  width: 24px;
-  height: 24px;
-  margin-left: 24px;
-  color: rgba(255,255,255,.78);
+  width: 21px;
+  height: 21px;
+  margin-left: 20px;
+  color: rgba(255,255,255,.68);
   flex: 0 0 auto;
 }
 
@@ -1382,12 +1383,12 @@ h1, h2, h3 {
   outline: 0;
   background: transparent;
   color: rgba(255,255,255,.92);
-  font: 700 clamp(16px, 2vw, 20px)/1.2 Inter, sans-serif;
-  padding: 0 24px 0 16px;
+  font: 600 clamp(15px, 1.7vw, 17px)/1.2 Inter, sans-serif;
+  padding: 0 20px 0 13px;
 }
 
 .program-search-input::placeholder {
-  color: rgba(255,255,255,.48);
+  color: rgba(255,255,255,.4);
 }
 
 .program-search-meta {

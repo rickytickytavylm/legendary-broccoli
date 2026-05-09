@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>AI-помощник — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=40" />
+  <link rel="stylesheet" href="/css/style.css?v=41" />
   <link rel="stylesheet" href="/css/nav.css?v=55" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -314,7 +314,7 @@
         width: 100%;
         height: var(--ai-viewport-height, 100svh);
         min-height: var(--ai-viewport-height, 100svh);
-        padding: calc(72px + env(safe-area-inset-top, 0px)) 14px calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 18px + env(safe-area-inset-bottom, 0px));
+        padding: calc(74px + env(safe-area-inset-top, 0px)) 14px calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 18px + env(safe-area-inset-bottom, 0px));
         justify-content: flex-start;
         overflow: hidden;
       }
@@ -375,7 +375,7 @@
       .ai-time { display: none; }
       .ai-back-mobile {
         position: fixed !important;
-        top: calc(144px + env(safe-area-inset-top, 0px)) !important;
+        top: calc(76px + env(safe-area-inset-top, 0px)) !important;
         left: 14px !important;
         margin: 0 !important;
         opacity: 1 !important;
@@ -394,8 +394,9 @@
         overflow: hidden;
         pointer-events: none;
       }
-      body.ai-input-focused .ai-page {
-        padding-top: calc(66px + env(safe-area-inset-top, 0px));
+      body.ai-input-focused .ai-page,
+      body.ai-has-messages .ai-page {
+        padding-top: calc(74px + env(safe-area-inset-top, 0px));
       }
 
       body.ai-has-messages .ai-hero {
@@ -407,14 +408,6 @@
         pointer-events: none;
       }
 
-      body.ai-has-messages .ai-page {
-        padding-top: calc(66px + env(safe-area-inset-top, 0px));
-      }
-
-      body.ai-has-messages .ai-back-mobile,
-      body.ai-input-focused .ai-back-mobile {
-        display: none !important;
-      }
     }
 
     @media (min-width: 769px) {
