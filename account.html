@@ -6,7 +6,7 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=37" />
+  <link rel="stylesheet" href="/css/style.css?v=38" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -682,7 +682,7 @@
     }
     @media (max-width: 600px) {
       .profile-wrap {
-        padding: calc(104px + env(safe-area-inset-top, 0px)) 14px 100px;
+        padding: calc(118px + env(safe-area-inset-top, 0px)) 16px 112px;
       }
       .profile-hero {
         grid-template-columns: 1fr;
@@ -700,7 +700,7 @@
       }
       .profile-card {
         border-radius: 22px;
-        padding: 17px;
+        padding: 20px;
       }
       .pro-card {
         min-height: 0;
@@ -709,10 +709,11 @@
         font-size: 30px;
       }
       .rings-grid {
-        gap: 8px;
+        gap: 10px;
+        margin-top: 18px !important;
       }
       .ring-card {
-        padding: 12px 8px;
+        padding: 14px 9px;
       }
       .ring {
         width: 68px;
@@ -723,9 +724,10 @@
       }
       .course-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
       }
       .course-tile {
-        min-height: 112px;
+        min-height: 126px;
       }
       .profile-actions {
         flex-direction: column;
@@ -775,7 +777,7 @@
       <div class="profile-grid">
         <div class="profile-stack">
           <section class="profile-card pro-card">
-            <div class="pro-badge" id="prog-pct">Бесплатный доступ</div>
+            <div class="pro-badge">Подписка</div>
             <h2 class="pro-title">Система Pro</h2>
             <p class="profile-muted" id="access-desc">Первые видео всех разделов доступны для знакомства.</p>
             <ul class="pro-list">
@@ -897,7 +899,7 @@
         </div>
         <button class="pro-close" type="button" onclick="closeProModal()" aria-label="Закрыть">×</button>
       </div>
-      <div class="pro-price">990 ₽ <small>/ месяц</small></div>
+      <div class="pro-price">2999 ₽ <small>/ месяц</small></div>
       <ul class="pro-list">
         <li>Все видео во всех программах без ограничений</li>
         <li>50 сообщений с ИИ-помощником в месяц</li>
@@ -995,7 +997,6 @@
 
       // Access status
       const pct = isPro ? 100 : 35;
-      document.getElementById('prog-pct').textContent = access ? access.label : (isPro ? 'Система Pro' : 'Бесплатный доступ');
       document.getElementById('prog-bar').style.width = pct + '%';
       document.getElementById('access-desc').textContent = isPro
         ? 'Открыт весь видеоконтент, закрытый Telegram и 50 сообщений с AI.'

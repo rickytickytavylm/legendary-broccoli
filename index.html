@@ -9,7 +9,7 @@
 <title>Система — Руслан Молодцов</title>
   <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия и практики." />
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=37" />
+  <link rel="stylesheet" href="/css/style.css?v=38" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -76,11 +76,21 @@
     <!-- Bento Grid: Обучение -->
     <section id="learning" class="section bento-section">
       <div class="section-header reveal">
-        <h2 class="section-title">Обучение</h2>
+        <h2 class="section-title">Все программы</h2>
         <p class="section-desc">Фундаментальные программы и практики</p>
+        <div class="program-search-shell">
+          <label class="program-search-box" for="program-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M20 20l-3.5-3.5"></path>
+            </svg>
+            <input id="program-search" class="program-search-input" type="search" placeholder="Найти подходящую программу" autocomplete="off" />
+          </label>
+          <div class="program-search-meta" id="program-search-meta"></div>
+        </div>
       </div>
 
-      <div class="bento-grid">
+      <div class="bento-grid" id="program-grid">
 
         <!-- Row 1: Психосоматика (wide) + Мини-йога -->
         <a href="/psihosomatika/" class="bento-card wide reveal card-hover">
@@ -259,6 +269,7 @@
         </a>
 
       </div>
+      <p class="program-search-empty" id="program-search-empty">Ничего не найдено. Попробуйте искать по теме, навыку или названию урока.</p>
     </section>
 
     <!-- Section: Каналы (Rork style lists) -->
@@ -450,6 +461,107 @@
   <script src="/js/nav.js?v=58"></script>
   <script src="/js/main.js"></script>
   <script>
+    (function setupProgramSearch() {
+      const input = document.getElementById('program-search');
+      const meta = document.getElementById('program-search-meta');
+      const empty = document.getElementById('program-search-empty');
+      const cards = Array.from(document.querySelectorAll('#program-grid .bento-card'));
+      if (!input || !cards.length) return;
+
+      const endpointByHref = {
+        '/geshtalt/': '/content/geshtalt-lessons',
+        '/dermer/': '/content/dermer-lessons',
+        '/gipnoz/': '/content/gipnoz-lessons',
+        '/yoga/': '/content/yoga-lessons',
+        '/marathons/': '/content/marathons-lessons',
+        '/psihosomatika/': '/content/psihosomatika-lessons',
+        '/master/': '/content/master-lessons',
+        '/superviziya/': '/content/superviziya-lessons',
+        '/antologiya/': '/content/antologiya-lessons',
+        '/sozavisimost/': '/content/sozavisimost-lessons',
+        '/mj/': '/content/mj-lessons',
+      };
+
+      function normalize(value) {
+        return String(value || '')
+          .toLowerCase()
+          .replace(/ё/g, 'е')
+          .replace(/[^\p{L}\p{N}]+/gu, ' ')
+          .trim();
+      }
+
+      function flattenLessons(data) {
+        if (!Array.isArray(data)) return [];
+        if (data.every((item) => Array.isArray(item.lessons))) {
+          return data.flatMap((section) => section.lessons || []);
+        }
+        return data;
+      }
+
+      function hrefKey(card) {
+        const href = card.getAttribute('href') || '';
+        if (!href || href === '#') return '';
+        try {
+          return new URL(href, location.origin).pathname;
+        } catch (e) {
+          return href;
+        }
+      }
+
+      const searchItems = cards.map((card) => {
+        const title = card.querySelector('h3')?.textContent || '';
+        const desc = card.querySelector('p')?.textContent || '';
+        const item = {
+          card,
+          title,
+          desc,
+          haystack: normalize([title, desc].join(' ')),
+          lessonCount: 0,
+        };
+        card.dataset.searchBase = item.haystack;
+        return item;
+      });
+
+      function applySearch() {
+        const query = normalize(input.value);
+        let visible = 0;
+        searchItems.forEach((item) => {
+          const matches = !query || item.haystack.includes(query);
+          item.card.classList.toggle('program-search-hidden', !matches);
+          if (matches) visible += 1;
+        });
+        if (empty) empty.classList.toggle('visible', !!query && visible === 0);
+        if (meta) {
+          if (!query) meta.textContent = 'Можно искать по названию программы, теме или названию урока';
+          else meta.textContent = visible
+            ? `Найдено программ: ${visible}`
+            : 'Совпадений пока нет';
+        }
+      }
+
+      async function enrichWithLessons() {
+        if (!window.API || !window.API.request) return;
+        await Promise.all(searchItems.map(async (item) => {
+          const endpoint = endpointByHref[hrefKey(item.card)];
+          if (!endpoint) return;
+          try {
+            const data = await window.API.request('GET', endpoint);
+            const lessons = flattenLessons(data);
+            item.lessonCount = lessons.length;
+            const lessonText = lessons
+              .map((lesson) => [lesson.title, lesson.description, lesson.duration].filter(Boolean).join(' '))
+              .join(' ');
+            item.haystack = normalize([item.title, item.desc, lessonText].join(' '));
+          } catch (e) {}
+        }));
+        applySearch();
+      }
+
+      input.addEventListener('input', applySearch);
+      applySearch();
+      enrichWithLessons();
+    })();
+
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');
       const link = document.getElementById('nav-account-link');

@@ -1053,6 +1053,116 @@ h1, h2, h3 {
   transform: translateX(6px);
 }
 
+/* ── Program Search ─────────────────────────────────────── */
+.program-search-shell {
+  max-width: 860px;
+  margin: 24px auto 0;
+  position: relative;
+}
+
+.program-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 68px;
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12)),
+    rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow:
+    0 22px 70px rgba(0,0,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.25);
+  -webkit-backdrop-filter: blur(28px) saturate(145%);
+  backdrop-filter: blur(28px) saturate(145%);
+  overflow: hidden;
+}
+
+.program-search-box::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.16), transparent 55%);
+}
+
+.program-search-box svg {
+  position: relative;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  margin-left: 24px;
+  color: rgba(255,255,255,.78);
+  flex: 0 0 auto;
+}
+
+.program-search-input {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: rgba(255,255,255,.92);
+  font: 700 clamp(16px, 2vw, 20px)/1.2 Inter, sans-serif;
+  padding: 0 24px 0 16px;
+}
+
+.program-search-input::placeholder {
+  color: rgba(255,255,255,.48);
+}
+
+.program-search-meta {
+  min-height: 20px;
+  margin-top: 10px;
+  color: rgba(255,255,255,.42);
+  font-size: 13px;
+  text-align: center;
+}
+
+.program-search-hidden {
+  display: none !important;
+}
+
+.program-search-empty {
+  display: none;
+  margin: 28px auto 0;
+  max-width: 520px;
+  color: rgba(255,255,255,.55);
+  font-size: 15px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.program-search-empty.visible {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .program-search-shell {
+    margin-top: 18px;
+  }
+
+  .program-search-box {
+    min-height: 58px;
+    border-radius: 24px;
+  }
+
+  .program-search-box svg {
+    width: 21px;
+    height: 21px;
+    margin-left: 18px;
+  }
+
+  .program-search-input {
+    padding-left: 12px;
+    padding-right: 18px;
+    font-size: 16px;
+  }
+}
+
 /* ── Course Page ──────────────────────────────────────────── */
 .course-page {
   padding-top: 120px;
