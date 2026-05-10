@@ -943,8 +943,17 @@ h1, h2, h3 {
 }
 
 .single-feature-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   min-height: 430px;
+}
+
+.single-feature-card .hub-feature-content {
+  height: auto;
+  min-height: 430px;
+  justify-content: flex-end;
+  padding-top: 96px;
 }
 
 .program-rail::-webkit-scrollbar {
