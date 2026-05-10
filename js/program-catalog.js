@@ -165,6 +165,12 @@
     }
 
     input.addEventListener('input', apply);
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      input.blur();
+    });
+    input.addEventListener('search', () => input.blur());
     input.addEventListener('focus', () => document.body.classList.add('program-search-focused'));
     input.addEventListener('blur', () => {
       window.setTimeout(() => document.body.classList.remove('program-search-focused'), 80);

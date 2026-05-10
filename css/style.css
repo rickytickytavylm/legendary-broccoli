@@ -358,6 +358,20 @@ video::-internal-media-interstitial-panel { display: none !important; }
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*:focus {
+  outline-color: rgba(255,255,255,.22);
+}
+
+a,
+button,
+input,
+textarea,
+select,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -599,8 +613,21 @@ h1, h2, h3 {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   background: 
-    linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 70%, var(--bg-main) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0.58) 72%, var(--bg-main) 100%),
     url('../assets/webp/hero.webp') center/cover no-repeat;
+  background-size: auto, 106% auto;
+  animation: heroSoftPan 22s ease-in-out infinite alternate;
+}
+
+@keyframes heroSoftPan {
+  from {
+    background-position: center, 48% 48%;
+    background-size: auto, 106% auto;
+  }
+  to {
+    background-position: center, 54% 52%;
+    background-size: auto, 111% auto;
+  }
 }
 
 .hero-courses {
@@ -716,7 +743,7 @@ h1, h2, h3 {
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.76) 0%, rgba(0,0,0,0.14) 62%, transparent 100%);
   z-index: 1;
   transition: opacity 0.4s var(--ease);
 }
@@ -1037,7 +1064,7 @@ h1, h2, h3 {
 
 .hub-feature-overlay {
   background:
-    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.76)),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.62)),
     radial-gradient(circle at 18% 0%, rgba(255,255,255,.12), transparent 36%);
 }
 
@@ -2871,8 +2898,8 @@ h1, h2, h3 {
   }
 
   .program-rail {
-    width: calc(100vw - 18px);
-    grid-auto-columns: minmax(300px, 84vw);
+    width: 100vw;
+    grid-auto-columns: minmax(276px, 76vw);
     gap: 12px;
     margin-left: -18px;
     margin-right: -18px;
@@ -2881,7 +2908,7 @@ h1, h2, h3 {
   }
 
   .compact-rail {
-    grid-auto-columns: minmax(300px, 84vw);
+    grid-auto-columns: minmax(276px, 76vw);
   }
 
   .home-programs-section,
@@ -2890,7 +2917,7 @@ h1, h2, h3 {
   }
 
   .program-rail-card {
-    min-height: 380px;
+    min-height: 348px;
     padding: 22px;
   }
 
