@@ -613,7 +613,7 @@ h1, h2, h3 {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   background: 
-    linear-gradient(to bottom, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0.58) 72%, var(--bg-main) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.42) 74%, var(--bg-main) 100%),
     url('../assets/webp/hero.webp') center/cover no-repeat;
   background-size: auto, 106% auto;
   animation: heroSoftPan 22s ease-in-out infinite alternate;
@@ -627,6 +627,17 @@ h1, h2, h3 {
   to {
     background-position: center, 54% 52%;
     background-size: auto, 111% auto;
+  }
+}
+
+@keyframes heroSoftPanMobile {
+  from {
+    background-position: center, 44% 42%;
+    background-size: auto, auto 142%;
+  }
+  to {
+    background-position: center, 58% 48%;
+    background-size: auto, auto 152%;
   }
 }
 
@@ -743,7 +754,7 @@ h1, h2, h3 {
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.76) 0%, rgba(0,0,0,0.14) 62%, transparent 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.08) 64%, transparent 100%);
   z-index: 1;
   transition: opacity 0.4s var(--ease);
 }
@@ -1073,7 +1084,7 @@ h1, h2, h3 {
 
 .hub-feature-overlay {
   background:
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.62)),
+    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.46)),
     radial-gradient(circle at 18% 0%, rgba(255,255,255,.12), transparent 36%);
 }
 
@@ -2784,9 +2795,9 @@ h1, h2, h3 {
   .hero {
     padding: 132px 0 52px;
     min-height: min(62vh, 560px);
-    background-position: center top, center top;
-    background-size: auto, auto 142%;
     background-repeat: no-repeat;
+    animation-name: heroSoftPanMobile;
+    animation-duration: 18s;
   }
 
   .hero .hero-content {
