@@ -381,6 +381,11 @@
         `).join('');
 
         data.forEach((section, idx) => initSection(section, idx, idx === 0));
+        if (window.location.hash) {
+          window.requestAnimationFrame(() => {
+            document.querySelector(window.location.hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
       } catch (e) {
         container.innerHTML = '<p style="color:rgba(255,255,255,.5);padding:40px 0">Не удалось загрузить марафоны</p>';
       }

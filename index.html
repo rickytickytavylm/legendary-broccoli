@@ -9,7 +9,7 @@
 <title>Система — Руслан Молодцов</title>
   <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия и практики." />
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=45" />
+  <link rel="stylesheet" href="/css/style.css?v=46" />
   <link rel="stylesheet" href="/css/nav.css?v=56" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,7 +27,7 @@
       
       <div class="nav-links desktop-only">
         <a href="/programs/" class="nav-link">Программы</a>
-        <a href="#channels" class="nav-link">Каналы</a>
+        <a href="#webinars" class="nav-link">Вебинары</a>
         <a href="#resources" class="nav-link">Ресурсы</a>
       </div>
 
@@ -62,8 +62,8 @@
             Смотреть программы
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
-          <a href="#channels" class="btn btn-secondary btn-lg">
-            Наши каналы
+          <a href="#resources" class="btn btn-secondary btn-lg">
+            Полезные ресурсы
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
@@ -85,97 +85,57 @@
       <div class="program-rail" id="home-program-rail" aria-label="Популярные программы"></div>
     </section>
 
-    <!-- Product resources -->
-    <section id="resources" class="section home-hub-section">
+    <section id="webinars" class="section home-hub-section home-rail-section">
       <div class="hub-section-header reveal">
         <div>
-          <p class="hub-kicker">Ресурсы</p>
-          <h2 class="section-title">Всё, что поддерживает путь</h2>
-          <p class="section-desc">Приложение, забота, AI-помощник и живой формат личной сессии.</p>
+          <p class="hub-kicker">Вебинары</p>
+          <h2 class="section-title">Живые эфиры и записи встреч</h2>
+          <p class="section-desc">Скоро добавим отдельный раздел с вебинарами, таймкодами и ИИ-разбором.</p>
         </div>
       </div>
-
-      <div class="hub-feature-grid">
-        <a href="/ai/" class="hub-feature-card hub-feature-card-large reveal card-hover" data-title="AI-помощник">
-          <div class="hub-feature-bg" style="background-image:url('/assets/webp/ai_back.webp')"></div>
-          <div class="hub-feature-overlay"></div>
-          <div class="hub-feature-content">
-            <span class="hub-kicker">AI-помощник</span>
-            <h3>Подобрать урок, разобрать вопрос, не потеряться в материале</h3>
-            <p>Помощник знает структуру продукта и помогает собрать личную траекторию внутри Системы.</p>
-          </div>
-          <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        </a>
-
-        <div class="hub-feature-card reveal card-hover" data-title="Приложение">
-          <div class="hub-feature-bg" style="background-image:url('/assets/webp/app.webp')"></div>
-          <div class="hub-feature-overlay"></div>
-          <div class="hub-feature-content">
-            <span class="hub-kicker">Приложение</span>
-            <h3>Система всегда под рукой</h3>
-            <p>Установите на экран телефона для быстрого доступа к урокам и AI.</p>
-            <button id="btn-install-pwa" class="btn-support-text mt-auto" type="button">Установить</button>
-          </div>
-        </div>
-
-        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="hub-feature-card reveal card-hover" data-title="Отдел заботы">
-          <div class="hub-feature-bg" style="background-image:url('/assets/webp/hope.webp')"></div>
-          <div class="hub-feature-overlay"></div>
-          <div class="hub-feature-content">
-            <span class="hub-kicker">Отдел заботы</span>
-            <h3>Поможем разобраться</h3>
-            <p>Вопросы по доступу, оплате, курсам и навигации можно задать в Telegram.</p>
-          </div>
-        </a>
-
-      </div>
+      <div class="program-rail compact-rail" id="home-webinar-rail" aria-label="Вебинары"></div>
     </section>
 
-    <!-- Section: Каналы (Rork style lists) -->
-    <section id="channels" class="section">
-      <div class="section-header reveal">
-        <h2 class="section-title">Каналы и комьюнити</h2>
+    <section id="marathons" class="section home-hub-section home-rail-section">
+      <div class="hub-section-header reveal">
+        <div>
+          <p class="hub-kicker">Марафоны</p>
+          <h2 class="section-title">Короткие программы по разным темам</h2>
+          <p class="section-desc">Выберите тему и переходите сразу к нужному блоку внутри марафонов.</p>
+        </div>
       </div>
+      <div class="program-rail" id="home-marathon-rail" aria-label="Марафоны"></div>
+    </section>
 
-      <div class="minimal-list">
-        
-        <!-- Открытый Канал -->
-        <a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="minimal-list-item reveal">
-          <div class="minimal-list-number">01</div>
-          <div class="minimal-list-content">
-            <h3>Открытый Канал</h3>
-            <p>Новости, объявления, публичная информация</p>
-          </div>
-          <div class="minimal-list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </a>
-
-        <!-- Канал Клуба -->
-        <a href="#" class="minimal-list-item reveal">
-          <div class="minimal-list-number">02</div>
-          <div class="minimal-list-content">
-            <h3>Канал Клуба</h3>
-            <p>Закрытые новости и эксклюзивные материалы</p>
-          </div>
-          <div class="minimal-list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </a>
-
-        <!-- Чат Клуба -->
-        <a href="#" class="minimal-list-item reveal">
-          <div class="minimal-list-number">03</div>
-          <div class="minimal-list-content">
-            <h3>Чат Клуба</h3>
-            <p>Общение с участниками и единомышленниками</p>
-          </div>
-          <div class="minimal-list-arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </a>
-
+    <section id="system-ai" class="section home-hub-section">
+      <div class="hub-section-header reveal">
+        <div>
+          <p class="hub-kicker">Система Ai</p>
+          <h2 class="section-title">Помощник внутри продукта</h2>
+          <p class="section-desc">Подбирает уроки, помогает разобраться в вопросе и не теряться в материалах.</p>
+        </div>
       </div>
+      <a href="/ai/" class="hub-feature-card hub-feature-card-large single-feature-card reveal card-hover" data-title="Система Ai">
+        <div class="hub-feature-bg" style="background-image:url('/assets/webp/ai_back.webp')"></div>
+        <div class="hub-feature-overlay"></div>
+        <div class="hub-feature-content">
+          <span class="hub-kicker">Система Ai</span>
+          <h3>Подобрать урок, разобрать вопрос, собрать личную траекторию</h3>
+          <p>Помощник знает структуру продукта и помогает быстро найти материал под текущий запрос.</p>
+        </div>
+        <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </a>
+    </section>
+
+    <section id="resources" class="section home-hub-section home-rail-section">
+      <div class="hub-section-header reveal">
+        <div>
+          <p class="hub-kicker">Полезные ресурсы</p>
+          <h2 class="section-title">Всё, что поддерживает путь</h2>
+          <p class="section-desc">Профайлинг, приложение и отдел заботы — отдельные точки входа вокруг программ.</p>
+        </div>
+      </div>
+      <div class="program-rail" id="home-resource-rail" aria-label="Полезные ресурсы"></div>
     </section>
 
     <!-- Об Авторе -->
@@ -220,7 +180,7 @@
         <h4 class="footer-heading">Обучение</h4>
         <ul class="footer-list">
           <li><a href="/programs/">Все программы</a></li>
-          <li><a href="#channels">Каналы</a></li>
+          <li><a href="#webinars">Вебинары</a></li>
           <li><a href="#">Библиотека</a></li>
           <li><a href="/terapiya/">Практики</a></li>
         </ul>
@@ -274,9 +234,14 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=60"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/program-catalog.js?v=2"></script>
+  <script src="/js/program-catalog.js?v=3"></script>
   <script>
-    if (window.ProgramCatalog) window.ProgramCatalog.renderRail('#home-program-rail', 4);
+    if (window.ProgramCatalog) {
+      window.ProgramCatalog.renderRail('#home-program-rail', 4);
+      window.ProgramCatalog.renderWebinarRail('#home-webinar-rail');
+      window.ProgramCatalog.renderMarathonRail('#home-marathon-rail');
+      window.ProgramCatalog.renderResourceRail('#home-resource-rail');
+    }
 
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');

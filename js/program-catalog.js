@@ -6,14 +6,22 @@
     { href: '/geshtalt/', title: 'Гештальт-подход', desc: 'Контакт, границы, эмоции и возвращение к себе', image: '/assets/webp/courses.webp', wide: true, endpoint: '/content/geshtalt-lessons' },
     { href: '#', title: 'Сценарий', desc: 'Ваш личный план', image: '/assets/webp/scenario.webp', badge: 'Скоро', disabled: true },
     { href: '/gipnoz/', title: 'Гипноз', desc: 'Техники и практики гипнотерапии', image: '/assets/webp/hipno.webp', endpoint: '/content/gipnoz-lessons' },
-    { href: '/marathons/', title: 'Марафоны', desc: 'Интенсивные программы трансформации', image: '/assets/webp/maraphones.webp', wide: true, endpoint: '/content/marathons-lessons' },
-    { href: '/profiling/', title: 'Профайлинг', desc: 'Курс по распознаванию личности', image: '/assets/webp/way_block.webp', wide: true },
     { href: '/superviziya/', title: 'Супервизия', desc: 'Профессиональная поддержка психологов', image: '/assets/webp/supervision.webp', badge: 'Для профессионалов', endpoint: '/content/superviziya-lessons' },
     { href: '/master/', title: 'Мастер Коммуникаций', desc: 'Развитие навыков общения', image: '/assets/webp/masterofcommication.webp', endpoint: '/content/master-lessons' },
     { href: '/terapiya/', title: 'Телесная терапия', desc: 'Практики, которые возвращают внимание в тело', image: '/assets/webp/theraphy.webp', wide: true },
     { href: '/antologiya/', title: 'Антология', desc: 'Сборник материалов и практик', image: '/assets/webp/antology.webp', wide: true, endpoint: '/content/antologiya-lessons' },
     { href: '/sozavisimost/', title: 'Созависимость', desc: 'Работа с созависимыми отношениями', image: '/assets/webp/coda2.webp', endpoint: '/content/sozavisimost-lessons' },
     { href: '/mj/', title: 'Мужское и Женское', desc: 'Психология отношений и природа полов', image: '/assets/webp/man_woman.webp', full: true, endpoint: '/content/mj-lessons' },
+  ];
+  const MARATHON_RAIL = [
+    { href: '/marathons/#section-stress', title: 'Стресс', desc: 'Быстрые практики саморегуляции и восстановления управляемости', image: '/assets/webp/maraphones.webp' },
+    { href: '/marathons/#section-samoocenka', title: 'Самооценка', desc: 'Внутренняя опора, самоценность и мягкая пересборка отношения к себе', image: '/assets/webp/maraphones.webp' },
+    { href: '/marathons/#section-konflikty', title: 'Конфликты', desc: 'Границы и разговор о сложном без разрушения контакта', image: '/assets/webp/maraphones.webp' },
+  ];
+  const RESOURCE_RAIL = [
+    { href: '/profiling/', title: 'Профайлинг', desc: 'Психологический портрет личности и точка входа в самопонимание', image: '/assets/webp/way_block.webp' },
+    { href: '#', title: 'Приложение', desc: 'Установите Систему на экран телефона для быстрого доступа', image: '/assets/webp/app.webp', disabled: true },
+    { href: 'https://t.me/obrazmisl', title: 'Отдел заботы', desc: 'Поможем с доступом, оплатой, курсами и навигацией', image: '/assets/webp/hope.webp', external: true },
   ];
 
   function normalize(value) {
@@ -49,7 +57,8 @@
     const badge = program.badge
       ? `<span class="${program.badge === 'Скоро' ? 'card-badge' : 'card-badge-glass'}">${program.badge}</span>`
       : '';
-    return `<${tag}${href} class="${classes}" data-program-card data-endpoint="${program.endpoint || ''}">
+    const external = program.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+    return `<${tag}${href}${external} class="${classes}" data-program-card data-endpoint="${program.endpoint || ''}">
       ${badge}
       <div class="card-bg" style="background: url('${program.image}') center/cover no-repeat;"></div>
       <div class="card-overlay"></div>
@@ -63,15 +72,44 @@
     </${tag}>`;
   }
 
+  function renderRailItems(root, items, allHref, allLabel, allTitle) {
+    root.innerHTML = items.map((program) => card(program, 'rail')).join('') +
+      `<a href="${allHref}" class="program-rail-card program-rail-all">
+        <span>${allLabel}</span>
+        <strong>${allTitle}</strong>
+        ${arrow()}
+      </a>`;
+  }
+
   function renderRail(target, limit) {
     const root = typeof target === 'string' ? document.querySelector(target) : target;
     if (!root) return;
-    root.innerHTML = PROGRAMS.slice(0, limit || 4).map((program) => card(program, 'rail')).join('') +
-      `<a href="/programs/" class="program-rail-card program-rail-all">
-        <span>Все программы</span>
-        <strong>Открыть каталог</strong>
-        ${arrow()}
-      </a>`;
+    renderRailItems(root, PROGRAMS.slice(0, limit || 4), '/programs/', 'Все программы', 'Открыть каталог');
+  }
+
+  function renderWebinarRail(target) {
+    const root = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!root) return;
+    root.innerHTML = card({
+      href: '#',
+      title: 'Вебинары',
+      desc: 'Живые эфиры, разборы и записи встреч появятся в отдельном разделе',
+      image: '/assets/webp/courses.webp',
+      badge: 'Скоро',
+      disabled: true,
+    }, 'rail');
+  }
+
+  function renderMarathonRail(target) {
+    const root = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!root) return;
+    renderRailItems(root, MARATHON_RAIL, '/marathons/', 'Марафоны', 'Открыть все');
+  }
+
+  function renderResourceRail(target) {
+    const root = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!root) return;
+    root.innerHTML = RESOURCE_RAIL.map((program) => card(program, 'rail')).join('');
   }
 
   function renderGrid(target) {
@@ -135,5 +173,5 @@
     enrich();
   }
 
-  window.ProgramCatalog = { programs: PROGRAMS, renderRail, renderGrid, setupSearch };
+  window.ProgramCatalog = { programs: PROGRAMS, renderRail, renderWebinarRail, renderMarathonRail, renderResourceRail, renderGrid, setupSearch };
 })();

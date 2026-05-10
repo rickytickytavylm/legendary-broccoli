@@ -907,6 +907,19 @@ h1, h2, h3 {
   scrollbar-width: none;
 }
 
+.home-rail-section {
+  overflow: hidden;
+}
+
+.compact-rail {
+  grid-auto-columns: minmax(360px, 44%);
+}
+
+.single-feature-card {
+  display: block;
+  min-height: 430px;
+}
+
 .program-rail::-webkit-scrollbar {
   display: none;
 }
@@ -1076,7 +1089,7 @@ h1, h2, h3 {
 
 /* ── Programs Page ─────────────────────────────────────── */
 .programs-main {
-  padding-top: 104px;
+  padding-top: 126px;
 }
 
 .programs-hero {
@@ -2867,7 +2880,12 @@ h1, h2, h3 {
     scroll-padding-inline: 18px;
   }
 
-  .home-programs-section {
+  .compact-rail {
+    grid-auto-columns: minmax(300px, 84vw);
+  }
+
+  .home-programs-section,
+  .home-rail-section {
     overflow: hidden;
   }
 
@@ -2898,7 +2916,7 @@ h1, h2, h3 {
   }
 
   .programs-main {
-    padding-top: calc(164px + env(safe-area-inset-top, 0px));
+    padding-top: calc(188px + env(safe-area-inset-top, 0px));
   }
 
   .programs-hero {
@@ -2907,7 +2925,7 @@ h1, h2, h3 {
 
   .programs-search-shell {
     position: fixed;
-    top: calc(96px + env(safe-area-inset-top, 0px));
+    top: calc(118px + env(safe-area-inset-top, 0px));
     left: 14px;
     right: 14px;
     z-index: 720;
