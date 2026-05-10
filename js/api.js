@@ -478,8 +478,9 @@ function ensureAudioMode(video, slug) {
   }
 
   function setTitle() {
-    title.textContent = audio.dataset.loading === 'true' ? 'Готовим аудио' : getLessonTitle();
-    inline.querySelector('strong').textContent = getLessonTitle();
+    const lessonTitle = getLessonTitle();
+    title.textContent = lessonTitle;
+    inline.querySelector('strong').textContent = lessonTitle;
   }
 
   function escapeHtml(value) {
@@ -530,9 +531,8 @@ function ensureAudioMode(video, slug) {
   }
 
   async function loadAudio() {
-    if (audio.dataset.loading === 'true' || audio.src) return;
+    if (audio.dataset.loading === 'true' || audio.getAttribute('src')) return;
     audio.dataset.loading = 'true';
-    title.textContent = 'Готовим аудио';
     try {
       const stream = await window.API.getAudioStream(audio.dataset.slug);
       const url = new URL(stream.url, API_ORIGIN).href;
@@ -543,7 +543,8 @@ function ensureAudioMode(video, slug) {
         hls.loadSource(url);
         hls.attachMedia(audio);
       } else if (audio.canPlayType('application/vnd.apple.mpegurl') || audio.canPlayType('application/x-mpegURL')) {
-        audio.src = url;
+        audio.setAttribute('src', url);
+        audio.load();
       } else {
         throw new Error('Audio HLS is not supported');
       }
@@ -637,6 +638,7 @@ function ensureAudioMode(video, slug) {
       audio.pause();
       audio.removeAttribute('src');
       audio.load();
+      delete audio.dataset.loading;
       audio.dataset.slug = nextSlug || '';
       progress.style.width = '0%';
       current.textContent = '0:00';
