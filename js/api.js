@@ -394,11 +394,14 @@ window.ensureHlsJs = function ensureHlsJs() {
 
 function ensureAudioMode(video, slug) {
   const container = video.closest('.video-container');
-  if (!container || container.querySelector('.audio-mode-card')) return null;
+  if (!container) return null;
+  if (container._audioMode) return container._audioMode;
+  const layout = container.closest('.course-layout') || container.parentElement || document;
 
   const card = document.createElement('div');
   card.className = 'audio-mode-card hidden';
   card.innerHTML = `
+    <button type="button" class="audio-mode-close" data-audio-close aria-label="Закрыть аудиоплеер">×</button>
     <div class="audio-mode-art">
       <img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async">
     </div>
@@ -409,22 +412,24 @@ function ensureAudioMode(video, slug) {
       <div class="audio-mode-progress"><span></span></div>
       <div class="audio-mode-time"><span data-audio-current>0:00</span><span data-audio-duration>0:00</span></div>
       <div class="audio-mode-controls">
+        <button type="button" data-audio-track="-1">Назад</button>
         <button type="button" data-audio-seek="-15">-15</button>
         <button type="button" class="audio-mode-play" data-audio-play>Слушать</button>
         <button type="button" data-audio-seek="15">+15</button>
+        <button type="button" data-audio-track="1">Дальше</button>
       </div>
     </div>
   `;
 
   const toggle = document.createElement('div');
-  toggle.className = 'media-mode-toggle';
+  toggle.className = 'media-mode-switch';
   toggle.innerHTML = `
     <button type="button" class="active" data-media-mode="video">Видео</button>
     <button type="button" data-media-mode="audio">Аудио</button>
   `;
 
-  container.appendChild(card);
-  container.appendChild(toggle);
+  container.insertAdjacentElement('beforebegin', toggle);
+  document.body.appendChild(card);
 
   const audio = document.createElement('audio');
   audio.preload = 'metadata';
@@ -439,6 +444,17 @@ function ensureAudioMode(video, slug) {
   const title = card.querySelector('.audio-mode-title');
   const modeButtons = toggle.querySelectorAll('[data-media-mode]');
 
+  function getLessonTitle() {
+    return layout.querySelector('.lesson-item.active .lesson-title')?.textContent?.trim() ||
+      layout.querySelector('.now-playing')?.textContent?.trim() ||
+      document.querySelector('.lesson-item.active .lesson-title')?.textContent?.trim() ||
+      'Слушать урок';
+  }
+
+  function setTitle() {
+    title.textContent = audio.dataset.loading === 'true' ? 'Готовим аудио' : getLessonTitle();
+  }
+
   function fmt(value) {
     if (!Number.isFinite(value) || value <= 0) return '0:00';
     const total = Math.floor(value);
@@ -451,10 +467,11 @@ function ensureAudioMode(video, slug) {
   function setMode(mode) {
     const audioMode = mode === 'audio';
     card.classList.toggle('hidden', !audioMode);
-    video.classList.toggle('media-hidden', audioMode);
+    document.body.classList.toggle('audio-player-open', audioMode);
     modeButtons.forEach((button) => button.classList.toggle('active', button.dataset.mediaMode === mode));
     if (audioMode) {
       video.pause();
+      setTitle();
       if (!audio.src) loadAudio();
     } else {
       audio.pause();
@@ -479,7 +496,7 @@ function ensureAudioMode(video, slug) {
       } else {
         throw new Error('Audio HLS is not supported');
       }
-      title.textContent = 'Слушать урок';
+      setTitle();
     } catch (err) {
       title.textContent = 'Аудио пока недоступно';
     } finally {
@@ -490,6 +507,7 @@ function ensureAudioMode(video, slug) {
   modeButtons.forEach((button) => {
     button.addEventListener('click', () => setMode(button.dataset.mediaMode));
   });
+  card.querySelector('[data-audio-close]')?.addEventListener('click', () => setMode('video'));
   play.addEventListener('click', async () => {
     if (audio.paused) {
       await loadAudio();
@@ -501,6 +519,16 @@ function ensureAudioMode(video, slug) {
   card.querySelectorAll('[data-audio-seek]').forEach((button) => {
     button.addEventListener('click', () => {
       audio.currentTime = Math.max(0, Math.min((audio.duration || Infinity), audio.currentTime + Number(button.dataset.audioSeek || 0)));
+    });
+  });
+  card.querySelectorAll('[data-audio-track]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const direction = Number(button.dataset.audioTrack || 0);
+      const active = layout.querySelector('.lesson-item.active') || document.querySelector('.lesson-item.active');
+      const items = active?.parentElement ? Array.from(active.parentElement.querySelectorAll('.lesson-item')) : [];
+      const index = items.indexOf(active);
+      const next = items[index + direction];
+      if (next) next.click();
     });
   });
   audio.addEventListener('play', () => {
@@ -520,7 +548,7 @@ function ensureAudioMode(video, slug) {
     duration.textContent = fmt(audio.duration);
   });
 
-  return {
+  const api = {
     setSlug(nextSlug) {
       if (audio.dataset.slug === nextSlug) return;
       if (audio._hlsInstance && typeof audio._hlsInstance.destroy === 'function') audio._hlsInstance.destroy();
@@ -532,10 +560,12 @@ function ensureAudioMode(video, slug) {
       progress.style.width = '0%';
       current.textContent = '0:00';
       duration.textContent = '0:00';
-      title.textContent = 'Слушать урок';
+      setTitle();
     },
     setMode,
   };
+  container._audioMode = api;
+  return api;
 }
 
 window.attachVideoSource = async function attachVideoSource(video, slug, currentHls, setHls) {
@@ -545,9 +575,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
   const audioMode = ensureAudioMode(video, slug);
   if (audioMode) {
     video._audioMode = audioMode;
-  } else if (video._audioMode) {
-    video._audioMode.setSlug(slug);
-    video._audioMode.setMode('video');
+    audioMode.setSlug(slug);
   }
 
   if (shouldPreferMp4ForSlug(slug)) {
