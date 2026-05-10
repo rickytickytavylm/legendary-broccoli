@@ -221,7 +221,8 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=43"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=58"></script>
+  <script src="/js/nav.js?v=60"></script>
+  <script src="/js/course-ai.js?v=1"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
     (async function() {
@@ -302,7 +303,8 @@
           video.addEventListener('canplay', hideVideoLoader, { once: true });
           hideVideoLoader();
           courseTitle.textContent = lesson.title;
-          courseDesc.textContent = COURSE_OVERVIEW;
+          if (courseDesc) courseDesc.textContent = window.CourseAI ? window.CourseAI.summary(lesson) || '' : '';
+          if (window.CourseAI) window.CourseAI.load(lesson);
         } catch (err) {
           hideVideoLoader();
           courseTitle.textContent = 'Ошибка';
@@ -335,9 +337,10 @@
         renderSkeletons(9);
         const lessons_data = await window.API.request('GET', '/content/mj-lessons');
         lessons = Array.isArray(lessons_data) ? lessons_data : [];
+        if (window.CourseAI) await window.CourseAI.init('mj', lessons);
 
         courseTitle.textContent = lessons[0] ? lessons[0].title : 'Мужское и Женское';
-        courseDesc.textContent = COURSE_OVERVIEW;
+        courseDesc.textContent = window.CourseAI ? window.CourseAI.summary(lessons[0]) || '' : '';
         lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
 
         renderLessonsList();
@@ -351,6 +354,7 @@
           } else {
             loadLesson(lessons[0]);
           }
+          if (window.CourseAI) window.CourseAI.load(lessons[0]);
         }
       } catch (err) {
         courseTitle.textContent = 'Курс не найден';

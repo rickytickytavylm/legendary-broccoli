@@ -184,7 +184,8 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=43"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=58"></script>
+  <script src="/js/nav.js?v=60"></script>
+  <script src="/js/course-ai.js?v=1"></script>
   <script>
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');
@@ -260,7 +261,8 @@
           hideVideoLoader();
           if (infoBlock) infoBlock.style.display = 'flex';
           if (lessonTitleEl) lessonTitleEl.textContent = lesson.title;
-          if (lessonDescEl) lessonDescEl.textContent = COURSE_OVERVIEW;
+          if (lessonDescEl) lessonDescEl.textContent = window.CourseAI ? window.CourseAI.summary(lesson) || '' : '';
+          if (window.CourseAI) window.CourseAI.load(lesson);
         } catch(e) {
           hideVideoLoader();
         }
@@ -342,10 +344,14 @@
         `).join('');
 
         const weeks = await window.API.request('GET', '/content/dermer-lessons');
+        if (window.CourseAI) await window.CourseAI.init('dermer', weeks);
         renderWeeks(weeks);
 
         // Prepare first lesson without touching the video stream until play.
         if (weeks[0] && weeks[0].lessons[0]) {
+          if (lessonTitleEl) lessonTitleEl.textContent = weeks[0].lessons[0].title;
+          if (lessonDescEl) lessonDescEl.textContent = window.CourseAI ? window.CourseAI.summary(weeks[0].lessons[0]) || '' : '';
+          if (window.CourseAI) window.CourseAI.load(weeks[0].lessons[0]);
           if (window.setupVideoPreview) {
             window.setupVideoPreview(videoContainer, {
               poster: '/assets/webp/geshtalt.webp',
