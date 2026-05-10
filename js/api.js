@@ -286,6 +286,21 @@ class ApiClient {
     const mp4 = await this.getVideoPresign(slug);
     return { type: 'mp4', url: mp4.url, expires_in: mp4.expires_in };
   }
+  async getAudioStream(slug) {
+    try {
+      const audio = await this.request('GET', '/video/audio-token?slug=' + encodeURIComponent(slug));
+      return {
+        type: 'audio-hls',
+        url: this.base + '/video/audio.m3u8?token=' + encodeURIComponent(audio.token),
+        expires_in: audio.expires_in,
+      };
+    } catch (err) {
+      if (err.code === 'LOGIN_REQUIRED' || err.code === 'NO_SUBSCRIPTION') {
+        if (window.showAccessPrompt) window.showAccessPrompt(err.code);
+      }
+      throw err;
+    }
+  }
 
   // --- Payment ---
   getPlans()       { return this.request('GET', '/payment/plans'); }
@@ -377,10 +392,163 @@ window.ensureHlsJs = function ensureHlsJs() {
   });
 };
 
+function ensureAudioMode(video, slug) {
+  const container = video.closest('.video-container');
+  if (!container || container.querySelector('.audio-mode-card')) return null;
+
+  const card = document.createElement('div');
+  card.className = 'audio-mode-card hidden';
+  card.innerHTML = `
+    <div class="audio-mode-art">
+      <img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async">
+    </div>
+    <div class="audio-mode-body">
+      <div class="audio-mode-kicker">Аудиоверсия</div>
+      <div class="audio-mode-title">Слушать урок</div>
+      <div class="audio-mode-wave" aria-hidden="true">${'<span></span>'.repeat(42)}</div>
+      <div class="audio-mode-progress"><span></span></div>
+      <div class="audio-mode-time"><span data-audio-current>0:00</span><span data-audio-duration>0:00</span></div>
+      <div class="audio-mode-controls">
+        <button type="button" data-audio-seek="-15">-15</button>
+        <button type="button" class="audio-mode-play" data-audio-play>Слушать</button>
+        <button type="button" data-audio-seek="15">+15</button>
+      </div>
+    </div>
+  `;
+
+  const toggle = document.createElement('div');
+  toggle.className = 'media-mode-toggle';
+  toggle.innerHTML = `
+    <button type="button" class="active" data-media-mode="video">Видео</button>
+    <button type="button" data-media-mode="audio">Аудио</button>
+  `;
+
+  container.appendChild(card);
+  container.appendChild(toggle);
+
+  const audio = document.createElement('audio');
+  audio.preload = 'metadata';
+  audio.playsInline = true;
+  audio.dataset.slug = slug || '';
+  card.appendChild(audio);
+
+  const current = card.querySelector('[data-audio-current]');
+  const duration = card.querySelector('[data-audio-duration]');
+  const progress = card.querySelector('.audio-mode-progress span');
+  const play = card.querySelector('[data-audio-play]');
+  const title = card.querySelector('.audio-mode-title');
+  const modeButtons = toggle.querySelectorAll('[data-media-mode]');
+
+  function fmt(value) {
+    if (!Number.isFinite(value) || value <= 0) return '0:00';
+    const total = Math.floor(value);
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const seconds = String(total % 60).padStart(2, '0');
+    return hours ? `${hours}:${String(minutes).padStart(2, '0')}:${seconds}` : `${minutes}:${seconds}`;
+  }
+
+  function setMode(mode) {
+    const audioMode = mode === 'audio';
+    card.classList.toggle('hidden', !audioMode);
+    video.classList.toggle('media-hidden', audioMode);
+    modeButtons.forEach((button) => button.classList.toggle('active', button.dataset.mediaMode === mode));
+    if (audioMode) {
+      video.pause();
+      if (!audio.src) loadAudio();
+    } else {
+      audio.pause();
+    }
+  }
+
+  async function loadAudio() {
+    if (audio.dataset.loading === 'true' || audio.src) return;
+    audio.dataset.loading = 'true';
+    title.textContent = 'Готовим аудио';
+    try {
+      const stream = await window.API.getAudioStream(audio.dataset.slug);
+      const url = new URL(stream.url, API_ORIGIN).href;
+      const Hls = await window.ensureHlsJs().catch(() => null);
+      if (Hls && Hls.isSupported()) {
+        const hls = new Hls({ enableWorker: false, lowLatencyMode: false });
+        audio._hlsInstance = hls;
+        hls.loadSource(url);
+        hls.attachMedia(audio);
+      } else if (audio.canPlayType('application/vnd.apple.mpegurl') || audio.canPlayType('application/x-mpegURL')) {
+        audio.src = url;
+      } else {
+        throw new Error('Audio HLS is not supported');
+      }
+      title.textContent = 'Слушать урок';
+    } catch (err) {
+      title.textContent = 'Аудио пока недоступно';
+    } finally {
+      audio.dataset.loading = 'false';
+    }
+  }
+
+  modeButtons.forEach((button) => {
+    button.addEventListener('click', () => setMode(button.dataset.mediaMode));
+  });
+  play.addEventListener('click', async () => {
+    if (audio.paused) {
+      await loadAudio();
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+  });
+  card.querySelectorAll('[data-audio-seek]').forEach((button) => {
+    button.addEventListener('click', () => {
+      audio.currentTime = Math.max(0, Math.min((audio.duration || Infinity), audio.currentTime + Number(button.dataset.audioSeek || 0)));
+    });
+  });
+  audio.addEventListener('play', () => {
+    play.textContent = 'Пауза';
+    card.classList.add('is-playing');
+  });
+  audio.addEventListener('pause', () => {
+    play.textContent = 'Слушать';
+    card.classList.remove('is-playing');
+  });
+  audio.addEventListener('timeupdate', () => {
+    current.textContent = fmt(audio.currentTime);
+    const pct = audio.duration ? Math.min(100, Math.max(0, (audio.currentTime / audio.duration) * 100)) : 0;
+    progress.style.width = `${pct}%`;
+  });
+  audio.addEventListener('durationchange', () => {
+    duration.textContent = fmt(audio.duration);
+  });
+
+  return {
+    setSlug(nextSlug) {
+      if (audio.dataset.slug === nextSlug) return;
+      if (audio._hlsInstance && typeof audio._hlsInstance.destroy === 'function') audio._hlsInstance.destroy();
+      audio._hlsInstance = null;
+      audio.pause();
+      audio.removeAttribute('src');
+      audio.load();
+      audio.dataset.slug = nextSlug || '';
+      progress.style.width = '0%';
+      current.textContent = '0:00';
+      duration.textContent = '0:00';
+      title.textContent = 'Слушать урок';
+    },
+    setMode,
+  };
+}
+
 window.attachVideoSource = async function attachVideoSource(video, slug, currentHls, setHls) {
   video.setAttribute('controls', '');
   video.setAttribute('playsinline', '');
   video.setAttribute('webkit-playsinline', '');
+  const audioMode = ensureAudioMode(video, slug);
+  if (audioMode) {
+    video._audioMode = audioMode;
+  } else if (video._audioMode) {
+    video._audioMode.setSlug(slug);
+    video._audioMode.setMode('video');
+  }
 
   if (shouldPreferMp4ForSlug(slug)) {
     const previousHls = currentHls || video._hlsInstance;

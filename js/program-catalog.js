@@ -94,7 +94,7 @@
       href: '#',
       title: 'Вебинары',
       desc: 'Живые эфиры, разборы и записи встреч появятся в отдельном разделе',
-      image: '/assets/webp/courses.webp',
+      image: '/assets/webp/supervision.webp',
       badge: 'Скоро',
       disabled: true,
     }, 'rail');
