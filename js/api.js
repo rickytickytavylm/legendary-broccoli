@@ -406,11 +406,13 @@ function ensureAudioMode(video, slug) {
       <img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async">
     </div>
     <div class="audio-mode-body">
-      <div class="audio-mode-kicker">Аудиоверсия</div>
       <div class="audio-mode-title">Слушать урок</div>
+      <div class="audio-mode-artist">Система Молодцова</div>
       <div class="audio-mode-wave" aria-hidden="true">${'<span></span>'.repeat(42)}</div>
       <div class="audio-mode-progress"><span></span></div>
       <div class="audio-mode-time"><span data-audio-current>0:00</span><span data-audio-duration>0:00</span></div>
+      <button type="button" class="audio-mode-chapters-btn" data-audio-chapters-toggle>Главы и таймкоды</button>
+      <div class="audio-mode-chapters hidden" data-audio-chapters></div>
       <div class="audio-mode-controls">
         <button type="button" data-audio-track="-1">Назад</button>
         <button type="button" data-audio-seek="-15">-15</button>
@@ -421,14 +423,35 @@ function ensureAudioMode(video, slug) {
     </div>
   `;
 
-  const toggle = document.createElement('div');
+  const inline = document.createElement('button');
+  inline.type = 'button';
+  inline.className = 'audio-inline-card hidden';
+  inline.innerHTML = `
+    <span class="audio-inline-art"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></span>
+    <span class="audio-inline-copy">
+      <span class="audio-inline-kicker">Аудиоверсия</span>
+      <strong>Слушать урок</strong>
+      <small>Откроется отдельный аудиоплеер</small>
+    </span>
+  `;
+
+  const existingToggle = container.previousElementSibling && container.previousElementSibling.matches('.media-mode-switch')
+    ? container.previousElementSibling
+    : null;
+  let toggle = existingToggle || document.createElement('div');
+  if (existingToggle) {
+    const freshToggle = existingToggle.cloneNode(false);
+    existingToggle.replaceWith(freshToggle);
+    toggle = freshToggle;
+  }
   toggle.className = 'media-mode-switch';
   toggle.innerHTML = `
     <button type="button" class="active" data-media-mode="video">Видео</button>
     <button type="button" data-media-mode="audio">Аудио</button>
   `;
 
-  container.insertAdjacentElement('beforebegin', toggle);
+  if (!toggle.parentElement) container.insertAdjacentElement('beforebegin', toggle);
+  container.appendChild(inline);
   document.body.appendChild(card);
 
   const audio = document.createElement('audio');
@@ -443,6 +466,9 @@ function ensureAudioMode(video, slug) {
   const play = card.querySelector('[data-audio-play]');
   const title = card.querySelector('.audio-mode-title');
   const modeButtons = toggle.querySelectorAll('[data-media-mode]');
+  const chaptersToggle = card.querySelector('[data-audio-chapters-toggle]');
+  const chaptersPanel = card.querySelector('[data-audio-chapters]');
+  let chapters = [];
 
   function getLessonTitle() {
     return layout.querySelector('.lesson-item.active .lesson-title')?.textContent?.trim() ||
@@ -453,6 +479,17 @@ function ensureAudioMode(video, slug) {
 
   function setTitle() {
     title.textContent = audio.dataset.loading === 'true' ? 'Готовим аудио' : getLessonTitle();
+    inline.querySelector('strong').textContent = getLessonTitle();
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }[char]));
   }
 
   function fmt(value) {
@@ -466,16 +503,30 @@ function ensureAudioMode(video, slug) {
 
   function setMode(mode) {
     const audioMode = mode === 'audio';
-    card.classList.toggle('hidden', !audioMode);
-    document.body.classList.toggle('audio-player-open', audioMode);
+    inline.classList.toggle('hidden', !audioMode);
+    container.classList.toggle('audio-inline-active', audioMode);
     modeButtons.forEach((button) => button.classList.toggle('active', button.dataset.mediaMode === mode));
     if (audioMode) {
       video.pause();
       setTitle();
-      if (!audio.src) loadAudio();
     } else {
-      audio.pause();
+      closePlayer();
     }
+  }
+
+  async function openPlayer(autoplay = true) {
+    card.classList.remove('hidden');
+    document.body.classList.add('audio-player-open');
+    video.pause();
+    setTitle();
+    await loadAudio();
+    if (autoplay) audio.play().catch(() => {});
+  }
+
+  function closePlayer() {
+    card.classList.add('hidden');
+    document.body.classList.remove('audio-player-open');
+    audio.pause();
   }
 
   async function loadAudio() {
@@ -507,7 +558,11 @@ function ensureAudioMode(video, slug) {
   modeButtons.forEach((button) => {
     button.addEventListener('click', () => setMode(button.dataset.mediaMode));
   });
-  card.querySelector('[data-audio-close]')?.addEventListener('click', () => setMode('video'));
+  inline.addEventListener('click', () => openPlayer(true));
+  card.querySelector('[data-audio-close]')?.addEventListener('click', closePlayer);
+  chaptersToggle?.addEventListener('click', () => {
+    chaptersPanel.classList.toggle('hidden');
+  });
   play.addEventListener('click', async () => {
     if (audio.paused) {
       await loadAudio();
@@ -530,6 +585,32 @@ function ensureAudioMode(video, slug) {
       const next = items[index + direction];
       if (next) next.click();
     });
+  });
+  function renderChapters(nextChapters) {
+    chapters = Array.isArray(nextChapters) ? nextChapters : [];
+    if (!chapters.length) {
+      chaptersToggle.hidden = true;
+      chaptersPanel.innerHTML = '';
+      chaptersPanel.classList.add('hidden');
+      return;
+    }
+    chaptersToggle.hidden = false;
+    chaptersPanel.innerHTML = chapters.map((chapter) => `
+      <button type="button" data-audio-chapter="${Number(chapter.start_seconds) || 0}">
+        <span>${escapeHtml(chapter.start_time || '')}</span>
+        <strong>${escapeHtml(chapter.title || 'Глава')}</strong>
+      </button>
+    `).join('');
+  }
+  chaptersPanel.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-audio-chapter]');
+    if (!button) return;
+    await loadAudio();
+    audio.currentTime = Math.max(0, Number(button.dataset.audioChapter) || 0);
+    audio.play().catch(() => {});
+  });
+  window.addEventListener('course-ai:chapters', (event) => {
+    renderChapters(event.detail && event.detail.chapters);
   });
   audio.addEventListener('play', () => {
     play.textContent = 'Пауза';
@@ -561,12 +642,29 @@ function ensureAudioMode(video, slug) {
       current.textContent = '0:00';
       duration.textContent = '0:00';
       setTitle();
+      if (document.body.classList.contains('audio-player-open')) {
+        loadAudio().then(() => audio.play().catch(() => {}));
+      }
     },
     setMode,
+    openPlayer,
+    renderChapters,
   };
   container._audioMode = api;
   return api;
 }
+
+window.prepareAudioMode = function prepareAudioMode(container, slug) {
+  const root = typeof container === 'string' ? document.querySelector(container) : container;
+  const video = root ? root.querySelector('video') : null;
+  if (!video || !slug) return null;
+  const audioMode = ensureAudioMode(video, slug);
+  if (audioMode) {
+    video._audioMode = audioMode;
+    audioMode.setSlug(slug);
+  }
+  return audioMode;
+};
 
 window.attachVideoSource = async function attachVideoSource(video, slug, currentHls, setHls) {
   video.setAttribute('controls', '');

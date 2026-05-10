@@ -552,6 +552,37 @@
     video.setAttribute('preload', 'none');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
+    if (options.audioSlug && window.prepareAudioMode) {
+      window.prepareAudioMode(container, options.audioSlug);
+    }
+
+    if (!container.previousElementSibling || !container.previousElementSibling.matches('.media-mode-switch')) {
+      var modeSwitch = document.createElement('div');
+      modeSwitch.className = 'media-mode-switch media-mode-switch-preview';
+      modeSwitch.innerHTML =
+        '<button type="button" class="active" data-preview-mode="video">Видео</button>' +
+        '<button type="button" data-preview-mode="audio">Аудио</button>';
+      container.insertAdjacentElement('beforebegin', modeSwitch);
+      modeSwitch.addEventListener('click', function(event) {
+        var button = event.target.closest('[data-preview-mode]');
+        if (!button) return;
+        modeSwitch.querySelectorAll('[data-preview-mode]').forEach(function(item) {
+          item.classList.toggle('active', item === button);
+        });
+        if (button.dataset.previewMode !== 'audio') return;
+        start();
+        var attempts = 0;
+        var timer = setInterval(function() {
+          attempts += 1;
+          if (video._audioMode) {
+            clearInterval(timer);
+            video._audioMode.setMode('audio');
+          } else if (attempts > 40) {
+            clearInterval(timer);
+          }
+        }, 100);
+      });
+    }
 
     function isAppleTouchVideoDevice() {
       var ua = navigator.userAgent || '';

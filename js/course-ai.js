@@ -90,6 +90,13 @@
     }
 
     const chapters = Array.isArray(ai.chapters) ? ai.chapters : [];
+    window.dispatchEvent(new CustomEvent('course-ai:chapters', {
+      detail: {
+        lessonId: data?.lesson?.id,
+        videoSlug: data?.lesson?.video_slug || data?.source?.key,
+        chapters,
+      },
+    }));
     timeline.classList.toggle('visible', chapters.length > 0);
     timeline.innerHTML = chapters.length ? `
       <div class="ai-timeline-head">

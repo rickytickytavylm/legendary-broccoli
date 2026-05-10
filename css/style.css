@@ -2082,20 +2082,101 @@ h1, h2, h3 {
   box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 8px 20px rgba(0,0,0,.2);
 }
 
+.video-container.audio-inline-active video,
+.video-container.audio-inline-active .video-preview-overlay,
+.video-container.audio-inline-active .video-placeholder,
+.video-container.audio-inline-active .watermark {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.audio-inline-card {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  width: 100%;
+  border: 0;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 36px);
+  padding: clamp(22px, 5vw, 46px);
+  background:
+    radial-gradient(circle at 46% 18%, rgba(255,255,255,.2), transparent 30%),
+    linear-gradient(180deg, #8d8d8d, #777);
+  color: #fff;
+  text-align: left;
+}
+
+.audio-inline-card.hidden {
+  display: none;
+}
+
+.audio-inline-art {
+  width: min(34vw, 190px);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, #f8f8f8, #e7e7e7);
+  box-shadow: 0 18px 48px rgba(0,0,0,.24);
+}
+
+.audio-inline-art img {
+  width: 42%;
+  height: 42%;
+  object-fit: contain;
+  filter: invert(1);
+}
+
+.audio-inline-copy {
+  min-width: 0;
+  max-width: 460px;
+}
+
+.audio-inline-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,.72);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.audio-inline-copy strong {
+  display: block;
+  color: #fff;
+  font-size: clamp(24px, 4vw, 44px);
+  line-height: .98;
+  letter-spacing: -.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-inline-copy small {
+  display: block;
+  margin-top: 10px;
+  color: rgba(255,255,255,.72);
+  font-size: 14px;
+}
+
 .audio-mode-card {
   position: fixed;
   inset: 0;
   z-index: 3000;
   display: grid;
   grid-template-rows: 1fr auto;
-  align-items: end;
+  align-items: center;
   justify-items: center;
-  gap: clamp(22px, 4vh, 42px);
-  padding: calc(28px + env(safe-area-inset-top, 0px)) 24px calc(28px + env(safe-area-inset-bottom, 0px));
+  gap: clamp(20px, 4vh, 34px);
+  padding: calc(56px + env(safe-area-inset-top, 0px)) 24px calc(30px + env(safe-area-inset-bottom, 0px));
   background:
-    radial-gradient(circle at 50% 20%, rgba(255,255,255,.16), transparent 28%),
-    radial-gradient(circle at 18% 78%, rgba(255,255,255,.08), transparent 34%),
-    linear-gradient(180deg, rgba(19,20,25,.98), rgba(0,0,0,.98));
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,.28), transparent 24%),
+    linear-gradient(180deg, #9a9a9a 0%, #848484 54%, #777 100%);
   color: #fff;
 }
 
@@ -2109,74 +2190,76 @@ h1, h2, h3 {
 
 .audio-mode-close {
   position: fixed;
-  top: calc(18px + env(safe-area-inset-top, 0px));
+  top: calc(16px + env(safe-area-inset-top, 0px));
   right: 18px;
   z-index: 2;
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(255,255,255,.13);
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255,255,255,.18);
   border-radius: 999px;
-  background: rgba(255,255,255,.07);
-  color: rgba(255,255,255,.86);
-  font-size: 26px;
+  background: rgba(0,0,0,.18);
+  color: rgba(255,255,255,.9);
+  font-size: 22px;
   line-height: 1;
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   backdrop-filter: blur(18px) saturate(160%);
 }
 
 .audio-mode-art {
-  width: min(54vh, 460px);
-  max-width: min(78vw, 460px);
+  width: min(48vh, 430px);
+  max-width: min(76vw, 430px);
   aspect-ratio: 1;
-  align-self: end;
-  border-radius: 42px;
+  align-self: center;
+  border-radius: 9px;
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 28% 18%, rgba(255,255,255,.24), transparent 34%),
-    linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.035));
-  border: 1px solid rgba(255,255,255,.15);
-  box-shadow: 0 28px 80px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.16);
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,.24), transparent 28%),
+    linear-gradient(145deg, #f8f8f8, #e7e7e7);
+  border: 0;
+  box-shadow: 0 28px 80px rgba(0,0,0,.24);
 }
 
 .audio-mode-art img {
-  width: 52%;
-  height: 52%;
+  width: 42%;
+  height: 42%;
   object-fit: contain;
-  filter: drop-shadow(0 16px 28px rgba(0,0,0,.45));
+  filter: invert(1) drop-shadow(0 14px 24px rgba(0,0,0,.2));
 }
 
 .audio-mode-body {
-  width: min(680px, 100%);
+  width: min(540px, 100%);
   min-width: 0;
-  text-align: center;
-}
-
-.audio-mode-kicker {
-  margin-bottom: 10px;
-  color: rgba(255,255,255,.52);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+  text-align: left;
 }
 
 .audio-mode-title {
-  margin: 0 auto 28px;
-  max-width: 620px;
-  font-size: clamp(30px, 6vw, 64px);
-  font-weight: 900;
-  line-height: .94;
-  letter-spacing: -.055em;
+  margin: 0;
+  max-width: 100%;
+  font-size: clamp(21px, 4.8vw, 34px);
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: -.045em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 14px rgba(0,0,0,.16);
+}
+
+.audio-mode-artist {
+  margin-top: 3px;
+  color: rgba(255,255,255,.76);
+  font-size: 15px;
+  font-weight: 650;
 }
 
 .audio-mode-wave {
-  height: 58px;
+  height: 0;
   display: flex;
   align-items: center;
   gap: 4px;
   overflow: hidden;
-  opacity: .78;
+  opacity: 0;
 }
 
 .audio-mode-wave span {
@@ -2201,10 +2284,10 @@ h1, h2, h3 {
 }
 
 .audio-mode-progress {
-  height: 5px;
-  margin: 18px 0 10px;
+  height: 4px;
+  margin: 24px 0 10px;
   border-radius: 999px;
-  background: rgba(255,255,255,.14);
+  background: rgba(255,255,255,.46);
   overflow: hidden;
 }
 
@@ -2213,40 +2296,116 @@ h1, h2, h3 {
   width: 0%;
   height: 100%;
   border-radius: inherit;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.98);
 }
 
 .audio-mode-time {
   display: flex;
   justify-content: space-between;
-  color: rgba(255,255,255,.5);
+  color: rgba(255,255,255,.72);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
+}
+
+.audio-mode-chapters-btn {
+  margin-top: 14px;
+  border: 0;
+  background: transparent;
+  color: rgba(255,255,255,.86);
+  font: 800 13px/1 Inter, sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.audio-mode-chapters {
+  max-height: min(28vh, 220px);
+  margin-top: 12px;
+  overflow-y: auto;
+  display: grid;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.audio-mode-chapters.hidden {
+  display: none;
+}
+
+.audio-mode-chapters button {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 10px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  text-align: left;
+}
+
+.audio-mode-chapters span {
+  color: rgba(255,255,255,.72);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.audio-mode-chapters strong {
+  min-width: 0;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .audio-mode-controls {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 22px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+  flex-wrap: nowrap;
 }
 
 .audio-mode-controls button {
-  min-height: 42px;
-  padding: 0 16px;
-  border: 1px solid rgba(255,255,255,.13);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
   border-radius: 999px;
-  background: rgba(255,255,255,.07);
-  color: rgba(255,255,255,.86);
-  font: 800 13px/1 Inter, sans-serif;
+  background: transparent;
+  color: rgba(255,255,255,.92);
+  font: 850 13px/1 Inter, sans-serif;
+  text-shadow: 0 2px 12px rgba(0,0,0,.18);
 }
 
 .audio-mode-controls .audio-mode-play {
-  min-width: 132px;
-  color: #050506;
-  background: rgba(255,255,255,.92);
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  color: #8f8f8f;
+  background: #fff;
+  box-shadow: 0 18px 34px rgba(0,0,0,.18);
+  font-size: 0;
+}
+
+.audio-mode-controls .audio-mode-play::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  border-left: 20px solid currentColor;
+}
+
+.audio-mode-card.is-playing .audio-mode-play::before {
+  width: 20px;
+  height: 24px;
+  margin-left: 0;
+  border: 0;
+  background:
+    linear-gradient(90deg, currentColor 0 34%, transparent 34% 66%, currentColor 66% 100%);
 }
 
 body.audio-player-open {
@@ -3263,29 +3422,24 @@ body.audio-player-open {
   }
 
   .audio-mode-art {
-    width: min(68vw, 320px);
+    width: min(72vw, 320px);
     max-width: none;
     margin: 0 auto;
-    border-radius: 34px;
+    border-radius: 9px;
   }
 
   .audio-mode-title {
-    margin-bottom: 16px;
     font-size: clamp(28px, 9vw, 42px);
-    text-align: center;
-  }
-
-  .audio-mode-kicker {
-    text-align: center;
+    text-align: left;
   }
 
   .audio-mode-wave {
-    height: 44px;
+    height: 0;
   }
 
   .audio-mode-controls {
-    justify-content: center;
-    margin-top: 16px;
+    justify-content: space-between;
+    margin-top: 24px;
   }
 
   .single-video-wrap,
