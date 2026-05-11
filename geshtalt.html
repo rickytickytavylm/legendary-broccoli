@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Гештальт — Система Молодцова</title>
   <meta name="description" content="Гештальт-подход в психотерапии. Обучающие программы и практики." />
-  <link rel="stylesheet" href="/css/style.css?v=63" />
+  <link rel="stylesheet" href="/css/style.css?v=65" />
   <link rel="stylesheet" href="/css/nav.css?v=56" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -401,9 +401,9 @@
         if (aiTimelinePanel) {
           aiTimelinePanel.classList.add('visible');
           aiTimelinePanel.innerHTML = `
-            <div class="ai-timeline-head">
-              <span>Таймкоды</span>
-              <small>Нажмите, чтобы перейти к моменту</small>
+            <div class="course-ai-section-head">
+              <h3>Таймкоды</h3>
+              <p>Нажмите, чтобы перейти к моменту</p>
             </div>
             <div class="ai-lesson-timeline">
               ${chapters.map((chapter) => `
@@ -423,8 +423,10 @@
         aiPanel.classList.add('visible');
         aiPanel.classList.remove('expanded');
         aiPanel.innerHTML = `
+          <div class="course-ai-section-head course-ai-section-head-analysis">
+            <h3>Система Ai разбор</h3>
+          </div>
           <div class="ai-lesson-inner">
-            <div class="ai-lesson-kicker">ИИ-разбор</div>
             <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
             <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
             <div class="ai-lesson-actions">

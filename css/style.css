@@ -1669,17 +1669,14 @@ h1, h2, h3 {
   position: relative;
   display: none;
   overflow: hidden;
-  border-radius: 28px;
-  border: 1px solid rgba(255,255,255,.14);
-  background:
-    linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.03)),
-    rgba(18,18,20,.72);
-  -webkit-backdrop-filter: blur(28px) saturate(140%);
-  backdrop-filter: blur(28px) saturate(140%);
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 24px 80px rgba(0,0,0,.45);
-  padding: clamp(22px, 3.4vw, 34px);
+    none;
+  padding: 0;
 }
 
 .ai-lesson-panel.visible {
@@ -1687,60 +1684,100 @@ h1, h2, h3 {
 }
 
 .ai-lesson-panel::before {
+  display: none;
+}
+
+.ai-lesson-panel::after {
+  display: none;
+}
+
+.course-ai-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 2px 12px;
+}
+
+.course-ai-section-head h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.05;
+  letter-spacing: -.04em;
+  text-shadow: 0 18px 48px rgba(0,0,0,.52);
+}
+
+.course-ai-section-head p {
+  margin: 0;
+  color: rgba(255,255,255,.4);
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: right;
+}
+
+.course-ai-section-head-analysis {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.ai-lesson-inner {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(7, 9, 13, .28);
+  -webkit-backdrop-filter: blur(34px) saturate(170%) contrast(108%);
+  backdrop-filter: blur(34px) saturate(170%) contrast(108%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    inset 0 -1px 0 rgba(255,255,255,.07),
+    inset 0 0 48px rgba(255,255,255,.035),
+    0 28px 90px rgba(0,0,0,.58),
+    0 0 0 1px rgba(255,255,255,.035);
+  padding: clamp(24px, 3.8vw, 38px);
+  max-width: none;
+}
+
+.ai-lesson-inner::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 0;
   background-image:
-    linear-gradient(90deg, rgba(0,0,0,.2), rgba(0,0,0,.58)),
+    radial-gradient(circle at 70% 64%, rgba(255,229,188,.24), transparent 22%),
+    linear-gradient(90deg, rgba(3,4,8,.74) 0%, rgba(5,6,10,.5) 42%, rgba(4,5,9,.2) 100%),
     url('../assets/webp/open_all.webp');
   background-size: cover;
   background-position: center right;
-  opacity: .72;
+  opacity: .94;
+  transform: scale(1.015);
 }
 
-.ai-lesson-panel::after {
+.ai-lesson-inner::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 18% 8%, rgba(255,255,255,.18), transparent 28%),
-    linear-gradient(135deg, rgba(255,255,255,.08), transparent 42%);
+    radial-gradient(circle at 10% 8%, rgba(255,255,255,.22), transparent 23%),
+    radial-gradient(circle at 84% 58%, rgba(255,225,180,.16), transparent 30%),
+    linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.02) 38%, transparent 58%),
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 32%, rgba(0,0,0,.18) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 1px 0 0 rgba(255,255,255,.08),
+    inset -1px 0 0 rgba(255,255,255,.05);
 }
 
-.ai-lesson-inner {
+.ai-lesson-title,
+.ai-lesson-summary,
+.ai-lesson-actions,
+.ai-expanded {
   position: relative;
   z-index: 2;
-  max-width: 760px;
-}
-
-.ai-lesson-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-  padding: 9px 14px;
-  border-radius: 999px;
-  color: rgba(255,255,255,.9);
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.ai-lesson-kicker::before {
-  content: '✦';
-  color: rgba(255,255,255,.92);
-  font-size: 12px;
-  line-height: 1;
-  text-shadow: 0 0 14px rgba(255,255,255,.34);
 }
 
 .ai-timeline-panel {
@@ -1748,75 +1785,82 @@ h1, h2, h3 {
   margin-top: -8px;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.14), transparent 30%),
-    linear-gradient(135deg, rgba(255,255,255,.105), rgba(255,255,255,.025)),
-    rgba(18,18,20,.66);
-  -webkit-backdrop-filter: blur(26px) saturate(145%);
-  backdrop-filter: blur(26px) saturate(145%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 20px 64px rgba(0,0,0,.42);
-  padding: 12px 12px 8px;
+  position: relative;
+  padding: 0;
 }
 
-.ai-timeline-panel.visible {
-  display: block;
-}
-
-.ai-timeline-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 0 2px 10px;
-}
-
-.ai-timeline-head span {
-  color: rgba(255,255,255,.86);
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.ai-timeline-head small {
-  color: rgba(255,255,255,.42);
-  font-size: 12px;
+.ai-timeline-panel::before {
+  display: none;
 }
 
 .ai-lesson-timeline {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  padding: 0 0 8px;
+  padding: 12px 12px 8px;
   display: flex;
   gap: 10px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.18);
+  background:
+    radial-gradient(circle at 26% 100%, rgba(255,230,190,.14), transparent 30%),
+    linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.025) 44%, rgba(255,255,255,.055)),
+    rgba(7,9,14,.34);
+  -webkit-backdrop-filter: blur(34px) saturate(170%) contrast(108%);
+  backdrop-filter: blur(34px) saturate(170%) contrast(108%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -1px 0 rgba(255,255,255,.07),
+    inset 0 0 42px rgba(255,255,255,.025),
+    0 24px 76px rgba(0,0,0,.52);
 }
 
+.ai-lesson-timeline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255,255,255,.18), transparent 26%),
+    linear-gradient(180deg, rgba(255,255,255,.07), transparent 46%, rgba(255,218,170,.055));
+  z-index: 0;
+}
+
+.ai-timeline-panel.visible {
+  display: block;
+}
+
+
 .ai-lesson-timeline::-webkit-scrollbar {
-  height: 5px;
+  height: 7px;
 }
 
 .ai-lesson-timeline::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,.16);
+  background: linear-gradient(90deg, rgba(255,255,255,.92), rgba(255,225,180,.78), rgba(255,255,255,.28));
+  border-radius: 999px;
+  box-shadow: 0 0 18px rgba(255,225,180,.22);
+}
+
+.ai-lesson-timeline::-webkit-scrollbar-track {
+  background: rgba(255,255,255,.08);
   border-radius: 999px;
 }
 
 .ai-time-chip {
   flex: 0 0 clamp(220px, 28vw, 340px);
-  border: 1px solid rgba(255,255,255,.13);
-  border-radius: 17px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 18px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.14), transparent 32%),
-    linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.03)),
-    rgba(255,255,255,.04);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  backdrop-filter: blur(22px) saturate(170%);
-  color: rgba(255,255,255,.82);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.18), transparent 32%),
+    linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.03)),
+    rgba(255,255,255,.035);
+  -webkit-backdrop-filter: blur(28px) saturate(175%);
+  backdrop-filter: blur(28px) saturate(175%);
+  color: rgba(255,255,255,.88);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -1827,8 +1871,9 @@ h1, h2, h3 {
   padding: 13px 15px;
   text-align: left;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 12px 32px rgba(0,0,0,.22);
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -1px 0 rgba(255,255,255,.05),
+    0 12px 34px rgba(0,0,0,.28);
   transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
 }
 
@@ -1885,21 +1930,37 @@ h1, h2, h3 {
 }
 
 .ai-toggle-btn {
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.24);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 17px;
+  padding: 14px 22px;
   border-radius: 999px;
-  color: rgba(255,255,255,.9);
-  background: rgba(255,255,255,.09);
+  color: rgba(255,255,255,.94);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.22), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.045)),
+    rgba(255,255,255,.055);
   font-weight: 800;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    0 12px 34px rgba(0,0,0,.28);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    0 16px 44px rgba(0,0,0,.35),
+    0 0 30px rgba(255,230,190,.06);
+  -webkit-backdrop-filter: blur(26px) saturate(175%);
+  backdrop-filter: blur(26px) saturate(175%);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.ai-toggle-btn:hover,
+.ai-toggle-btn:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.34);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.28), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,255,255,.06)),
+    rgba(255,255,255,.07);
 }
 
 .ai-toggle-btn::before {
@@ -2010,22 +2071,31 @@ h1, h2, h3 {
 
 @media (max-width: 640px) {
   .ai-lesson-panel {
-    border-radius: 22px;
+    padding: 0;
+  }
+
+  .ai-lesson-inner {
+    border-radius: 24px;
     padding: 20px;
   }
 
-  .ai-lesson-panel::before {
+  .ai-lesson-inner::before {
     background-position: 64% center;
-    opacity: .58;
+    opacity: .82;
   }
 
   .ai-timeline-panel {
     margin-top: -10px;
-    border-radius: 18px;
-    padding: 12px 10px 8px;
   }
 
-  .ai-timeline-head small {
+  .course-ai-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .course-ai-section-head p {
     display: none;
   }
 

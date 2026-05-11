@@ -107,9 +107,9 @@
     }));
     timeline.classList.toggle('visible', chapters.length > 0);
     timeline.innerHTML = chapters.length ? `
-      <div class="ai-timeline-head">
-        <span>Таймкоды</span>
-        <small>Нажмите, чтобы перейти к моменту</small>
+      <div class="course-ai-section-head">
+        <h3>Таймкоды</h3>
+        <p>Нажмите, чтобы перейти к моменту</p>
       </div>
       <div class="ai-lesson-timeline">
         ${chapters.map((chapter) => `
@@ -127,8 +127,10 @@
     panel.classList.add('visible');
     panel.classList.remove('expanded');
     panel.innerHTML = `
+      <div class="course-ai-section-head course-ai-section-head-analysis">
+        <h3>Система Ai разбор</h3>
+      </div>
       <div class="ai-lesson-inner">
-        <div class="ai-lesson-kicker">ИИ-разбор</div>
         <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
         <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
         <div class="ai-lesson-actions">
