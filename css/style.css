@@ -144,8 +144,8 @@ video::-internal-media-interstitial-panel { display: none !important; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 45%, rgba(0,0,0,.12), rgba(0,0,0,.5) 52%, rgba(0,0,0,.78)),
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.64));
+    radial-gradient(circle at 50% 45%, rgba(0,0,0,.04), rgba(0,0,0,.26) 52%, rgba(0,0,0,.52)),
+    linear-gradient(180deg, rgba(0,0,0,.025), rgba(0,0,0,.34));
 }
 
 .video-preview-overlay.hidden {
@@ -2088,21 +2088,24 @@ h1, h2, h3 {
     margin-top: 34px;
   }
 
-  .course-ai-section-head {
-    padding-inline: 6px;
-    margin-bottom: 14px;
-  }
-
   .course-ai-section-head-analysis {
     margin-top: 34px;
     margin-bottom: 14px;
   }
 
+  .ai-timeline-panel,
+  .ai-lesson-panel {
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
   .ai-lesson-timeline,
   .ai-lesson-inner {
-    width: calc(100% + 24px);
-    margin-left: -12px;
-    margin-right: -12px;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .ai-lesson-panel {
@@ -2127,7 +2130,8 @@ h1, h2, h3 {
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
-    margin-bottom: 10px;
+    margin: 0 18px 10px;
+    padding-inline: 0;
   }
 
   .course-ai-section-head p {
@@ -2791,18 +2795,18 @@ body.audio-player-open {
 }
 
 .course-title {
-  font-size: 2rem;
+  font-size: clamp(1.55rem, 2.4vw, 1.9rem) !important;
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: var(--text-1);
 }
 
 .course-desc {
-  font-size: 1.125rem;
+  font-size: .98rem !important;
   color: var(--text-2);
-  line-height: 1.65;
+  line-height: 1.58 !important;
   max-width: 52ch;
 }
 
@@ -2944,17 +2948,18 @@ body.audio-player-open {
 }
 
 .lesson-title-main {
-  font-size: 1.75rem;
+  font-size: clamp(1.35rem, 2.1vw, 1.68rem) !important;
   font-weight: 700;
   color: var(--text-1);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
 }
 
 .lesson-desc-main {
   color: var(--text-2);
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: .95rem !important;
+  line-height: 1.58 !important;
   margin: 0;
   max-width: 640px;
 }
@@ -3668,8 +3673,8 @@ body.audio-player-open {
     width: 100vw;
     grid-auto-columns: minmax(276px, 76vw);
     gap: 12px;
-    margin-left: -18px;
-    margin-right: -18px;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     padding: 2px 18px 16px;
     scroll-padding-inline: 18px;
   }
@@ -3685,7 +3690,7 @@ body.audio-player-open {
 
   .home-programs-section,
   .home-rail-section {
-    overflow: hidden;
+    overflow: visible;
   }
 
   .program-rail-card {
@@ -3786,15 +3791,35 @@ body.audio-player-open {
   }
 
   .course-title {
-    font-size: 1.6rem;
+    font-size: clamp(1.32rem, 5.4vw, 1.58rem) !important;
+    line-height: 1.12 !important;
+    letter-spacing: -.035em !important;
+    margin-bottom: 8px !important;
+  }
+
+  .course-desc,
+  .lesson-desc-main {
+    font-size: .9rem !important;
+    line-height: 1.52 !important;
+  }
+
+  .lesson-info-block {
+    margin-top: 18px !important;
+    gap: 12px !important;
+  }
+
+  .lesson-title-main {
+    font-size: clamp(1.24rem, 5.2vw, 1.54rem) !important;
+    line-height: 1.12 !important;
+    letter-spacing: -.035em !important;
   }
 
   .video-container {
     border-radius: var(--r-sm);
-    width: calc(100% + 24px);
+    width: 100vw;
     max-width: none;
-    margin-left: -12px;
-    margin-right: -12px;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     aspect-ratio: 16 / 10;
     min-height: clamp(246px, 64vw, 365px);
     transform: translateZ(0);
@@ -3802,9 +3827,9 @@ body.audio-player-open {
   }
 
   .video-container.video-text-preview-container {
-    width: calc(100% + 24px);
-    margin-left: -12px;
-    margin-right: -12px;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
   }
 
   .video-container.video-text-preview-container .video-preview-overlay {
@@ -3859,10 +3884,10 @@ body.audio-player-open {
 
   .single-video-wrap,
   .player-video-wrap {
-    width: calc(100% + 24px);
+    width: 100vw;
     max-width: none;
-    margin-left: -12px;
-    margin-right: -12px;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
   }
