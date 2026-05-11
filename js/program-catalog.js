@@ -1,9 +1,9 @@
 (function initProgramCatalog() {
   const PROGRAMS = [
-    { href: '/psihosomatika/', title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов', image: '/assets/webp/psysoma-prew.webp', wide: true, endpoint: '/content/psihosomatika-lessons' },
+    { href: '/psihosomatika/', title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов', image: '/assets/webp/psysomatic.webp', wide: true, endpoint: '/content/psihosomatika-lessons' },
     { href: '/yoga/', title: 'Мини-йога', desc: 'Мягкие практики дыхания и движения', image: '/assets/webp/mini-yoga.webp', endpoint: '/content/yoga-lessons' },
-    { href: '/dermer/', title: 'Работа с травмами', desc: 'Практический курс о кризисах и восстановлении опоры', image: '/assets/webp/pane-prew.webp', endpoint: '/content/dermer-lessons' },
-    { href: '/geshtalt/', title: 'Гештальт-подход', desc: 'Контакт, границы, эмоции и возвращение к себе', image: '/assets/webp/geshtalt-prew.webp', wide: true, endpoint: '/content/geshtalt-lessons' },
+    { href: '/dermer/', title: 'Работа с травмами', desc: 'Практический курс о кризисах и восстановлении опоры', image: '/assets/webp/geshtalt.webp', endpoint: '/content/dermer-lessons' },
+    { href: '/geshtalt/', title: 'Гештальт-подход', desc: 'Контакт, границы, эмоции и возвращение к себе', image: '/assets/webp/courses.webp', wide: true, endpoint: '/content/geshtalt-lessons' },
     { href: '#', title: 'Сценарий', desc: 'Ваш личный план', image: '/assets/webp/scenario.webp', badge: 'Скоро', disabled: true },
     { href: '/gipnoz/', title: 'Гипноз', desc: 'Техники и практики гипнотерапии', image: '/assets/webp/hipno.webp', endpoint: '/content/gipnoz-lessons' },
     { href: '/superviziya/', title: 'Супервизия', desc: 'Профессиональная поддержка психологов', image: '/assets/webp/supervision.webp', badge: 'Для профессионалов', endpoint: '/content/superviziya-lessons' },

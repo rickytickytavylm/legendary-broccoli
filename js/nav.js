@@ -75,9 +75,9 @@
   var RESTORE_HOME_SCROLL_KEY = 'sistema:restore-home-scroll';
   var VIDEO_ACCESS_BYPASS = window.VIDEO_ACCESS_BYPASS !== false;
   var COURSE_PREFETCH = {
-    '/geshtalt/': { api: '/content/geshtalt-lessons', image: '/assets/webp/geshtalt-prew.webp' },
+    '/geshtalt/': { api: '/content/geshtalt-lessons', image: '/assets/webp/courses.webp' },
     '/sozavisimost/': { api: '/content/sozavisimost-lessons', image: '/assets/webp/coda2.webp' },
-    '/psihosomatika/': { api: '/content/psihosomatika-lessons', image: '/assets/webp/psysoma-prew.webp' },
+    '/psihosomatika/': { api: '/content/psihosomatika-lessons', image: '/assets/webp/psysomatic.webp' },
     '/mj/': { api: '/content/mj-lessons', image: '/assets/webp/man_woman.webp' },
     '/yoga/': { api: '/content/yoga-lessons', image: '/assets/webp/mini-yoga.webp' },
     '/marathons/': { api: '/content/marathons-lessons', image: '/assets/webp/maraphones.webp' },
@@ -86,7 +86,7 @@
     '/terapiya/': { image: '/assets/webp/theraphy.webp' },
     '/gipnoz/': { image: '/assets/webp/hipno.webp' },
     '/master/': { image: '/assets/webp/masterofcommication.webp' },
-    '/dermer/': { image: '/assets/webp/pane-prew.webp' },
+    '/dermer/': { image: '/assets/webp/geshtalt.webp' },
   };
 
   // ── Active page detection ───────────────────────────────
