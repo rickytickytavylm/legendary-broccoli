@@ -552,7 +552,8 @@
 
     options = options || {};
     container.dataset.previewReady = 'true';
-    if (options.poster) container.dataset.audioPoster = options.poster;
+    if (options.audioPoster || options.poster) container.dataset.audioPoster = options.audioPoster || options.poster;
+    if (/-prew\.webp(?:$|\?)/.test(options.poster || '')) container.classList.add('video-text-preview-container');
     video.removeAttribute('controls');
     video.setAttribute('preload', 'none');
     video.setAttribute('playsinline', '');
