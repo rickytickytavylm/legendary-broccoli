@@ -2281,7 +2281,11 @@ h1, h2, h3 {
   width: 22px;
   height: 22px;
   display: block;
-  fill: currentColor;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .audio-mode-art {
@@ -2445,6 +2449,7 @@ h1, h2, h3 {
 .audio-mode-controls .audio-mode-play svg {
   width: 30px;
   height: 30px;
+  stroke-width: 2.35;
 }
 
 .audio-icon-pause,

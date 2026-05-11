@@ -406,11 +406,11 @@ function ensureAudioMode(video, slug) {
     <div class="audio-mode-shell">
       <div class="audio-mode-topbar">
         <button type="button" class="audio-mode-close" data-audio-close aria-label="Закрыть аудиоплеер">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="audio-mode-eyebrow">Аудиоурок</div>
         <button type="button" class="audio-mode-menu" data-audio-chapters-toggle aria-label="Главы и таймкоды">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm1 4h-2v6l5 3 1-1.7-4-2.3V7z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>
         </button>
       </div>
       <div class="audio-mode-art">
@@ -425,16 +425,16 @@ function ensureAudioMode(video, slug) {
         <div class="audio-mode-time"><span data-audio-current>0:00</span><span data-audio-duration>0:00</span></div>
         <div class="audio-mode-controls">
           <button type="button" data-audio-track="-1" aria-label="Предыдущий урок">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6v12l-8.5-6L19 6zM7 6h2v12H7z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m19 20-9-8 9-8v16Z"/><path d="M5 19V5"/></svg>
           </button>
           <button type="button" data-audio-seek="-15" aria-label="Назад на 15 секунд"><span>-15</span></button>
           <button type="button" class="audio-mode-play" data-audio-play aria-label="Воспроизвести">
-            <svg class="audio-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
-            <svg class="audio-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+            <svg class="audio-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg>
+            <svg class="audio-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14"/><path d="M16 5v14"/></svg>
           </button>
           <button type="button" data-audio-seek="15" aria-label="Вперёд на 15 секунд"><span>+15</span></button>
           <button type="button" data-audio-track="1" aria-label="Следующий урок">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18V6l8.5 6L5 18zM15 6h2v12h-2z"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 4 9 8-9 8V4Z"/><path d="M19 5v14"/></svg>
           </button>
         </div>
       </div>
