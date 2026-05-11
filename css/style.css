@@ -1011,6 +1011,12 @@ h1, h2, h3 {
     linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.035));
 }
 
+.program-rail-all .card-overlay {
+  background:
+    radial-gradient(circle at 26% 12%, rgba(255,255,255,.14), transparent 34%),
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.68) 72%, rgba(0,0,0,.82));
+}
+
 .program-rail-all span {
   position: relative;
   z-index: 2;

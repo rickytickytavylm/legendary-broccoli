@@ -75,6 +75,8 @@
   function renderRailItems(root, items, allHref, allLabel, allTitle) {
     root.innerHTML = items.map((program) => card(program, 'rail')).join('') +
       `<a href="${allHref}" class="program-rail-card program-rail-all">
+        <div class="card-bg" style="background: url('/assets/webp/open_all.webp') center/cover no-repeat;"></div>
+        <div class="card-overlay"></div>
         <span>${allLabel}</span>
         <strong>${allTitle}</strong>
         ${arrow()}
