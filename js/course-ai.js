@@ -127,10 +127,8 @@
     panel.classList.add('visible');
     panel.classList.remove('expanded');
     panel.innerHTML = `
-      <div class="course-ai-section-head course-ai-section-head-analysis">
-        <h3>Система Ai разбор</h3>
-      </div>
       <div class="ai-lesson-inner">
+        <span class="ai-lesson-badge">Ai разбор</span>
         <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
         <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
         <div class="ai-lesson-actions">
