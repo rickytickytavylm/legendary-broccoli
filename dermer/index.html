@@ -7,13 +7,14 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Работа с травмами — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=67" />
+  <link rel="stylesheet" href="/css/style.css?v=69" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .video-container { position: relative; }
+    .video-container { position: relative; background: #000; border-radius: 16px; overflow: hidden; aspect-ratio: 16 / 9; }
+    .video-container video { width: 100%; height: 100%; display: block; border-radius: 16px; object-fit: contain; }
     .watermark { position: absolute; top: 16px; left: 16px; z-index: 5; pointer-events: none; opacity: .45; }
     .watermark img { height: 26px; width: auto; filter: brightness(1.2); }
     .trauma-page { padding: 32px 24px 80px; max-width: 1280px; margin: 0 auto; }
@@ -207,7 +208,7 @@
       const lessonTitleEl  = document.getElementById('lesson-title-main');
       const lessonDescEl   = document.getElementById('lesson-desc-main');
       const COURSE_OVERVIEW = 'Практический курс о кризисах, травматическом опыте и восстановлении внутренней опоры. Материалы помогают понять, как формируются защитные реакции, где человек застревает после сильных переживаний и как выстраивать бережный путь возвращения к устойчивости, ясности и живому контакту с собой.';
-      const FIRST_LESSON_POSTER = '/assets/webp/dermer_prew.webp';
+      const FIRST_LESSON_POSTER = '/assets/webp/pane-prew.webp';
       const countEl        = document.getElementById('course-lessons-count');
       const totalCountEl   = document.getElementById('total-count');
 
