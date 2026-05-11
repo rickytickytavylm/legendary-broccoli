@@ -401,24 +401,42 @@ function ensureAudioMode(video, slug) {
   const card = document.createElement('div');
   card.className = 'audio-mode-card hidden';
   card.innerHTML = `
-    <button type="button" class="audio-mode-close" data-audio-close aria-label="Закрыть аудиоплеер">×</button>
-    <div class="audio-mode-art">
-      <img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async">
-    </div>
-    <div class="audio-mode-body">
-      <div class="audio-mode-title">Слушать урок</div>
-      <div class="audio-mode-artist">Система Молодцова</div>
-      <div class="audio-mode-wave" aria-hidden="true">${'<span></span>'.repeat(42)}</div>
-      <div class="audio-mode-progress"><span></span></div>
-      <div class="audio-mode-time"><span data-audio-current>0:00</span><span data-audio-duration>0:00</span></div>
-      <button type="button" class="audio-mode-chapters-btn" data-audio-chapters-toggle>Главы и таймкоды</button>
-      <div class="audio-mode-chapters hidden" data-audio-chapters></div>
-      <div class="audio-mode-controls">
-        <button type="button" data-audio-track="-1">Назад</button>
-        <button type="button" data-audio-seek="-15">-15</button>
-        <button type="button" class="audio-mode-play" data-audio-play>Слушать</button>
-        <button type="button" data-audio-seek="15">+15</button>
-        <button type="button" data-audio-track="1">Дальше</button>
+    <div class="audio-mode-shell">
+      <div class="audio-mode-topbar">
+        <button type="button" class="audio-mode-close" data-audio-close aria-label="Закрыть аудиоплеер">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="audio-mode-eyebrow">Аудиоурок</div>
+        <button type="button" class="audio-mode-menu" data-audio-chapters-toggle aria-label="Главы и таймкоды">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/></svg>
+        </button>
+      </div>
+      <div class="audio-mode-art">
+        <img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async">
+      </div>
+      <div class="audio-mode-body">
+        <div class="audio-mode-meta">
+          <div class="audio-mode-title">Слушать урок</div>
+          <div class="audio-mode-artist">Система Молодцова</div>
+        </div>
+        <div class="audio-mode-progress" data-audio-progress><span></span></div>
+        <div class="audio-mode-time"><span data-audio-current>0:00</span><span data-audio-duration>0:00</span></div>
+        <div class="audio-mode-controls">
+          <button type="button" data-audio-track="-1" aria-label="Предыдущий урок">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6v12l-8.5-6L19 6zM7 6h2v12H7z"/></svg>
+          </button>
+          <button type="button" data-audio-seek="-15" aria-label="Назад на 15 секунд"><span>-15</span></button>
+          <button type="button" class="audio-mode-play" data-audio-play aria-label="Воспроизвести">
+            <svg class="audio-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+            <svg class="audio-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+          </button>
+          <button type="button" data-audio-seek="15" aria-label="Вперёд на 15 секунд"><span>+15</span></button>
+          <button type="button" data-audio-track="1" aria-label="Следующий урок">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18V6l8.5 6L5 18zM15 6h2v12h-2z"/></svg>
+          </button>
+        </div>
+        <button type="button" class="audio-mode-chapters-btn" data-audio-chapters-toggle-secondary>Главы и таймкоды</button>
+        <div class="audio-mode-chapters hidden" data-audio-chapters></div>
       </div>
     </div>
   `;
@@ -462,11 +480,13 @@ function ensureAudioMode(video, slug) {
 
   const current = card.querySelector('[data-audio-current]');
   const duration = card.querySelector('[data-audio-duration]');
-  const progress = card.querySelector('.audio-mode-progress span');
+  const progressTrack = card.querySelector('[data-audio-progress]');
+  const progress = progressTrack.querySelector('span');
   const play = card.querySelector('[data-audio-play]');
   const title = card.querySelector('.audio-mode-title');
   const modeButtons = toggle.querySelectorAll('[data-media-mode]');
   const chaptersToggle = card.querySelector('[data-audio-chapters-toggle]');
+  const chaptersToggleSecondary = card.querySelector('[data-audio-chapters-toggle-secondary]');
   const chaptersPanel = card.querySelector('[data-audio-chapters]');
   let chapters = [];
 
@@ -561,9 +581,11 @@ function ensureAudioMode(video, slug) {
   });
   inline.addEventListener('click', () => openPlayer(true));
   card.querySelector('[data-audio-close]')?.addEventListener('click', closePlayer);
-  chaptersToggle?.addEventListener('click', () => {
+  function toggleChapters() {
     chaptersPanel.classList.toggle('hidden');
-  });
+  }
+  chaptersToggle?.addEventListener('click', toggleChapters);
+  chaptersToggleSecondary?.addEventListener('click', toggleChapters);
   play.addEventListener('click', async () => {
     if (audio.paused) {
       await loadAudio();
@@ -576,6 +598,12 @@ function ensureAudioMode(video, slug) {
     button.addEventListener('click', () => {
       audio.currentTime = Math.max(0, Math.min((audio.duration || Infinity), audio.currentTime + Number(button.dataset.audioSeek || 0)));
     });
+  });
+  progressTrack?.addEventListener('click', (event) => {
+    if (!audio.duration) return;
+    const rect = progressTrack.getBoundingClientRect();
+    const pct = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+    audio.currentTime = pct * audio.duration;
   });
   card.querySelectorAll('[data-audio-track]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -591,11 +619,13 @@ function ensureAudioMode(video, slug) {
     chapters = Array.isArray(nextChapters) ? nextChapters : [];
     if (!chapters.length) {
       chaptersToggle.hidden = true;
+      chaptersToggleSecondary.hidden = true;
       chaptersPanel.innerHTML = '';
       chaptersPanel.classList.add('hidden');
       return;
     }
     chaptersToggle.hidden = false;
+    chaptersToggleSecondary.hidden = false;
     chaptersPanel.innerHTML = chapters.map((chapter) => `
       <button type="button" data-audio-chapter="${Number(chapter.start_seconds) || 0}">
         <span>${escapeHtml(chapter.start_time || '')}</span>
@@ -614,11 +644,11 @@ function ensureAudioMode(video, slug) {
     renderChapters(event.detail && event.detail.chapters);
   });
   audio.addEventListener('play', () => {
-    play.textContent = 'Пауза';
+    play.setAttribute('aria-label', 'Пауза');
     card.classList.add('is-playing');
   });
   audio.addEventListener('pause', () => {
-    play.textContent = 'Слушать';
+    play.setAttribute('aria-label', 'Воспроизвести');
     card.classList.remove('is-playing');
   });
   audio.addEventListener('timeupdate', () => {
