@@ -1,9 +1,9 @@
 (function initProgramCatalog() {
   const PROGRAMS = [
-    { href: '/psihosomatika/', title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов', image: '/assets/webp/psysomatic.webp', wide: true, endpoint: '/content/psihosomatika-lessons' },
+    { href: '/psihosomatika/', title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов', image: '/assets/webp/psysoma-prew.webp', wide: true, endpoint: '/content/psihosomatika-lessons' },
     { href: '/yoga/', title: 'Мини-йога', desc: 'Мягкие практики дыхания и движения', image: '/assets/webp/mini-yoga.webp', endpoint: '/content/yoga-lessons' },
-    { href: '/dermer/', title: 'Работа с травмами', desc: 'Практический курс о кризисах и восстановлении опоры', image: '/assets/webp/geshtalt.webp', endpoint: '/content/dermer-lessons' },
-    { href: '/geshtalt/', title: 'Гештальт-подход', desc: 'Контакт, границы, эмоции и возвращение к себе', image: '/assets/webp/courses.webp', wide: true, endpoint: '/content/geshtalt-lessons' },
+    { href: '/dermer/', title: 'Работа с травмами', desc: 'Практический курс о кризисах и восстановлении опоры', image: '/assets/webp/pane-prew.webp', endpoint: '/content/dermer-lessons' },
+    { href: '/geshtalt/', title: 'Гештальт-подход', desc: 'Контакт, границы, эмоции и возвращение к себе', image: '/assets/webp/geshtalt-prew.webp', wide: true, endpoint: '/content/geshtalt-lessons' },
     { href: '#', title: 'Сценарий', desc: 'Ваш личный план', image: '/assets/webp/scenario.webp', badge: 'Скоро', disabled: true },
     { href: '/gipnoz/', title: 'Гипноз', desc: 'Техники и практики гипнотерапии', image: '/assets/webp/hipno.webp', endpoint: '/content/gipnoz-lessons' },
     { href: '/superviziya/', title: 'Супервизия', desc: 'Профессиональная поддержка психологов', image: '/assets/webp/supervision.webp', badge: 'Для профессионалов', endpoint: '/content/superviziya-lessons' },
@@ -14,9 +14,9 @@
     { href: '/mj/', title: 'Мужское и Женское', desc: 'Психология отношений и природа полов', image: '/assets/webp/man_woman.webp', full: true, endpoint: '/content/mj-lessons' },
   ];
   const MARATHON_RAIL = [
-    { href: '/marathons/#section-stress', title: 'Стресс', desc: 'Быстрые практики саморегуляции и восстановления управляемости', image: '/assets/webp/maraphones.webp' },
-    { href: '/marathons/#section-samoocenka', title: 'Самооценка', desc: 'Внутренняя опора, самоценность и мягкая пересборка отношения к себе', image: '/assets/webp/maraphones.webp' },
-    { href: '/marathons/#section-konflikty', title: 'Конфликты', desc: 'Границы и разговор о сложном без разрушения контакта', image: '/assets/webp/maraphones.webp' },
+    { href: '/marathons/#section-stress', title: 'Стресс', desc: 'Быстрые практики саморегуляции и восстановления управляемости', image: '/assets/webp/stress-mar.webp' },
+    { href: '/marathons/#section-samoocenka', title: 'Самооценка', desc: 'Внутренняя опора, самоценность и мягкая пересборка отношения к себе', image: '/assets/webp/myself_mar.webp' },
+    { href: '/marathons/#section-konflikty', title: 'Конфликты', desc: 'Границы и разговор о сложном без разрушения контакта', image: '/assets/webp/conflicts.webp' },
   ];
   const RESOURCE_RAIL = [
     { href: '/profiling/', title: 'Профайлинг', desc: 'Психологический портрет личности и точка входа в самопонимание', image: '/assets/webp/way_block.webp' },
