@@ -93,10 +93,15 @@
     }
 
     const chapters = Array.isArray(ai.chapters) ? ai.chapters : [];
+    const chapterSlug = data?.lesson?.video_slug || data?.source?.key;
+    if (chapterSlug) {
+      window.__courseAIChaptersByVideoSlug = window.__courseAIChaptersByVideoSlug || {};
+      window.__courseAIChaptersByVideoSlug[normalize(chapterSlug)] = chapters;
+    }
     window.dispatchEvent(new CustomEvent('course-ai:chapters', {
       detail: {
         lessonId: data?.lesson?.id,
-        videoSlug: data?.lesson?.video_slug || data?.source?.key,
+        videoSlug: chapterSlug,
         chapters,
       },
     }));

@@ -559,6 +559,10 @@ function ensureAudioMode(video, slug) {
       .replace(/[^\p{L}\p{N}]+/gu, '');
   }
 
+  function getCachedChaptersForSlug(slug) {
+    return window.__courseAIChaptersByVideoSlug?.[normalizeMediaSlug(slug)] || null;
+  }
+
   function fmt(value) {
     if (!Number.isFinite(value) || value <= 0) return '0:00';
     const total = Math.floor(value);
@@ -577,6 +581,8 @@ function ensureAudioMode(video, slug) {
       video.pause();
       setArtwork();
       setTitle();
+      const cachedChapters = getCachedChaptersForSlug(audio.dataset.slug);
+      if (cachedChapters) renderChapters(cachedChapters);
     } else {
       closePlayer();
     }
@@ -792,6 +798,8 @@ function ensureAudioMode(video, slug) {
       duration.textContent = '0:00';
       setArtwork();
       setTitle();
+      const cachedChapters = getCachedChaptersForSlug(audio.dataset.slug);
+      if (cachedChapters) renderChapters(cachedChapters);
       if (document.body.classList.contains('audio-player-open')) {
         loadAudio().then(() => audio.play().catch(() => {}));
       }
