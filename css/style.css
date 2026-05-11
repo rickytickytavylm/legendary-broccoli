@@ -1683,6 +1683,11 @@ h1, h2, h3 {
   display: block;
 }
 
+.video-container + .ai-timeline-panel.visible,
+.now-playing + .ai-timeline-panel.visible {
+  margin-top: clamp(28px, 4.5vw, 46px);
+}
+
 .ai-lesson-panel::before {
   display: none;
 }
@@ -1696,7 +1701,7 @@ h1, h2, h3 {
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin: 0 2px 12px;
+  margin: 0 2px 16px;
 }
 
 .course-ai-section-head h3 {
@@ -1717,25 +1722,26 @@ h1, h2, h3 {
 }
 
 .course-ai-section-head-analysis {
-  margin-top: 0;
-  margin-bottom: 14px;
+  margin-top: clamp(28px, 4vw, 44px);
+  margin-bottom: 16px;
 }
 
 .ai-lesson-inner {
   position: relative;
   z-index: 0;
+  box-sizing: border-box;
   overflow: hidden;
   border-radius: 30px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(7, 9, 13, .28);
+  border: 1px solid rgba(255,255,255,.13);
+  background: rgba(2, 3, 6, .18);
   -webkit-backdrop-filter: blur(34px) saturate(170%) contrast(108%);
   backdrop-filter: blur(34px) saturate(170%) contrast(108%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.2),
-    inset 0 -1px 0 rgba(255,255,255,.07),
-    inset 0 0 48px rgba(255,255,255,.035),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(255,255,255,.035),
+    inset 0 0 42px rgba(0,0,0,.18),
     0 28px 90px rgba(0,0,0,.58),
-    0 0 0 1px rgba(255,255,255,.035);
+    0 0 0 1px rgba(255,255,255,.02);
   padding: clamp(24px, 3.8vw, 38px);
   max-width: none;
 }
@@ -1746,8 +1752,8 @@ h1, h2, h3 {
   inset: 0;
   z-index: 0;
   background-image:
-    radial-gradient(circle at 70% 64%, rgba(255,229,188,.24), transparent 22%),
-    linear-gradient(90deg, rgba(3,4,8,.74) 0%, rgba(5,6,10,.5) 42%, rgba(4,5,9,.2) 100%),
+    radial-gradient(circle at 76% 66%, rgba(255,226,178,.16), transparent 24%),
+    linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.5) 42%, rgba(0,0,0,.14) 100%),
     url('../assets/webp/open_all.webp');
   background-size: cover;
   background-position: center right;
@@ -1762,14 +1768,13 @@ h1, h2, h3 {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(circle at 10% 8%, rgba(255,255,255,.22), transparent 23%),
-    radial-gradient(circle at 84% 58%, rgba(255,225,180,.16), transparent 30%),
-    linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.02) 38%, transparent 58%),
-    linear-gradient(180deg, rgba(255,255,255,.08), transparent 32%, rgba(0,0,0,.18) 100%);
+    radial-gradient(circle at 78% 62%, rgba(255,222,178,.1), transparent 28%),
+    linear-gradient(135deg, rgba(255,255,255,.045), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.025), transparent 30%, rgba(0,0,0,.22) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.28),
-    inset 1px 0 0 rgba(255,255,255,.08),
-    inset -1px 0 0 rgba(255,255,255,.05);
+    inset 0 1px 0 rgba(255,255,255,.13),
+    inset 1px 0 0 rgba(255,255,255,.04),
+    inset -1px 0 0 rgba(255,255,255,.025);
 }
 
 .ai-lesson-title,
@@ -1782,7 +1787,7 @@ h1, h2, h3 {
 
 .ai-timeline-panel {
   display: none;
-  margin-top: -8px;
+  margin-top: 0;
   width: 100%;
   box-sizing: border-box;
   position: relative;
@@ -1796,6 +1801,7 @@ h1, h2, h3 {
 .ai-lesson-timeline {
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
   margin: 0;
   padding: 12px 12px 8px;
   display: flex;
@@ -1805,17 +1811,17 @@ h1, h2, h3 {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   border-radius: 24px;
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 26% 100%, rgba(255,230,190,.14), transparent 30%),
-    linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.025) 44%, rgba(255,255,255,.055)),
-    rgba(7,9,14,.34);
+    radial-gradient(circle at 30% 100%, rgba(255,226,178,.08), transparent 32%),
+    linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.012) 44%, rgba(255,255,255,.02)),
+    rgba(3,4,8,.22);
   -webkit-backdrop-filter: blur(34px) saturate(170%) contrast(108%);
   backdrop-filter: blur(34px) saturate(170%) contrast(108%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.22),
-    inset 0 -1px 0 rgba(255,255,255,.07),
-    inset 0 0 42px rgba(255,255,255,.025),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(255,255,255,.035),
+    inset 0 0 42px rgba(0,0,0,.12),
     0 24px 76px rgba(0,0,0,.52);
 }
 
@@ -1825,8 +1831,8 @@ h1, h2, h3 {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 8% 0%, rgba(255,255,255,.18), transparent 26%),
-    linear-gradient(180deg, rgba(255,255,255,.07), transparent 46%, rgba(255,218,170,.055));
+    radial-gradient(circle at 12% 0%, rgba(255,255,255,.06), transparent 28%),
+    linear-gradient(180deg, rgba(255,255,255,.022), transparent 46%, rgba(255,218,170,.035));
   z-index: 0;
 }
 
@@ -1852,12 +1858,12 @@ h1, h2, h3 {
 
 .ai-time-chip {
   flex: 0 0 clamp(220px, 28vw, 340px);
-  border: 1px solid rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.1);
   border-radius: 18px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.18), transparent 32%),
-    linear-gradient(135deg, rgba(255,255,255,.11), rgba(255,255,255,.03)),
-    rgba(255,255,255,.035);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.055), transparent 32%),
+    linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.012)),
+    rgba(8,10,16,.22);
   -webkit-backdrop-filter: blur(28px) saturate(175%);
   backdrop-filter: blur(28px) saturate(175%);
   color: rgba(255,255,255,.88);
@@ -1871,16 +1877,16 @@ h1, h2, h3 {
   padding: 13px 15px;
   text-align: left;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    inset 0 -1px 0 rgba(255,255,255,.05),
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 -1px 0 rgba(255,255,255,.025),
     0 12px 34px rgba(0,0,0,.28);
   transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
 }
 
 .ai-time-chip:hover,
 .ai-time-chip:focus-visible {
-  background: rgba(255,255,255,.095);
-  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.045);
+  border-color: rgba(255,255,255,.16);
   color: #fff;
   transform: translateY(-1px);
 }
@@ -1930,7 +1936,7 @@ h1, h2, h3 {
 }
 
 .ai-toggle-btn {
-  border: 1px solid rgba(255,255,255,.24);
+  border: 1px solid rgba(255,255,255,.16);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -1939,13 +1945,13 @@ h1, h2, h3 {
   border-radius: 999px;
   color: rgba(255,255,255,.94);
   background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,.22), transparent 34%),
-    linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.045)),
-    rgba(255,255,255,.055);
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.08), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.018)),
+    rgba(8,10,16,.22);
   font-weight: 800;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.26),
-    inset 0 -1px 0 rgba(255,255,255,.06),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(255,255,255,.025),
     0 16px 44px rgba(0,0,0,.35),
     0 0 30px rgba(255,230,190,.06);
   -webkit-backdrop-filter: blur(26px) saturate(175%);
@@ -1956,11 +1962,11 @@ h1, h2, h3 {
 .ai-toggle-btn:hover,
 .ai-toggle-btn:focus-visible {
   transform: translateY(-1px);
-  border-color: rgba(255,255,255,.34);
+  border-color: rgba(255,255,255,.24);
   background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,.28), transparent 34%),
-    linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,255,255,.06)),
-    rgba(255,255,255,.07);
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.12), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.024)),
+    rgba(10,12,18,.28);
 }
 
 .ai-toggle-btn::before {
@@ -2070,6 +2076,28 @@ h1, h2, h3 {
 }
 
 @media (max-width: 640px) {
+  .video-container + .ai-timeline-panel.visible,
+  .now-playing + .ai-timeline-panel.visible {
+    margin-top: 34px;
+  }
+
+  .course-ai-section-head {
+    padding-inline: 6px;
+    margin-bottom: 14px;
+  }
+
+  .course-ai-section-head-analysis {
+    margin-top: 34px;
+    margin-bottom: 14px;
+  }
+
+  .ai-lesson-timeline,
+  .ai-lesson-inner {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
   .ai-lesson-panel {
     padding: 0;
   }
@@ -3701,10 +3729,10 @@ body.audio-player-open {
 
   .video-container {
     border-radius: var(--r-sm);
-    width: calc(100% + 12px);
+    width: calc(100% + 24px);
     max-width: none;
-    margin-left: -6px;
-    margin-right: -6px;
+    margin-left: -12px;
+    margin-right: -12px;
     aspect-ratio: 16 / 10;
     min-height: clamp(246px, 64vw, 365px);
     transform: translateZ(0);
@@ -3712,9 +3740,9 @@ body.audio-player-open {
   }
 
   .video-container.video-text-preview-container {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+    width: calc(100% + 24px);
+    margin-left: -12px;
+    margin-right: -12px;
   }
 
   .video-container.video-text-preview-container .video-preview-overlay {
@@ -3769,10 +3797,10 @@ body.audio-player-open {
 
   .single-video-wrap,
   .player-video-wrap {
-    width: calc(100% + 12px);
+    width: calc(100% + 24px);
     max-width: none;
-    margin-left: -6px;
-    margin-right: -6px;
+    margin-left: -12px;
+    margin-right: -12px;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
   }
