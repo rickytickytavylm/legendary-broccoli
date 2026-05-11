@@ -548,6 +548,7 @@
 
     options = options || {};
     container.dataset.previewReady = 'true';
+    if (options.poster) container.dataset.audioPoster = options.poster;
     video.removeAttribute('controls');
     video.setAttribute('preload', 'none');
     video.setAttribute('playsinline', '');

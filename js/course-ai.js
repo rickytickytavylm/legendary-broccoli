@@ -46,19 +46,19 @@
     const main = video ? video.closest('.course-main') : document.querySelector('.course-main');
     if (!main || !video) return {};
 
-    let timeline = document.getElementById('ai-timeline-panel');
+    let timeline = target ? main.querySelector('.ai-timeline-panel') : document.getElementById('ai-timeline-panel');
     if (!timeline) {
       timeline = document.createElement('section');
-      timeline.id = 'ai-timeline-panel';
+      if (!target) timeline.id = 'ai-timeline-panel';
       timeline.className = 'ai-timeline-panel';
       timeline.setAttribute('aria-label', 'Таймкоды урока');
       video.insertAdjacentElement('afterend', timeline);
     }
 
-    let panel = document.getElementById('ai-lesson-panel');
+    let panel = target ? main.querySelector('.ai-lesson-panel') : document.getElementById('ai-lesson-panel');
     if (!panel) {
       panel = document.createElement('section');
-      panel.id = 'ai-lesson-panel';
+      if (!target) panel.id = 'ai-lesson-panel';
       panel.className = 'ai-lesson-panel';
       panel.setAttribute('aria-live', 'polite');
       timeline.insertAdjacentElement('afterend', panel);
@@ -67,8 +67,11 @@
     return { timeline, panel };
   }
 
-  function jumpTo(seconds) {
-    const video = document.getElementById('course-video');
+  function jumpTo(seconds, target) {
+    const video = target?.querySelector('video') ||
+      target?.closest('.course-main')?.querySelector('video') ||
+      document.getElementById('course-video') ||
+      document.querySelector('.course-main video');
     if (!video || !Number.isFinite(seconds)) return;
     video.setAttribute('controls', '');
     video.currentTime = Math.max(0, seconds);
@@ -113,7 +116,7 @@
       </div>
     ` : '';
     timeline.querySelectorAll('.ai-time-chip').forEach((button) => {
-      button.addEventListener('click', () => jumpTo(Number(button.dataset.seconds)));
+      button.addEventListener('click', () => jumpTo(Number(button.dataset.seconds), target));
     });
 
     panel.classList.add('visible');
@@ -124,9 +127,9 @@
         <h3 class="ai-lesson-title">${escapeHtml(ai.clean_title || ai.title || 'Разбор урока')}</h3>
         <p class="ai-lesson-summary">${escapeHtml(ai.short_summary || '')}</p>
         <div class="ai-lesson-actions">
-          <button type="button" class="ai-toggle-btn" id="ai-toggle-btn">Открыть разбор</button>
+          <button type="button" class="ai-toggle-btn">Открыть разбор</button>
         </div>
-        <div class="ai-expanded" id="ai-expanded">
+        <div class="ai-expanded">
           <h4 class="ai-section-title">Саммари урока</h4>
           <div class="ai-rich-text">${escapeHtml(ai.summary || '')}</div>
           <h4 class="ai-section-title" style="margin-top:20px">Что важно вынести</h4>
@@ -134,7 +137,7 @@
         </div>
       </div>
     `;
-    const toggle = document.getElementById('ai-toggle-btn');
+    const toggle = panel.querySelector('.ai-toggle-btn');
     if (toggle) {
       toggle.addEventListener('click', () => {
         const expanded = panel.classList.toggle('expanded');
@@ -167,7 +170,7 @@
     const desc = document.getElementById('course-desc') || document.getElementById('lesson-desc-main');
     if (desc) desc.textContent = lesson?.ai_short_summary || item?.short_summary || '';
     if (!item?.has_ai || !item.file || !state.course) {
-      render(null);
+      render(null, target);
       return;
     }
     try {

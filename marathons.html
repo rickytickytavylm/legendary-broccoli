@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Марафоны — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=56" />
+  <link rel="stylesheet" href="/css/style.css?v=57" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -218,10 +218,10 @@
     </div>
   </footer>
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=50"></script>
+  <script src="/js/api.js?v=52"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=62"></script>
-  <script src="/js/course-ai.js?v=2"></script>
+  <script src="/js/nav.js?v=63"></script>
+  <script src="/js/course-ai.js?v=3"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
     function pluralLessons(n) {
@@ -253,7 +253,6 @@
       const listId = `list-${secId}`;
       const loaderId = `loader-${secId}`;
       const nowId = `now-${secId}`;
-      const placeholderId = `placeholder-${secId}`;
 
       let hlsInstance = null;
 
@@ -292,8 +291,8 @@
           showLoader();
           const vid = document.getElementById(videoId);
           if (!vid) return;
-          const placeholder = document.getElementById(placeholderId);
-          if (placeholder) placeholder.classList.add('hidden');
+          const preview = document.getElementById(containerId)?.querySelector('.video-preview-overlay');
+          if (preview) preview.classList.add('hidden');
           await window.attachVideoSource(vid, lesson.video_slug, hlsInstance, (next) => { hlsInstance = next; });
           vid.addEventListener('loadedmetadata', hideLoader, { once: true });
           vid.addEventListener('canplay', hideLoader, { once: true });
@@ -325,20 +324,14 @@
         });
       });
 
-      const placeholder = document.getElementById(placeholderId);
-      if (placeholder) {
-        placeholder.addEventListener('click', () => loadLesson(lessons[0]));
-      }
-
-      if (autoLoad) {
-        if (window.setupVideoPreview) {
-          window.setupVideoPreview(document.getElementById(containerId), {
-            poster: '/assets/webp/maraphones.webp',
-            onStart: () => loadLesson(lessons[0]),
-          });
-        } else {
-          loadLesson(lessons[0]);
-        }
+      if (window.setupVideoPreview) {
+        window.setupVideoPreview(document.getElementById(containerId), {
+          poster: '/assets/webp/maraphones.webp',
+          audioSlug: lessons[0]?.video_slug,
+          onStart: () => loadLesson(lessons[0]),
+        });
+      } else if (autoLoad) {
+        loadLesson(lessons[0]);
       }
     }
 
@@ -362,9 +355,6 @@
                 <div class="video-container" id="container-${section.id}">
                   <video id="video-${section.id}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
                   <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
-                  <button class="video-placeholder ${idx === 0 ? 'hidden' : ''}" id="placeholder-${section.id}" type="button" style="background-image:url('/assets/webp/maraphones.webp')" aria-label="Открыть видео">
-                    <span class="video-placeholder-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-                  </button>
                   <div class="video-loader hidden" id="loader-${section.id}"><div class="apple-spinner">${'<span></span>'.repeat(8)}</div></div>
                 </div>
                 <div class="now-playing" id="now-${section.id}"></div>

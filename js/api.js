@@ -292,6 +292,8 @@ class ApiClient {
       return {
         type: 'audio-hls',
         url: this.base + '/video/audio.m3u8?token=' + encodeURIComponent(audio.token),
+        tracks: Array.isArray(audio.tracks) ? audio.tracks : [],
+        duration_seconds: audio.duration_seconds || null,
         expires_in: audio.expires_in,
       };
     } catch (err) {
@@ -408,7 +410,7 @@ function ensureAudioMode(video, slug) {
         </button>
         <div class="audio-mode-eyebrow">Аудиоурок</div>
         <button type="button" class="audio-mode-menu" data-audio-chapters-toggle aria-label="Главы и таймкоды">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm1 4h-2v6l5 3 1-1.7-4-2.3V7z"/></svg>
         </button>
       </div>
       <div class="audio-mode-art">
@@ -435,8 +437,17 @@ function ensureAudioMode(video, slug) {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18V6l8.5 6L5 18zM15 6h2v12h-2z"/></svg>
           </button>
         </div>
-        <button type="button" class="audio-mode-chapters-btn" data-audio-chapters-toggle-secondary>Главы и таймкоды</button>
-        <div class="audio-mode-chapters hidden" data-audio-chapters></div>
+      </div>
+      <div class="audio-mode-sheet hidden" data-audio-sheet>
+        <div class="audio-mode-sheet-handle" aria-hidden="true"></div>
+        <div class="audio-mode-sheet-head">
+          <div>
+            <span>Главы</span>
+            <strong>Таймкоды урока</strong>
+          </div>
+          <button type="button" data-audio-chapters-close aria-label="Закрыть главы">×</button>
+        </div>
+        <div class="audio-mode-chapters" data-audio-chapters></div>
       </div>
     </div>
   `;
@@ -484,11 +495,16 @@ function ensureAudioMode(video, slug) {
   const progress = progressTrack.querySelector('span');
   const play = card.querySelector('[data-audio-play]');
   const title = card.querySelector('.audio-mode-title');
+  const artImage = card.querySelector('.audio-mode-art img');
+  const inlineArtImage = inline.querySelector('.audio-inline-art img');
   const modeButtons = toggle.querySelectorAll('[data-media-mode]');
   const chaptersToggle = card.querySelector('[data-audio-chapters-toggle]');
-  const chaptersToggleSecondary = card.querySelector('[data-audio-chapters-toggle-secondary]');
+  const chaptersSheet = card.querySelector('[data-audio-sheet]');
   const chaptersPanel = card.querySelector('[data-audio-chapters]');
   let chapters = [];
+  let nativeTracks = [];
+  let nativeTrackIndex = 0;
+  let nativeDuration = 0;
 
   function getLessonTitle() {
     return layout.querySelector('.lesson-item.active .lesson-title')?.textContent?.trim() ||
@@ -503,6 +519,27 @@ function ensureAudioMode(video, slug) {
     inline.querySelector('strong').textContent = lessonTitle;
   }
 
+  function extractCssUrl(value) {
+    const match = String(value || '').match(/url\((['"]?)(.*?)\1\)/i);
+    return match ? match[2] : '';
+  }
+
+  function getPosterImage() {
+    const preview = container.querySelector('.video-preview-overlay');
+    return container.dataset.audioPoster ||
+      extractCssUrl(preview?.style?.backgroundImage) ||
+      video.getAttribute('poster') ||
+      '/assets/webp/ai_back.webp';
+  }
+
+  function setArtwork() {
+    const poster = getPosterImage();
+    card.style.setProperty('--audio-artwork', `url("${poster}")`);
+    inline.style.setProperty('--audio-artwork', `url("${poster}")`);
+    artImage.src = poster;
+    inlineArtImage.src = poster;
+  }
+
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, (char) => ({
       '&': '&amp;',
@@ -511,6 +548,15 @@ function ensureAudioMode(video, slug) {
       '"': '&quot;',
       "'": '&#39;',
     }[char]));
+  }
+
+  function normalizeMediaSlug(value) {
+    return String(value || '')
+      .toLowerCase()
+      .replace(/\\/g, '/')
+      .replace(/ё/g, 'е')
+      .replace(/\.[a-z0-9]+$/i, '')
+      .replace(/[^\p{L}\p{N}]+/gu, '');
   }
 
   function fmt(value) {
@@ -529,6 +575,7 @@ function ensureAudioMode(video, slug) {
     modeButtons.forEach((button) => button.classList.toggle('active', button.dataset.mediaMode === mode));
     if (audioMode) {
       video.pause();
+      setArtwork();
       setTitle();
     } else {
       closePlayer();
@@ -539,6 +586,7 @@ function ensureAudioMode(video, slug) {
     card.classList.remove('hidden');
     document.body.classList.add('audio-player-open');
     video.pause();
+    setArtwork();
     setTitle();
     await loadAudio();
     if (autoplay) audio.play().catch(() => {});
@@ -546,8 +594,48 @@ function ensureAudioMode(video, slug) {
 
   function closePlayer() {
     card.classList.add('hidden');
+    card.classList.remove('chapters-open');
     document.body.classList.remove('audio-player-open');
     audio.pause();
+  }
+
+  function isNativeTrackMode() {
+    return isAppleTouchVideoDevice() && nativeTracks.length > 0;
+  }
+
+  function currentNativeGlobalTime() {
+    const track = nativeTracks[nativeTrackIndex];
+    return (track ? Number(track.start) || 0 : 0) + (audio.currentTime || 0);
+  }
+
+  function loadNativeTrack(index, offset = 0, autoplay = false) {
+    const track = nativeTracks[index];
+    if (!track) return;
+    nativeTrackIndex = index;
+    audio.pause();
+    audio.setAttribute('src', new URL(track.url, API_ORIGIN).href);
+    audio.load();
+    const applyOffset = () => {
+      if (Number.isFinite(offset) && offset > 0) {
+        audio.currentTime = Math.min(offset, Math.max(0, Number(track.duration) || offset));
+      }
+      if (autoplay) audio.play().catch(() => {});
+    };
+    audio.addEventListener('loadedmetadata', applyOffset, { once: true });
+  }
+
+  function seekToAudioTime(seconds, autoplay = !audio.paused) {
+    const safe = Math.max(0, Number(seconds) || 0);
+    if (!isNativeTrackMode()) {
+      audio.currentTime = Math.max(0, Math.min((audio.duration || Infinity), safe));
+      if (autoplay) audio.play().catch(() => {});
+      return;
+    }
+    let index = nativeTracks.findIndex((track) => safe >= (Number(track.start) || 0) && safe < (Number(track.end) || Infinity));
+    if (index < 0) index = nativeTracks.length - 1;
+    const track = nativeTracks[index];
+    const nextIndex = index;
+    loadNativeTrack(nextIndex, safe - (Number(track.start) || 0), autoplay);
   }
 
   async function loadAudio() {
@@ -556,6 +644,14 @@ function ensureAudioMode(video, slug) {
     try {
       const stream = await window.API.getAudioStream(audio.dataset.slug);
       const url = new URL(stream.url, API_ORIGIN).href;
+      nativeTracks = Array.isArray(stream.tracks) ? stream.tracks : [];
+      nativeDuration = Number(stream.duration_seconds) || 0;
+      if (isNativeTrackMode()) {
+        loadNativeTrack(0, 0, false);
+        duration.textContent = fmt(nativeDuration || nativeTracks[nativeTracks.length - 1]?.end);
+        setTitle();
+        return;
+      }
       const Hls = await window.ensureHlsJs().catch(() => null);
       if (Hls && Hls.isSupported()) {
         const hls = new Hls({ enableWorker: false, lowLatencyMode: false });
@@ -582,10 +678,15 @@ function ensureAudioMode(video, slug) {
   inline.addEventListener('click', () => openPlayer(true));
   card.querySelector('[data-audio-close]')?.addEventListener('click', closePlayer);
   function toggleChapters() {
-    chaptersPanel.classList.toggle('hidden');
+    const open = !card.classList.contains('chapters-open');
+    card.classList.toggle('chapters-open', open);
+    chaptersSheet.classList.toggle('hidden', !open);
   }
   chaptersToggle?.addEventListener('click', toggleChapters);
-  chaptersToggleSecondary?.addEventListener('click', toggleChapters);
+  card.querySelector('[data-audio-chapters-close]')?.addEventListener('click', () => {
+    card.classList.remove('chapters-open');
+    chaptersSheet.classList.add('hidden');
+  });
   play.addEventListener('click', async () => {
     if (audio.paused) {
       await loadAudio();
@@ -596,14 +697,16 @@ function ensureAudioMode(video, slug) {
   });
   card.querySelectorAll('[data-audio-seek]').forEach((button) => {
     button.addEventListener('click', () => {
-      audio.currentTime = Math.max(0, Math.min((audio.duration || Infinity), audio.currentTime + Number(button.dataset.audioSeek || 0)));
+      const base = isNativeTrackMode() ? currentNativeGlobalTime() : audio.currentTime;
+      seekToAudioTime(base + Number(button.dataset.audioSeek || 0));
     });
   });
   progressTrack?.addEventListener('click', (event) => {
-    if (!audio.duration) return;
+    const total = isNativeTrackMode() ? nativeDuration : audio.duration;
+    if (!total) return;
     const rect = progressTrack.getBoundingClientRect();
     const pct = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
-    audio.currentTime = pct * audio.duration;
+    seekToAudioTime(pct * total);
   });
   card.querySelectorAll('[data-audio-track]').forEach((button) => {
     button.addEventListener('click', () => {
@@ -619,13 +722,12 @@ function ensureAudioMode(video, slug) {
     chapters = Array.isArray(nextChapters) ? nextChapters : [];
     if (!chapters.length) {
       chaptersToggle.hidden = true;
-      chaptersToggleSecondary.hidden = true;
       chaptersPanel.innerHTML = '';
-      chaptersPanel.classList.add('hidden');
+      chaptersSheet.classList.add('hidden');
+      card.classList.remove('chapters-open');
       return;
     }
     chaptersToggle.hidden = false;
-    chaptersToggleSecondary.hidden = false;
     chaptersPanel.innerHTML = chapters.map((chapter) => `
       <button type="button" data-audio-chapter="${Number(chapter.start_seconds) || 0}">
         <span>${escapeHtml(chapter.start_time || '')}</span>
@@ -637,11 +739,14 @@ function ensureAudioMode(video, slug) {
     const button = event.target.closest('[data-audio-chapter]');
     if (!button) return;
     await loadAudio();
-    audio.currentTime = Math.max(0, Number(button.dataset.audioChapter) || 0);
-    audio.play().catch(() => {});
+    seekToAudioTime(Number(button.dataset.audioChapter) || 0, true);
+    card.classList.remove('chapters-open');
+    chaptersSheet.classList.add('hidden');
   });
   window.addEventListener('course-ai:chapters', (event) => {
-    renderChapters(event.detail && event.detail.chapters);
+    const detail = event.detail || {};
+    if (detail.videoSlug && normalizeMediaSlug(detail.videoSlug) !== normalizeMediaSlug(audio.dataset.slug)) return;
+    renderChapters(detail.chapters);
   });
   audio.addEventListener('play', () => {
     play.setAttribute('aria-label', 'Пауза');
@@ -652,12 +757,21 @@ function ensureAudioMode(video, slug) {
     card.classList.remove('is-playing');
   });
   audio.addEventListener('timeupdate', () => {
-    current.textContent = fmt(audio.currentTime);
-    const pct = audio.duration ? Math.min(100, Math.max(0, (audio.currentTime / audio.duration) * 100)) : 0;
+    const currentSeconds = isNativeTrackMode() ? currentNativeGlobalTime() : audio.currentTime;
+    const totalSeconds = isNativeTrackMode() ? nativeDuration : audio.duration;
+    current.textContent = fmt(currentSeconds);
+    const pct = totalSeconds ? Math.min(100, Math.max(0, (currentSeconds / totalSeconds) * 100)) : 0;
     progress.style.width = `${pct}%`;
   });
   audio.addEventListener('durationchange', () => {
-    duration.textContent = fmt(audio.duration);
+    duration.textContent = fmt(isNativeTrackMode() ? nativeDuration : audio.duration);
+  });
+  audio.addEventListener('ended', () => {
+    if (!isNativeTrackMode()) return;
+    const nextIndex = nativeTrackIndex + 1;
+    if (nativeTracks[nextIndex]) {
+      loadNativeTrack(nextIndex, 0, true);
+    }
   });
 
   const api = {
@@ -669,10 +783,14 @@ function ensureAudioMode(video, slug) {
       audio.removeAttribute('src');
       audio.load();
       delete audio.dataset.loading;
+      nativeTracks = [];
+      nativeTrackIndex = 0;
+      nativeDuration = 0;
       audio.dataset.slug = nextSlug || '';
       progress.style.width = '0%';
       current.textContent = '0:00';
       duration.textContent = '0:00';
+      setArtwork();
       setTitle();
       if (document.body.classList.contains('audio-player-open')) {
         loadAudio().then(() => audio.play().catch(() => {}));
