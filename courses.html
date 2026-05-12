@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="refresh" content="0; url=/programs/" />
-  <title>Программы — Система Молодцова</title>
-  <script>location.replace('/programs/');</script>
+  <meta http-equiv="refresh" content="0; url=courses/" />
+  <link rel="canonical" href="/courses/" />
+  <title>??????? ? ??????? ?????????</title>
+  <script>
+    (function() {
+      var target = 'courses/';
+      location.replace(target + location.search + location.hash);
+    })();
+  </script>
 </head>
 <body>
-  <a href="/programs/">Открыть программы</a>
+  <a href="courses/">??????? ????????</a>
 </body>
 </html>

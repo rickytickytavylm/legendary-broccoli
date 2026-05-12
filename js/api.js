@@ -385,7 +385,7 @@ window.ensureHlsJs = function ensureHlsJs() {
       return;
     }
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js';
     script.async = true;
     script.dataset.hlsLoader = 'true';
     script.onload = () => resolve(window.Hls);

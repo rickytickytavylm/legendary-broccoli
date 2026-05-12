@@ -11,7 +11,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=34';
+    link.href = '/css/nav.css?v=57';
     document.head.appendChild(link);
   }
 
