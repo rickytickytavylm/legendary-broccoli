@@ -114,7 +114,7 @@
       <a href="/" class="back-link-glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Назад</a>
 
       <div class="single-video-wrap" id="video-container">
-        <video id="course-video" preload="none" oncontextmenu="return false;"></video>
+        <video id="course-video" preload="none"></video>
         <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
         <div class="video-loader hidden" id="video-loader"><div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
       </div>
@@ -192,86 +192,8 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=67"></script>
-  <script>
-    window.refreshAuthUI = function(user) {
-      const btn = document.getElementById('nav-auth-btn');
-      const link = document.getElementById('nav-account-link');
-      if (user || window.API.isLoggedIn()) {
-        if (btn) btn.style.display = 'none';
-        if (link) link.style.display = 'inline-flex';
-      }
-    };
-    if (window.API.isLoggedIn()) {
-      window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
-    }
-  </script>
-  <script>
-    (async () => {
-      const videoContainer = document.getElementById('video-container');
-      const VIDEO_SLUG = 'Телесные практики/ Телесная практика по преодолению депрессии..mp4';
-
-      function showLoader() {
-        const vid = document.getElementById('course-video');
-        if (vid) vid.setAttribute('controls', '');
-        let loader = document.getElementById('video-loader');
-        if (!loader) {
-          loader = document.createElement('div');
-          loader.id = 'video-loader';
-          loader.className = 'video-loader';
-          loader.innerHTML = '<div class="apple-spinner">' + '<span></span>'.repeat(8) + '</div>';
-          videoContainer.appendChild(loader);
-        }
-        loader.classList.remove('hidden');
-      }
-
-      function hideLoader() {
-        const loader = document.getElementById('video-loader');
-        if (loader) loader.classList.add('hidden');
-        const vid = document.getElementById('course-video');
-        if (vid) vid.setAttribute('controls', '');
-      }
-
-      function captureFirstFrame(video) {
-        video.addEventListener('loadedmetadata', () => {
-          video.currentTime = 0.1;
-        }, { once: true });
-        video.addEventListener('seeked', () => {
-          try {
-            const c = document.createElement('canvas');
-            c.width = video.videoWidth || 1280;
-            c.height = video.videoHeight || 720;
-            c.getContext('2d').drawImage(video, 0, 0);
-            const poster = c.toDataURL('image/jpeg', 0.8);
-            if (poster && poster.length > 100) video.poster = poster;
-          } catch(e) {}
-        }, { once: true });
-      }
-
-      async function loadVideo() {
-        try {
-          showLoader();
-          const video = document.getElementById('course-video');
-          await window.attachVideoSource(video, VIDEO_SLUG);
-          video.addEventListener('loadedmetadata', hideLoader, { once: true });
-          video.addEventListener('canplay', hideLoader, { once: true });
-          hideLoader();
-        } catch(e) {
-          hideLoader();
-          const vid = document.getElementById('course-video');
-          if (vid) vid.setAttribute('controls', '');
-        }
-      }
-
-      if (window.setupVideoPreview) {
-        window.setupVideoPreview(videoContainer, {
-          poster: '/assets/webp/theraphy.webp',
-          onStart: loadVideo,
-        });
-      } else {
-        loadVideo();
-      }
-    })();
-  </script>
+  <script src="/js/nav.js?v=68"></script>
+  <script src="/js/page-inline/terapiya-1.js?v=1"></script>
+  <script src="/js/page-inline/terapiya-2.js?v=1"></script>
 </body>
 </html>

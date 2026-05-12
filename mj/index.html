@@ -134,7 +134,7 @@
       <div class="course-layout">
         <div class="course-main">
           <div class="video-container" id="video-container">
-            <video id="course-video" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
+            <video id="course-video" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;"></video>
             <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
             <div class="video-loader hidden" id="video-loader">
               <div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
@@ -221,155 +221,9 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=67"></script>
+  <script src="/js/nav.js?v=68"></script>
   <script src="/js/course-ai.js?v=5"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
-  <script>
-      function escapeHtml(value) {
-        return String(value || '').replace(/[&<>"']/g, (char) => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;',
-        }[char]));
-      }
-    (async function() {
-      const lessonsList = document.getElementById('lessons-list');
-      const videoContainer = document.getElementById('video-container');
-      const courseTitle = document.getElementById('course-title');
-      const courseDesc = document.getElementById('course-desc');
-      const lessonsCount = document.getElementById('course-lessons-count');
-      let lessons = [];
-      let hlsInstance = null;
-      const COURSE_OVERVIEW = 'Курс о мужском и женском как о живой динамике отношений: ожиданиях, близости, притяжении, конфликтах и различиях в восприятии. Материалы помогают увидеть повторяющиеся сценарии и говорить о важном спокойнее, честнее и без игры в угадывание.';
-
-      function pluralLessons(n) {
-        if (n === 1) return 'урок';
-        if (n >= 2 && n <= 4) return 'урока';
-        return 'уроков';
-      }
-
-      function renderSkeletons(n = 9) {
-        lessonsList.innerHTML = Array.from({ length: n }, () => `
-          <div class="skeleton-lesson">
-            <div class="skeleton-num skeleton-pulse"></div>
-            <div class="skeleton-info">
-              <div class="skeleton-title skeleton-pulse"></div>
-              <div class="skeleton-dur skeleton-pulse"></div>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      function showVideoLoader() {
-        const vid = document.getElementById('course-video');
-        if (vid) vid.setAttribute('controls', '');
-        const loader = document.getElementById('video-loader');
-        if (loader) loader.classList.remove('hidden');
-      }
-
-      function hideVideoLoader() {
-        const loader = document.getElementById('video-loader');
-        if (loader) loader.classList.add('hidden');
-        const vid = document.getElementById('course-video');
-        if (vid) vid.setAttribute('controls', '');
-      }
-
-      function captureFirstFrame(video) {
-        video.addEventListener('loadedmetadata', () => {
-          video.currentTime = 0.1;
-        }, { once: true });
-        video.addEventListener('seeked', () => {
-          try {
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth || 1280;
-            canvas.height = video.videoHeight || 720;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            const poster = canvas.toDataURL('image/jpeg', 0.8);
-            if (poster && poster.length > 100) video.poster = poster;
-          } catch (e) {}
-        }, { once: true });
-      }
-
-      function destroyHls() {
-        if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-      }
-
-      function restoreVideoEl() {
-        if (!document.getElementById('course-video')) {
-          videoContainer.innerHTML = '<video id="course-video" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video><div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div><div class="video-loader hidden" id="video-loader"><div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>';
-        }
-        return document.getElementById('course-video');
-      }
-
-      async function loadLesson(lesson) {
-        try {
-          showVideoLoader();
-          const video = restoreVideoEl();
-          await window.attachVideoSource(video, lesson.video_slug, hlsInstance, (next) => { hlsInstance = next; });
-          video.addEventListener('loadedmetadata', hideVideoLoader, { once: true });
-          video.addEventListener('canplay', hideVideoLoader, { once: true });
-          hideVideoLoader();
-          courseTitle.textContent = lesson.title;
-          if (courseDesc) courseDesc.textContent = window.CourseAI ? window.CourseAI.summary(lesson) || '' : '';
-          if (window.CourseAI) window.CourseAI.load(lesson);
-        } catch (err) {
-          hideVideoLoader();
-          courseTitle.textContent = 'Ошибка';
-          courseDesc.textContent = 'Не удалось загрузить видео';
-        }
-      }
-
-      function renderLessonsList() {
-        lessonsList.innerHTML = lessons.map((lesson, idx) => `
-          <div class="lesson-item ${idx === 0 ? 'active' : ''}" data-idx="${idx}">
-            <div class="lesson-number">${idx + 1}</div>
-            <div class="lesson-info">
-              <div class="lesson-title">${escapeHtml(lesson.title)}</div>
-              <div class="lesson-dur">${escapeHtml(lesson.duration || '')}</div>
-            </div>
-          </div>
-        `).join('');
-
-        lessonsList.querySelectorAll('.lesson-item').forEach((item) => {
-          item.addEventListener('click', () => {
-            const idx = parseInt(item.dataset.idx);
-            lessonsList.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            loadLesson(lessons[idx]);
-          });
-        });
-      }
-
-      try {
-        renderSkeletons(9);
-        const lessons_data = await window.API.request('GET', '/content/mj-lessons');
-        lessons = Array.isArray(lessons_data) ? lessons_data : [];
-        if (window.CourseAI) await window.CourseAI.init('mj', lessons);
-
-        courseTitle.textContent = lessons[0] ? lessons[0].title : 'Мужское и Женское';
-        courseDesc.textContent = window.CourseAI ? window.CourseAI.summary(lessons[0]) || '' : '';
-        lessonsCount.textContent = lessons.length + ' ' + pluralLessons(lessons.length);
-
-        renderLessonsList();
-        if (lessons[0]) {
-          if (window.setupVideoPreview) {
-            hideVideoLoader();
-            window.setupVideoPreview(videoContainer, {
-              poster: '/assets/webp/man_woman.webp',
-              onStart: () => loadLesson(lessons[0]),
-            });
-          } else {
-            loadLesson(lessons[0]);
-          }
-          if (window.CourseAI) window.CourseAI.load(lessons[0]);
-        }
-      } catch (err) {
-        courseTitle.textContent = 'Курс не найден';
-        courseDesc.textContent = 'Не удалось загрузить данные курса';
-      }
-    })();
-  </script>
+  <script src="/js/page-inline/mj-1.js?v=1"></script>
 </body>
 </html>

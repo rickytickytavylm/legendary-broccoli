@@ -57,7 +57,7 @@
       </form>
       <div id="done-actions" class="magic-actions" style="display:none">
         <a class="magic-btn primary" href="/account/">Открыть профиль</a>
-        <button class="magic-btn secondary" type="button" onclick="window.openAuthModal && window.openAuthModal('login')">Запросить новую ссылку</button>
+        <button class="magic-btn secondary" id="request-new-link-btn" type="button">Запросить новую ссылку</button>
       </div>
       <p class="magic-small" id="magic-small"></p>
     </main>
@@ -66,68 +66,6 @@
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script>
-    const params = new URLSearchParams(location.search);
-    const token = params.get('token') || '';
-    const rawReturnTo = params.get('returnTo') || '';
-    const returnTo = rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//') ? rawReturnTo : '';
-    const title = document.getElementById('magic-title');
-    const text = document.getElementById('magic-text');
-    const small = document.getElementById('magic-small');
-    const resendForm = document.getElementById('resend-form');
-    const doneActions = document.getElementById('done-actions');
-    const emailInput = document.getElementById('email');
-
-    function showResend(state, email) {
-      const isExpired = state === 'expired';
-      title.textContent = isExpired ? 'Ссылка устарела' : 'Ссылка недействительна';
-      text.textContent = isExpired
-        ? 'Для безопасности ссылка действует ограниченное время. Введите почту, и мы пришлём новую.'
-        : 'Эта ссылка уже использована или повреждена. Запросите новую ссылку для входа.';
-      if (email) emailInput.value = email;
-      resendForm.style.display = 'flex';
-      small.textContent = 'Новая ссылка будет действовать 15 минут.';
-    }
-
-    async function verify() {
-      if (!token) {
-        showResend('invalid');
-        return;
-      }
-      try {
-        const res = await window.API.verifyMagicLink(token);
-        window.API.setTokens(res.tokens);
-        history.replaceState({}, document.title, '/auth-magic/');
-        window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: res.user } }));
-        title.textContent = 'Готово, вы вошли';
-        text.textContent = 'Сейчас перенаправим вас дальше.';
-        const target = returnTo || res.redirect_to || '/account/';
-        setTimeout(() => { window.location.href = target; }, 500);
-      } catch (err) {
-        history.replaceState({}, document.title, '/auth-magic/');
-        showResend(err.status === 410 ? 'expired' : 'invalid', err.email);
-      }
-    }
-
-    resendForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const btn = document.getElementById('resend-btn');
-      btn.disabled = true;
-      try {
-        await window.API.requestMagicLink({ email: emailInput.value.trim(), returnTo });
-        title.textContent = 'Письмо отправлено';
-        text.textContent = 'Проверьте почту. Если письма нет во входящих, загляните в «Спам».';
-        resendForm.style.display = 'none';
-        doneActions.style.display = 'flex';
-        small.textContent = '';
-      } catch (err) {
-        text.textContent = err.error || 'Не получилось отправить письмо. Попробуйте ещё раз.';
-      } finally {
-        btn.disabled = false;
-      }
-    });
-
-    verify();
-  </script>
+  <script src="/js/page-inline/auth-magic-1.js?v=1"></script>
 </body>
 </html>

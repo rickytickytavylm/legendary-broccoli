@@ -9,38 +9,7 @@
   <meta name="robots" content="noindex,follow" />
 <title>Урок — Система Молодцова</title>
   <meta name="description" content="Просмотр урока" />
-  <script>
-    (function () {
-      var params = new URLSearchParams(location.search);
-      var slug = (params.get('slug') || '').toLowerCase();
-      if (!slug) location.replace('/courses/');
-      var map = {
-        'marafony': '/marathons/',
-        'marathon': '/marathons/',
-        'marathons': '/marathons/',
-        'yoga': '/yoga/',
-        'gipnoz': '/gipnoz/',
-        'hypnoz': '/gipnoz/',
-        'dermer': '/dermer/',
-        'psihosomatika': '/psihosomatika/',
-        'psychosomatika': '/psihosomatika/',
-        'superviziya': '/superviziya/',
-        'supervision': '/superviziya/',
-        'telesnaya': '/terapiya/',
-        'terapiya': '/terapiya/',
-        'geshtalt': '/geshtalt/',
-        'master': '/master/',
-        'masterofcommication': '/master/',
-        'antologiya': '/antologiya/',
-        'anthology': '/antologiya/',
-        'sozavisimost': '/sozavisimost/',
-        'codependency': '/sozavisimost/',
-        'mj': '/mj/',
-        'manzhen': '/mj/'
-      };
-      if (map[slug]) { location.replace(map[slug]); }
-    })();
-  </script>
+  <script src="/js/page-inline/course-1.js?v=1"></script>
   <link rel="stylesheet" href="/css/style.css?v=76" />
   <link rel="stylesheet" href="/css/nav.css?v=53" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -107,7 +76,7 @@
       <!-- Левая колонка: Плеер и описание -->
       <div class="course-main">
         <div class="video-container">
-          <video id="course-video" controls preload="metadata" oncontextmenu="return false;">
+          <video id="course-video" controls preload="metadata">
             Ваш браузер не поддерживает видео.
           </video>
           <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
@@ -217,21 +186,8 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=67"></script>
+  <script src="/js/nav.js?v=68"></script>
   <script src="/js/course.js?v=1"></script>
-  <script>
-    // Auth UI state
-    window.refreshAuthUI = function(user) {
-      const btn = document.getElementById('nav-auth-btn');
-      const link = document.getElementById('nav-account-link');
-      if (user || window.API.isLoggedIn()) {
-        if (btn) btn.style.display = 'none';
-        if (link) link.style.display = 'inline-flex';
-      }
-    };
-    if (window.API.isLoggedIn()) {
-      window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
-    }
-  </script>
+  <script src="/js/page-inline/course-2.js?v=1"></script>
 </body>
 </html>

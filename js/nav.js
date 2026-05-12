@@ -25,6 +25,12 @@
     }, { once: true });
   }
 
+  document.addEventListener('contextmenu', function(event) {
+    if (event.target && event.target.closest && event.target.closest('video')) {
+      event.preventDefault();
+    }
+  });
+
   // ── Nav items config ────────────────────────────────────
   var NAV_ITEMS = [
     {
