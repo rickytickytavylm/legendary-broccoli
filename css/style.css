@@ -1581,17 +1581,17 @@ h1, h2, h3 {
   min-height: 58px;
   border-radius: 26px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.14), transparent 34%),
-    radial-gradient(circle at 86% 110%, rgba(255,226,178,.07), transparent 38%),
-    linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.012) 50%, rgba(255,255,255,.035)),
-    rgba(3, 5, 10, .46);
+    radial-gradient(circle at 16% 0%, rgba(255,255,255,.2), transparent 36%),
+    radial-gradient(circle at 92% 116%, rgba(255,255,255,.08), transparent 42%),
+    linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.014) 52%, rgba(255,255,255,.045)),
+    rgba(2, 4, 8, .34);
   border: 1px solid var(--sm-glass-border);
   box-shadow:
-    0 22px 66px rgba(0,0,0,.46),
-    inset 0 1px 0 rgba(255,255,255,.18),
+    0 24px 72px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.24),
     inset 0 -1px 0 rgba(255,255,255,.04);
-  -webkit-backdrop-filter: blur(30px) saturate(185%) contrast(112%);
-  backdrop-filter: blur(30px) saturate(185%) contrast(112%);
+  -webkit-backdrop-filter: blur(34px) saturate(195%) contrast(116%);
+  backdrop-filter: blur(34px) saturate(195%) contrast(116%);
   overflow: hidden;
 }
 
@@ -1609,10 +1609,10 @@ h1, h2, h3 {
 .program-search-box:focus-within {
   border-color: var(--sm-glass-border-strong);
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.2), transparent 36%),
-    radial-gradient(circle at 86% 110%, rgba(255,226,178,.1), transparent 40%),
-    linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.016) 50%, rgba(255,255,255,.04)),
-    rgba(4, 7, 13, .56);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.26), transparent 38%),
+    radial-gradient(circle at 88% 110%, rgba(255,255,255,.1), transparent 42%),
+    linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.018) 52%, rgba(255,255,255,.055)),
+    rgba(3, 6, 12, .42);
   box-shadow:
     0 28px 86px rgba(0,0,0,.5),
     0 0 34px rgba(255,226,178,.04),
@@ -3932,12 +3932,21 @@ body.audio-player-open {
 
   .programs-search-shell {
     position: fixed;
-    top: calc(118px + env(safe-area-inset-top, 0px));
+    top: calc(92px + env(safe-area-inset-top, 0px));
     left: 14px;
     right: 14px;
     z-index: 720;
     width: auto;
     margin: 0;
+    transition: opacity .24s ease, transform .24s ease, filter .24s ease;
+    will-change: opacity, transform;
+  }
+
+  body.programs-search-hidden .programs-search-shell {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-18px) scale(.985);
+    filter: blur(2px);
   }
 
   .programs-hero h1 {

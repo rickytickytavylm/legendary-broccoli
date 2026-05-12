@@ -6,8 +6,8 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=38" />
-  <link rel="stylesheet" href="/css/nav.css?v=53" />
+  <link rel="stylesheet" href="/css/style.css?v=77" />
+  <link rel="stylesheet" href="/css/nav.css?v=57" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ─── Layout ─────────────────────────────────────── */
@@ -408,18 +408,19 @@
       line-height: 1.55;
     }
     .pro-card {
-      min-height: 260px;
+      min-height: 0;
       background:
         radial-gradient(circle at 20% 0, rgba(255,255,255,.13), transparent 34%),
         linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.035)),
         rgba(8,10,16,.78);
+      padding: 20px;
     }
     .pro-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 18px;
-      padding: 7px 11px;
+      margin-bottom: 12px;
+      padding: 6px 10px;
       border-radius: 999px;
       color: rgba(255,255,255,.78);
       background: rgba(255,255,255,.08);
@@ -432,14 +433,14 @@
     .pro-title {
       margin: 0;
       color: #fff;
-      font-size: clamp(28px, 4vw, 44px);
+      font-size: clamp(24px, 3.1vw, 34px);
       line-height: 1;
       letter-spacing: -.055em;
     }
     .pro-list {
       display: grid;
-      gap: 10px;
-      margin: 22px 0;
+      gap: 8px;
+      margin: 16px 0;
       padding: 0;
       list-style: none;
     }
@@ -448,7 +449,7 @@
       align-items: center;
       gap: 10px;
       color: rgba(255,255,255,.72);
-      font-size: 14px;
+      font-size: 13px;
     }
     .pro-list li::before {
       content: '';
@@ -606,7 +607,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-top: 14px;
+      margin-top: 10px;
       color: rgba(255,255,255,.44);
       font-size: 12px;
     }
@@ -704,9 +705,17 @@
       }
       .pro-card {
         min-height: 0;
+        padding: 18px;
       }
       .pro-title {
-        font-size: 30px;
+        font-size: 25px;
+      }
+      .pro-list {
+        gap: 7px;
+        margin: 14px 0;
+      }
+      .pro-list li {
+        font-size: 12.5px;
       }
       .rings-grid {
         gap: 10px;

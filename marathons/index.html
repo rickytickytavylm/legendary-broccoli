@@ -7,8 +7,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Марафоны — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=76" />
-  <link rel="stylesheet" href="/css/nav.css?v=53" />
+  <link rel="stylesheet" href="/css/style.css?v=77" />
+  <link rel="stylesheet" href="/css/nav.css?v=57" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -296,6 +296,10 @@
         }, { once: true });
       }
 
+      function renderLessonAI(lesson) {
+        if (window.CourseAI) window.CourseAI.load(lesson, { container: document.getElementById(containerId) });
+      }
+
       async function loadLesson(lesson) {
         try {
           showLoader();
@@ -309,7 +313,7 @@
           hideLoader();
           const nowEl = document.getElementById(nowId);
           if (nowEl) nowEl.textContent = lesson.ai_title || lesson.title;
-          if (window.CourseAI) window.CourseAI.load(lesson, { container: document.getElementById(containerId) });
+          renderLessonAI(lesson);
         } catch (e) {
           hideLoader();
         }
@@ -330,9 +334,13 @@
         item.addEventListener('click', () => {
           listEl.querySelectorAll('.lesson-item').forEach(i => i.classList.remove('active'));
           item.classList.add('active');
-          loadLesson(lessons[parseInt(item.dataset.idx)]);
+          const lesson = lessons[parseInt(item.dataset.idx)];
+          renderLessonAI(lesson);
+          loadLesson(lesson);
         });
       });
+
+      renderLessonAI(lessons[0]);
 
       if (window.setupVideoPreview) {
         window.setupVideoPreview(document.getElementById(containerId), {

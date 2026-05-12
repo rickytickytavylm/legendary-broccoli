@@ -692,10 +692,10 @@
   .single-video-wrap,
   .player-video-wrap {
     border-radius: 20px !important;
-    width: calc(100% + 12px) !important;
+    width: 100vw !important;
     max-width: none !important;
-    margin-left: -6px !important;
-    margin-right: -6px !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
     transform: translateZ(0) !important;
     -webkit-transform: translateZ(0) !important;
     overflow: hidden !important;
