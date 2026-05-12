@@ -1576,22 +1576,24 @@ h1, h2, h3 {
 
 .program-search-box {
   position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   min-height: 58px;
   border-radius: 26px;
   background:
-    radial-gradient(circle at 16% 0%, rgba(255,255,255,.2), transparent 36%),
-    radial-gradient(circle at 92% 116%, rgba(255,255,255,.08), transparent 42%),
-    linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.014) 52%, rgba(255,255,255,.045)),
-    rgba(2, 4, 8, .34);
-  border: 1px solid var(--sm-glass-border);
+    radial-gradient(circle at 18% -45%, rgba(255,255,255,.2), transparent 36%),
+    radial-gradient(circle at 96% 140%, rgba(255,255,255,.06), transparent 44%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012) 54%, rgba(255,255,255,.026)),
+    rgba(2, 4, 8, .16);
+  border: 1px solid rgba(255,255,255,.18);
   box-shadow:
-    0 24px 72px rgba(0,0,0,.5),
-    inset 0 1px 0 rgba(255,255,255,.24),
+    0 20px 58px rgba(0,0,0,.52),
+    0 1px 0 rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.2),
     inset 0 -1px 0 rgba(255,255,255,.04);
-  -webkit-backdrop-filter: blur(34px) saturate(195%) contrast(116%);
-  backdrop-filter: blur(34px) saturate(195%) contrast(116%);
+  -webkit-backdrop-filter: blur(38px) saturate(210%) contrast(118%) brightness(1.04);
+  backdrop-filter: blur(38px) saturate(210%) contrast(118%) brightness(1.04);
   overflow: hidden;
 }
 
@@ -1600,23 +1602,38 @@ h1, h2, h3 {
   position: absolute;
   inset: 1px;
   border-radius: inherit;
+  z-index: -1;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.13), transparent 54%),
-    linear-gradient(90deg, rgba(255,255,255,.045), transparent 28%, rgba(255,255,255,.05));
+    linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.018) 44%, rgba(255,255,255,.035)),
+    linear-gradient(105deg, rgba(255,255,255,.08), transparent 32%, rgba(255,255,255,.045));
+}
+
+.program-search-box::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 7px;
+  height: 1px;
+  z-index: -1;
+  border-radius: 999px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent);
+  opacity: .7;
 }
 
 .program-search-box:focus-within {
-  border-color: var(--sm-glass-border-strong);
+  border-color: rgba(255,255,255,.28);
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.26), transparent 38%),
-    radial-gradient(circle at 88% 110%, rgba(255,255,255,.1), transparent 42%),
-    linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.018) 52%, rgba(255,255,255,.055)),
-    rgba(3, 6, 12, .42);
+    radial-gradient(circle at 18% -45%, rgba(255,255,255,.27), transparent 38%),
+    radial-gradient(circle at 96% 140%, rgba(255,255,255,.08), transparent 46%),
+    linear-gradient(180deg, rgba(255,255,255,.066), rgba(255,255,255,.014) 54%, rgba(255,255,255,.035)),
+    rgba(2, 4, 8, .2);
   box-shadow:
-    0 28px 86px rgba(0,0,0,.5),
-    0 0 34px rgba(255,226,178,.04),
-    inset 0 1px 0 rgba(255,255,255,.24);
+    0 26px 82px rgba(0,0,0,.54),
+    0 0 34px rgba(255,255,255,.035),
+    inset 0 1px 0 rgba(255,255,255,.26);
 }
 
 .program-search-box svg {
