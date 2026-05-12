@@ -707,12 +707,31 @@ function ensureAudioMode(video, slug) {
       seekToAudioTime(base + Number(button.dataset.audioSeek || 0));
     });
   });
-  progressTrack?.addEventListener('click', (event) => {
+  function seekFromProgressEvent(event) {
     const total = isNativeTrackMode() ? nativeDuration : audio.duration;
     if (!total) return;
     const rect = progressTrack.getBoundingClientRect();
     const pct = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
     seekToAudioTime(pct * total);
+  }
+
+  progressTrack?.addEventListener('click', seekFromProgressEvent);
+  progressTrack?.addEventListener('pointerdown', (event) => {
+    if (!progressTrack || event.button > 0) return;
+    event.preventDefault();
+    progressTrack.setPointerCapture?.(event.pointerId);
+    seekFromProgressEvent(event);
+    const onMove = (moveEvent) => seekFromProgressEvent(moveEvent);
+    const onUp = (upEvent) => {
+      seekFromProgressEvent(upEvent);
+      progressTrack.releasePointerCapture?.(event.pointerId);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp, { once: true });
+    window.addEventListener('pointercancel', onUp, { once: true });
   });
   card.querySelectorAll('[data-audio-track]').forEach((button) => {
     button.addEventListener('click', () => {

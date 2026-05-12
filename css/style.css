@@ -144,8 +144,8 @@ video::-internal-media-interstitial-panel { display: none !important; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 45%, rgba(0,0,0,.12), rgba(0,0,0,.5) 52%, rgba(0,0,0,.78)),
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.64));
+    radial-gradient(circle at 50% 45%, rgba(0,0,0,.04), rgba(0,0,0,.28) 54%, rgba(0,0,0,.5)),
+    linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.34));
 }
 
 .video-preview-overlay.hidden {
@@ -668,8 +668,6 @@ h1, h2, h3 {
 .btn-secondary,
 .btn-nav-outline,
 .btn-glass,
-.back-link-glass,
-.back-link--glass,
 .ai-toggle-btn,
 .ai-outline-btn,
 .lesson-action-btn,
@@ -697,8 +695,6 @@ h1, h2, h3 {
 .btn-secondary::after,
 .btn-nav-outline::after,
 .btn-glass::after,
-.back-link-glass::after,
-.back-link--glass::after,
 .ai-toggle-btn::after,
 .ai-outline-btn::after,
 .lesson-action-btn::after,
@@ -721,8 +717,6 @@ h1, h2, h3 {
 .btn-secondary:hover,
 .btn-nav-outline:hover,
 .btn-glass:hover,
-.back-link-glass:hover,
-.back-link--glass:hover,
 .ai-toggle-btn:hover,
 .ai-toggle-btn:focus-visible,
 .ai-outline-btn:hover,
@@ -1732,6 +1726,10 @@ h1, h2, h3 {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
+.back-link--glass::after {
+  display: none;
+}
+
 .back-link--glass:hover {
   color: var(--text-1);
   background: rgba(255, 255, 255, 0.1);
@@ -1769,6 +1767,10 @@ h1, h2, h3 {
   box-shadow: 0 12px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
   margin-bottom: 24px;
   transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+}
+
+.back-link-glass::after {
+  display: none;
 }
 
 .back-link-glass:hover {
@@ -2840,11 +2842,19 @@ h1, h2, h3 {
 
 .audio-icon-pause,
 .audio-mode-card.is-playing .audio-icon-play {
-  display: none;
+  display: none !important;
 }
 
 .audio-mode-card.is-playing .audio-icon-pause {
-  display: block;
+  display: block !important;
+}
+
+.audio-mode-card:not(.is-playing) .audio-icon-play {
+  display: block !important;
+}
+
+.audio-mode-card:not(.is-playing) .audio-icon-pause {
+  display: none !important;
 }
 
 .audio-mode-sheet {
