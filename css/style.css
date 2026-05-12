@@ -3940,7 +3940,7 @@ body.audio-player-open {
   }
 
   .programs-main {
-    padding-top: calc(188px + env(safe-area-inset-top, 0px));
+    padding-top: calc(176px + env(safe-area-inset-top, 0px));
   }
 
   .programs-hero {
@@ -3949,7 +3949,7 @@ body.audio-player-open {
 
   .programs-search-shell {
     position: fixed;
-    top: calc(92px + env(safe-area-inset-top, 0px));
+    top: calc(106px + env(safe-area-inset-top, 0px));
     left: 14px;
     right: 14px;
     z-index: 720;
@@ -3964,6 +3964,43 @@ body.audio-player-open {
     pointer-events: none;
     transform: translateY(-18px) scale(.985);
     filter: blur(2px);
+  }
+
+  .programs-page .program-search-box {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.048), rgba(255,255,255,.008) 48%, rgba(255,255,255,.018)),
+      rgba(255,255,255,.026) !important;
+    border-color: rgba(255,255,255,.2) !important;
+    box-shadow:
+      0 18px 58px rgba(0,0,0,.58),
+      inset 0 1px 0 rgba(255,255,255,.26),
+      inset 0 -1px 0 rgba(255,255,255,.045),
+      inset 16px 0 38px rgba(255,255,255,.025),
+      inset -18px 0 42px rgba(255,255,255,.018) !important;
+    -webkit-backdrop-filter: blur(42px) saturate(220%) contrast(120%) brightness(1.08) !important;
+    backdrop-filter: blur(42px) saturate(220%) contrast(120%) brightness(1.08) !important;
+  }
+
+  .programs-page .program-search-box::before {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,0) 42%),
+      linear-gradient(100deg, rgba(255,255,255,.055), transparent 34%, rgba(255,255,255,.035)) !important;
+  }
+
+  .programs-page .program-search-box::after {
+    left: 18px;
+    right: 18px;
+    top: 6px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.62), transparent) !important;
+    opacity: .78 !important;
+  }
+
+  .programs-page .program-search-box:focus-within {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.01) 48%, rgba(255,255,255,.024)),
+      rgba(255,255,255,.035) !important;
+    border-color: rgba(255,255,255,.28) !important;
   }
 
   .programs-hero h1 {
