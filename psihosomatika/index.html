@@ -225,6 +225,15 @@
   <script src="/js/course-ai.js?v=5"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
   <script>
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        }[char]));
+      }
     (async function() {
       const lessonsList = document.getElementById('lessons-list');
       const videoContainer = document.getElementById('video-container');
@@ -321,8 +330,8 @@
           <div class="lesson-item ${idx === 0 ? 'active' : ''}" data-idx="${idx}">
             <div class="lesson-number">${idx + 1}</div>
             <div class="lesson-info">
-              <div class="lesson-title">${lesson.title}</div>
-              <div class="lesson-dur">${lesson.duration || ''}</div>
+              <div class="lesson-title">${escapeHtml(lesson.title)}</div>
+              <div class="lesson-dur">${escapeHtml(lesson.duration || '')}</div>
             </div>
           </div>
         `).join('');

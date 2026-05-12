@@ -1,3 +1,13 @@
+
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
+}
 document.addEventListener('DOMContentLoaded', async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get('slug');
@@ -141,8 +151,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       el.innerHTML = `
         <div class="lesson-number">${i + 1}</div>
         <div class="lesson-info">
-          <div class="lesson-title">${l.title}</div>
-          <div class="lesson-dur">${l.duration || ''}</div>
+          <div class="lesson-title">${escapeHtml(l.title)}</div>
+          <div class="lesson-dur">${escapeHtml(l.duration || '')}</div>
         </div>
       `;
       el.addEventListener('click', () => {

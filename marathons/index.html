@@ -230,6 +230,16 @@
       return 'уроков';
     }
 
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }[char]));
+    }
+
     function getSectionDescription(section) {
       const descriptions = {
         stress: 'Марафон о том, как распознавать стресс, снижать внутреннее напряжение и возвращать себе ощущение управляемости. Подходит как практичный вход в тему саморегуляции и восстановления.',
@@ -324,8 +334,8 @@
         <div class="lesson-item ${i === 0 ? 'active' : ''}" data-idx="${i}">
           <div class="lesson-number">${i + 1}</div>
           <div class="lesson-info">
-            <div class="lesson-title">${l.title}</div>
-            <div class="lesson-dur">${l.duration || ''}</div>
+            <div class="lesson-title">${escapeHtml(l.title)}</div>
+            <div class="lesson-dur">${escapeHtml(l.duration || '')}</div>
           </div>
         </div>
       `).join('');
@@ -362,27 +372,27 @@
 
         container.innerHTML = data.map((section, idx) => `
           ${idx > 0 ? '<hr class="section-divider">' : ''}
-          <div class="marathon-section" id="section-${section.id}">
+          <div class="marathon-section" id="section-${escapeHtml(section.id)}">
             <div class="marathon-section-header">
-              <h2 class="marathon-section-title">${section.title}</h2>
+              <h2 class="marathon-section-title">${escapeHtml(section.title)}</h2>
               <div class="marathon-section-meta">${section.lessons.length} ${pluralLessons(section.lessons.length)} · Марафон</div>
-              <p class="marathon-section-desc">${getSectionDescription(section)}</p>
+              <p class="marathon-section-desc">${escapeHtml(getSectionDescription(section))}</p>
             </div>
             <div class="course-layout">
               <div class="course-main">
-                <div class="video-container" id="container-${section.id}">
-                  <video id="video-${section.id}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
+                <div class="video-container" id="container-${escapeHtml(section.id)}">
+                  <video id="video-${escapeHtml(section.id)}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;" oncontextmenu="return false;"></video>
                   <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
-                  <div class="video-loader hidden" id="loader-${section.id}"><div class="apple-spinner">${'<span></span>'.repeat(8)}</div></div>
+                  <div class="video-loader hidden" id="loader-${escapeHtml(section.id)}"><div class="apple-spinner">${'<span></span>'.repeat(8)}</div></div>
                 </div>
-                <div class="now-playing" id="now-${section.id}"></div>
+                <div class="now-playing" id="now-${escapeHtml(section.id)}"></div>
               </div>
               <div class="course-sidebar">
                 <div class="sidebar-header">
                   <h3>Уроки</h3>
                   <span class="lessons-count">${section.lessons.length} ${pluralLessons(section.lessons.length)}</span>
                 </div>
-                <div id="list-${section.id}"></div>
+                <div id="list-${escapeHtml(section.id)}"></div>
               </div>
             </div>
           </div>

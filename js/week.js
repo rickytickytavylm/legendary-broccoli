@@ -1,3 +1,13 @@
+
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[char]));
+}
 (async function() {
   const params = new URLSearchParams(window.location.search);
   const programSlug = params.get('program') || 'dermer';
@@ -82,8 +92,8 @@
         row.innerHTML = `
           <div class="l-num">${i+1}</div>
           <div class="l-info">
-            <div class="l-title">${l.title}</div>
-            <div class="l-dur">${l.duration || ''}</div>
+            <div class="l-title">${escapeHtml(l.title)}</div>
+            <div class="l-dur">${escapeHtml(l.duration || '')}</div>
           </div>
         `;
         row.addEventListener('click', () => {

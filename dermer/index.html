@@ -188,6 +188,15 @@
   <script src="/js/nav.js?v=67"></script>
   <script src="/js/course-ai.js?v=5"></script>
   <script>
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        }[char]));
+      }
     window.refreshAuthUI = function(user) {
       const btn = document.getElementById('nav-auth-btn');
       const link = document.getElementById('nav-account-link');
@@ -305,8 +314,8 @@
             item.innerHTML = `
               <div class="lesson-number">${li + 1}</div>
               <div class="lesson-info">
-                <div class="lesson-title">${lesson.title}</div>
-                <div class="lesson-dur">${lesson.duration || ''}</div>
+                <div class="lesson-title">${escapeHtml(lesson.title)}</div>
+                <div class="lesson-dur">${escapeHtml(lesson.duration || '')}</div>
               </div>
             `;
             item.addEventListener('click', () => {

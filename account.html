@@ -928,6 +928,28 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=58"></script>
   <script>
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }[char]));
+  }
+
+  function safeInternalPath(value, fallback = '#') {
+    const path = String(value || '').trim();
+    if (!path || !path.startsWith('/') || path.startsWith('//') || /[\r\n"'<>]/.test(path)) return fallback;
+    return path;
+  }
+
+  function safeAssetPath(value, fallback = '/assets/webp/courses.webp') {
+    const path = String(value || '').trim();
+    if (!path.startsWith('/assets/') || /[\r\n"'<>\\]/.test(path)) return fallback;
+    return path;
+  }
+
   window.addEventListener('auth:change', () => {
     document.getElementById('auth-gate').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
@@ -1062,9 +1084,9 @@
       // Continue learning — show static course cards (extend later from API)
       const courseItems = Array.isArray(courses) ? courses : [];
       document.getElementById('lessons-scroll').innerHTML = courseItems.map((c, i) => `
-        <a class="course-tile" href="${c.href}" style="--thumb:url('${c.thumb}')">
+        <a class="course-tile" href="${escapeHtml(safeInternalPath(c.href))}" style="--thumb:url('${escapeHtml(safeAssetPath(c.thumb))}')">
           <div class="course-tile-content">
-            <p class="course-tile-title">${c.title}</p>
+            <p class="course-tile-title">${escapeHtml(c.title)}</p>
             <p class="course-tile-sub">${isPro ? 'Полный доступ' : 'Первый урок открыт'}</p>
           </div>
         </a>
@@ -1102,7 +1124,7 @@
               <span style="font-size:11px;color:rgba(255,255,255,.3)">${new Date(e.created_at).toLocaleDateString('ru-RU')}</span>
               ${e.mood ? `<span style="font-size:16px">${moodEmoji[e.mood]}</span>` : ''}
             </div>
-            <p style="margin:0;font-size:13px;color:rgba(255,255,255,.7);line-height:1.5">${e.content || ''}</p>
+            <p style="margin:0;font-size:13px;color:rgba(255,255,255,.7);line-height:1.5">${escapeHtml(e.content || '')}</p>
           </div>
         `).join('');
       } else {

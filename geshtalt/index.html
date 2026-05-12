@@ -484,11 +484,11 @@
 
       function renderLessonsList() {
         lessonsList.innerHTML = lessons.map((lesson, idx) => `
-          <div class="lesson-item ${idx === 0 ? 'active' : ''}" data-id="${lesson.id}">
+          <div class="lesson-item ${idx === 0 ? 'active' : ''}" data-id="${escapeHtml(lesson.id)}">
             <div class="lesson-number">${idx + 1}</div>
             <div class="lesson-info">
-              <div class="lesson-title">${lessonDisplayTitle(lesson)}</div>
-              <div class="lesson-dur">${lesson.duration || ''}</div>
+              <div class="lesson-title">${escapeHtml(lessonDisplayTitle(lesson))}</div>
+              <div class="lesson-dur">${escapeHtml(lesson.duration || '')}</div>
             </div>
           </div>
         `).join('');
