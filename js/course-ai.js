@@ -137,7 +137,7 @@
         <div class="ai-expanded">
           <h4 class="ai-section-title">Саммари урока</h4>
           <div class="ai-rich-text">${escapeHtml(ai.summary || '')}</div>
-          <h4 class="ai-section-title" style="margin-top:20px">Что важно вынести</h4>
+          <h4 class="ai-section-title u-mt-20">Что важно вынести</h4>
           <div class="ai-rich-text">${escapeHtml(ai.lesson_card?.why_watch || ai.audience_value || '')}</div>
         </div>
       </div>

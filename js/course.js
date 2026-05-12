@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!res.lesson) throw new Error('No lesson data');
 
       if (!document.getElementById('course-video')) {
-        videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;border-radius:16px" oncontextmenu="return false;"></video>';
+        videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" class="u-video-wide" oncontextmenu="return false;"></video>';
       }
       const video = document.getElementById('course-video');
 

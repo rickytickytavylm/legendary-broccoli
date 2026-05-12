@@ -85,7 +85,7 @@
 
       function restoreVideoEl() {
         if (!document.getElementById('course-video')) {
-          videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" style="width:100%;height:100%;display:block;border-radius:16px;"></video><div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>';
+          videoContainer.innerHTML = '<video id="course-video" controls preload="metadata" class="u-video-fill"></video><div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>';
         }
         return document.getElementById('course-video');
       }
@@ -181,7 +181,7 @@
             <div class="ai-expanded" id="ai-expanded">
               <h4 class="ai-section-title">Саммари урока</h4>
               <div class="ai-rich-text">${escapeHtml(ai.summary || '')}</div>
-              <h4 class="ai-section-title" style="margin-top:20px">Что важно вынести</h4>
+              <h4 class="ai-section-title u-mt-20">Что важно вынести</h4>
               <div class="ai-rich-text">${escapeHtml(ai.lesson_card && ai.lesson_card.why_watch ? ai.lesson_card.why_watch : '')}</div>
             </div>
           </div>

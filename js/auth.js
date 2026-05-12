@@ -112,7 +112,7 @@
             <span class="auth-yandex-mark">Я</span>
             <span>Войти через Яндекс</span>
           </button>
-          <p class="auth-error" id="auth-error" style="display:none"></p>
+          <p class="auth-error" id="auth-error" class="u-hidden"></p>
           <p class="auth-note" id="auth-note">Telegram подтвердит профиль и сразу откроет доступ.</p>
         </form>
       </div>
@@ -168,7 +168,7 @@
     preview.style.display = 'none';
     document.getElementById('auth-form').innerHTML = `
       <input type="tel" class="auth-input" name="phone" placeholder="+7 999 123-45-67" required autocomplete="tel" inputmode="tel">
-      <p class="auth-error" id="auth-error" style="display:none"></p>
+      <p class="auth-error" id="auth-error" class="u-hidden"></p>
       <button type="submit" class="auth-btn" id="auth-submit">Получить код</button>
       <button type="button" class="auth-secondary" id="auth-back-to-tg">Назад к Telegram</button>
       <p class="auth-note" id="auth-note">Код действует 5 минут. Если SMS не придёт, через минуту можно запросить звонок с кодом.</p>
@@ -323,7 +323,7 @@
     preview.style.display = 'block';
     document.getElementById('auth-form').innerHTML = `
       <input type="text" class="auth-input code" name="code" placeholder="${'0'.repeat(pendingCodeLength)}" required autocomplete="one-time-code" inputmode="numeric" maxlength="${pendingCodeLength}">
-      <p class="auth-error" id="auth-error" style="display:none"></p>
+      <p class="auth-error" id="auth-error" class="u-hidden"></p>
       <button type="submit" class="auth-btn" id="auth-submit">Войти</button>
       ${isCall ? '' : '<button type="button" class="auth-secondary" id="auth-call" disabled>Получить код звонком через 1:00</button>'}
       <button type="button" class="auth-secondary" id="auth-back">Изменить номер</button>

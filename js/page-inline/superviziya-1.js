@@ -131,7 +131,7 @@ function escapeHtml(value) {
             <div class="course-layout">
               <div class="course-main">
                 <div class="video-container" id="container-${escapeHtml(section.id)}">
-                  <video id="video-${escapeHtml(section.id)}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;"></video>
+                  <video id="video-${escapeHtml(section.id)}" preload="none" class="u-video-fill"></video>
                   <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
                   <button class="video-placeholder ${idx === 0 ? 'hidden' : ''}" id="placeholder-${escapeHtml(section.id)}" type="button" style="background-image:url('/assets/webp/supervision.webp')" aria-label="Открыть видео">
                     <span class="video-placeholder-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
@@ -155,7 +155,7 @@ function escapeHtml(value) {
 
         data.forEach((section, idx) => initSection(section, idx === 0));
       } catch (e) {
-        container.innerHTML = '<p style="color:rgba(255,255,255,.5);padding:40px 0">Не удалось загрузить данные</p>';
+        container.innerHTML = '<p class="u-error-muted">Не удалось загрузить данные</p>';
       }
     }
 

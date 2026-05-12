@@ -84,7 +84,7 @@
                 <span class="week-badge">Неделя ${week.week}</span>
                 <span class="week-title">${week.title}</span>
               </div>
-              <div style="display:flex;align-items:center;gap:8px;">
+              <div class="u-flex-center-gap">
                 <span class="week-count">${week.lessons.length} ур.</span>
                 <svg class="week-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
@@ -161,6 +161,6 @@
           }
         }
       } catch(e) {
-        lessonsList.innerHTML = '<p style="padding:20px;color:rgba(255,255,255,.4);font-size:14px;">Не удалось загрузить уроки</p>';
+        lessonsList.innerHTML = '<p class="u-error-list">Не удалось загрузить уроки</p>';
       }
     })();

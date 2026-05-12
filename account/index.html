@@ -751,7 +751,7 @@
 <body class="dark-theme">
 
   <!-- ─── NOT LOGGED IN ─────────────────────────────────── -->
-  <div id="auth-gate" class="auth-gate" style="display:none">
+  <div id="auth-gate" class="auth-gate u-hidden">
     <div class="auth-gate-card">
       <div class="auth-gate-icon">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5">
@@ -769,7 +769,7 @@
   </div>
 
   <!-- ─── DASHBOARD ─────────────────────────────────────── -->
-  <div id="dashboard" style="display:none">
+  <div id="dashboard" class="u-hidden">
     <div class="profile-wrap">
 
       <header class="profile-hero">
@@ -811,7 +811,7 @@
           <section class="profile-card">
             <h3 class="profile-card-title">Дни в приложении</h3>
             <p class="profile-muted">Активность за неделю в стиле Apple Watch.</p>
-            <div class="rings-grid" style="margin-top:16px">
+            <div class="rings-grid u-mt-16">
               <div class="ring-card">
                 <div class="ring" id="ring-streak" style="--value:0"><span id="streak-val">0</span></div>
                 <p class="ring-label">Серия</p>
@@ -828,8 +828,8 @@
                 <p class="ring-sub" id="ai-usage-desc">сообщения</p>
               </div>
             </div>
-            <div id="streak-dots" style="display:none"></div>
-            <div id="bar-chart" style="display:none"></div>
+            <div id="streak-dots" class="u-hidden"></div>
+            <div id="bar-chart" class="u-hidden"></div>
           </section>
 
           <section class="profile-card">
@@ -850,21 +850,21 @@
               <div class="mini-stat"><span>Просмотрено</span><span><span id="goal-target">0</span> уроков</span></div>
               <div class="mini-stat"><span>Практика</span><span id="practice-time">0 мин</span></div>
             </div>
-            <div id="gratitude-cnt" style="display:none">0</div>
-            <div id="mindfulness-pct" style="display:none">Free</div>
-            <div id="goal-desc" style="display:none"></div>
+            <div id="gratitude-cnt" class="u-hidden">0</div>
+            <div id="mindfulness-pct" class="u-hidden">Free</div>
+            <div id="goal-desc" class="u-hidden"></div>
           </section>
 
           <section class="profile-card">
             <h3 class="profile-card-title">Telegram</h3>
             <p class="profile-muted" id="telegram-desc">Открытый канал доступен всем. Закрытый канал входит в Система Pro.</p>
             <p class="mood-last" id="diary-last"></p>
-            <a href="#" class="profile-secondary" id="open-diary-btn" style="margin-top:16px">Открыть Telegram</a>
+            <a href="#" class="profile-secondary" id="open-diary-btn" class="u-mt-16">Открыть Telegram</a>
           </section>
 
           <section class="profile-card">
             <h3 class="profile-card-title">Быстрые действия</h3>
-            <div class="profile-actions" style="margin-top:14px">
+            <div class="profile-actions u-mt-14">
               <a class="profile-secondary" href="/ai/">Открыть AI</a>
               <a class="profile-secondary" href="/feed/">Лента</a>
               <a class="profile-secondary" href="/shorts/">Shorts</a>
@@ -872,7 +872,7 @@
             <p class="reminders-empty" id="reminders-text">Продолжайте с любого раздела или откройте ленту.</p>
           </section>
 
-          <div class="logout-row" style="margin-top:0">
+          <div class="logout-row u-mt-0">
             <button class="btn-logout" id="logout-btn" type="button">Выйти из аккаунта</button>
           </div>
         </aside>

@@ -71,7 +71,7 @@ function escapeHtml(value) {
 
       function restoreVideoEl() {
         if (!document.getElementById('course-video')) {
-          videoContainer.innerHTML = '<video id="course-video" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;"></video><div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div><div class="video-loader hidden" id="video-loader"><div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>';
+          videoContainer.innerHTML = '<video id="course-video" preload="none" class="u-video-fill"></video><div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div><div class="video-loader hidden" id="video-loader"><div class="apple-spinner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>';
         }
         return document.getElementById('course-video');
       }

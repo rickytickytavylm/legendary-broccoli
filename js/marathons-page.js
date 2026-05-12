@@ -135,7 +135,7 @@ async function initMarathons() {
         <div class="course-layout">
           <div class="course-main">
             <div class="video-container" id="container-${escapeHtml(section.id)}">
-              <video id="video-${escapeHtml(section.id)}" preload="none" style="width:100%;height:100%;display:block;border-radius:16px;"></video>
+              <video id="video-${escapeHtml(section.id)}" preload="none" class="u-video-fill"></video>
               <div class="watermark"><img src="/assets/webp/logo2.webp" alt="" loading="lazy" decoding="async"></div>
               <div class="video-loader hidden" id="loader-${escapeHtml(section.id)}"><div class="apple-spinner">${'<span></span>'.repeat(8)}</div></div>
             </div>
@@ -162,7 +162,7 @@ async function initMarathons() {
       });
     }
   } catch (e) {
-    container.innerHTML = '<p style="color:rgba(255,255,255,.5);padding:40px 0">Не удалось загрузить марафоны</p>';
+    container.innerHTML = '<p class="u-error-muted">Не удалось загрузить марафоны</p>';
   }
 }
 
