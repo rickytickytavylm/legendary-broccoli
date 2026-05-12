@@ -340,6 +340,15 @@ video::-internal-media-interstitial-panel { display: none !important; }
   --purple: #8B5CF6;
   --green: #34C759;
 
+  /* Liquid glass preset */
+  --sm-glass-bg: rgba(3, 4, 8, 0.28);
+  --sm-glass-bg-strong: rgba(4, 6, 12, 0.42);
+  --sm-glass-border: rgba(255, 255, 255, 0.16);
+  --sm-glass-border-strong: rgba(255, 255, 255, 0.24);
+  --sm-glass-light: rgba(255, 255, 255, 0.22);
+  --sm-glass-warm: rgba(255, 226, 178, 0.08);
+  --sm-glass-shadow: 0 18px 52px rgba(0, 0, 0, 0.42);
+
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   
@@ -352,6 +361,59 @@ video::-internal-media-interstitial-panel { display: none !important; }
   /* Transitions */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── System Liquid Glass Primitives ───────────────────────── */
+.sm-liquid-surface,
+.sm-liquid-button,
+.sm-liquid-badge,
+.sm-liquid-input {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--sm-glass-border);
+  background:
+    radial-gradient(circle at 22% 0%, rgba(255,255,255,.16), transparent 34%),
+    radial-gradient(circle at 82% 110%, var(--sm-glass-warm), transparent 38%),
+    linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.012) 48%, rgba(255,255,255,.034)),
+    var(--sm-glass-bg);
+  -webkit-backdrop-filter: blur(26px) saturate(180%) contrast(112%);
+  backdrop-filter: blur(26px) saturate(180%) contrast(112%);
+  box-shadow:
+    var(--sm-glass-shadow),
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -1px 0 rgba(255,255,255,.035);
+}
+
+.sm-liquid-surface::before,
+.sm-liquid-button::before,
+.sm-liquid-badge::before,
+.sm-liquid-input::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.16), transparent 38%),
+    linear-gradient(115deg, rgba(255,255,255,.08), transparent 34%, rgba(255,255,255,.05));
+}
+
+.sm-liquid-button,
+.sm-liquid-badge {
+  color: rgba(255,255,255,.94);
+  text-shadow: 0 1px 10px rgba(0,0,0,.45);
+}
+
+.sm-liquid-button:hover,
+.sm-liquid-button:focus-visible {
+  border-color: var(--sm-glass-border-strong);
+  background:
+    radial-gradient(circle at 22% 0%, rgba(255,255,255,.22), transparent 36%),
+    radial-gradient(circle at 82% 110%, rgba(255,226,178,.12), transparent 40%),
+    linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.018) 48%, rgba(255,255,255,.044)),
+    var(--sm-glass-bg-strong);
 }
 
 * {
@@ -602,6 +664,81 @@ h1, h2, h3 {
 
 .btn-tg { color: #fff; }
 .btn-tg svg { color: var(--blue); }
+
+.btn-secondary,
+.btn-nav-outline,
+.btn-glass,
+.back-link-glass,
+.back-link--glass,
+.ai-toggle-btn,
+.ai-outline-btn,
+.lesson-action-btn,
+.btn-support-outline,
+.btn-footer-telegram,
+.audio-mode-close,
+.audio-mode-menu {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: var(--sm-glass-border);
+  background:
+    radial-gradient(circle at 22% 0%, rgba(255,255,255,.16), transparent 34%),
+    radial-gradient(circle at 82% 110%, var(--sm-glass-warm), transparent 38%),
+    linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.012) 48%, rgba(255,255,255,.034)),
+    var(--sm-glass-bg);
+  -webkit-backdrop-filter: blur(26px) saturate(180%) contrast(112%);
+  backdrop-filter: blur(26px) saturate(180%) contrast(112%);
+  box-shadow:
+    0 18px 52px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -1px 0 rgba(255,255,255,.035);
+}
+
+.btn-secondary::after,
+.btn-nav-outline::after,
+.btn-glass::after,
+.back-link-glass::after,
+.back-link--glass::after,
+.ai-toggle-btn::after,
+.ai-outline-btn::after,
+.lesson-action-btn::after,
+.btn-support-outline::after,
+.btn-footer-telegram::after,
+.audio-mode-close::after,
+.audio-mode-menu::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 16%;
+  top: 1px;
+  height: 1px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent);
+  opacity: .58;
+}
+
+.btn-secondary:hover,
+.btn-nav-outline:hover,
+.btn-glass:hover,
+.back-link-glass:hover,
+.back-link--glass:hover,
+.ai-toggle-btn:hover,
+.ai-toggle-btn:focus-visible,
+.ai-outline-btn:hover,
+.ai-outline-btn:focus-visible,
+.lesson-action-btn:hover,
+.btn-support-outline:hover,
+.btn-footer-telegram:hover,
+.audio-mode-close:hover,
+.audio-mode-menu:hover {
+  border-color: var(--sm-glass-border-strong);
+  background:
+    radial-gradient(circle at 22% 0%, rgba(255,255,255,.22), transparent 36%),
+    radial-gradient(circle at 82% 110%, rgba(255,226,178,.12), transparent 40%),
+    linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.018) 48%, rgba(255,255,255,.044)),
+    var(--sm-glass-bg-strong);
+}
 
 /* ── Hero ─────────────────────────────────────────────────── */
 .hero {
@@ -1450,17 +1587,17 @@ h1, h2, h3 {
   min-height: 58px;
   border-radius: 26px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.10), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.058), rgba(255,255,255,.02)),
-    rgba(4, 6, 10, .66);
-  border: 1px solid rgba(255,255,255,.105);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.14), transparent 34%),
+    radial-gradient(circle at 86% 110%, rgba(255,226,178,.07), transparent 38%),
+    linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.012) 50%, rgba(255,255,255,.035)),
+    rgba(3, 5, 10, .46);
+  border: 1px solid var(--sm-glass-border);
   box-shadow:
-    0 18px 54px rgba(0,0,0,.42),
-    0 1px 0 rgba(255,255,255,.08),
-    inset 0 1px 0 rgba(255,255,255,.13),
+    0 22px 66px rgba(0,0,0,.46),
+    inset 0 1px 0 rgba(255,255,255,.18),
     inset 0 -1px 0 rgba(255,255,255,.04);
-  -webkit-backdrop-filter: blur(34px) saturate(170%);
-  backdrop-filter: blur(34px) saturate(170%);
+  -webkit-backdrop-filter: blur(30px) saturate(185%) contrast(112%);
+  backdrop-filter: blur(30px) saturate(185%) contrast(112%);
   overflow: hidden;
 }
 
@@ -1476,15 +1613,16 @@ h1, h2, h3 {
 }
 
 .program-search-box:focus-within {
-  border-color: rgba(255,255,255,.18);
+  border-color: var(--sm-glass-border-strong);
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.14), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)),
-    rgba(4, 7, 12, .76);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.2), transparent 36%),
+    radial-gradient(circle at 86% 110%, rgba(255,226,178,.1), transparent 40%),
+    linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.016) 50%, rgba(255,255,255,.04)),
+    rgba(4, 7, 13, .56);
   box-shadow:
     0 28px 86px rgba(0,0,0,.5),
-    0 0 0 1px rgba(255,255,255,.04),
-    inset 0 1px 0 rgba(255,255,255,.2);
+    0 0 34px rgba(255,226,178,.04),
+    inset 0 1px 0 rgba(255,255,255,.24);
 }
 
 .program-search-box svg {
@@ -1782,29 +1920,57 @@ h1, h2, h3 {
   z-index: 2;
   display: inline-flex;
   align-items: center;
+  isolation: isolate;
+  overflow: hidden;
   width: fit-content;
   margin: 0 0 18px;
-  padding: 8px 14px;
+  padding: 9px 15px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.2);
+  border: 1px solid rgba(255,255,255,.18);
   background:
-    radial-gradient(circle at 28% 0%, rgba(255,255,255,.34), transparent 42%),
-    linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.045) 52%, rgba(255,255,255,.08)),
-    rgba(255,255,255,.055);
-  color: rgba(255,255,255,.92);
+    radial-gradient(circle at 24% 0%, rgba(255,255,255,.18), transparent 36%),
+    radial-gradient(circle at 78% 100%, rgba(255,219,170,.08), transparent 42%),
+    linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.012) 48%, rgba(255,255,255,.035)),
+    rgba(2,3,7,.28);
+  color: rgba(255,255,255,.96);
   font-size: 11px;
   font-weight: 850;
   line-height: 1;
   letter-spacing: .12em;
   text-transform: uppercase;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) contrast(110%);
-  backdrop-filter: blur(22px) saturate(180%) contrast(110%);
+  -webkit-backdrop-filter: blur(26px) saturate(190%) contrast(116%);
+  backdrop-filter: blur(26px) saturate(190%) contrast(116%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.28),
-    inset 0 -1px 0 rgba(255,255,255,.06),
-    0 12px 34px rgba(0,0,0,.28),
-    0 0 34px rgba(255,226,178,.08);
-  text-shadow: 0 1px 8px rgba(0,0,0,.35);
+    inset 0 -1px 0 rgba(255,255,255,.035),
+    inset 0 0 22px rgba(255,255,255,.035),
+    0 14px 36px rgba(0,0,0,.36),
+    0 0 26px rgba(255,226,178,.055);
+  text-shadow: 0 1px 10px rgba(0,0,0,.5);
+}
+
+.ai-lesson-badge::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.13), transparent 36%),
+    linear-gradient(90deg, rgba(255,255,255,.055), transparent 42%, rgba(255,255,255,.04));
+  opacity: .78;
+}
+
+.ai-lesson-badge::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 18%;
+  top: 1px;
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.8), transparent);
+  opacity: .72;
 }
 
 .ai-lesson-inner::before {
@@ -2123,21 +2289,25 @@ h1, h2, h3 {
     margin-top: 34px;
   }
 
-  .course-ai-section-head {
-    padding-inline: 6px;
-    margin-bottom: 14px;
-  }
-
   .course-ai-section-head-analysis {
     margin-top: 34px;
     margin-bottom: 14px;
   }
 
+  .ai-timeline-panel,
+  .ai-lesson-panel {
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
   .ai-lesson-timeline,
   .ai-lesson-inner {
-    width: calc(100% + 24px);
-    margin-left: -12px;
-    margin-right: -12px;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .ai-lesson-panel {
@@ -2162,7 +2332,8 @@ h1, h2, h3 {
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
-    margin-bottom: 10px;
+    margin: 0 18px 10px;
+    padding-inline: 0;
   }
 
   .course-ai-section-head p {
@@ -2259,12 +2430,18 @@ h1, h2, h3 {
   display: inline-flex;
   gap: 4px;
   padding: 4px;
-  border: 1px solid rgba(255,255,255,.14);
+  border: 1px solid var(--sm-glass-border);
   border-radius: 999px;
-  background: rgba(10, 11, 14, .38);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  backdrop-filter: blur(22px) saturate(160%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 14px 36px rgba(0,0,0,.32);
+  background:
+    radial-gradient(circle at 24% 0%, rgba(255,255,255,.13), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.01)),
+    rgba(3,4,8,.34);
+  -webkit-backdrop-filter: blur(24px) saturate(175%) contrast(112%);
+  backdrop-filter: blur(24px) saturate(175%) contrast(112%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 -1px 0 rgba(255,255,255,.035),
+    0 14px 36px rgba(0,0,0,.34);
 }
 
 .media-mode-switch button {
@@ -2281,9 +2458,14 @@ h1, h2, h3 {
 .media-mode-switch button.active {
   color: rgba(255,255,255,.96);
   background:
-    radial-gradient(circle at 28% 0%, rgba(255,255,255,.22), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.07));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 8px 20px rgba(0,0,0,.2);
+    radial-gradient(circle at 28% 0%, rgba(255,255,255,.24), transparent 36%),
+    radial-gradient(circle at 84% 110%, rgba(255,226,178,.1), transparent 42%),
+    linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.035)),
+    rgba(255,255,255,.035);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    inset 0 -1px 0 rgba(255,255,255,.035),
+    0 8px 20px rgba(0,0,0,.24);
 }
 
 .video-container.audio-inline-active video,
@@ -3784,16 +3966,22 @@ body.audio-player-open {
     position: static;
   }
 
+  .course-main,
+  .course-layout {
+    min-width: 0;
+    overflow: visible;
+  }
+
   .course-title {
     font-size: 1.6rem;
   }
 
   .video-container {
     border-radius: var(--r-sm);
-    width: calc(100% + 24px);
+    width: 100vw;
     max-width: none;
-    margin-left: -12px;
-    margin-right: -12px;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     aspect-ratio: 16 / 10;
     min-height: clamp(246px, 64vw, 365px);
     transform: translateZ(0);
@@ -3801,9 +3989,9 @@ body.audio-player-open {
   }
 
   .video-container.video-text-preview-container {
-    width: calc(100% + 24px);
-    margin-left: -12px;
-    margin-right: -12px;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
   }
 
   .video-container.video-text-preview-container .video-preview-overlay {
@@ -3858,10 +4046,10 @@ body.audio-player-open {
 
   .single-video-wrap,
   .player-video-wrap {
-    width: calc(100% + 24px);
+    width: 100vw;
     max-width: none;
-    margin-left: -12px;
-    margin-right: -12px;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
   }
@@ -3871,6 +4059,8 @@ body.audio-player-open {
   .course-page-shell,
   .marathon-page {
     padding-top: 18px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
     padding-bottom: 28px !important;
   }
 
