@@ -312,6 +312,22 @@
       cursor: pointer; transition: all .2s;
     }
     .btn-logout:hover { border-color: rgba(255,255,255,.25); color: rgba(255,255,255,.7); }
+    .btn-delete-account {
+      background: rgba(255, 80, 80, .06);
+      border-color: rgba(255, 95, 95, .18);
+      color: rgba(255, 150, 150, .78);
+    }
+    .btn-delete-account:hover {
+      border-color: rgba(255, 115, 115, .34);
+      color: rgba(255, 190, 190, .94);
+      background: rgba(255, 80, 80, .09);
+    }
+    .account-danger-note {
+      margin: 10px 0 0;
+      color: rgba(255,255,255,.34);
+      font-size: 12px;
+      line-height: 1.5;
+    }
 
     /* ─── Responsive ────────────────────────────────── */
     @media (max-width: 900px) {
@@ -759,8 +775,8 @@
           <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
         </svg>
       </div>
-      <h2>Личный кабинет</h2>
-      <p>Войдите, чтобы видеть свой прогресс,<br>дневник и статистику обучения.</p>
+      <h2>Профиль пути</h2>
+      <p>Войдите, чтобы сохранить маршрут,<br>прогресс и рекомендации системы.</p>
       <button class="btn-enter" id="gate-login-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
         Войти в систему
@@ -774,9 +790,9 @@
 
       <header class="profile-hero">
         <div>
-          <p class="profile-eyebrow">Личный кабинет</p>
+          <p class="profile-eyebrow">Профиль пути</p>
           <h1 class="profile-title" id="dash-greeting">Добрый день</h1>
-          <p class="profile-subtitle" id="dash-sub">Продолжайте движение к своим целям</p>
+          <p class="profile-subtitle" id="dash-sub">Ваш доступ, маршрут и настройки аккаунта</p>
         </div>
         <div class="profile-avatar" id="avatar-btn">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -834,8 +850,8 @@
 
           <section class="profile-card">
             <div class="section-head" style="margin-bottom:14px">
-              <h3>Доступные курсы</h3>
-              <a href="/courses/">Все курсы</a>
+              <h3>Ваши направления</h3>
+              <a href="/path/">Путь</a>
             </div>
             <div class="course-grid" id="lessons-scroll"></div>
           </section>
@@ -865,16 +881,24 @@
           <section class="profile-card">
             <h3 class="profile-card-title">Быстрые действия</h3>
             <div class="profile-actions u-mt-14">
+              <a class="profile-secondary" href="/path/">Путь</a>
+              <a class="profile-secondary" href="/practices/">Практики</a>
               <a class="profile-secondary" href="/ai/">Открыть AI</a>
-              <a class="profile-secondary" href="/feed/">Лента</a>
-              <a class="profile-secondary" href="/shorts/">Shorts</a>
+              <a class="profile-secondary" href="/community/">Сообщество</a>
             </div>
-            <p class="reminders-empty" id="reminders-text">Продолжайте с любого раздела или откройте ленту.</p>
+            <p class="reminders-empty" id="reminders-text">Продолжайте маршрут или откройте практики под текущее состояние.</p>
           </section>
 
           <div class="logout-row u-mt-0">
             <button class="btn-logout" id="logout-btn" type="button">Выйти из аккаунта</button>
           </div>
+
+          <section class="profile-card">
+            <h3 class="profile-card-title">Аккаунт</h3>
+            <p class="profile-muted">Можно полностью удалить профиль, прогресс, историю AI и привязки входа.</p>
+            <button class="btn-logout btn-delete-account" id="delete-account-btn" type="button">Удалить аккаунт</button>
+            <p class="account-danger-note">После удаления вход через тот же Яндекс, Telegram, телефон или почту создаст новый аккаунт.</p>
+          </section>
         </aside>
       </div>
 

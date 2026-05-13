@@ -78,8 +78,8 @@ function escapeHtml(value) {
       document.getElementById('dash-greeting').textContent = greet + ', ' + name;
 
       document.getElementById('dash-sub').textContent = isPro
-        ? 'У вас открыт весь контент, закрытый Telegram и расширенный AI.'
-        : 'Первые видео открыты. Остальное доступно в Система Pro.';
+        ? 'Путь, программы, закрытый Telegram и расширенный AI открыты.'
+        : 'Путь сохраняется. Первые видео открыты, полный доступ — в Система Pro.';
 
       // Streak
       const streak = stats.streak_days || 0;
@@ -172,7 +172,7 @@ function escapeHtml(value) {
         <a class="course-tile" href="${escapeHtml(safeInternalPath(c.href))}" style="--thumb:url('${escapeHtml(safeAssetPath(c.thumb))}')">
           <div class="course-tile-content">
             <p class="course-tile-title">${escapeHtml(c.title)}</p>
-            <p class="course-tile-sub">${isPro ? 'Полный доступ' : 'Первый урок открыт'}</p>
+            <p class="course-tile-sub">${isPro ? 'В вашем пути' : 'Можно начать с первого урока'}</p>
           </div>
         </a>
       `).join('');
@@ -251,7 +251,33 @@ function escapeHtml(value) {
     window.location.href = '/';
   }
 
+  async function deleteAccount() {
+    const firstConfirm = confirm('Удалить аккаунт полностью? Будут удалены профиль, прогресс, история AI и привязки входа.');
+    if (!firstConfirm) return;
+    const secondConfirm = confirm('Это действие нельзя отменить. При следующем входе через тот же Яндекс или Telegram будет создан новый аккаунт.');
+    if (!secondConfirm) return;
+
+    const button = document.getElementById('delete-account-btn');
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Удаляем...';
+    }
+
+    try {
+      await window.API.deleteAccount();
+      window.API.clearLocalState();
+      window.location.href = '/';
+    } catch (err) {
+      alert(err.error || 'Не удалось удалить аккаунт. Попробуйте еще раз.');
+      if (button) {
+        button.disabled = false;
+        button.textContent = 'Удалить аккаунт';
+      }
+    }
+  }
+
   document.getElementById('logout-btn')?.addEventListener('click', doLogout);
+  document.getElementById('delete-account-btn')?.addEventListener('click', deleteAccount);
   document.getElementById('diary-close-btn')?.addEventListener('click', closeDiary);
   document.getElementById('diary-cancel-btn')?.addEventListener('click', closeDiary);
   document.getElementById('diary-save-btn')?.addEventListener('click', saveDiary);

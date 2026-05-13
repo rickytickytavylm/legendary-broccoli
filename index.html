@@ -9,8 +9,8 @@
 <title>Система — Руслан Молодцов</title>
   <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия и практики." />
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=76" />
-  <link rel="stylesheet" href="/css/nav.css?v=56" />
+  <link rel="stylesheet" href="/css/style.css?v=83" />
+  <link rel="stylesheet" href="/css/nav.css?v=68" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -46,7 +46,85 @@
 
   <main class="main-content">
     
-    <!-- Hero Section (Framer style) -->
+    <section class="system-intro-screen" id="system-intro" aria-label="Вход в систему">
+      <div class="system-intro-orb" aria-hidden="true"></div>
+      <div class="system-intro-card">
+        <img src="/assets/webp/logo2.webp" alt="Система" class="system-intro-logo" loading="eager" decoding="async">
+        <p class="system-intro-kicker">Личная система сопровождения</p>
+        <h1>Войти в свой путь</h1>
+        <p>Несколько коротких вопросов помогут собрать первый маршрут и понять, с чего начать сегодня.</p>
+        <div class="system-intro-actions">
+          <button class="btn btn-primary btn-lg" type="button" data-onboarding-start>Начать путь</button>
+          <button class="btn btn-secondary btn-lg" type="button" data-auth-open="login">Войти</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="onboarding-flow hidden" id="onboarding-flow" aria-label="Настройка пути">
+      <div class="onboarding-card">
+        <div class="onboarding-progress"><span data-onboarding-progress></span></div>
+        <p class="hub-kicker" data-onboarding-step-label>Шаг 1 из 5</p>
+        <h2 data-onboarding-title>Что сейчас важнее?</h2>
+        <p data-onboarding-desc>Выберите ближайший запрос. Это не диагноз, а точка входа в материалы.</p>
+        <div class="onboarding-options" data-onboarding-options></div>
+        <div class="onboarding-actions">
+          <button class="btn btn-secondary" type="button" data-onboarding-back>Назад</button>
+          <button class="btn btn-primary" type="button" data-onboarding-next>Дальше</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="today-screen hidden" id="today-screen" aria-label="Сегодня">
+      <div class="today-hero-card">
+        <div>
+          <p class="hub-kicker">Сегодня</p>
+          <h1 data-today-title>Ваш следующий шаг</h1>
+          <p data-today-subtitle>Система соберет маршрут вокруг вашего запроса и предложит первое действие.</p>
+        </div>
+        <div class="today-progress-pill"><span data-today-progress>День 1</span></div>
+      </div>
+
+      <div class="today-grid">
+        <article class="today-main-card">
+          <p class="hub-kicker">Следующий шаг</p>
+          <h2 data-today-step-title>Мягкий вход в систему</h2>
+          <p data-today-step-desc>Начните с короткого видео, а затем сохраните наблюдение через AI-помощника.</p>
+          <div class="today-actions">
+            <a class="btn btn-primary" href="/practices/">Начать</a>
+            <a class="btn btn-secondary" href="/ai/">Спросить AI</a>
+          </div>
+        </article>
+
+        <article class="today-checkin-card">
+          <p class="hub-kicker">Check-in</p>
+          <h3>Как вы сейчас?</h3>
+          <div class="today-checkin-options" data-today-checkin>
+            <button type="button">Спокойно</button>
+            <button type="button">Напряжение</button>
+            <button type="button">Тревога</button>
+            <button type="button">Усталость</button>
+            <button type="button">Не понимаю</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="today-rail">
+        <a href="/path/" class="today-mini-card">
+          <span>Путь</span>
+          <strong>Посмотреть маршрут</strong>
+        </a>
+        <a href="/community/" class="today-mini-card">
+          <span>Сообщество</span>
+          <strong>Группы и эфиры</strong>
+        </a>
+        <a href="/programs/" class="today-mini-card">
+          <span>Каталог</span>
+          <strong>Все программы</strong>
+        </a>
+      </div>
+    </section>
+
+    <!-- Hero Section (legacy catalog preview) -->
     <section class="hero">
       <div class="hero-content">
         <div class="hero-top-text fade-up">АВТОРСКИЙ ПРОЕКТ</div>

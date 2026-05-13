@@ -200,6 +200,18 @@ class ApiClient {
     } catch (e) {}
   }
 
+  clearLocalState() {
+    this.logout();
+    try {
+      Object.keys(localStorage)
+        .filter((key) => key.startsWith('sistema:'))
+        .forEach((key) => localStorage.removeItem(key));
+      Object.keys(sessionStorage)
+        .filter((key) => key.startsWith('sistema:'))
+        .forEach((key) => sessionStorage.removeItem(key));
+    } catch (e) {}
+  }
+
   isLoggedIn() {
     return !!this.accessToken;
   }
@@ -308,6 +320,9 @@ class ApiClient {
   getPlans()       { return this.request('GET', '/payment/plans'); }
   createPayment(data) { return this.request('POST', '/payment/create', data); }
   getSubscription() { return this.request('GET', '/payment/subscription'); }
+
+  // --- Profile ---
+  deleteAccount() { return this.request('DELETE', '/profile/account'); }
 
   // --- AI ---
   getAiUsage() { return this.request('GET', '/ai/usage'); }

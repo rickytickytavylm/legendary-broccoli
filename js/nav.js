@@ -36,27 +36,27 @@
     {
       id: 'home',
       href: '/',
-      label: 'Главная',
+      label: 'Сегодня',
       icon: icon('<path d="m3 10.5 9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/>')
     },
     {
-      id: 'programs',
-      href: '/programs/',
-      label: 'Программы',
-      labelShort: 'Программы',
-      icon: icon('<rect width="7" height="7" x="3" y="3" rx="1.8"/><rect width="7" height="7" x="14" y="3" rx="1.8"/><rect width="7" height="7" x="14" y="14" rx="1.8"/><rect width="7" height="7" x="3" y="14" rx="1.8"/>')
+      id: 'path',
+      href: '/path/',
+      label: 'Путь',
+      icon: icon('<path d="M4 19c4-8 12-6 16-14"/><path d="M5 19h4"/><path d="M15 5h5v5"/>')
     },
     {
-      id: 'feed',
-      href: '/feed/',
-      label: 'Лента',
-      icon: icon('<path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/>')
+      id: 'practices',
+      href: '/practices/',
+      label: 'Практики',
+      icon: icon('<path d="M12 21c4.5-3.5 7-7 7-11a7 7 0 1 0-14 0c0 4 2.5 7.5 7 11Z"/><path d="M9 10h6"/><path d="M12 7v6"/>')
     },
     {
-      id: 'shorts',
-      href: '/shorts/',
-      label: 'Shorts',
-      icon: icon('<path d="m15 6-6 4 6 4V6Z"/><path d="M3 7.5A3.5 3.5 0 0 1 6.5 4h11A3.5 3.5 0 0 1 21 7.5v9a3.5 3.5 0 0 1-3.5 3.5h-11A3.5 3.5 0 0 1 3 16.5v-9Z"/>')
+      id: 'community',
+      href: '/community/',
+      label: 'Сообщество',
+      labelShort: 'Сообщество',
+      icon: icon('<path d="M16 11a4 4 0 1 0-8 0"/><path d="M3 21a7 7 0 0 1 18 0"/><path d="M18 8a3 3 0 0 1 3 3"/><path d="M6 8a3 3 0 0 0-3 3"/>')
     },
     {
       id: 'ai',
