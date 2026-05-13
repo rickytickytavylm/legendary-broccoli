@@ -318,7 +318,7 @@
         width: 100%;
         height: var(--ai-viewport-height, 100svh);
         min-height: var(--ai-viewport-height, 100svh);
-        padding: calc(126px + env(safe-area-inset-top, 0px)) 14px calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 18px + env(safe-area-inset-bottom, 0px));
+        padding: calc(112px + env(safe-area-inset-top, 0px)) 14px calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 18px + env(safe-area-inset-bottom, 0px));
         justify-content: flex-start;
         overflow: hidden;
       }
@@ -405,6 +405,7 @@
 
       body.ai-has-messages .ai-conversation {
         padding-top: 0;
+        margin-top: -42px;
       }
 
       body.ai-has-messages .ai-chat-panel {
