@@ -16,33 +16,33 @@
 </head>
 <body class="dark-theme ux-route-page">
   <main class="ux-page-shell">
-    <section class="ux-page-hero">
+    <section class="ux-page-hero ux-visual-hero" style="--ux-bg:url('/assets/webp/scenario.webp')">
       <p class="hub-kicker">Путь</p>
       <h1>Личная траектория</h1>
-      <p>Здесь собирается маршрут пользователя: первый шаг, текущая тема, прогресс и рекомендации без ощущения каталога.</p>
+      <p>Маршрут показывает, что делать сейчас, что будет следующим и где подключается AI, практика или сообщество.</p>
     </section>
 
-    <section class="ux-path-grid">
-      <article class="ux-path-card ux-path-card-primary">
-        <span>Текущий этап</span>
-        <h2>Мягкий вход</h2>
-        <p>Начните с короткого материала, затем отметьте состояние и сохраните наблюдение через AI.</p>
-        <a href="/practices/" class="btn btn-primary">Продолжить</a>
+    <section class="ux-path-timeline">
+      <article class="ux-path-stage active" style="--ux-bg:url('/assets/webp/ai_back.webp')">
+        <span>01 / сейчас</span>
+        <h2>Стабилизировать вход</h2>
+        <p>Один короткий материал или аудио без перегруза. Цель — начать, а не пройти всё сразу.</p>
+        <a href="/practices/" class="ux-button ux-button-primary">Открыть практики</a>
       </article>
-      <article class="ux-path-card">
-        <span>Следом</span>
-        <h3>Понять запрос</h3>
-        <p>Система предложит материалы по состоянию, а не по названию курса.</p>
+      <article class="ux-path-stage" style="--ux-bg:url('/assets/webp/courses.webp')">
+        <span>02 / понять</span>
+        <h3>Разобрать запрос</h3>
+        <p>Гештальт, психосоматика, отношения или коммуникации подключаются после первого шага.</p>
       </article>
-      <article class="ux-path-card">
-        <span>После</span>
-        <h3>Закрепить практикой</h3>
-        <p>Короткое действие, которое можно выполнить сегодня.</p>
+      <article class="ux-path-stage" style="--ux-bg:url('/assets/webp/open_all.webp')">
+        <span>03 / закрепить</span>
+        <h3>Сделать практику</h3>
+        <p>Короткое действие, check-in и заметка через AI, чтобы материал стал личным опытом.</p>
       </article>
-      <article class="ux-path-card">
-        <span>Опора</span>
-        <h3>Сообщество</h3>
-        <p>Группы, эфиры и поддержка без перегруза.</p>
+      <article class="ux-path-stage" style="--ux-bg:url('/assets/webp/hope.webp')">
+        <span>04 / поддержка</span>
+        <h3>Подключить людей</h3>
+        <p>Сообщество, эфиры или специалист появляются тогда, когда они действительно уместны.</p>
       </article>
     </section>
   </main>

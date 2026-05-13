@@ -17,6 +17,9 @@
   <link rel="manifest" href="/manifest.json" />
 </head>
 <body class="dark-theme">
+  <div class="system-splash" id="system-splash" aria-hidden="true">
+    <img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="system-splash-logo" loading="eager" decoding="async">
+  </div>
 
   <!-- Навигация (Desktop & Mobile Top) -->
   <nav class="navbar">
@@ -47,35 +50,51 @@
   <main class="main-content">
     
     <section class="system-intro-screen" id="system-intro" aria-label="Вход в систему">
-      <div class="system-intro-orb" aria-hidden="true"></div>
       <div class="system-intro-card">
-        <img src="/assets/webp/logo2.webp" alt="Система" class="system-intro-logo" loading="eager" decoding="async">
+        <img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="system-intro-logo" loading="eager" decoding="async">
         <p class="system-intro-kicker">Личная система сопровождения</p>
-        <h1>Войти в свой путь</h1>
-        <p>Несколько коротких вопросов помогут собрать первый маршрут и понять, с чего начать сегодня.</p>
+        <h1>Собрать путь</h1>
+        <p>Не выбирайте из десятков материалов. Ответьте на несколько вопросов, и Система предложит спокойный первый шаг.</p>
         <div class="system-intro-actions">
-          <button class="btn btn-primary btn-lg" type="button" data-onboarding-start>Начать путь</button>
-          <button class="btn btn-secondary btn-lg" type="button" data-auth-open="login">Войти</button>
+          <button class="ux-button ux-button-primary" type="button" data-onboarding-start>Настроить путь</button>
+          <button class="ux-button ux-button-secondary" type="button" data-auth-open="login">Войти</button>
         </div>
       </div>
     </section>
 
     <section class="onboarding-flow hidden" id="onboarding-flow" aria-label="Настройка пути">
       <div class="onboarding-card">
-        <div class="onboarding-progress"><span data-onboarding-progress></span></div>
-        <p class="hub-kicker" data-onboarding-step-label>Шаг 1 из 5</p>
-        <h2 data-onboarding-title>Что сейчас важнее?</h2>
-        <p data-onboarding-desc>Выберите ближайший запрос. Это не диагноз, а точка входа в материалы.</p>
-        <div class="onboarding-options" data-onboarding-options></div>
-        <div class="onboarding-actions">
-          <button class="btn btn-secondary" type="button" data-onboarding-back>Назад</button>
-          <button class="btn btn-primary" type="button" data-onboarding-next>Дальше</button>
+        <div class="onboarding-topbar">
+          <button class="onboarding-back-link" type="button" data-onboarding-back>Назад</button>
+          <button class="onboarding-skip" type="button" data-onboarding-skip>Пропустить</button>
+        </div>
+        <div class="onboarding-art" data-onboarding-art>
+          <span class="onboarding-orbit orbit-a"></span>
+          <span class="onboarding-orbit orbit-b"></span>
+          <span class="onboarding-orbit orbit-c"></span>
+          <span class="onboarding-orbit orbit-d"></span>
+        </div>
+        <div class="onboarding-sheet">
+          <div class="onboarding-progress-dots" data-onboarding-dots></div>
+          <p class="hub-kicker" data-onboarding-step-label>Шаг 1 из 6</p>
+          <h2 data-onboarding-title>Что сейчас важнее?</h2>
+          <p data-onboarding-desc>Выберите ближайший запрос. Это не диагноз, а точка входа в материалы.</p>
+          <p class="onboarding-select-hint" data-onboarding-hint>Можно выбрать несколько вариантов</p>
+          <div class="onboarding-options" data-onboarding-options></div>
+          <div class="onboarding-result-card hidden" data-onboarding-result>
+            <span data-result-kicker>Стартовый маршрут</span>
+            <strong data-result-title>Мягкий вход</strong>
+            <p data-result-desc>Система соберет первый шаг после ответов.</p>
+          </div>
+          <div class="onboarding-actions">
+            <button class="ux-button ux-button-primary" type="button" data-onboarding-next>Дальше</button>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="today-screen hidden" id="today-screen" aria-label="Сегодня">
-      <div class="today-hero-card">
+      <div class="today-hero-card" data-today-hero style="--ux-bg:url('/assets/webp/new_main.webp')">
         <div>
           <p class="hub-kicker">Сегодня</p>
           <h1 data-today-title>Ваш следующий шаг</h1>
@@ -85,17 +104,17 @@
       </div>
 
       <div class="today-grid">
-        <article class="today-main-card">
+        <article class="today-main-card" data-today-main style="--ux-bg:url('/assets/webp/ai_back.webp')">
           <p class="hub-kicker">Следующий шаг</p>
           <h2 data-today-step-title>Мягкий вход в систему</h2>
           <p data-today-step-desc>Начните с короткого видео, а затем сохраните наблюдение через AI-помощника.</p>
           <div class="today-actions">
-            <a class="btn btn-primary" href="/practices/">Начать</a>
-            <a class="btn btn-secondary" href="/ai/">Спросить AI</a>
+            <a class="ux-button ux-button-primary" href="/practices/" data-today-primary>Начать</a>
+            <a class="ux-button ux-button-secondary" href="/ai/">Спросить AI</a>
           </div>
         </article>
 
-        <article class="today-checkin-card">
+        <article class="today-checkin-card" style="--ux-bg:url('/assets/webp/open_all.webp')">
           <p class="hub-kicker">Check-in</p>
           <h3>Как вы сейчас?</h3>
           <div class="today-checkin-options" data-today-checkin>
@@ -109,15 +128,15 @@
       </div>
 
       <div class="today-rail">
-        <a href="/path/" class="today-mini-card">
+        <a href="/path/" class="today-mini-card" style="--ux-bg:url('/assets/webp/scenario.webp')">
           <span>Путь</span>
           <strong>Посмотреть маршрут</strong>
         </a>
-        <a href="/community/" class="today-mini-card">
+        <a href="/community/" class="today-mini-card" style="--ux-bg:url('/assets/webp/hope.webp')">
           <span>Сообщество</span>
           <strong>Группы и эфиры</strong>
         </a>
-        <a href="/programs/" class="today-mini-card">
+        <a href="/programs/" class="today-mini-card" style="--ux-bg:url('/assets/webp/open_all.webp')">
           <span>Каталог</span>
           <strong>Все программы</strong>
         </a>
