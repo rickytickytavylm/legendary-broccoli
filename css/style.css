@@ -123,7 +123,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
 
 .video-preview-overlay {
   position: absolute;
-  inset: 0;
+  inset: -1px;
   z-index: 8;
   border: 0;
   border-radius: inherit;
@@ -784,6 +784,19 @@ h1, h2, h3 {
   text-align: left;
   padding-top: clamp(140px, 18vh, 190px);
   padding-bottom: clamp(54px, 8vh, 92px);
+  overflow: hidden;
+}
+
+.hero-courses::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 34px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(5,5,6,0), var(--bg-main) 88%);
 }
 
 .hero-courses .hero-content {
@@ -2461,6 +2474,8 @@ h1, h2, h3 {
     inset 0 1px 0 rgba(255,255,255,.16),
     inset 0 -1px 0 rgba(255,255,255,.035),
     0 14px 36px rgba(0,0,0,.34);
+  position: relative;
+  z-index: 12;
 }
 
 .media-mode-switch button {
@@ -4240,6 +4255,23 @@ body.audio-player-open {
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
   }
+
+.video-container {
+  background: #000;
+}
+
+.video-container .video-mode-toggle,
+.video-container .preview-mode-switch,
+.video-container [data-preview-mode],
+.video-container [data-media-mode] {
+  transform: translateZ(0);
+}
+
+.video-container:has(.preview-mode-switch),
+.video-container:has(.video-mode-toggle),
+.video-container:has([data-media-mode]) {
+  overflow: hidden;
+}
 
   .support-grid { grid-template-columns: 1fr; }
 

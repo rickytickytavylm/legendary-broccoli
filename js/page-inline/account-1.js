@@ -21,21 +21,36 @@ function escapeHtml(value) {
   }
 
   window.addEventListener('auth:change', () => {
-    document.getElementById('auth-gate').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
+    showDashboardShell();
     loadDashboard();
   });
   window.refreshAuthUI = () => {
-    document.getElementById('auth-gate').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
+    showDashboardShell();
     loadDashboard();
   };
+
+  function setPanelVisible(element, visible, display = 'block') {
+    if (!element) return;
+    element.classList.toggle('u-hidden', !visible);
+    element.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    element.style.display = visible ? display : 'none';
+  }
+
+  function showAuthGate() {
+    setPanelVisible(document.getElementById('dashboard'), false);
+    setPanelVisible(document.getElementById('auth-gate'), true, 'flex');
+  }
+
+  function showDashboardShell() {
+    setPanelVisible(document.getElementById('auth-gate'), false);
+    setPanelVisible(document.getElementById('dashboard'), true, 'block');
+  }
 
   async function initProfile() {
     const isLoggedIn = window.API && window.API.isLoggedIn();
 
     if (!isLoggedIn) {
-      document.getElementById('auth-gate').style.display = 'flex';
+      showAuthGate();
       document.getElementById('gate-login-btn').addEventListener('click', () => {
         // trigger auth modal from auth.js
         if (window.openAuthModal) window.openAuthModal();
@@ -44,7 +59,7 @@ function escapeHtml(value) {
       return;
     }
 
-    document.getElementById('dashboard').style.display = 'block';
+    showDashboardShell();
     await loadDashboard();
   }
 

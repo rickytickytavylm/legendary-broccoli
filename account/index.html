@@ -6,7 +6,7 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=77" />
+  <link rel="stylesheet" href="/css/style.css?v=81" />
   <link rel="stylesheet" href="/css/nav.css?v=57" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -751,7 +751,7 @@
 <body class="dark-theme">
 
   <!-- ─── NOT LOGGED IN ─────────────────────────────────── -->
-  <div id="auth-gate" class="auth-gate u-hidden">
+  <div id="auth-gate" class="auth-gate u-hidden" aria-hidden="true">
     <div class="auth-gate-card">
       <div class="auth-gate-icon">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5">
@@ -769,7 +769,7 @@
   </div>
 
   <!-- ─── DASHBOARD ─────────────────────────────────────── -->
-  <div id="dashboard" class="u-hidden">
+  <div id="dashboard" class="u-hidden" aria-hidden="true">
     <div class="profile-wrap">
 
       <header class="profile-hero">
@@ -859,7 +859,7 @@
             <h3 class="profile-card-title">Telegram</h3>
             <p class="profile-muted" id="telegram-desc">Открытый канал доступен всем. Закрытый канал входит в Система Pro.</p>
             <p class="mood-last" id="diary-last"></p>
-            <a href="#" class="profile-secondary" id="open-diary-btn" class="u-mt-16">Открыть Telegram</a>
+            <a href="#" class="profile-secondary u-mt-16" id="open-diary-btn">Открыть Telegram</a>
           </section>
 
           <section class="profile-card">

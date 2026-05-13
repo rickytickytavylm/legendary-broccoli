@@ -77,6 +77,7 @@ async function loadAiHistory() {
       addMessage(message.content || '', message.role === 'assistant' ? 'assistant' : 'user');
     });
     syncAiIntroState();
+    scrollAiToBottom(40);
   } catch {}
 }
 
