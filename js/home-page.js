@@ -191,6 +191,7 @@ function playSplashSound() {
 
 function showNewHomeState(state) {
   if (state === 'splash') playSplashSound();
+  document.documentElement.classList.remove('home-boot-today', 'home-boot-first-run');
   document.body.classList.toggle('home-splash-active', state === 'splash');
   document.body.classList.toggle('home-first-run-active', state === 'intro' || state === 'onboarding' || state === 'splash');
   document.body.classList.toggle('home-today-active', state === 'today');

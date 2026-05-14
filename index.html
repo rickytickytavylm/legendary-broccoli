@@ -15,6 +15,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="manifest" href="/manifest.json" />
+  <script>
+    (function() {
+      try {
+        var completed = localStorage.getItem('sistema:onboarding-complete') === 'true';
+        if (completed) document.documentElement.classList.add('home-boot-today');
+        else document.documentElement.classList.add('home-boot-first-run');
+      } catch (e) {
+        document.documentElement.classList.add('home-boot-first-run');
+      }
+    })();
+  </script>
 </head>
 <body class="dark-theme">
   <div class="system-splash" id="system-splash" aria-hidden="true">
@@ -74,13 +85,13 @@
             <p>Выберите удобный способ входа. После авторизации Система сохранит маршрут и рекомендации.</p>
           </div>
           <div class="auth-gateway-actions">
-            <button class="ios-auth-button ios-auth-button-primary" type="button" id="auth-telegram-btn" data-telegram-login>
+            <button class="ios-auth-button ios-auth-button-primary" type="button" id="gateway-telegram-btn" data-telegram-login>
               <span>Войти через Telegram</span>
             </button>
-            <button class="ios-auth-button ios-auth-button-secondary" type="button" id="auth-yandex-btn" data-yandex-login>
+            <button class="ios-auth-button ios-auth-button-secondary" type="button" id="gateway-yandex-btn" data-yandex-login>
               <span>Войти через Яндекс</span>
             </button>
-            <p class="auth-error" id="auth-error"></p>
+            <p class="auth-error" id="gateway-auth-error"></p>
           </div>
         </div>
       </div>
@@ -131,11 +142,11 @@
         <p class="hub-kicker">Check-in</p>
         <h3>Как вы сейчас?</h3>
         <div class="today-checkin-options" data-today-checkin>
-          <button type="button"><span aria-hidden="true">≈</span>Спокойно</button>
-          <button type="button"><span aria-hidden="true">ϟ</span>Напряжение</button>
-          <button type="button"><span aria-hidden="true">▵</span>Тревога</button>
-          <button type="button"><span aria-hidden="true">▭</span>Усталость</button>
-          <button type="button"><span aria-hidden="true">?</span>Не понимаю</button>
+          <button type="button"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 13c3-3 5-3 8 0s5 3 8 0"/><path d="M4 8c3-3 5-3 8 0s5 3 8 0"/></svg></span>Спокойно</button>
+          <button type="button"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m13 2-8 12h7l-1 8 8-12h-7l1-8Z"/></svg></span>Напряжение</button>
+          <button type="button"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5 4 19h16L12 5Z"/></svg></span>Тревога</button>
+          <button type="button"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12v8H6z"/><path d="M9 8V6h6v2"/></svg></span>Усталость</button>
+          <button type="button"><span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 9a2.7 2.7 0 1 1 4.4 2.1c-1 .7-1.9 1.3-1.9 2.9"/><path d="M12 18h.01"/><circle cx="12" cy="12" r="9"/></svg></span>Не понимаю</button>
         </div>
       </article>
 
