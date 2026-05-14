@@ -45,8 +45,8 @@ function addMessage(text, role = 'user', options = {}) {
     actions.className = 'ai-limit-actions';
     const link = document.createElement('a');
     link.className = 'ai-limit-pro-btn';
-    link.href = '/path/';
-    link.textContent = 'Вернуться к пути';
+    link.href = '/';
+    link.textContent = 'Вернуться на сегодня';
     actions.appendChild(link);
     bubble.appendChild(actions);
   }

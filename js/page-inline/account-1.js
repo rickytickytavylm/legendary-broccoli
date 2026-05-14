@@ -271,7 +271,7 @@ function escapeHtml(value) {
   document.getElementById('diary-save-btn')?.addEventListener('click', saveDiary);
   document.getElementById('pro-close-btn')?.addEventListener('click', closeProModal);
   document.getElementById('yookassa-placeholder-btn')?.addEventListener('click', () => {
-    window.location.href = '/path/';
+    window.location.href = '/programs/';
   });
 
   function pluralDays(n) {

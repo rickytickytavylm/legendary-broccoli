@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#000000" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-<title>AI-РїРѕРјРѕС‰РЅРёРє вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°</title>
+<title>AI-помощник — Система Молодцова</title>
   <link rel="stylesheet" href="/css/style.css?v=84" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -484,34 +484,34 @@
   <main class="main-content ai-main">
     <div class="ai-page">
       <div class="ai-shell">
-        <a href="/" class="back-link-glass ai-back-mobile" aria-label="РќР°Р·Р°Рґ">
+        <a href="/" class="back-link-glass ai-back-mobile" aria-label="Назад">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          РќР°Р·Р°Рґ
+          Назад
         </a>
 
         <div class="ai-hero">
-          <div class="ai-kicker">AI-РїРѕРјРѕС‰РЅРёРє</div>
-          <h1 class="ai-title">AI-РїРѕРјРѕС‰РЅРёРє<br>РїРѕ РјР°С‚РµСЂРёР°Р»Р°Рј СЃРёСЃС‚РµРјС‹</h1>
+          <div class="ai-kicker">AI-помощник</div>
+          <h1 class="ai-title">AI-помощник<br>по материалам системы</h1>
           <p class="ai-desc">
-            РџРѕРјРѕРіР°РµС‚ РїРѕРґРѕР±СЂР°С‚СЊ РєСѓСЂСЃ, РЅР°Р№С‚Рё РїСЂР°РєС‚РёРєСѓ Рё СЃРІСЏР·Р°С‚СЊ РІРѕРїСЂРѕСЃ СЃ РјР°С‚РµСЂРёР°Р»Р°РјРё РЎРёСЃС‚РµРјС‹ РњРѕР»РѕРґС†РѕРІР°.
+            Помогает подобрать курс, найти практику и связать вопрос с материалами Системы Молодцова.
           </p>
-          <div class="ai-usage-pill" id="ai-usage-pill">Р’РѕР№РґРёС‚Рµ, С‡С‚РѕР±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ AI</div>
+          <div class="ai-usage-pill" id="ai-usage-pill">Войдите, чтобы использовать AI</div>
         </div>
 
-        <section class="ai-chat-panel" aria-label="Р§Р°С‚ СЃ AI">
+        <section class="ai-chat-panel" aria-label="Чат с AI">
           <div class="ai-conversation" id="ai-conversation"></div>
 
           <div class="ai-input-bar">
-            <input id="ai-input" type="text" placeholder="Р—Р°РґР°Р№С‚Рµ РІРѕРїСЂРѕСЃ..." aria-label="Р—Р°РґР°Р№С‚Рµ РІРѕРїСЂРѕСЃ" autocomplete="off">
-            <button class="ai-tune" type="button" aria-label="РќР°СЃС‚СЂРѕР№РєРё">
+            <input id="ai-input" type="text" placeholder="Задайте вопрос..." aria-label="Задайте вопрос" autocomplete="off">
+            <button class="ai-tune" type="button" aria-label="Настройки">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M8 17h12M4 17h2"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
             </button>
-            <button class="ai-send" type="button" aria-label="РћС‚РїСЂР°РІРёС‚СЊ" id="ai-send">
+            <button class="ai-send" type="button" aria-label="Отправить" id="ai-send">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
             </button>
           </div>
 
-          <p class="ai-footnote">AI РјРѕР¶РµС‚ РѕС€РёР±Р°С‚СЊСЃСЏ. РџСЂРѕРІРµСЂСЏР№С‚Рµ РІР°Р¶РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ.</p>
+          <p class="ai-footnote">AI может ошибаться. Проверяйте важную информацию.</p>
         </section>
       </div>
     </div>
@@ -519,7 +519,7 @@
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=68"></script>
+  <script src="/js/nav.js?v=70"></script>
   <script src="/js/ai-page.js?v=1"></script>
 </body>
 </html>

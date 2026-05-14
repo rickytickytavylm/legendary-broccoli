@@ -40,12 +40,6 @@
       icon: icon('<path d="m3 10.5 9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/>')
     },
     {
-      id: 'path',
-      href: '/path/',
-      label: 'Путь',
-      icon: icon('<path d="M4 19c4-8 12-6 16-14"/><path d="M5 19h4"/><path d="M15 5h5v5"/>')
-    },
-    {
       id: 'practices',
       href: '/practices/',
       label: 'Практики',
