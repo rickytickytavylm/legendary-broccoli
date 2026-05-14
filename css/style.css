@@ -83,11 +83,14 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .home-first-run-active .main-content,
-.home-splash-active .main-content {
+.home-splash-active .main-content,
+.home-today-active .main-content {
   width: 100vw !important;
   max-width: none !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .home-first-run-active .system-intro-screen:not(.hidden) {

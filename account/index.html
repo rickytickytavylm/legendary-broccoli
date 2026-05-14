@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=81" />
-  <link rel="stylesheet" href="/css/nav.css?v=57" />
+  <title>РџСЂРѕС„РёР»СЊ вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°</title>
+  <link rel="stylesheet" href="/css/style.css?v=84" />
+  <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ─── Layout ─────────────────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Layout в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     body { background: #0a0a0f; min-height: 100vh; overflow-x: hidden; }
     .profile-wrap {
       max-width: 1100px;
@@ -18,7 +18,7 @@
       padding: 36px 28px 80px;
     }
 
-    /* ─── Not-auth screen ───────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Not-auth screen в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .auth-gate {
       display: flex; align-items: center; justify-content: center;
       min-height: 80vh;
@@ -53,7 +53,7 @@
     }
     .btn-enter:hover { opacity: .88; }
 
-    /* ─── Dashboard header ─────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Dashboard header в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .dash-header {
       display: flex; align-items: flex-start;
       justify-content: space-between;
@@ -85,13 +85,13 @@
     }
     .avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* ─── Grid rows ────────────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Grid rows в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .dash-row { display: grid; gap: 16px; margin-bottom: 16px; }
     .dash-row-2 { grid-template-columns: 1fr 1fr; }
     .dash-row-3 { grid-template-columns: 1fr 1fr 1fr; }
     .dash-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
-    /* ─── Glass card base ──────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Glass card base в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .g-card {
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.08);
@@ -117,7 +117,7 @@
       margin: 6px 0 0;
     }
 
-    /* ─── Big progress card ────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Big progress card в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .progress-card {
       grid-column: span 2;
       display: flex; gap: 0;
@@ -167,7 +167,7 @@
       margin-top: 6px;
     }
 
-    /* ─── Continue learning section ─────────────────── */
+    /* в”Ђв”Ђв”Ђ Continue learning section в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .continue-section { margin-bottom: 16px; }
     .section-head {
       display: flex; align-items: center;
@@ -224,7 +224,7 @@
     }
     .lesson-card-sm-dur { font-size: 11px; color: rgba(255,255,255,.35); }
 
-    /* ─── Diary card ────────────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Diary card в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .diary-card {
       display: flex; flex-direction: column;
       justify-content: space-between;
@@ -250,7 +250,7 @@
     }
     .diary-btn:hover { color: #fff; }
 
-    /* ─── Mood card ─────────────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Mood card в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .mood-emojis {
       display: flex; justify-content: space-between;
       margin: 14px 0 10px;
@@ -266,7 +266,7 @@
     .mood-btn.selected { background: rgba(255,255,255,.12); transform: scale(1.15); }
     .mood-last { font-size: 11.5px; color: rgba(255,255,255,.28); margin-top: 8px; }
 
-    /* ─── Practice time card ────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Practice time card в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .practice-val { font-size: 1.9rem; font-weight: 700; margin: 4px 0 12px; }
     .bar-chart {
       display: flex; align-items: flex-end;
@@ -282,7 +282,7 @@
     .bar-fill.active { background: rgba(255,255,255,.5); }
     .bar-lbl { font-size: 9px; color: rgba(255,255,255,.25); }
 
-    /* ─── Small stat cards ──────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Small stat cards в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .stat-icon {
       width: 36px; height: 36px;
       background: rgba(255,255,255,.06);
@@ -300,7 +300,7 @@
       margin-top: 4px; line-height: 1.5;
     }
 
-    /* ─── Logout btn ────────────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Logout btn в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .logout-row {
       margin-top: 24px;
       display: flex; justify-content: flex-end;
@@ -329,7 +329,7 @@
       line-height: 1.5;
     }
 
-    /* ─── Responsive ────────────────────────────────── */
+    /* в”Ђв”Ђв”Ђ Responsive в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     @media (max-width: 900px) {
       .dash-row-3, .dash-row-4 { grid-template-columns: 1fr 1fr; }
       .progress-card { grid-column: span 1; }
@@ -342,7 +342,7 @@
       .dash-greeting h1 { font-size: 1.4rem; }
     }
 
-    /* ─── Profile v2 dashboard ───────────────────────── */
+    /* в”Ђв”Ђв”Ђ Profile v2 dashboard в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
     .profile-wrap {
       max-width: none;
       width: 100%;
@@ -794,7 +794,7 @@
 </head>
 <body class="dark-theme">
 
-  <!-- ─── NOT LOGGED IN ─────────────────────────────────── -->
+  <!-- в”Ђв”Ђв”Ђ NOT LOGGED IN в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ -->
   <div id="auth-gate" class="auth-gate u-hidden" aria-hidden="true">
     <div class="auth-gate-card">
       <div class="auth-gate-icon">
@@ -803,24 +803,24 @@
           <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
         </svg>
       </div>
-      <h2>Профиль пути</h2>
-      <p>Войдите, чтобы сохранить маршрут,<br>прогресс и рекомендации системы.</p>
+      <h2>РџСЂРѕС„РёР»СЊ РїСѓС‚Рё</h2>
+      <p>Р’РѕР№РґРёС‚Рµ, С‡С‚РѕР±С‹ СЃРѕС…СЂР°РЅРёС‚СЊ РјР°СЂС€СЂСѓС‚,<br>РїСЂРѕРіСЂРµСЃСЃ Рё СЂРµРєРѕРјРµРЅРґР°С†РёРё СЃРёСЃС‚РµРјС‹.</p>
       <button class="btn-enter" id="gate-login-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-        Войти в систему
+        Р’РѕР№С‚Рё РІ СЃРёСЃС‚РµРјСѓ
       </button>
     </div>
   </div>
 
-  <!-- ─── DASHBOARD ─────────────────────────────────────── -->
+  <!-- в”Ђв”Ђв”Ђ DASHBOARD в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ -->
   <div id="dashboard" class="u-hidden" aria-hidden="true">
     <div class="profile-wrap">
 
       <header class="profile-hero">
         <div>
-          <p class="profile-eyebrow">Профиль пути</p>
-          <h1 class="profile-title" id="dash-greeting">Добрый день</h1>
-          <p class="profile-subtitle" id="dash-sub">Ваш доступ, маршрут и настройки аккаунта</p>
+          <p class="profile-eyebrow">РџСЂРѕС„РёР»СЊ РїСѓС‚Рё</p>
+          <h1 class="profile-title" id="dash-greeting">Р”РѕР±СЂС‹Р№ РґРµРЅСЊ</h1>
+          <p class="profile-subtitle" id="dash-sub">Р’Р°С€ РґРѕСЃС‚СѓРї, РјР°СЂС€СЂСѓС‚ Рё РЅР°СЃС‚СЂРѕР№РєРё Р°РєРєР°СѓРЅС‚Р°</p>
         </div>
         <div class="profile-avatar" id="avatar-btn">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -830,22 +830,22 @@
       <div class="profile-grid">
         <div class="profile-stack">
           <section class="profile-card pro-card">
-            <div class="pro-badge">Маршрут</div>
-            <h2 class="pro-title">Путь открыт</h2>
-            <p class="profile-muted" id="access-desc">Видео, аудио, практики и AI помогают собрать следующий полезный шаг.</p>
+            <div class="pro-badge">РњР°СЂС€СЂСѓС‚</div>
+            <h2 class="pro-title">РџСѓС‚СЊ РѕС‚РєСЂС‹С‚</h2>
+            <p class="profile-muted" id="access-desc">Р’РёРґРµРѕ, Р°СѓРґРёРѕ, РїСЂР°РєС‚РёРєРё Рё AI РїРѕРјРѕРіР°СЋС‚ СЃРѕР±СЂР°С‚СЊ СЃР»РµРґСѓСЋС‰РёР№ РїРѕР»РµР·РЅС‹Р№ С€Р°Рі.</p>
             <ul class="pro-list">
-              <li>Программы без подписочного экрана</li>
-              <li>Аудиоформат для длинных материалов</li>
-              <li>AI-разбор после просмотра</li>
-              <li>История прогресса и действий</li>
+              <li>РџСЂРѕРіСЂР°РјРјС‹ Р±РµР· РїРѕРґРїРёСЃРѕС‡РЅРѕРіРѕ СЌРєСЂР°РЅР°</li>
+              <li>РђСѓРґРёРѕС„РѕСЂРјР°С‚ РґР»СЏ РґР»РёРЅРЅС‹С… РјР°С‚РµСЂРёР°Р»РѕРІ</li>
+              <li>AI-СЂР°Р·Р±РѕСЂ РїРѕСЃР»Рµ РїСЂРѕСЃРјРѕС‚СЂР°</li>
+              <li>РСЃС‚РѕСЂРёСЏ РїСЂРѕРіСЂРµСЃСЃР° Рё РґРµР№СЃС‚РІРёР№</li>
             </ul>
             <div class="profile-actions">
-              <a class="profile-primary" id="pro-cta" href="/path/">Продолжить путь</a>
-              <a class="profile-secondary" href="/programs/">Все программы</a>
+              <a class="profile-primary" id="pro-cta" href="/path/">РџСЂРѕРґРѕР»Р¶РёС‚СЊ РїСѓС‚СЊ</a>
+              <a class="profile-secondary" href="/programs/">Р’СЃРµ РїСЂРѕРіСЂР°РјРјС‹</a>
             </div>
             <div class="billing-row">
               <span class="yookassa-mark">Beta</span>
-              <span>Сейчас доводим продуктовую логику без продажи доступа</span>
+              <span>РЎРµР№С‡Р°СЃ РґРѕРІРѕРґРёРј РїСЂРѕРґСѓРєС‚РѕРІСѓСЋ Р»РѕРіРёРєСѓ Р±РµР· РїСЂРѕРґР°Р¶Рё РґРѕСЃС‚СѓРїР°</span>
             </div>
             <div class="progress-bar-track" style="margin-top:18px">
               <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
@@ -853,23 +853,23 @@
           </section>
 
           <section class="profile-card">
-            <h3 class="profile-card-title">Дни в приложении</h3>
-            <p class="profile-muted">Активность за неделю в стиле Apple Watch.</p>
+            <h3 class="profile-card-title">Р”РЅРё РІ РїСЂРёР»РѕР¶РµРЅРёРё</h3>
+            <p class="profile-muted">РђРєС‚РёРІРЅРѕСЃС‚СЊ Р·Р° РЅРµРґРµР»СЋ РІ СЃС‚РёР»Рµ Apple Watch.</p>
             <div class="rings-grid u-mt-16">
               <div class="ring-card">
                 <div class="ring" id="ring-streak" style="--value:0"><span id="streak-val">0</span></div>
-                <p class="ring-label">Серия</p>
-                <p class="ring-sub">дней подряд</p>
+                <p class="ring-label">РЎРµСЂРёСЏ</p>
+                <p class="ring-sub">РґРЅРµР№ РїРѕРґСЂСЏРґ</p>
               </div>
               <div class="ring-card">
                 <div class="ring" id="ring-week" style="--value:0"><span id="goal-done">0</span></div>
-                <p class="ring-label">Неделя</p>
-                <p class="ring-sub">активных дней</p>
+                <p class="ring-label">РќРµРґРµР»СЏ</p>
+                <p class="ring-sub">Р°РєС‚РёРІРЅС‹С… РґРЅРµР№</p>
               </div>
               <div class="ring-card">
                 <div class="ring" id="ring-ai" style="--value:0"><span id="ai-usage-card">0/5</span></div>
                 <p class="ring-label">AI</p>
-                <p class="ring-sub" id="ai-usage-desc">сообщения</p>
+                <p class="ring-sub" id="ai-usage-desc">СЃРѕРѕР±С‰РµРЅРёСЏ</p>
               </div>
             </div>
             <div id="streak-dots" class="u-hidden"></div>
@@ -878,8 +878,8 @@
 
           <section class="profile-card">
             <div class="section-head" style="margin-bottom:14px">
-              <h3>Ваши направления</h3>
-              <a href="/path/">Путь</a>
+              <h3>Р’Р°С€Рё РЅР°РїСЂР°РІР»РµРЅРёСЏ</h3>
+              <a href="/path/">РџСѓС‚СЊ</a>
             </div>
             <div class="course-grid" id="lessons-scroll"></div>
           </section>
@@ -887,12 +887,12 @@
 
         <aside class="profile-stack">
           <section class="profile-card">
-            <h3 class="profile-card-title">Ваш статус</h3>
+            <h3 class="profile-card-title">Р’Р°С€ СЃС‚Р°С‚СѓСЃ</h3>
             <div class="mini-stat-list">
-              <div class="mini-stat"><span>Статус</span><span id="streak-big">Открыто</span></div>
-              <div class="mini-stat"><span>Период</span><span id="member-since">Маршрут собирается</span></div>
-              <div class="mini-stat"><span>Просмотрено</span><span><span id="goal-target">0</span> уроков</span></div>
-              <div class="mini-stat"><span>Практика</span><span id="practice-time">0 мин</span></div>
+              <div class="mini-stat"><span>РЎС‚Р°С‚СѓСЃ</span><span id="streak-big">РћС‚РєСЂС‹С‚Рѕ</span></div>
+              <div class="mini-stat"><span>РџРµСЂРёРѕРґ</span><span id="member-since">РњР°СЂС€СЂСѓС‚ СЃРѕР±РёСЂР°РµС‚СЃСЏ</span></div>
+              <div class="mini-stat"><span>РџСЂРѕСЃРјРѕС‚СЂРµРЅРѕ</span><span><span id="goal-target">0</span> СѓСЂРѕРєРѕРІ</span></div>
+              <div class="mini-stat"><span>РџСЂР°РєС‚РёРєР°</span><span id="practice-time">0 РјРёРЅ</span></div>
             </div>
             <div id="gratitude-cnt" class="u-hidden">0</div>
             <div id="mindfulness-pct" class="u-hidden">Free</div>
@@ -901,31 +901,31 @@
 
           <section class="profile-card">
             <h3 class="profile-card-title">Telegram</h3>
-            <p class="profile-muted" id="telegram-desc">Канал и сообщество подключим как поддержку маршрута, без ощущения платного барьера.</p>
+            <p class="profile-muted" id="telegram-desc">РљР°РЅР°Р» Рё СЃРѕРѕР±С‰РµСЃС‚РІРѕ РїРѕРґРєР»СЋС‡РёРј РєР°Рє РїРѕРґРґРµСЂР¶РєСѓ РјР°СЂС€СЂСѓС‚Р°, Р±РµР· РѕС‰СѓС‰РµРЅРёСЏ РїР»Р°С‚РЅРѕРіРѕ Р±Р°СЂСЊРµСЂР°.</p>
             <p class="mood-last" id="diary-last"></p>
-            <a href="#" class="profile-secondary u-mt-16" id="open-diary-btn">Открыть Telegram</a>
+            <a href="#" class="profile-secondary u-mt-16" id="open-diary-btn">РћС‚РєСЂС‹С‚СЊ Telegram</a>
           </section>
 
           <section class="profile-card">
-            <h3 class="profile-card-title">Быстрые действия</h3>
+            <h3 class="profile-card-title">Р‘С‹СЃС‚СЂС‹Рµ РґРµР№СЃС‚РІРёСЏ</h3>
             <div class="profile-actions u-mt-14">
-              <a class="profile-secondary" href="/path/">Путь</a>
-              <a class="profile-secondary" href="/practices/">Практики</a>
-              <a class="profile-secondary" href="/ai/">Открыть AI</a>
-              <a class="profile-secondary" href="/community/">Сообщество</a>
+              <a class="profile-secondary" href="/path/">РџСѓС‚СЊ</a>
+              <a class="profile-secondary" href="/practices/">РџСЂР°РєС‚РёРєРё</a>
+              <a class="profile-secondary" href="/ai/">РћС‚РєСЂС‹С‚СЊ AI</a>
+              <a class="profile-secondary" href="/community/">РЎРѕРѕР±С‰РµСЃС‚РІРѕ</a>
             </div>
-            <p class="reminders-empty" id="reminders-text">Продолжайте маршрут или откройте практики под текущее состояние.</p>
+            <p class="reminders-empty" id="reminders-text">РџСЂРѕРґРѕР»Р¶Р°Р№С‚Рµ РјР°СЂС€СЂСѓС‚ РёР»Рё РѕС‚РєСЂРѕР№С‚Рµ РїСЂР°РєС‚РёРєРё РїРѕРґ С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ.</p>
           </section>
 
           <div class="logout-row u-mt-0">
-            <button class="btn-logout" id="logout-btn" type="button">Выйти из аккаунта</button>
+            <button class="btn-logout" id="logout-btn" type="button">Р’С‹Р№С‚Рё РёР· Р°РєРєР°СѓРЅС‚Р°</button>
           </div>
 
           <section class="profile-card">
-            <h3 class="profile-card-title">Аккаунт</h3>
-            <p class="profile-muted">Можно полностью удалить профиль, прогресс, историю AI и привязки входа.</p>
-            <button class="btn-logout btn-delete-account" id="delete-account-btn" type="button">Удалить аккаунт</button>
-            <p class="account-danger-note">После удаления вход через тот же Яндекс, Telegram, телефон или почту создаст новый аккаунт.</p>
+            <h3 class="profile-card-title">РђРєРєР°СѓРЅС‚</h3>
+            <p class="profile-muted">РњРѕР¶РЅРѕ РїРѕР»РЅРѕСЃС‚СЊСЋ СѓРґР°Р»РёС‚СЊ РїСЂРѕС„РёР»СЊ, РїСЂРѕРіСЂРµСЃСЃ, РёСЃС‚РѕСЂРёСЋ AI Рё РїСЂРёРІСЏР·РєРё РІС…РѕРґР°.</p>
+            <button class="btn-logout btn-delete-account" id="delete-account-btn" type="button">РЈРґР°Р»РёС‚СЊ Р°РєРєР°СѓРЅС‚</button>
+            <p class="account-danger-note">РџРѕСЃР»Рµ СѓРґР°Р»РµРЅРёСЏ РІС…РѕРґ С‡РµСЂРµР· С‚РѕС‚ Р¶Рµ РЇРЅРґРµРєСЃ, Telegram, С‚РµР»РµС„РѕРЅ РёР»Рё РїРѕС‡С‚Сѓ СЃРѕР·РґР°СЃС‚ РЅРѕРІС‹Р№ Р°РєРєР°СѓРЅС‚.</p>
           </section>
         </aside>
       </div>
@@ -933,18 +933,18 @@
     </div>
   </div>
 
-  <!-- ─── DIARY MODAL ──────────────────────────────────── -->
+  <!-- в”Ђв”Ђв”Ђ DIARY MODAL в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ -->
   <div id="diary-modal" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center">
     <div style="background:#12121a;border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:32px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <h3 style="margin:0;font-size:1.2rem">Дневник</h3>
-        <button id="diary-close-btn" type="button" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:20px">×</button>
+        <h3 style="margin:0;font-size:1.2rem">Р”РЅРµРІРЅРёРє</h3>
+        <button id="diary-close-btn" type="button" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:20px">Г—</button>
       </div>
-      <textarea id="diary-input" placeholder="Что у вас на уме сегодня?..." 
+      <textarea id="diary-input" placeholder="Р§С‚Рѕ Сѓ РІР°СЃ РЅР° СѓРјРµ СЃРµРіРѕРґРЅСЏ?..." 
         style="width:100%;min-height:120px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;color:#fff;font-family:Inter,sans-serif;font-size:14px;resize:vertical;box-sizing:border-box;outline:none"></textarea>
       <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end">
-        <button id="diary-cancel-btn" type="button" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:10px 20px;border-radius:100px;cursor:pointer;font-size:14px">Отмена</button>
-        <button id="diary-save-btn" type="button" style="background:#fff;color:#000;padding:10px 24px;border-radius:100px;border:none;cursor:pointer;font-weight:600;font-size:14px">Сохранить</button>
+        <button id="diary-cancel-btn" type="button" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:10px 20px;border-radius:100px;cursor:pointer;font-size:14px">РћС‚РјРµРЅР°</button>
+        <button id="diary-save-btn" type="button" style="background:#fff;color:#000;padding:10px 24px;border-radius:100px;border:none;cursor:pointer;font-weight:600;font-size:14px">РЎРѕС…СЂР°РЅРёС‚СЊ</button>
       </div>
       <div id="diary-entries" style="margin-top:24px;display:flex;flex-direction:column;gap:10px"></div>
     </div>
@@ -954,23 +954,23 @@
     <div class="pro-modal-card">
       <div class="pro-modal-head">
         <div>
-          <div class="pro-badge">Система</div>
-          <h2 class="pro-title" id="pro-modal-title">Маршрут в разработке</h2>
-          <p class="profile-muted" id="pro-modal-status">Сейчас доступ к материалам открыт, чтобы довести продуктовую логику.</p>
+          <div class="pro-badge">РЎРёСЃС‚РµРјР°</div>
+          <h2 class="pro-title" id="pro-modal-title">РњР°СЂС€СЂСѓС‚ РІ СЂР°Р·СЂР°Р±РѕС‚РєРµ</h2>
+          <p class="profile-muted" id="pro-modal-status">РЎРµР№С‡Р°СЃ РґРѕСЃС‚СѓРї Рє РјР°С‚РµСЂРёР°Р»Р°Рј РѕС‚РєСЂС‹С‚, С‡С‚РѕР±С‹ РґРѕРІРµСЃС‚Рё РїСЂРѕРґСѓРєС‚РѕРІСѓСЋ Р»РѕРіРёРєСѓ.</p>
         </div>
-        <button class="pro-close" id="pro-close-btn" type="button" aria-label="Закрыть">×</button>
+        <button class="pro-close" id="pro-close-btn" type="button" aria-label="Р—Р°РєСЂС‹С‚СЊ">Г—</button>
       </div>
-      <div class="pro-price">Beta <small>/ открытый этап</small></div>
+      <div class="pro-price">Beta <small>/ РѕС‚РєСЂС‹С‚С‹Р№ СЌС‚Р°Рї</small></div>
       <ul class="pro-list">
-        <li>Видео и аудио без подписочного экрана</li>
-        <li>AI как навигатор по личной траектории</li>
-        <li>Путь, практики и check-in как ежедневная логика</li>
-        <li>История прогресса и активность в профиле</li>
+        <li>Р’РёРґРµРѕ Рё Р°СѓРґРёРѕ Р±РµР· РїРѕРґРїРёСЃРѕС‡РЅРѕРіРѕ СЌРєСЂР°РЅР°</li>
+        <li>AI РєР°Рє РЅР°РІРёРіР°С‚РѕСЂ РїРѕ Р»РёС‡РЅРѕР№ С‚СЂР°РµРєС‚РѕСЂРёРё</li>
+        <li>РџСѓС‚СЊ, РїСЂР°РєС‚РёРєРё Рё check-in РєР°Рє РµР¶РµРґРЅРµРІРЅР°СЏ Р»РѕРіРёРєР°</li>
+        <li>РСЃС‚РѕСЂРёСЏ РїСЂРѕРіСЂРµСЃСЃР° Рё Р°РєС‚РёРІРЅРѕСЃС‚СЊ РІ РїСЂРѕС„РёР»Рµ</li>
       </ul>
-      <button class="profile-primary" id="yookassa-placeholder-btn" type="button" style="width:100%;margin-top:8px">Продолжить путь</button>
+      <button class="profile-primary" id="yookassa-placeholder-btn" type="button" style="width:100%;margin-top:8px">РџСЂРѕРґРѕР»Р¶РёС‚СЊ РїСѓС‚СЊ</button>
       <div class="billing-row">
         <span class="yookassa-mark">Beta</span>
-        <span>Монетизацию вернем только после ясной ценности продукта.</span>
+        <span>РњРѕРЅРµС‚РёР·Р°С†РёСЋ РІРµСЂРЅРµРј С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЏСЃРЅРѕР№ С†РµРЅРЅРѕСЃС‚Рё РїСЂРѕРґСѓРєС‚Р°.</span>
       </div>
     </div>
   </div>
