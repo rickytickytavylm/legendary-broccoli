@@ -344,8 +344,10 @@
 
     /* ─── Profile v2 dashboard ───────────────────────── */
     .profile-wrap {
-      max-width: 1180px;
-      padding-top: 54px;
+      max-width: none;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 96px clamp(14px, 2.8vw, 34px) 110px;
     }
     .profile-hero {
       display: grid;
@@ -353,6 +355,17 @@
       gap: 24px;
       align-items: end;
       margin-bottom: 22px;
+      padding: 22px;
+      border-radius: 30px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+        rgba(7,8,10,.72);
+      border: 1px solid rgba(255,255,255,.12);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      backdrop-filter: blur(28px) saturate(160%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.16),
+        0 24px 70px rgba(0,0,0,.34);
     }
     .profile-eyebrow {
       margin: 0 0 10px;
@@ -389,8 +402,8 @@
     }
     .profile-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr);
-      gap: 18px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 14px;
       align-items: start;
     }
     .profile-stack {
@@ -403,11 +416,12 @@
       border-radius: 28px;
       border: 1px solid rgba(255,255,255,.11);
       background:
-        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.032)),
-        rgba(8,10,16,.72);
-      -webkit-backdrop-filter: blur(26px) saturate(140%);
-      backdrop-filter: blur(26px) saturate(140%);
-      box-shadow: 0 22px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.1);
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,.11), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.026)),
+        rgba(7,8,10,.66);
+      -webkit-backdrop-filter: blur(30px) saturate(165%);
+      backdrop-filter: blur(30px) saturate(165%);
+      box-shadow: 0 22px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.15);
       padding: 22px;
     }
     .profile-card-title {
@@ -496,8 +510,14 @@
       font-weight: 800;
     }
     .profile-primary {
-      color: #050506;
-      background: #fff;
+      color: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.22);
+      background:
+        radial-gradient(circle at 30% 0%, rgba(255,255,255,.22), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.045)),
+        rgba(0,0,0,.18);
+      -webkit-backdrop-filter: blur(22px) saturate(170%);
+      backdrop-filter: blur(22px) saturate(170%);
     }
     .profile-secondary {
       color: rgba(255,255,255,.76);
@@ -697,6 +717,14 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+    @media (min-width: 769px) {
+      .profile-wrap {
+        width: calc(100vw - 232px) !important;
+        max-width: none !important;
+        margin-left: 232px !important;
+        margin-right: 0 !important;
+      }
+    }
     @media (max-width: 600px) {
       .profile-wrap {
         padding: calc(96px + env(safe-area-inset-top, 0px)) 16px 112px;
@@ -802,22 +830,22 @@
       <div class="profile-grid">
         <div class="profile-stack">
           <section class="profile-card pro-card">
-            <div class="pro-badge">Подписка</div>
-            <h2 class="pro-title">Система Pro</h2>
-            <p class="profile-muted" id="access-desc">Первые видео всех разделов доступны для знакомства.</p>
+            <div class="pro-badge">Маршрут</div>
+            <h2 class="pro-title">Путь открыт</h2>
+            <p class="profile-muted" id="access-desc">Видео, аудио, практики и AI помогают собрать следующий полезный шаг.</p>
             <ul class="pro-list">
-              <li>Все видео во всех программах</li>
-              <li>50 сообщений с ИИ-помощником</li>
-              <li>Закрытый Telegram-канал</li>
-              <li>Полная история прогресса</li>
+              <li>Программы без подписочного экрана</li>
+              <li>Аудиоформат для длинных материалов</li>
+              <li>AI-разбор после просмотра</li>
+              <li>История прогресса и действий</li>
             </ul>
             <div class="profile-actions">
-              <button class="profile-primary" type="button" id="pro-cta">Оформить Система Pro</button>
-              <a class="profile-secondary" href="/courses/">Смотреть курсы</a>
+              <a class="profile-primary" id="pro-cta" href="/path/">Продолжить путь</a>
+              <a class="profile-secondary" href="/programs/">Все программы</a>
             </div>
             <div class="billing-row">
-              <span class="yookassa-mark">ЮKassa</span>
-              <span>Оплату подключим на этапе боевого запуска</span>
+              <span class="yookassa-mark">Beta</span>
+              <span>Сейчас доводим продуктовую логику без продажи доступа</span>
             </div>
             <div class="progress-bar-track" style="margin-top:18px">
               <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
@@ -861,8 +889,8 @@
           <section class="profile-card">
             <h3 class="profile-card-title">Ваш статус</h3>
             <div class="mini-stat-list">
-              <div class="mini-stat"><span>Подписка</span><span id="streak-big">Free</span></div>
-              <div class="mini-stat"><span>Период</span><span id="member-since">Первые уроки открыты</span></div>
+              <div class="mini-stat"><span>Статус</span><span id="streak-big">Открыто</span></div>
+              <div class="mini-stat"><span>Период</span><span id="member-since">Маршрут собирается</span></div>
               <div class="mini-stat"><span>Просмотрено</span><span><span id="goal-target">0</span> уроков</span></div>
               <div class="mini-stat"><span>Практика</span><span id="practice-time">0 мин</span></div>
             </div>
@@ -873,7 +901,7 @@
 
           <section class="profile-card">
             <h3 class="profile-card-title">Telegram</h3>
-            <p class="profile-muted" id="telegram-desc">Открытый канал доступен всем. Закрытый канал входит в Система Pro.</p>
+            <p class="profile-muted" id="telegram-desc">Канал и сообщество подключим как поддержку маршрута, без ощущения платного барьера.</p>
             <p class="mood-last" id="diary-last"></p>
             <a href="#" class="profile-secondary u-mt-16" id="open-diary-btn">Открыть Telegram</a>
           </section>
@@ -926,23 +954,23 @@
     <div class="pro-modal-card">
       <div class="pro-modal-head">
         <div>
-          <div class="pro-badge">Система Pro</div>
-          <h2 class="pro-title" id="pro-modal-title">Полный доступ к системе</h2>
-          <p class="profile-muted" id="pro-modal-status">Сейчас у вас бесплатный доступ.</p>
+          <div class="pro-badge">Система</div>
+          <h2 class="pro-title" id="pro-modal-title">Маршрут в разработке</h2>
+          <p class="profile-muted" id="pro-modal-status">Сейчас доступ к материалам открыт, чтобы довести продуктовую логику.</p>
         </div>
         <button class="pro-close" id="pro-close-btn" type="button" aria-label="Закрыть">×</button>
       </div>
-      <div class="pro-price">2999 ₽ <small>/ месяц</small></div>
+      <div class="pro-price">Beta <small>/ открытый этап</small></div>
       <ul class="pro-list">
-        <li>Все видео во всех программах без ограничений</li>
-        <li>50 сообщений с ИИ-помощником в месяц</li>
-        <li>Закрытый Telegram-канал</li>
+        <li>Видео и аудио без подписочного экрана</li>
+        <li>AI как навигатор по личной траектории</li>
+        <li>Путь, практики и check-in как ежедневная логика</li>
         <li>История прогресса и активность в профиле</li>
       </ul>
-      <button class="profile-primary" id="yookassa-placeholder-btn" type="button" style="width:100%;margin-top:8px">Оплатить через ЮKassa</button>
+      <button class="profile-primary" id="yookassa-placeholder-btn" type="button" style="width:100%;margin-top:8px">Продолжить путь</button>
       <div class="billing-row">
-        <span class="yookassa-mark">ЮKassa</span>
-        <span>Безопасная оплата картой, СБП или кошельком ЮMoney</span>
+        <span class="yookassa-mark">Beta</span>
+        <span>Монетизацию вернем только после ясной ценности продукта.</span>
       </div>
     </div>
   </div>

@@ -248,32 +248,11 @@
   }
 
   function updateLessonLocks(root) {
-    if (VIDEO_ACCESS_BYPASS) {
-      Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-item.locked'), function(item) {
-        item.classList.remove('locked');
-      });
-      Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-lock-note'), function(note) {
-        note.remove();
-      });
-      return;
-    }
-    if (accessState === 'unknown') return;
-    Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-item'), function(item) {
-      var idx = getLessonIndex(item);
-      var locked = accessState !== 'pro' && idx > 0;
-      item.classList.toggle('locked', locked);
-      if (!locked) {
-        Array.prototype.forEach.call(item.querySelectorAll('.lesson-lock-note'), function(note) {
-          note.remove();
-        });
-      }
-      if (locked && !item.querySelector('.lesson-lock-note')) {
-        var info = item.querySelector('.lesson-info') || item;
-        var note = document.createElement('div');
-        note.className = 'lesson-lock-note';
-        note.textContent = 'Система Pro';
-        info.appendChild(note);
-      }
+    Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-item.locked'), function(item) {
+      item.classList.remove('locked');
+    });
+    Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-lock-note'), function(note) {
+      note.remove();
     });
   }
 
@@ -298,41 +277,11 @@
       else window.location.href = '/account/';
       return;
     }
-    if (document.getElementById('access-prompt')) return;
-    var overlay = document.createElement('div');
-    overlay.id = 'access-prompt';
-    overlay.className = 'access-prompt';
-    overlay.innerHTML =
-      '<div class="access-prompt-card">' +
-        '<button class="access-prompt-close" type="button" aria-label="Закрыть">×</button>' +
-        '<div class="access-prompt-kicker">Система Pro</div>' +
-        '<h3>Урок доступен по подписке</h3>' +
-        '<p>В Pro открывается весь видеоконтент, закрытый Telegram и 50 сообщений с AI.</p>' +
-        '<button class="access-prompt-primary" type="button">Оформить Pro</button>' +
-      '</div>';
-    document.body.appendChild(overlay);
-
-    overlay.querySelector('.access-prompt-close').addEventListener('click', function() {
-      overlay.remove();
-    });
-    overlay.addEventListener('click', function(event) {
-      if (event.target === overlay) overlay.remove();
-    });
-    overlay.querySelector('.access-prompt-primary').addEventListener('click', function() {
-      window.location.href = '/subscription/';
-    });
+    return;
   };
 
   document.addEventListener('click', function(event) {
-    if (VIDEO_ACCESS_BYPASS) return;
-    var lesson = event.target.closest('.lesson-item');
-    if (!lesson || accessState === 'pro' || accessState === 'unknown') return;
-    if (getLessonIndex(lesson) === 0) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    window.showAccessPrompt(accessState === 'guest' ? 'LOGIN_REQUIRED' : 'NO_SUBSCRIPTION');
+    return;
   }, true);
 
   // ── Hide legacy nav elements ────────────────────────────

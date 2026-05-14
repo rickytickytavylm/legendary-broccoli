@@ -14,36 +14,116 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
-<body class="dark-theme ux-route-page">
-  <main class="ux-page-shell">
-    <section class="ux-page-hero ux-visual-hero" style="--ux-bg:url('/assets/webp/scenario.webp')">
-      <p class="hub-kicker">Путь</p>
-      <h1>Личная траектория</h1>
-      <p>Маршрут показывает, что делать сейчас, что будет следующим и где подключается AI, практика или сообщество.</p>
+<body class="dark-theme ux-route-page path-product-page">
+  <main class="ux-page-shell path-app-shell">
+    <section class="path-hero-card" data-path-hero style="--ux-bg:url('/assets/webp/scenario.webp')">
+      <div class="path-hero-top">
+        <p class="hub-kicker">Путь</p>
+        <span data-path-day>День 1</span>
+      </div>
+      <div class="path-hero-copy">
+        <h1 data-path-title>Личная траектория</h1>
+        <p data-path-desc>Сегодня достаточно одного материала, одного AI-разбора и короткой фиксации состояния.</p>
+      </div>
+      <div class="path-hero-actions">
+        <a class="path-glass-button path-glass-button-primary" href="/practices/" data-path-primary>Продолжить</a>
+        <a class="path-glass-button" href="/ai/">Обсудить с AI</a>
+      </div>
     </section>
 
-    <section class="ux-path-timeline">
-      <article class="ux-path-stage active" style="--ux-bg:url('/assets/webp/ai_back.webp')">
-        <span>01 / сейчас</span>
-        <h2>Стабилизировать вход</h2>
-        <p>Один короткий материал или аудио без перегруза. Цель — начать, а не пройти всё сразу.</p>
-        <a href="/practices/" class="ux-button ux-button-primary">Открыть практики</a>
+    <section class="path-current-grid" aria-label="Текущий маршрут">
+      <article class="path-now-card path-glass-panel" data-path-now style="--ux-bg:url('/assets/webp/ai_back.webp')">
+        <span class="path-card-kicker">Сейчас</span>
+        <h2 data-path-step-title>Мягкий вход</h2>
+        <p data-path-step-desc>Начните с одного короткого материала. После просмотра AI поможет связать его с вашей ситуацией.</p>
+        <div class="path-progress-line" aria-hidden="true"><span></span></div>
+        <div class="path-now-actions">
+          <a href="/practices/" data-path-step-link>Открыть шаг</a>
+          <a href="/ai/">Задать вопрос</a>
+        </div>
       </article>
-      <article class="ux-path-stage" style="--ux-bg:url('/assets/webp/courses.webp')">
-        <span>02 / понять</span>
-        <h3>Разобрать запрос</h3>
-        <p>Гештальт, психосоматика, отношения или коммуникации подключаются после первого шага.</p>
+
+      <article class="path-check-card path-glass-panel">
+        <span class="path-card-kicker">Сегодня</span>
+        <h3>Не нужно проходить всё</h3>
+        <p>Задача дня — один материал, одна мысль, один короткий вывод. Так путь становится живым, а не библиотекой.</p>
       </article>
-      <article class="ux-path-stage" style="--ux-bg:url('/assets/webp/open_all.webp')">
-        <span>03 / закрепить</span>
-        <h3>Сделать практику</h3>
-        <p>Короткое действие, check-in и заметка через AI, чтобы материал стал личным опытом.</p>
-      </article>
-      <article class="ux-path-stage" style="--ux-bg:url('/assets/webp/hope.webp')">
-        <span>04 / поддержка</span>
-        <h3>Подключить людей</h3>
-        <p>Сообщество, эфиры или специалист появляются тогда, когда они действительно уместны.</p>
-      </article>
+    </section>
+
+    <section class="path-section path-today-section">
+      <div class="path-section-head">
+        <p class="hub-kicker">Сегодня</p>
+        <h2>План на один вход</h2>
+      </div>
+      <div class="path-day-card">
+        <div class="path-day-head">
+          <h3>Вход в маршрут</h3>
+          <span>15-25 минут</span>
+        </div>
+        <a class="path-task-row" href="/path/" data-path-step-link>
+          <span class="path-task-mark">1</span>
+          <div>
+            <strong data-path-task-video>Открыть первый материал</strong>
+            <small>Видео или аудио по текущему фокусу</small>
+          </div>
+          <em>8-15 мин</em>
+        </a>
+        <a class="path-task-row" href="/ai/">
+          <span class="path-task-mark">2</span>
+          <div>
+            <strong>Сформулировать вывод</strong>
+            <small>Спросите AI, как применить материал к вашей ситуации</small>
+          </div>
+          <em>5 мин</em>
+        </a>
+        <a class="path-task-row" href="/">
+          <span class="path-task-mark">3</span>
+          <div>
+            <strong>Отметить состояние</strong>
+            <small>Короткий check-in после материала</small>
+          </div>
+          <em>1 мин</em>
+        </a>
+      </div>
+    </section>
+
+    <section class="path-section">
+      <div class="path-section-head">
+        <p class="hub-kicker">Направления</p>
+        <h2>Если текущий фокус не подходит</h2>
+      </div>
+      <div class="path-directions-grid">
+        <a class="path-direction-card" href="/marathons/#section-stress" style="--ux-bg:url('/assets/webp/stress-mar.webp')">
+          <span>Стабилизация</span>
+          <strong>Стресс и опора</strong>
+          <p>Когда сначала нужно снизить внутреннее напряжение.</p>
+        </a>
+        <a class="path-direction-card" href="/psihosomatika/" style="--ux-bg:url('/assets/webp/psysomatic.webp')">
+          <span>Тело</span>
+          <strong>Психосоматика</strong>
+          <p>Когда запрос проявляется через тело и симптомы.</p>
+        </a>
+        <a class="path-direction-card" href="/sozavisimost/" style="--ux-bg:url('/assets/webp/coda2.webp')">
+          <span>Отношения</span>
+          <strong>Границы и близость</strong>
+          <p>Когда важно увидеть сценарии контакта с другими.</p>
+        </a>
+        <a class="path-direction-card" href="/marathons/#section-samoocenka" style="--ux-bg:url('/assets/webp/myself_mar.webp')">
+          <span>Опора</span>
+          <strong>Самооценка</strong>
+          <p>Когда не хватает устойчивости и права на себя.</p>
+        </a>
+        <a class="path-direction-card" href="/geshtalt/" style="--ux-bg:url('/assets/webp/new_geshtalt.webp')">
+          <span>Понимание себя</span>
+          <strong>Гештальт</strong>
+          <p>Когда хочется глубже понять эмоции, потребности и контакт.</p>
+        </a>
+        <a class="path-direction-card" href="/superviziya/" style="--ux-bg:url('/assets/webp/supervision.webp')">
+          <span>Профессионально</span>
+          <strong>Практика специалиста</strong>
+          <p>Когда нужен профессиональный взгляд и супервизионная логика.</p>
+        </a>
+      </div>
     </section>
   </main>
 
@@ -51,6 +131,7 @@
   <script src="/js/api.js?v=57"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=69"></script>
+  <script src="/js/path-page.js?v=1"></script>
   <script src="/js/main.js?v=2"></script>
 </body>
 </html>

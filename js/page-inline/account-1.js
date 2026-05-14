@@ -77,20 +77,16 @@ function escapeHtml(value) {
       const name = user.display_name || user.first_name || emailName || phoneName || 'друг';
       document.getElementById('dash-greeting').textContent = greet + ', ' + name;
 
-      document.getElementById('dash-sub').textContent = isPro
-        ? 'Путь, программы, закрытый Telegram и расширенный AI открыты.'
-        : 'Путь сохраняется. Первые видео открыты, полный доступ — в Система Pro.';
+      document.getElementById('dash-sub').textContent = 'Путь, программы, аудио и AI открыты для сборки личной траектории.';
 
       // Streak
       const streak = stats.streak_days || 0;
       document.getElementById('streak-val').textContent = streak;
       document.getElementById('ring-streak').style.setProperty('--value', Math.min(100, Math.round((streak / 7) * 100)));
-      document.getElementById('streak-big').textContent = isPro ? 'Pro' : 'Free';
-      document.getElementById('member-since').textContent = isPro
-        ? (user.subscription_expires_at ? 'Активно до ' + new Date(user.subscription_expires_at).toLocaleDateString('ru-RU') : 'Подписка активна')
-        : 'Первые уроки открыты';
-      document.getElementById('pro-cta').textContent = isPro ? 'Управлять подпиской' : 'Оформить Система Pro';
-      document.getElementById('pro-cta').onclick = () => openProModal(isPro);
+      document.getElementById('streak-big').textContent = 'Открыто';
+      document.getElementById('member-since').textContent = 'Маршрут собирается';
+      document.getElementById('pro-cta').textContent = 'Продолжить путь';
+      document.getElementById('pro-cta').onclick = null;
       if (new URLSearchParams(location.search).get('pro') === '1') {
         setTimeout(() => openProModal(isPro), 120);
         history.replaceState(null, '', location.pathname);
@@ -116,11 +112,9 @@ function escapeHtml(value) {
       }).join('');
 
       // Access status
-      const pct = isPro ? 100 : 35;
+      const pct = 100;
       document.getElementById('prog-bar').style.width = pct + '%';
-      document.getElementById('access-desc').textContent = isPro
-        ? 'Открыт весь видеоконтент, закрытый Telegram и 50 сообщений с AI.'
-        : 'Доступны первые видео всех разделов, лента, Shorts, открытый Telegram и 5 сообщений с AI.';
+      document.getElementById('access-desc').textContent = 'Материалы открыты. Сейчас важнее понять, какой маршрут действительно помогает пользователю.';
 
       // Practice time
       const mins = stats.practice_minutes || 0;
@@ -153,16 +147,14 @@ function escapeHtml(value) {
 
       // Product access cards
       window.profileAccessStatus = isPro ? 'pro' : 'free';
-      document.getElementById('diary-last').textContent = isPro ? 'Закрытый канал доступен по подписке' : 'Открытый канал доступен всем';
-      document.getElementById('open-diary-btn').textContent = isPro ? 'Получить ссылку Pro-канала' : 'Открыть Telegram';
-      document.getElementById('ai-usage-card').textContent = `${ai_usage?.used || 0} / ${ai_usage?.limit || (isPro ? 50 : 5)}`;
-      document.getElementById('ai-usage-desc').textContent = isPro
-        ? `${ai_usage?.remaining ?? 50} сообщений осталось в этом периоде.`
-        : `${ai_usage?.remaining ?? 5} сообщений осталось. В Pro будет 50.`;
-      const aiLimit = ai_usage?.limit || (isPro ? 50 : 5);
+      document.getElementById('diary-last').textContent = 'Сообщество подключаем как поддержку, а не как платный барьер.';
+      document.getElementById('open-diary-btn').textContent = 'Открыть Telegram';
+      document.getElementById('ai-usage-card').textContent = `${ai_usage?.used || 0}`;
+      document.getElementById('ai-usage-desc').textContent = 'Тестовый режим без лимита сообщений.';
+      const aiLimit = Math.max(ai_usage?.used || 1, 10);
       const aiUsed = ai_usage?.used || 0;
       document.getElementById('ring-ai').style.setProperty('--value', Math.min(100, Math.round((aiUsed / Math.max(1, aiLimit)) * 100)));
-      document.getElementById('gratitude-cnt').textContent = isPro ? 'Все' : (courses ? Math.max(courses.length - 1, 0) : 0);
+      document.getElementById('gratitude-cnt').textContent = courses ? courses.length : 0;
       document.getElementById('goal-done').textContent = stats.completed_lessons || 0;
       document.getElementById('goal-target').textContent = courses ? courses.length : 11;
 
@@ -172,7 +164,7 @@ function escapeHtml(value) {
         <a class="course-tile" href="${escapeHtml(safeInternalPath(c.href))}" style="--thumb:url('${escapeHtml(safeAssetPath(c.thumb))}')">
           <div class="course-tile-content">
             <p class="course-tile-title">${escapeHtml(c.title)}</p>
-            <p class="course-tile-sub">${isPro ? 'В вашем пути' : 'Можно начать с первого урока'}</p>
+            <p class="course-tile-sub">Можно добавить в путь</p>
           </div>
         </a>
       `).join('');
@@ -189,11 +181,7 @@ function escapeHtml(value) {
 
   document.getElementById('open-diary-btn').addEventListener('click', async (e) => {
     e.preventDefault();
-    if (window.profileAccessStatus === 'pro') {
-      alert('Ссылку на закрытый Telegram-канал подключим на этапе реальной подписки.');
-    } else {
-      alert('Ссылку на открытый Telegram-канал добавим после финального подключения каналов.');
-    }
+    alert('Ссылку на Telegram-канал добавим после финального подключения каналов.');
     return;
     const modal = document.getElementById('diary-modal');
     modal.style.display = 'flex';
@@ -223,7 +211,7 @@ function escapeHtml(value) {
     if (!modal) return;
     modal.classList.add('visible');
     document.body.style.overflow = 'hidden';
-    document.getElementById('pro-modal-status').textContent = isPro ? 'Сейчас у вас активен Система Pro.' : 'Сейчас у вас бесплатный доступ.';
+    document.getElementById('pro-modal-status').textContent = 'Сейчас доступ к материалам открыт, чтобы довести продуктовую логику.';
   }
 
   function closeProModal() {
@@ -283,7 +271,7 @@ function escapeHtml(value) {
   document.getElementById('diary-save-btn')?.addEventListener('click', saveDiary);
   document.getElementById('pro-close-btn')?.addEventListener('click', closeProModal);
   document.getElementById('yookassa-placeholder-btn')?.addEventListener('click', () => {
-    alert('Оплату через ЮKassa подключим на этапе боевого запуска.');
+    window.location.href = '/path/';
   });
 
   function pluralDays(n) {

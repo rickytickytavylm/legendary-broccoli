@@ -263,9 +263,6 @@ class ApiClient {
     try {
       return await this.request('GET', '/video/presign?slug=' + encodeURIComponent(slug));
     } catch (err) {
-      if (err.code === 'LOGIN_REQUIRED' || err.code === 'NO_SUBSCRIPTION') {
-        if (window.showAccessPrompt) window.showAccessPrompt(err.code);
-      }
       throw err;
     }
   }
@@ -273,9 +270,6 @@ class ApiClient {
     try {
       return await this.request('GET', '/video/hls-token?slug=' + encodeURIComponent(slug));
     } catch (err) {
-      if (err.code === 'LOGIN_REQUIRED' || err.code === 'NO_SUBSCRIPTION') {
-        if (window.showAccessPrompt) window.showAccessPrompt(err.code);
-      }
       throw err;
     }
   }
@@ -309,9 +303,6 @@ class ApiClient {
         expires_in: audio.expires_in,
       };
     } catch (err) {
-      if (err.code === 'LOGIN_REQUIRED' || err.code === 'NO_SUBSCRIPTION') {
-        if (window.showAccessPrompt) window.showAccessPrompt(err.code);
-      }
       throw err;
     }
   }

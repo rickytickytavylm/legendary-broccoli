@@ -45,8 +45,8 @@ function addMessage(text, role = 'user', options = {}) {
     actions.className = 'ai-limit-actions';
     const link = document.createElement('a');
     link.className = 'ai-limit-pro-btn';
-    link.href = '/account/?pro=1';
-    link.textContent = 'Открыть Система Pro';
+    link.href = '/path/';
+    link.textContent = 'Вернуться к пути';
     actions.appendChild(link);
     bubble.appendChild(actions);
   }
@@ -84,7 +84,7 @@ async function loadAiHistory() {
 function updateUsage(usage) {
   if (!usage) return;
   document.getElementById('ai-usage-pill').textContent =
-    `AI сообщения: ${usage.used} из ${usage.limit} · осталось ${usage.remaining}`;
+    `AI сообщения: ${usage.used} · тестовый режим без лимита`;
 }
 
 async function submitQuestion() {
@@ -122,7 +122,7 @@ async function submitQuestion() {
     assistant.msg.remove();
     if (err.code === 'AI_LIMIT_REACHED') {
       updateUsage(err.usage);
-      addMessage('Лимит сообщений закончился. В Система Pro доступно 50 сообщений с AI.', 'assistant', { limitCta: true });
+      addMessage('Лимит сообщений на этот период закончился. Вернитесь к пути: можно продолжить через видео, аудио или практику.', 'assistant', { limitCta: true });
     } else {
       addMessage('Не удалось отправить сообщение. Попробуйте еще раз.', 'assistant');
     }

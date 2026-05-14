@@ -29,18 +29,18 @@ function escapeHtml(value) {
     videoContainer.innerHTML = `
       <div class="video-locked">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <h3 style="margin:0;font-size:18px;color:#fff;font-weight:600">${isFirst ? 'Авторизуйтесь' : 'Требуется подписка'}</h3>
+        <h3 style="margin:0;font-size:18px;color:#fff;font-weight:600">${isFirst ? 'Авторизуйтесь' : 'Материал временно недоступен'}</h3>
         <p style="margin:0;font-size:14px;color:rgba(255,255,255,.5);max-width:280px">
-          ${isFirst ? 'Первый урок бесплатный. Войдите, чтобы продолжить.' : 'Этот урок доступен только по подписке.'}
+          ${isFirst ? 'Первый урок бесплатный. Войдите, чтобы продолжить.' : 'Не удалось открыть видео. Попробуйте обновить страницу или выбрать другой материал.'}
         </p>
         <button class="btn btn-primary" id="btn-auth-or-sub" style="padding:12px 24px;border-radius:12px;font-size:14px">
-          ${isFirst ? 'Войти' : 'Оформить подписку'}
+          ${isFirst ? 'Войти' : 'Обновить'}
         </button>
       </div>
     `;
     document.getElementById('btn-auth-or-sub').addEventListener('click', () => {
       if (isFirst) window.openAuthModal('login');
-      else window.location.href = '/subscription/';
+      else window.location.reload();
     });
     if (infoBlock) infoBlock.style.display = 'none';
   }
