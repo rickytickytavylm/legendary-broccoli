@@ -351,13 +351,6 @@ function initOnboarding() {
     onboardingIndex += 1;
     renderOnboarding();
   });
-  document.querySelector('[data-today-checkin]')?.addEventListener('click', (event) => {
-    const button = event.target.closest('button');
-    if (!button) return;
-    document.querySelectorAll('[data-today-checkin] button').forEach((item) => item.classList.toggle('active', item === button));
-    localStorage.setItem('sistema:last-checkin', JSON.stringify({ value: button.textContent.trim(), at: new Date().toISOString() }));
-  });
-
   const completed = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
   const splashSeen = localStorage.getItem(SPLASH_SEEN_KEY) === 'true';
   if (completed) {

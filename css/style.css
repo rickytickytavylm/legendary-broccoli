@@ -776,9 +776,9 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   max-width: none;
   margin: 0;
   box-sizing: border-box;
-  padding-top: clamp(104px, 10vw, 132px);
+  padding-top: clamp(112px, 10vw, 138px);
   padding-bottom: 132px;
-  padding-inline: clamp(14px, 2.8vw, 34px);
+  padding-inline: clamp(8px, 1.8vw, 28px);
   background:
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 32%),
     radial-gradient(circle at 50% 42%, rgba(138,115,255,.10), transparent 38%),
@@ -1176,11 +1176,11 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   .system-intro-screen,
   .onboarding-flow,
   .today-screen {
-    padding-top: max(86px, calc(76px + env(safe-area-inset-top)));
+    padding-top: max(112px, calc(102px + env(safe-area-inset-top)));
   }
 
   .today-screen {
-    padding-inline: 14px;
+    padding-inline: 8px;
   }
 
   .system-intro-screen {
@@ -1209,9 +1209,9 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-hero-card {
-    min-height: clamp(410px, 58svh, 500px);
-    padding: 25px;
-    border-radius: 30px;
+    min-height: clamp(390px, 55svh, 500px);
+    padding: 24px 26px;
+    border-radius: 28px;
   }
 
   .today-checkin-card,
