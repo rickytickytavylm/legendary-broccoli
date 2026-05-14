@@ -185,6 +185,13 @@ function showNewHomeState(state) {
   document.body.classList.toggle('home-onboarding-active', state !== 'today');
 }
 
+function showAuthGatewayMode(mode) {
+  const welcome = document.querySelector('[data-auth-welcome]');
+  const providers = document.querySelector('[data-auth-providers]');
+  if (welcome) welcome.classList.toggle('hidden', mode !== 'welcome');
+  if (providers) providers.classList.toggle('hidden', mode !== 'providers');
+}
+
 function renderToday() {
   const profile = JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}');
   const route = routeConfig(profile);
@@ -285,6 +292,19 @@ function hasStepAnswer(step) {
 }
 
 function initOnboarding() {
+  document.querySelector('[data-intro-login]')?.addEventListener('click', () => {
+    showAuthGatewayMode('providers');
+  });
+  document.querySelector('[data-auth-choice-back]')?.addEventListener('click', () => {
+    showAuthGatewayMode('welcome');
+  });
+  document.querySelector('[data-telegram-login]')?.addEventListener('click', () => {
+    if (window.startTelegramLogin) window.startTelegramLogin();
+    else if (window.openAuthModal) window.openAuthModal();
+  });
+  document.querySelector('[data-yandex-login]')?.addEventListener('click', () => {
+    if (window.API && window.API.yandexLoginUrl) window.location.href = window.API.yandexLoginUrl();
+  });
   document.querySelector('[data-onboarding-start]')?.addEventListener('click', () => {
     onboardingIndex = 0;
     renderOnboarding();

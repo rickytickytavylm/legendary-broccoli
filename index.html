@@ -50,14 +50,41 @@
   <main class="main-content">
     
     <section class="system-intro-screen" id="system-intro" aria-label="Вход в систему">
-      <div class="system-intro-card">
-        <img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="system-intro-logo" loading="eager" decoding="async">
-        <p class="system-intro-kicker">Личная система сопровождения</p>
-        <h1>Собрать путь</h1>
-        <p>Не выбирайте из десятков материалов. Ответьте на несколько вопросов, и Система предложит спокойный первый шаг.</p>
-        <div class="system-intro-actions">
-          <button class="ux-button ux-button-primary" type="button" data-onboarding-start>Настроить путь</button>
-          <button class="ux-button ux-button-secondary" type="button" data-auth-open="login">Войти</button>
+      <div class="auth-gateway-shell" data-auth-gateway>
+        <div class="auth-gateway-status" aria-hidden="true">
+          <span>9:41</span>
+          <span>●●●</span>
+        </div>
+
+        <div class="auth-gateway-panel" data-auth-welcome>
+          <div class="auth-gateway-copy">
+            <span class="auth-gateway-pill">Добро пожаловать</span>
+            <h1>Твой путь к осознанной и счастливой жизни</h1>
+            <p>Психология, практики и поддержка, чтобы стать лучшей версией себя</p>
+            <div class="auth-gateway-dots" aria-hidden="true"><span></span><span class="active"></span><span></span></div>
+          </div>
+          <div class="auth-gateway-actions">
+            <button class="ios-auth-button ios-auth-button-primary" type="button" data-intro-login>Войти</button>
+            <button class="ios-auth-button ios-auth-button-secondary" type="button" data-onboarding-start>Пропустить</button>
+          </div>
+        </div>
+
+        <div class="auth-gateway-panel auth-provider-panel hidden" data-auth-providers>
+          <button class="auth-provider-back" type="button" data-auth-choice-back>Назад</button>
+          <div class="auth-gateway-copy">
+            <span class="auth-gateway-pill">Вход</span>
+            <h2>Сохранить путь и прогресс</h2>
+            <p>Выберите удобный способ входа. После авторизации Система сохранит маршрут и рекомендации.</p>
+          </div>
+          <div class="auth-gateway-actions">
+            <button class="ios-auth-button ios-auth-button-primary" type="button" id="auth-telegram-btn" data-telegram-login>
+              <span>Войти через Telegram</span>
+            </button>
+            <button class="ios-auth-button ios-auth-button-secondary" type="button" id="auth-yandex-btn" data-yandex-login>
+              <span>Войти через Яндекс</span>
+            </button>
+            <p class="auth-error" id="auth-error"></p>
+          </div>
         </div>
       </div>
     </section>

@@ -271,6 +271,9 @@
     window.location.href = window.API.yandexLoginUrl();
   }
 
+  window.startTelegramLogin = startTelegramLogin;
+  window.startYandexLogin = startYandexLogin;
+
   function setupCallFallbackButton() {
     const callBtn = document.getElementById('auth-call');
     if (!callBtn) return;
