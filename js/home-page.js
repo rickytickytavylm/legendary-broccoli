@@ -217,6 +217,7 @@ function renderToday() {
   const hero = document.querySelector('[data-today-hero]');
   const main = document.querySelector('[data-today-main]');
   const primary = document.querySelector('[data-today-primary]');
+  const heroAction = document.querySelector('[data-today-hero-action]');
   if (todayTitle) todayTitle.textContent = route.title;
   if (todaySubtitle) todaySubtitle.textContent = route.desc;
   if (stepTitle) stepTitle.textContent = route.firstStep;
@@ -224,6 +225,7 @@ function renderToday() {
   if (hero) hero.style.setProperty('--ux-bg', `url('${route.hero}')`);
   if (main) main.style.setProperty('--ux-bg', `url('${route.image}')`);
   if (primary) primary.setAttribute('href', route.href);
+  if (heroAction) heroAction.setAttribute('href', route.href);
 }
 
 function finishOnboarding() {

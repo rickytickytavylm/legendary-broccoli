@@ -114,50 +114,57 @@
 
     <section class="today-screen hidden" id="today-screen" aria-label="Сегодня">
       <div class="today-hero-card" data-today-hero style="--ux-bg:url('/assets/webp/new_main.webp')">
-        <div>
+        <div class="today-hero-copy">
           <p class="hub-kicker">Сегодня</p>
           <h1 data-today-title>Ваш следующий шаг</h1>
           <p data-today-subtitle>Система соберет маршрут вокруг вашего запроса и предложит первое действие.</p>
+          <a class="today-hero-action" href="/path/" data-today-hero-action>
+            <span>Продолжить</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
         </div>
         <div class="today-progress-pill"><span data-today-progress>День 1</span></div>
+        <div class="today-hero-dots" aria-hidden="true"><span class="active"></span><span></span><span></span></div>
+      </div>
+
+      <article class="today-checkin-card" style="--ux-bg:url('/assets/webp/open_all.webp')">
+        <p class="hub-kicker">Check-in</p>
+        <h3>Как вы сейчас?</h3>
+        <div class="today-checkin-options" data-today-checkin>
+          <button type="button"><span aria-hidden="true">≈</span>Спокойно</button>
+          <button type="button"><span aria-hidden="true">ϟ</span>Напряжение</button>
+          <button type="button"><span aria-hidden="true">▵</span>Тревога</button>
+          <button type="button"><span aria-hidden="true">▭</span>Усталость</button>
+          <button type="button"><span aria-hidden="true">?</span>Не понимаю</button>
+        </div>
+      </article>
+
+      <div class="today-section-title">
+        <div>
+          <p class="hub-kicker">Продолжить</p>
+        </div>
+        <a href="/path/">Смотреть все <span aria-hidden="true">›</span></a>
       </div>
 
       <div class="today-grid">
         <article class="today-main-card" data-today-main style="--ux-bg:url('/assets/webp/ai_back.webp')">
-          <p class="hub-kicker">Следующий шаг</p>
-          <h2 data-today-step-title>Мягкий вход в систему</h2>
-          <p data-today-step-desc>Начните с короткого видео, а затем сохраните наблюдение через AI-помощника.</p>
-          <div class="today-actions">
-            <a class="ux-button ux-button-primary" href="/practices/" data-today-primary>Начать</a>
-            <a class="ux-button ux-button-secondary" href="/ai/">Спросить AI</a>
+          <div>
+            <span class="today-day-pill">День 1</span>
+            <h2 data-today-step-title>Мягкий вход в систему</h2>
+            <p data-today-step-desc>Начните с короткого видео, а затем сохраните наблюдение через AI-помощника.</p>
           </div>
+          <a class="today-play-button" href="/practices/" data-today-primary aria-label="Продолжить">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.75v12.5c0 .78.86 1.26 1.53.86l10.1-6.25a1 1 0 0 0 0-1.72L9.53 4.89A1 1 0 0 0 8 5.75Z"/></svg>
+          </a>
+          <div class="today-card-progress" aria-hidden="true"><span></span><em>20%</em></div>
         </article>
 
-        <article class="today-checkin-card" style="--ux-bg:url('/assets/webp/open_all.webp')">
-          <p class="hub-kicker">Check-in</p>
-          <h3>Как вы сейчас?</h3>
-          <div class="today-checkin-options" data-today-checkin>
-            <button type="button">Спокойно</button>
-            <button type="button">Напряжение</button>
-            <button type="button">Тревога</button>
-            <button type="button">Усталость</button>
-            <button type="button">Не понимаю</button>
+        <a href="/ai/" class="today-support-card" style="--ux-bg:url('/assets/webp/ai_back.webp')">
+          <div>
+            <h3>Нужна поддержка?</h3>
+            <p>Спросите AI о том, что сейчас важно для вас.</p>
           </div>
-        </article>
-      </div>
-
-      <div class="today-rail">
-        <a href="/path/" class="today-mini-card" style="--ux-bg:url('/assets/webp/scenario.webp')">
-          <span>Путь</span>
-          <strong>Посмотреть маршрут</strong>
-        </a>
-        <a href="/community/" class="today-mini-card" style="--ux-bg:url('/assets/webp/hope.webp')">
-          <span>Сообщество</span>
-          <strong>Группы и эфиры</strong>
-        </a>
-        <a href="/programs/" class="today-mini-card" style="--ux-bg:url('/assets/webp/open_all.webp')">
-          <span>Каталог</span>
-          <strong>Все программы</strong>
+          <span class="today-support-icon" aria-hidden="true">✦</span>
         </a>
       </div>
     </section>
