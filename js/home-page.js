@@ -1,6 +1,8 @@
 const ONBOARDING_COMPLETE_KEY = 'sistema:onboarding-complete';
 const ONBOARDING_PROFILE_KEY = 'sistema:onboarding-profile';
 const SPLASH_SEEN_KEY = 'sistema:intro-splash-seen';
+const SPLASH_AUDIO_SRC = '/assets/audio/opening-sistema.mp3';
+let splashSoundPlayed = false;
 
 const onboardingSteps = [
   {
@@ -175,7 +177,20 @@ function routeConfig(profile = onboardingState) {
   return routes[selectedRouteKey(profile)] || routes.selfstudy;
 }
 
+function playSplashSound() {
+  if (splashSoundPlayed) return;
+  splashSoundPlayed = true;
+  try {
+    const audio = new Audio(SPLASH_AUDIO_SRC);
+    audio.preload = 'auto';
+    audio.volume = 0.9;
+    const playPromise = audio.play();
+    if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+  } catch (e) {}
+}
+
 function showNewHomeState(state) {
+  if (state === 'splash') playSplashSound();
   document.body.classList.toggle('home-splash-active', state === 'splash');
   document.body.classList.toggle('home-first-run-active', state === 'intro' || state === 'onboarding' || state === 'splash');
   document.body.classList.toggle('home-today-active', state === 'today');
