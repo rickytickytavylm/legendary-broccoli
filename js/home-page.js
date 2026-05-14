@@ -236,17 +236,15 @@ function renderOnboarding() {
   const options = document.querySelector('[data-onboarding-options]');
   const back = document.querySelector('[data-onboarding-back]');
   const next = document.querySelector('[data-onboarding-next]');
-  const art = document.querySelector('[data-onboarding-art]');
   if (label) label.textContent = step.label;
   if (title) title.textContent = step.title;
   if (desc) desc.textContent = step.desc;
   if (progress) progress.style.width = `${((onboardingIndex + 1) / onboardingSteps.length) * 100}%`;
   if (dots) {
-    dots.innerHTML = onboardingSteps.map((_, index) => `<span class="${index <= onboardingIndex ? 'active' : ''}"></span>`).join('');
+    dots.innerHTML = onboardingSteps.map((_, index) => `<span class="${index === onboardingIndex ? 'active' : ''} ${index < onboardingIndex ? 'done' : ''}"></span>`).join('');
   }
   if (back) back.disabled = onboardingIndex === 0;
-  if (next) next.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'Начать' : 'Дальше';
-  if (art) art.dataset.step = String(onboardingIndex + 1);
+  if (next) next.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'Начать' : 'Далее';
   const hint = document.querySelector('[data-onboarding-hint]');
   const result = document.querySelector('[data-onboarding-result]');
   if (hint) {
@@ -268,7 +266,8 @@ function renderOnboarding() {
     const value = optionValue(option);
     return `
     <button type="button" class="${selected.includes(value) ? 'active' : ''}" data-onboarding-option="${value}">
-      ${optionLabel(option)}
+      <span>${optionLabel(option)}</span>
+      <i aria-hidden="true"></i>
     </button>
   `;
   }).join('');
@@ -320,11 +319,6 @@ function initOnboarding() {
   document.querySelector('[data-onboarding-back]')?.addEventListener('click', () => {
     onboardingIndex = Math.max(0, onboardingIndex - 1);
     renderOnboarding();
-  });
-  document.querySelector('[data-onboarding-skip]')?.addEventListener('click', () => {
-    onboardingState.focus = ['selfstudy'];
-    onboardingState.intensity = 'calm';
-    finishOnboarding();
   });
   document.querySelector('[data-onboarding-next]')?.addEventListener('click', () => {
     if (onboardingIndex === onboardingSteps.length - 1) {

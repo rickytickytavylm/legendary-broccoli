@@ -51,21 +51,16 @@
     
     <section class="system-intro-screen" id="system-intro" aria-label="Вход в систему">
       <div class="auth-gateway-shell" data-auth-gateway>
-        <div class="auth-gateway-status" aria-hidden="true">
-          <span>9:41</span>
-          <span>●●●</span>
-        </div>
-
         <div class="auth-gateway-panel" data-auth-welcome>
           <div class="auth-gateway-copy">
-            <span class="auth-gateway-pill">Добро пожаловать</span>
+            <img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="auth-gateway-logo" loading="eager" decoding="async">
             <h1>Твой путь к осознанной и счастливой жизни</h1>
             <p>Психология, практики и поддержка, чтобы стать лучшей версией себя</p>
             <div class="auth-gateway-dots" aria-hidden="true"><span></span><span class="active"></span><span></span></div>
           </div>
           <div class="auth-gateway-actions">
             <button class="ios-auth-button ios-auth-button-primary" type="button" data-intro-login>Войти</button>
-            <button class="ios-auth-button ios-auth-button-secondary" type="button" data-onboarding-start>Пропустить</button>
+            <button class="ios-auth-button ios-auth-button-secondary" type="button" data-onboarding-start>Настроить путь</button>
           </div>
         </div>
 
@@ -92,17 +87,12 @@
     <section class="onboarding-flow hidden" id="onboarding-flow" aria-label="Настройка пути">
       <div class="onboarding-card">
         <div class="onboarding-topbar">
+          <span class="onboarding-time">9:41</span>
           <button class="onboarding-back-link" type="button" data-onboarding-back>Назад</button>
-          <button class="onboarding-skip" type="button" data-onboarding-skip>Пропустить</button>
-        </div>
-        <div class="onboarding-art" data-onboarding-art>
-          <span class="onboarding-orbit orbit-a"></span>
-          <span class="onboarding-orbit orbit-b"></span>
-          <span class="onboarding-orbit orbit-c"></span>
-          <span class="onboarding-orbit orbit-d"></span>
+          <span class="onboarding-status-icons">●●●</span>
         </div>
         <div class="onboarding-sheet">
-          <div class="onboarding-progress-dots" data-onboarding-dots></div>
+          <div class="onboarding-progress-dots onboarding-progress-bars" data-onboarding-dots></div>
           <p class="hub-kicker" data-onboarding-step-label>Шаг 1 из 6</p>
           <h2 data-onboarding-title>Что сейчас важнее?</h2>
           <p data-onboarding-desc>Выберите ближайший запрос. Это не диагноз, а точка входа в материалы.</p>
@@ -114,7 +104,7 @@
             <p data-result-desc>Система соберет первый шаг после ответов.</p>
           </div>
           <div class="onboarding-actions">
-            <button class="ux-button ux-button-primary" type="button" data-onboarding-next>Дальше</button>
+            <button class="ios-auth-button ios-auth-button-primary" type="button" data-onboarding-next>Далее</button>
           </div>
         </div>
       </div>
