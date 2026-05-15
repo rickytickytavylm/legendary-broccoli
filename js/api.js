@@ -17,6 +17,10 @@ function getSistemaDeviceId() {
   return id;
 }
 
+function hasSistemaDeviceId() {
+  return !!localStorage.getItem(SISTEMA_DEVICE_ID_KEY);
+}
+
 class ApiClient {
   constructor() {
     this.base = API_BASE;
@@ -229,6 +233,10 @@ class ApiClient {
 
   isLoggedIn() {
     return !!this.accessToken;
+  }
+
+  hasDeviceIdentity() {
+    return hasSistemaDeviceId();
   }
 
   // --- Auth ---

@@ -156,16 +156,21 @@
   var mobileHeader = document.createElement('header');
   mobileHeader.id = 'app-mobile-header';
   mobileHeader.className = 'app-mobile-header';
-  var isLoggedIn = !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
+  function hasProfileIdentity() {
+    return !!(window.API && (
+      (window.API.isLoggedIn && window.API.isLoggedIn()) ||
+      (window.API.hasDeviceIdentity && window.API.hasDeviceIdentity())
+    ));
+  }
+
+  var isLoggedIn = hasProfileIdentity();
 
   mobileHeader.innerHTML =
     '<a href="/" class="mobile-header-brand">' +
       '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="mobile-header-logo">' +
     '</a>' +
     '<div class="mobile-header-actions">' +
-      (isLoggedIn
-        ? '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>'
-        : '<button type="button" class="mobile-login-btn" id="mobile-login-btn">Войти</button>') +
+      '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>' +
     '</div>';
 
   // ── Insert into DOM ─────────────────────────────────────
@@ -196,15 +201,13 @@
   function renderMobileAuthAction(loggedIn) {
     var actions = mobileHeader.querySelector('.mobile-header-actions');
     if (!actions) return;
-    actions.innerHTML = loggedIn
-      ? '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>'
-      : '<button type="button" class="mobile-login-btn" id="mobile-login-btn">Войти</button>';
+    actions.innerHTML = '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>';
     bindMobileLoginButton();
   }
 
   bindMobileLoginButton();
   window.addEventListener('auth:change', function(event) {
-    renderMobileAuthAction(!!(event.detail && event.detail.user) || !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn()));
+    renderMobileAuthAction(true);
     accessState = 'unknown';
     if (window.API && window.API.getSubscription) {
       window.API.getSubscription()
@@ -214,13 +217,13 @@
           updateLessonLocks(document);
         })
         .catch(function() {
-          accessState = window.API && window.API.isLoggedIn && window.API.isLoggedIn() ? 'free' : 'guest';
+          accessState = hasProfileIdentity() ? 'free' : 'guest';
           updateLessonLocks(document);
         });
     }
   });
 
-  var accessState = isLoggedIn ? 'unknown' : 'guest';
+  var accessState = isLoggedIn ? 'unknown' : 'free';
 
   if (window.API && window.API.restoreSession) {
     window.API.restoreSession()

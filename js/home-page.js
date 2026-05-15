@@ -1,5 +1,7 @@
 const ONBOARDING_COMPLETE_KEY = 'sistema:onboarding-complete';
 const ONBOARDING_PROFILE_KEY = 'sistema:onboarding-profile';
+const ONBOARDING_SCHEMA_KEY = 'sistema:onboarding-schema';
+const ONBOARDING_SCHEMA_VERSION = 'device-v1';
 const SPLASH_SEEN_KEY = 'sistema:intro-splash-seen';
 const SPLASH_AUDIO_SRC = '/assets/audio/opening-sistema.mp3';
 const TODAY_OPENED_PROGRAMS_KEY = 'sistema:today-opened-programs';
@@ -199,6 +201,14 @@ function routeConfig(profile = onboardingState, routeKey) {
   return copy;
 }
 
+function onboardingProfile() {
+  try {
+    return JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}') || {};
+  } catch (e) {
+    return {};
+  }
+}
+
 function programSlugFromHref(href = '') {
   return href.replace(/^https?:\/\/[^/]+/i, '').split('?')[0].replace(/^\/|\/$/g, '');
 }
@@ -276,6 +286,7 @@ function playSplashSound() {
 function resetLocalOnboardingForFreshDevice() {
   localStorage.removeItem(ONBOARDING_COMPLETE_KEY);
   localStorage.removeItem(ONBOARDING_PROFILE_KEY);
+  localStorage.removeItem(ONBOARDING_SCHEMA_KEY);
   localStorage.removeItem(SPLASH_SEEN_KEY);
 }
 
@@ -299,9 +310,10 @@ function showAuthGatewayMode(mode) {
 }
 
 function renderToday(routeKey) {
-  const profile = JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}');
+  const profile = onboardingProfile();
   currentTodayRouteKey = routeKey || currentTodayRouteKey || selectedRouteKey(profile);
   const route = routeConfig(profile, currentTodayRouteKey);
+  const kicker = document.querySelector('[data-today-kicker]');
   const todayTitle = document.querySelector('[data-today-title]');
   const todaySubtitle = document.querySelector('[data-today-subtitle]');
   const stepTitle = document.querySelector('[data-today-step-title]');
@@ -312,6 +324,10 @@ function renderToday(routeKey) {
   const secondaryTitle = document.querySelector('[data-today-secondary-title]');
   const secondaryDesc = document.querySelector('[data-today-secondary-desc]');
   const dots = document.querySelector('[data-today-dots]');
+  if (kicker) {
+    const name = cleanName(profile.name);
+    kicker.textContent = name ? `Добро пожаловать, ${name}` : 'Сегодня';
+  }
   if (todayTitle) todayTitle.textContent = route.title;
   if (todaySubtitle) todaySubtitle.textContent = route.desc;
   if (stepTitle) stepTitle.textContent = route.firstStep;
@@ -338,6 +354,7 @@ function finishOnboarding() {
   const route = routeConfig();
   onboardingState.name = cleanName(onboardingState.name) || 'Гость';
   localStorage.setItem(ONBOARDING_COMPLETE_KEY, 'true');
+  localStorage.setItem(ONBOARDING_SCHEMA_KEY, ONBOARDING_SCHEMA_VERSION);
   localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify({
     ...onboardingState,
     routeKey: selectedRouteKey(),
@@ -528,7 +545,11 @@ function initOnboarding() {
           resetLocalOnboardingForFreshDevice();
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        if (!window.API?.isLoggedIn?.() && localStorage.getItem(ONBOARDING_SCHEMA_KEY) !== ONBOARDING_SCHEMA_VERSION) {
+          resetLocalOnboardingForFreshDevice();
+        }
+      })
       .finally(boot);
     return;
   }
@@ -538,11 +559,11 @@ function initOnboarding() {
 window.refreshAuthUI = function(user) {
   const btn = document.getElementById('nav-auth-btn');
   const link = document.getElementById('nav-account-link');
-  if (user || window.API.isLoggedIn()) {
-    if (btn) btn.style.display = 'none';
-    if (link) link.style.display = 'inline-flex';
-  }
+  if (btn) btn.style.display = 'none';
+  if (link) link.style.display = 'inline-flex';
 };
+
+window.refreshAuthUI();
 
 if (window.API.isLoggedIn()) {
   window.API.me().then(r => window.refreshAuthUI(r.user)).catch(() => {});
