@@ -788,41 +788,17 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     #050506;
 }
 
-.today-welcome {
-  width: min(100%, 1180px);
-  margin: 0 auto 18px;
-  padding: 0 2px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 18px;
-}
-
-.today-welcome h2 {
-  margin: 0;
-  font-size: clamp(22px, 2.6vw, 34px);
-  line-height: 1.08;
-  letter-spacing: -.045em;
-  color: rgba(255,255,255,.94);
-}
-
-.today-welcome p {
-  margin: 7px 0 0;
-  max-width: 560px;
-  color: rgba(255,255,255,.52);
-  font-size: 14px;
-  line-height: 1.45;
-}
-
 .today-hero-card {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  padding: clamp(24px, 4vw, 44px);
-  border-radius: 34px;
-  min-height: clamp(410px, 52svh, 540px);
+  padding: clamp(30px, 5vw, 58px);
+  border-radius: 0 0 34px 34px;
+  min-height: clamp(430px, 58svh, 610px);
   align-items: flex-end;
   isolation: isolate;
+  width: min(100%, 1180px);
+  margin: -18px auto 0;
 }
 
 .today-hero-card::before,
@@ -856,53 +832,6 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .today-hero-copy {
   width: min(100%, 520px);
-}
-
-.today-hero-action {
-  position: relative;
-  isolation: isolate;
-  min-height: 48px;
-  width: fit-content;
-  margin-top: 26px;
-  padding: 0 18px 0 21px;
-  display: inline-flex;
-  align-items: center;
-  gap: 22px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.32);
-  color: rgba(255,255,255,.9);
-  text-decoration: none;
-  background:
-    radial-gradient(circle at 30% 0%, rgba(255,255,255,.25), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.055)),
-    rgba(0,0,0,.18);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.28),
-    inset 0 -1px 0 rgba(255,255,255,.07),
-    0 20px 46px rgba(0,0,0,.28);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  backdrop-filter: blur(28px) saturate(180%);
-  font-size: 15px;
-  font-weight: 650;
-  letter-spacing: -.02em;
-}
-
-.today-hero-action svg {
-  width: 18px;
-  height: 18px;
-}
-
-.today-progress-pill {
-  align-self: flex-start;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 999px;
-  padding: 9px 13px;
-  color: rgba(255,255,255,.74);
-  background: rgba(255,255,255,.08);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
-  font-size: 12px;
-  font-weight: 650;
 }
 
 .today-carousel-controls {
@@ -972,8 +901,9 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .today-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
-  margin-top: 12px;
+  gap: 16px;
+  width: min(100%, 1180px);
+  margin: 12px auto 0;
 }
 
 @media (min-width: 769px) {
@@ -983,8 +913,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-hero-card {
-    min-height: clamp(330px, 36vw, 430px);
-    border-radius: 28px;
+    min-height: clamp(360px, 38vw, 470px);
+    border-radius: 0 0 34px 34px;
   }
 
   .today-hero-copy {
@@ -998,17 +928,17 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   .today-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
-    gap: 14px;
+    gap: 16px;
   }
 
   .today-main-card,
   .today-support-card {
-    min-height: 290px;
+    min-height: 330px;
     align-items: end;
     grid-template-columns: 1fr;
   }
 
-  .today-play-button {
+  .today-program-button {
     justify-self: end;
     align-self: end;
   }
@@ -1183,8 +1113,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .today-main-card {
-  min-height: clamp(132px, 16vw, 168px);
-  padding: 22px;
+  min-height: clamp(190px, 24vw, 260px);
+  padding: 24px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -1196,20 +1126,32 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   margin-bottom: 16px;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(255,255,255,.09);
-  color: rgba(255,255,255,.78);
+  border: 1px solid rgba(255,255,255,.18);
+  background:
+    radial-gradient(circle at 34% 0%, rgba(255,255,255,.18), transparent 34%),
+    rgba(255,255,255,.08);
+  color: rgba(255,255,255,.82);
   font-size: 11px;
   font-weight: 650;
 }
 
-.today-play-button {
+.today-program-tracker {
+  display: block;
+  margin-top: 14px;
+  color: rgba(255,255,255,.56);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.today-program-button {
   position: relative;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  min-height: 48px;
+  padding: 0 17px 0 19px;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   color: #fff;
   text-decoration: none;
   border: 1px solid rgba(255,255,255,.30);
@@ -1223,12 +1165,15 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     inset 0 1px 0 rgba(255,255,255,.26),
     inset 0 -1px 0 rgba(255,255,255,.06),
     0 14px 36px rgba(0,0,0,.28);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -.02em;
 }
 
-.today-play-button svg {
-  width: 24px;
-  height: 24px;
-  margin-left: 3px;
+.today-program-button svg {
+  width: 17px;
+  height: 17px;
+  margin-left: 1px;
 }
 
 .today-card-progress {
@@ -1293,19 +1238,6 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     padding-inline: 8px;
   }
 
-  .today-welcome {
-    margin-bottom: 14px;
-    padding-inline: 4px;
-  }
-
-  .today-welcome h2 {
-    font-size: 22px;
-  }
-
-  .today-welcome p {
-    font-size: 12.5px;
-  }
-
   .system-intro-screen {
     padding: 0;
     width: 100vw;
@@ -1355,9 +1287,10 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-hero-card {
-    min-height: clamp(390px, 55svh, 500px);
-    padding: 24px 26px;
-    border-radius: 28px;
+    min-height: clamp(430px, 58svh, 540px);
+    padding: 28px 26px 30px;
+    border-radius: 0 0 30px 30px;
+    margin-top: -8px;
   }
 
   .today-carousel-controls {
@@ -1388,6 +1321,17 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   .today-main-card,
   .today-support-card {
     border-radius: 24px;
+  }
+
+  .today-main-card {
+    min-height: 230px;
+    grid-template-columns: 1fr;
+    align-items: end;
+  }
+
+  .today-program-button {
+    width: fit-content;
+    justify-self: end;
   }
 
   .today-checkin-card {
@@ -1480,6 +1424,10 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   .today-main-card,
   .today-checkin-card {
     border-radius: 28px;
+  }
+
+  .today-hero-card {
+    border-radius: 0 0 30px 30px;
   }
 
   .today-hero-card,

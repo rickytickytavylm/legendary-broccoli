@@ -2,6 +2,19 @@ const ONBOARDING_COMPLETE_KEY = 'sistema:onboarding-complete';
 const ONBOARDING_PROFILE_KEY = 'sistema:onboarding-profile';
 const SPLASH_SEEN_KEY = 'sistema:intro-splash-seen';
 const SPLASH_AUDIO_SRC = '/assets/audio/opening-sistema.mp3';
+const TODAY_OPENED_PROGRAMS_KEY = 'sistema:today-opened-programs';
+const TODAY_LESSON_COUNT_ENDPOINTS = {
+  geshtalt: '/content/geshtalt-lessons',
+  sozavisimost: '/content/sozavisimost-lessons',
+  psihosomatika: '/content/psihosomatika-lessons',
+  mj: '/content/mj-lessons',
+  yoga: '/content/yoga-lessons',
+  dermer: '/content/dermer-lessons',
+  gipnoz: '/content/gipnoz-lessons',
+  master: '/content/master-lessons',
+  superviziya: '/content/superviziya-lessons',
+  antologiya: '/content/antologiya-lessons',
+};
 let splashSoundPlayed = false;
 
 const onboardingSteps = [
@@ -173,6 +186,68 @@ function routeConfig(profile = onboardingState, routeKey) {
   return copy;
 }
 
+function programSlugFromHref(href = '') {
+  return href.replace(/^https?:\/\/[^/]+/i, '').split('?')[0].replace(/^\/|\/$/g, '');
+}
+
+function openedPrograms() {
+  try {
+    return JSON.parse(localStorage.getItem(TODAY_OPENED_PROGRAMS_KEY) || '{}') || {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function markProgramOpened(href) {
+  const slug = programSlugFromHref(href);
+  if (!slug) return;
+  localStorage.setItem(TODAY_OPENED_PROGRAMS_KEY, JSON.stringify({
+    ...openedPrograms(),
+    [slug]: new Date().toISOString(),
+  }));
+}
+
+function programOpened(href) {
+  const slug = programSlugFromHref(href);
+  return Boolean(slug && openedPrograms()[slug]);
+}
+
+async function fetchProgramLessonCount(href) {
+  const slug = programSlugFromHref(href);
+  if (!slug || !window.API?.getProgram) return null;
+  try {
+    const data = await window.API.getProgram(slug);
+    return Array.isArray(data.lessons) ? data.lessons.length : null;
+  } catch (e) {
+    const fallbackEndpoint = TODAY_LESSON_COUNT_ENDPOINTS[slug];
+    if (!fallbackEndpoint || !window.API?.request) return null;
+    try {
+      const data = await window.API.request('GET', fallbackEndpoint);
+      return Array.isArray(data.lessons) ? data.lessons.length : null;
+    } catch (fallbackError) {
+      return null;
+    }
+  }
+}
+
+function setTodayProgramState(prefix, program) {
+  const link = document.querySelector(`[data-today-${prefix === 'primary' ? 'primary' : 'secondary-link'}]`);
+  const action = document.querySelector(`[data-today-${prefix}-action]`);
+  const tracker = document.querySelector(`[data-today-${prefix}-tracker]`);
+  const href = program?.href || '';
+  if (link && program?.href) link.setAttribute('href', program.href);
+  if (action) action.textContent = programOpened(href) ? 'Продолжить' : 'Начать';
+  if (tracker) tracker.textContent = 'Считаем материалы';
+  fetchProgramLessonCount(href).then((count) => {
+    if (!tracker || link?.getAttribute('href') !== href) return;
+    if (!count) {
+      tracker.textContent = programOpened(href) ? 'Программа открыта' : 'Материалы внутри';
+      return;
+    }
+    tracker.textContent = `${programOpened(href) ? 1 : 0} из ${count} материалов`;
+  });
+}
+
 function playSplashSound() {
   if (splashSoundPlayed) return;
   splashSoundPlayed = true;
@@ -208,7 +283,6 @@ function renderToday(routeKey) {
   const profile = JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}');
   currentTodayRouteKey = routeKey || currentTodayRouteKey || selectedRouteKey(profile);
   const route = routeConfig(profile, currentTodayRouteKey);
-  const routeIndex = Math.max(0, todayRouteKeys.indexOf(currentTodayRouteKey));
   const todayTitle = document.querySelector('[data-today-title]');
   const todaySubtitle = document.querySelector('[data-today-subtitle]');
   const stepTitle = document.querySelector('[data-today-step-title]');
@@ -218,10 +292,6 @@ function renderToday(routeKey) {
   const secondaryCard = document.querySelector('[data-today-secondary]');
   const secondaryTitle = document.querySelector('[data-today-secondary-title]');
   const secondaryDesc = document.querySelector('[data-today-secondary-desc]');
-  const secondaryLink = document.querySelector('[data-today-secondary-link]');
-  const primary = document.querySelector('[data-today-primary]');
-  const heroAction = document.querySelector('[data-today-hero-action]');
-  const progress = document.querySelector('[data-today-progress]');
   const dots = document.querySelector('[data-today-dots]');
   if (todayTitle) todayTitle.textContent = route.title;
   if (todaySubtitle) todaySubtitle.textContent = route.desc;
@@ -232,10 +302,8 @@ function renderToday(routeKey) {
   if (secondaryCard && route.secondary) secondaryCard.style.setProperty('--ux-bg', `url('${route.secondary.image}')`);
   if (secondaryTitle && route.secondary) secondaryTitle.textContent = route.secondary.title;
   if (secondaryDesc && route.secondary) secondaryDesc.textContent = route.secondary.desc;
-  if (secondaryLink && route.secondary) secondaryLink.setAttribute('href', route.secondary.href);
-  if (primary) primary.setAttribute('href', route.href);
-  if (heroAction) heroAction.setAttribute('href', route.href);
-  if (progress) progress.textContent = `${routeIndex + 1} из ${todayRouteKeys.length}`;
+  setTodayProgramState('primary', route.primary);
+  setTodayProgramState('secondary', route.secondary);
   if (dots) {
     dots.innerHTML = todayRouteKeys.map((key) => `<span class="${key === currentTodayRouteKey ? 'active' : ''}"></span>`).join('');
   }
@@ -374,6 +442,9 @@ function initOnboarding() {
   });
   document.querySelector('[data-today-prev]')?.addEventListener('click', () => shiftTodayRoute(-1));
   document.querySelector('[data-today-next]')?.addEventListener('click', () => shiftTodayRoute(1));
+  document.querySelectorAll('[data-today-primary], [data-today-secondary-link]').forEach((link) => {
+    link.addEventListener('click', () => markProgramOpened(link.getAttribute('href') || ''));
+  });
   document.querySelector('[data-today-hero]')?.addEventListener('touchstart', (event) => {
     const touch = event.touches && event.touches[0];
     if (!touch) return;
@@ -407,13 +478,10 @@ function initOnboarding() {
 window.refreshAuthUI = function(user) {
   const btn = document.getElementById('nav-auth-btn');
   const link = document.getElementById('nav-account-link');
-  const greeting = document.querySelector('[data-today-greeting]');
-  const name = displayUserName(user);
   if (user || window.API.isLoggedIn()) {
     if (btn) btn.style.display = 'none';
     if (link) link.style.display = 'inline-flex';
   }
-  if (greeting) greeting.textContent = name ? `Добро пожаловать, ${name}` : 'Добро пожаловать';
 };
 
 if (window.API.isLoggedIn()) {
