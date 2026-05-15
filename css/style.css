@@ -379,6 +379,23 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   opacity: .55;
 }
 
+.auth-soon-button {
+  opacity: .78 !important;
+  cursor: default;
+}
+
+.auth-soon-button em {
+  margin-left: 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: rgba(0,0,0,.08);
+  color: rgba(0,0,0,.58);
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .ios-auth-button-primary {
   border: 0;
   color: #0b0b0d;
@@ -653,6 +670,33 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   color: rgba(255,255,255,.34) !important;
 }
 
+.onboarding-name-input {
+  width: min(100%, 420px);
+  min-height: 54px;
+  margin: 14px auto 0;
+  padding: 0 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.18);
+  outline: none;
+  color: rgba(255,255,255,.94);
+  text-align: center;
+  font: 700 17px/1 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: -.02em;
+  background:
+    radial-gradient(circle at 35% 0%, rgba(255,255,255,.18), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.035)),
+    rgba(0,0,0,.24);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 16px 44px rgba(0,0,0,.24);
+}
+
+.onboarding-name-input::placeholder {
+  color: rgba(255,255,255,.38);
+}
+
 .onboarding-options {
   display: grid;
   grid-template-columns: 1fr;
@@ -779,9 +823,9 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   max-width: none;
   margin: 0;
   box-sizing: border-box;
-  padding-top: clamp(112px, 10vw, 138px);
+  padding-top: 0;
   padding-bottom: 132px;
-  padding-inline: clamp(8px, 1.8vw, 28px);
+  padding-inline: 0;
   background:
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 32%),
     radial-gradient(circle at 50% 42%, rgba(138,115,255,.10), transparent 38%),
@@ -792,13 +836,33 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  padding: clamp(30px, 5vw, 58px);
-  border-radius: 0 0 34px 34px;
-  min-height: clamp(430px, 58svh, 610px);
+  padding: clamp(132px, 14vw, 178px) clamp(24px, 6vw, 72px) clamp(52px, 8vw, 92px);
+  border-radius: 0;
+  min-height: clamp(500px, 68svh, 720px);
   align-items: flex-end;
   isolation: isolate;
+  width: 100%;
+  margin: 0;
+}
+
+.today-hero-card .hub-kicker,
+.today-hero-card h1,
+.today-hero-card p {
   width: min(100%, 1180px);
-  margin: -18px auto 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.today-hero-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 34%;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(5,5,6,0), #050506 88%);
+  z-index: 0;
 }
 
 .today-hero-card::before,
@@ -831,13 +895,16 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .today-hero-copy {
-  width: min(100%, 520px);
+  width: min(100%, 720px);
+  max-width: 1180px;
+  margin-inline: auto;
+  margin-left: 0;
 }
 
 .today-carousel-controls {
   position: absolute;
-  right: clamp(18px, 3vw, 34px);
-  bottom: 18px;
+  right: clamp(18px, 6vw, 72px);
+  bottom: clamp(28px, 5vw, 58px);
   display: flex;
   gap: 9px;
   z-index: 2;
@@ -877,7 +944,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .today-hero-dots {
   position: absolute;
   left: 50%;
-  bottom: 18px;
+  bottom: clamp(36px, 6vw, 66px);
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -902,19 +969,19 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
-  width: min(100%, 1180px);
+  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1180px);
   margin: 12px auto 0;
 }
 
 @media (min-width: 769px) {
   .today-screen {
-    padding-top: 24px;
-    padding-inline: clamp(26px, 3vw, 44px);
+    padding-top: 0;
+    padding-inline: 0;
   }
 
   .today-hero-card {
-    min-height: clamp(360px, 38vw, 470px);
-    border-radius: 0 0 34px 34px;
+    min-height: clamp(470px, 52vw, 640px);
+    border-radius: 0;
   }
 
   .today-hero-copy {
@@ -1095,7 +1162,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .today-section-title {
-  margin: 26px 6px 10px;
+  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1180px);
+  margin: 26px auto 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1104,12 +1172,6 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .today-section-title .hub-kicker {
   margin: 0;
-}
-
-.today-section-title a {
-  color: rgba(255,255,255,.48);
-  text-decoration: none;
-  font-size: 13px;
 }
 
 .today-main-card {
@@ -1200,23 +1262,25 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .today-support-card {
-  min-height: clamp(104px, 13vw, 128px);
-  padding: 22px;
-  display: flex;
-  align-items: center;
+  min-height: clamp(190px, 22vw, 260px);
+  padding: 24px;
+  display: grid;
+  align-items: end;
   justify-content: space-between;
   gap: 18px;
   color: #fff;
   text-decoration: none;
 }
 
-.today-support-icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
+.today-support-button {
+  width: fit-content;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  justify-self: end;
   border: 1px solid rgba(255,255,255,.24);
   color: rgba(255,255,255,.9);
   background:
@@ -1225,6 +1289,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     rgba(0,0,0,.20);
   -webkit-backdrop-filter: blur(24px) saturate(170%);
   backdrop-filter: blur(24px) saturate(170%);
+  font-size: 14px;
+  font-weight: 800;
 }
 
 @media (max-width: 760px) {
@@ -1235,7 +1301,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-screen {
-    padding-inline: 8px;
+    padding-top: 0;
+    padding-inline: 0;
   }
 
   .system-intro-screen {
@@ -1287,15 +1354,15 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-hero-card {
-    min-height: clamp(430px, 58svh, 540px);
-    padding: 28px 26px 30px;
-    border-radius: 0 0 30px 30px;
-    margin-top: -8px;
+    min-height: clamp(520px, 72svh, 640px);
+    padding: max(118px, calc(104px + env(safe-area-inset-top))) 24px 64px;
+    border-radius: 0;
+    margin-top: 0;
   }
 
   .today-carousel-controls {
-    right: 20px;
-    bottom: 17px;
+    right: 24px;
+    bottom: 34px;
   }
 
   .today-carousel-controls button {
@@ -1304,7 +1371,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-hero-dots {
-    bottom: 24px;
+    bottom: 42px;
     gap: 7px;
   }
 
@@ -1332,6 +1399,11 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   .today-program-button {
     width: fit-content;
     justify-self: end;
+  }
+
+  .today-support-card {
+    min-height: 230px;
+    grid-template-columns: 1fr;
   }
 
   .today-checkin-card {
@@ -1427,7 +1499,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-hero-card {
-    border-radius: 0 0 30px 30px;
+    border-radius: 0;
   }
 
   .today-hero-card,

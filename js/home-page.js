@@ -19,8 +19,17 @@ let splashSoundPlayed = false;
 
 const onboardingSteps = [
   {
+    key: 'name',
+    label: 'Шаг 1 из 4',
+    title: 'Как вас зовут?',
+    desc: 'Имя нужно только для личного обращения в профиле и рекомендациях.',
+    input: {
+      placeholder: 'Ваше имя',
+    },
+  },
+  {
     key: 'focus',
-    label: 'Шаг 1 из 3',
+    label: 'Шаг 2 из 4',
     title: 'Что сейчас важнее?',
     desc: 'Выберите направление. Система покажет две подходящие программы для старта.',
     options: [
@@ -36,7 +45,7 @@ const onboardingSteps = [
   },
   {
     key: 'entry',
-    label: 'Шаг 2 из 3',
+    label: 'Шаг 3 из 4',
     title: 'Как лучше начать?',
     desc: 'Один формат входа. Контент тот же, меняется только способ начать.',
     options: [
@@ -47,7 +56,7 @@ const onboardingSteps = [
   },
   {
     key: 'result',
-    label: 'Шаг 3 из 3',
+    label: 'Шаг 4 из 4',
     title: 'Направление выбрано',
     desc: 'Покажем две подходящие программы. AI останется рядом и поможет выбрать между ними.',
     result: true,
@@ -162,6 +171,10 @@ function selectedRouteKey(profile = onboardingState) {
   return routes[profile.focus] ? profile.focus : 'selfstudy';
 }
 
+function cleanName(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ').slice(0, 80);
+}
+
 function routeConfig(profile = onboardingState, routeKey) {
   const route = routes[routeKey || selectedRouteKey(profile)] || routes.selfstudy;
   const entry = profile.entry || 'material';
@@ -260,6 +273,12 @@ function playSplashSound() {
   } catch (e) {}
 }
 
+function resetLocalOnboardingForFreshDevice() {
+  localStorage.removeItem(ONBOARDING_COMPLETE_KEY);
+  localStorage.removeItem(ONBOARDING_PROFILE_KEY);
+  localStorage.removeItem(SPLASH_SEEN_KEY);
+}
+
 function showNewHomeState(state) {
   if (state === 'splash') playSplashSound();
   document.documentElement.classList.remove('home-boot-today', 'home-boot-first-run');
@@ -317,6 +336,7 @@ function shiftTodayRoute(delta) {
 
 function finishOnboarding() {
   const route = routeConfig();
+  onboardingState.name = cleanName(onboardingState.name) || 'Гость';
   localStorage.setItem(ONBOARDING_COMPLETE_KEY, 'true');
   localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify({
     ...onboardingState,
@@ -328,6 +348,9 @@ function finishOnboarding() {
     secondStepHref: route.secondary?.href,
     completedAt: new Date().toISOString(),
   }));
+  if (window.API?.updateProfile) {
+    window.API.updateProfile({ display_name: onboardingState.name }).catch(() => {});
+  }
   renderToday();
   showNewHomeState('today');
 }
@@ -353,14 +376,35 @@ function renderOnboarding() {
   if (next) next.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'Начать' : 'Далее';
   const hint = document.querySelector('[data-onboarding-hint]');
   const result = document.querySelector('[data-onboarding-result]');
+  let input = document.querySelector('[data-onboarding-name-input]');
   if (hint) {
-    hint.textContent = step.result
+    hint.textContent = step.input
+      ? 'Введите имя'
+      : step.result
       ? 'Рекомендацию можно изменить позже'
       : 'Выберите один вариант';
   }
   if (!options) return;
-  options.classList.toggle('hidden', Boolean(step.result));
+  options.classList.toggle('hidden', Boolean(step.result || step.input));
   if (result) result.classList.toggle('hidden', !step.result);
+  if (!input) {
+    input = document.createElement('input');
+    input.type = 'text';
+    input.autocomplete = 'given-name';
+    input.className = 'onboarding-name-input hidden';
+    input.setAttribute('data-onboarding-name-input', '');
+    input.addEventListener('input', () => {
+      onboardingState.name = cleanName(input.value);
+    });
+    options.parentElement?.insertBefore(input, options);
+  }
+  input.classList.toggle('hidden', !step.input);
+  if (step.input) {
+    input.placeholder = step.input.placeholder;
+    input.value = onboardingState.name || '';
+    window.setTimeout(() => input.focus(), 80);
+    return;
+  }
   if (step.result) {
     const route = routeConfig();
     document.querySelector('[data-result-kicker]').textContent = 'Сегодня';
@@ -393,23 +437,23 @@ function selectOnboardingOption(step, value) {
 
 function hasStepAnswer(step) {
   if (step.result) return true;
+  if (step.input) return cleanName(onboardingState[step.key]).length >= 2;
   const value = onboardingState[step.key];
   return step.multiple ? asArray(value).length > 0 : Boolean(value);
 }
 
 function initOnboarding() {
   document.querySelector('[data-intro-login]')?.addEventListener('click', () => {
-    showAuthGatewayMode('providers');
+    return;
   });
   document.querySelector('[data-auth-choice-back]')?.addEventListener('click', () => {
     showAuthGatewayMode('welcome');
   });
   document.querySelector('[data-telegram-login]')?.addEventListener('click', () => {
-    if (window.startTelegramLogin) window.startTelegramLogin();
-    else if (window.openAuthModal) window.openAuthModal();
+    return;
   });
   document.querySelector('[data-yandex-login]')?.addEventListener('click', () => {
-    if (window.API && window.API.yandexLoginUrl) window.location.href = window.API.yandexLoginUrl();
+    return;
   });
   document.querySelector('[data-onboarding-start]')?.addEventListener('click', () => {
     onboardingIndex = 0;
@@ -434,6 +478,7 @@ function initOnboarding() {
     }
     const step = onboardingSteps[onboardingIndex];
     if (!hasStepAnswer(step)) {
+      if (step.input) return;
       const first = step.options[0];
       onboardingState[step.key] = step.multiple ? [optionValue(first)] : optionValue(first);
     }
@@ -459,20 +504,35 @@ function initOnboarding() {
     if (Math.abs(dx) < 46 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
     shiftTodayRoute(dx < 0 ? 1 : -1);
   }, { passive: true });
-  const completed = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
-  const splashSeen = localStorage.getItem(SPLASH_SEEN_KEY) === 'true';
-  if (completed) {
-    renderToday();
-    showNewHomeState('today');
+  const boot = () => {
+    const completed = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
+    const splashSeen = localStorage.getItem(SPLASH_SEEN_KEY) === 'true';
+    if (completed) {
+      renderToday();
+      showNewHomeState('today');
+      return;
+    }
+    if (!splashSeen) {
+      showNewHomeState('splash');
+      localStorage.setItem(SPLASH_SEEN_KEY, 'true');
+      window.setTimeout(() => showNewHomeState('intro'), 2400);
+      return;
+    }
+    showNewHomeState('intro');
+  };
+
+  if (window.API?.request) {
+    window.API.request('GET', '/profile/dashboard', null, { fresh: true })
+      .then((data) => {
+        if (data?.device_created && localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true') {
+          resetLocalOnboardingForFreshDevice();
+        }
+      })
+      .catch(() => {})
+      .finally(boot);
     return;
   }
-  if (!splashSeen) {
-    showNewHomeState('splash');
-    localStorage.setItem(SPLASH_SEEN_KEY, 'true');
-    window.setTimeout(() => showNewHomeState('intro'), 2400);
-    return;
-  }
-  showNewHomeState('intro');
+  boot();
 }
 
 window.refreshAuthUI = function(user) {

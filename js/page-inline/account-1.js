@@ -47,18 +47,6 @@ function escapeHtml(value) {
   }
 
   async function initProfile() {
-    const isLoggedIn = window.API && window.API.isLoggedIn();
-
-    if (!isLoggedIn) {
-      showAuthGate();
-      document.getElementById('gate-login-btn').addEventListener('click', () => {
-        // trigger auth modal from auth.js
-        if (window.openAuthModal) window.openAuthModal();
-        else window.location.href = '/';
-      });
-      return;
-    }
-
     showDashboardShell();
     await loadDashboard();
   }
@@ -67,17 +55,17 @@ function escapeHtml(value) {
     try {
       const data = await window.API.request('GET', '/profile/dashboard');
       const { user, stats, recent_activity, diary, daily_chart, ai_usage, access, courses } = data;
-      const isPro = access && access.status === 'pro';
+      const profile = JSON.parse(localStorage.getItem('sistema:onboarding-profile') || '{}');
 
       // Greeting
       const hour = new Date().getHours();
       const greet = hour < 12 ? 'Доброе утро' : hour < 18 ? 'Добрый день' : 'Добрый вечер';
       const emailName = user.email ? user.email.split('@')[0] : '';
       const phoneName = user.phone ? user.phone.replace(/^\+7/, '+7 ') : '';
-      const name = user.display_name || user.first_name || emailName || phoneName || 'друг';
+      const name = user.display_name || user.first_name || profile.name || emailName || phoneName || 'друг';
       document.getElementById('dash-greeting').textContent = greet + ', ' + name;
 
-      document.getElementById('dash-sub').textContent = 'Путь, программы, аудио и AI открыты для сборки личной траектории.';
+      document.getElementById('dash-sub').textContent = 'Ваши программы, активность и AI-навигация в одном месте.';
 
       // Streak
       const streak = stats.streak_days || 0;
@@ -87,10 +75,6 @@ function escapeHtml(value) {
       document.getElementById('member-since').textContent = 'Маршрут собирается';
       document.getElementById('pro-cta').textContent = 'Продолжить путь';
       document.getElementById('pro-cta').onclick = null;
-      if (new URLSearchParams(location.search).get('pro') === '1') {
-        setTimeout(() => openProModal(isPro), 120);
-        history.replaceState(null, '', location.pathname);
-      }
 
       // Streak dots (last 7 days)
       const dotsEl = document.getElementById('streak-dots');
@@ -114,7 +98,11 @@ function escapeHtml(value) {
       // Access status
       const pct = 100;
       document.getElementById('prog-bar').style.width = pct + '%';
-      document.getElementById('access-desc').textContent = 'Материалы открыты. Сейчас важнее понять, какой маршрут действительно помогает пользователю.';
+      document.getElementById('access-desc').textContent = profile.route
+        ? `Выбранное направление: ${profile.route}. На сегодня собраны две программы для старта.`
+        : 'Материалы открыты. Пройдите онбординг, чтобы собрать личный маршрут.';
+      document.getElementById('profile-main-direction').textContent = profile.route || 'Не выбрано';
+      document.getElementById('profile-entry-format').textContent = profile.entry === 'audio' ? 'Аудио' : profile.entry === 'short' ? 'Коротко' : 'Видео';
 
       // Practice time
       const mins = stats.practice_minutes || 0;
@@ -146,12 +134,11 @@ function escapeHtml(value) {
       document.getElementById('ring-week').style.setProperty('--value', Math.min(100, Math.round(((stats.active_days_this_week || 0) / 7) * 100)));
 
       // Product access cards
-      window.profileAccessStatus = isPro ? 'pro' : 'free';
       document.getElementById('diary-last').textContent = 'Сообщество подключаем как поддержку, а не как платный барьер.';
       document.getElementById('open-diary-btn').textContent = 'Открыть Telegram';
       document.getElementById('ai-usage-card').textContent = `${ai_usage?.used || 0}`;
-      document.getElementById('ai-usage-desc').textContent = 'Тестовый режим без лимита сообщений.';
-      const aiLimit = Math.max(ai_usage?.used || 1, 10);
+      document.getElementById('ai-usage-desc').textContent = 'без лимита';
+      const aiLimit = Math.max(ai_usage?.used || 1, 20);
       const aiUsed = ai_usage?.used || 0;
       document.getElementById('ring-ai').style.setProperty('--value', Math.min(100, Math.round((aiUsed / Math.max(1, aiLimit)) * 100)));
       document.getElementById('gratitude-cnt').textContent = courses ? courses.length : 0;
@@ -206,20 +193,6 @@ function escapeHtml(value) {
     } catch {}
   });
 
-  function openProModal(isPro) {
-    const modal = document.getElementById('pro-modal');
-    if (!modal) return;
-    modal.classList.add('visible');
-    document.body.style.overflow = 'hidden';
-    document.getElementById('pro-modal-status').textContent = 'Сейчас доступ к материалам открыт, чтобы довести продуктовую логику.';
-  }
-
-  function closeProModal() {
-    const modal = document.getElementById('pro-modal');
-    if (!modal) return;
-    modal.classList.remove('visible');
-    document.body.style.overflow = '';
-  }
   function closeDiary() {
     document.getElementById('diary-modal').style.display = 'none';
   }
@@ -269,10 +242,6 @@ function escapeHtml(value) {
   document.getElementById('diary-close-btn')?.addEventListener('click', closeDiary);
   document.getElementById('diary-cancel-btn')?.addEventListener('click', closeDiary);
   document.getElementById('diary-save-btn')?.addEventListener('click', saveDiary);
-  document.getElementById('pro-close-btn')?.addEventListener('click', closeProModal);
-  document.getElementById('yookassa-placeholder-btn')?.addEventListener('click', () => {
-    window.location.href = '/programs/';
-  });
 
   function pluralDays(n) {
     if (n % 10 === 1 && n % 100 !== 11) return 'день';

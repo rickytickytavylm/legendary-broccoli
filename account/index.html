@@ -6,7 +6,7 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=90" />
+  <link rel="stylesheet" href="/css/style.css?v=92" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -489,6 +489,35 @@
       background: rgba(255,255,255,.58);
       flex: 0 0 auto;
     }
+    .profile-route-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+    .profile-route-grid div {
+      min-height: 86px;
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.1);
+      background:
+        radial-gradient(circle at 30% 0%, rgba(255,255,255,.12), transparent 36%),
+        rgba(255,255,255,.045);
+    }
+    .profile-route-grid span {
+      display: block;
+      margin-bottom: 10px;
+      color: rgba(255,255,255,.42);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .profile-route-grid strong {
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.15;
+    }
     .profile-actions {
       display: flex;
       flex-wrap: wrap;
@@ -655,60 +684,6 @@
       border: 1px solid rgba(255,255,255,.1);
       font-weight: 800;
     }
-    .pro-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 2200;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      background: rgba(0,0,0,.72);
-      -webkit-backdrop-filter: blur(18px);
-      backdrop-filter: blur(18px);
-    }
-    .pro-modal.visible {
-      display: flex;
-    }
-    .pro-modal-card {
-      width: min(560px, 100%);
-      max-height: min(760px, 86vh);
-      overflow: auto;
-      border-radius: 30px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: #101017;
-      box-shadow: 0 30px 110px rgba(0,0,0,.58);
-      padding: 26px;
-    }
-    .pro-modal-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-    .pro-close {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,.1);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.72);
-      cursor: pointer;
-    }
-    .pro-price {
-      margin: 18px 0;
-      color: #fff;
-      font-size: 38px;
-      font-weight: 850;
-      letter-spacing: -.055em;
-    }
-    .pro-price small {
-      color: rgba(255,255,255,.44);
-      font-size: 14px;
-      font-weight: 650;
-      letter-spacing: 0;
-    }
     @media (max-width: 900px) {
       .profile-grid {
         grid-template-columns: 1fr;
@@ -760,6 +735,9 @@
       }
       .pro-list li {
         font-size: 12.5px;
+      }
+      .profile-route-grid {
+        grid-template-columns: 1fr;
       }
       .rings-grid {
         gap: 10px;
@@ -829,23 +807,18 @@
 
       <div class="profile-grid">
         <div class="profile-stack">
-          <section class="profile-card pro-card">
-            <div class="pro-badge">Beta</div>
-            <h2 class="pro-title">Контент открыт</h2>
-            <p class="profile-muted" id="access-desc">Видео, аудио, практики и AI помогают собрать следующий полезный шаг.</p>
-            <ul class="pro-list">
-              <li>Программы без подписочного экрана</li>
-              <li>Аудиоформат для длинных материалов</li>
-              <li>AI-разбор после просмотра</li>
-              <li>История прогресса и действий</li>
-            </ul>
-            <div class="profile-actions">
-              <a class="profile-primary" id="pro-cta" href="/">Сегодня</a>
-              <a class="profile-secondary" href="/programs/">Все программы</a>
+          <section class="profile-card profile-route-card">
+            <div class="pro-badge">Личная траектория</div>
+            <h2 class="pro-title">Ваш маршрут собирается</h2>
+            <p class="profile-muted" id="access-desc">Профиль показывает, что уже открыто: программы, активность, AI и ближайший шаг.</p>
+            <div class="profile-route-grid">
+              <div><span>Старт</span><strong id="profile-main-direction">Сегодня</strong></div>
+              <div><span>Формат</span><strong id="profile-entry-format">Видео / аудио</strong></div>
+              <div><span>Доступ</span><strong>Открыт</strong></div>
             </div>
-            <div class="billing-row">
-              <span class="yookassa-mark">Beta</span>
-              <span>Сейчас доводим продуктовую логику без продажи доступа</span>
+            <div class="profile-actions">
+              <a class="profile-primary" id="pro-cta" href="/">Открыть сегодня</a>
+              <a class="profile-secondary" href="/ai/">Спросить AI</a>
             </div>
             <div class="progress-bar-track" style="margin-top:18px">
               <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
@@ -910,15 +883,15 @@
             <h3 class="profile-card-title">Быстрые действия</h3>
             <div class="profile-actions u-mt-14">
               <a class="profile-secondary" href="/">Сегодня</a>
-              <a class="profile-secondary" href="/practices/">Практики</a>
+              <a class="profile-secondary" href="/feed/">Лента</a>
               <a class="profile-secondary" href="/ai/">Открыть AI</a>
               <a class="profile-secondary" href="/community/">Сообщество</a>
             </div>
-            <p class="reminders-empty" id="reminders-text">Продолжайте маршрут или откройте практики под текущее состояние.</p>
+            <p class="reminders-empty" id="reminders-text">Продолжайте маршрут или спросите AI, с чего лучше начать сегодня.</p>
           </section>
 
           <div class="logout-row u-mt-0">
-            <button class="btn-logout" id="logout-btn" type="button">Выйти из аккаунта</button>
+            <button class="btn-logout" id="logout-btn" type="button">Сбросить сессию</button>
           </div>
 
           <section class="profile-card">
@@ -950,35 +923,10 @@
     </div>
   </div>
 
-  <div class="pro-modal" id="pro-modal" role="dialog" aria-modal="true" aria-labelledby="pro-modal-title">
-    <div class="pro-modal-card">
-      <div class="pro-modal-head">
-        <div>
-          <div class="pro-badge">Система</div>
-          <h2 class="pro-title" id="pro-modal-title">Маршрут в разработке</h2>
-          <p class="profile-muted" id="pro-modal-status">Сейчас доступ к материалам открыт, чтобы довести продуктовую логику.</p>
-        </div>
-        <button class="pro-close" id="pro-close-btn" type="button" aria-label="Закрыть">×</button>
-      </div>
-      <div class="pro-price">Beta <small>/ открытый этап</small></div>
-      <ul class="pro-list">
-        <li>Видео и аудио без подписочного экрана</li>
-        <li>AI как навигатор по личной траектории</li>
-        <li>Путь, практики и check-in как ежедневная логика</li>
-        <li>История прогресса и активность в профиле</li>
-      </ul>
-      <button class="profile-primary" id="yookassa-placeholder-btn" type="button" style="width:100%;margin-top:8px">Продолжить путь</button>
-      <div class="billing-row">
-        <span class="yookassa-mark">Beta</span>
-        <span>Монетизацию вернем только после ясной ценности продукта.</span>
-      </div>
-    </div>
-  </div>
-
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=56"></script>
+  <script src="/js/api.js?v=57"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
-  <script src="/js/page-inline/account-1.js?v=1"></script>
+  <script src="/js/page-inline/account-1.js?v=2"></script>
 </body>
 </html>

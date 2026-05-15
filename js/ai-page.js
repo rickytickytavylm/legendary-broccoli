@@ -61,7 +61,7 @@ function addMessage(text, role = 'user', options = {}) {
 }
 
 async function loadAiUsage() {
-  if (!window.API || !window.API.isLoggedIn()) return;
+  if (!window.API) return;
   try {
     const data = await window.API.getAiUsage();
     updateUsage(data.usage);
@@ -69,7 +69,7 @@ async function loadAiUsage() {
 }
 
 async function loadAiHistory() {
-  if (!window.API || !window.API.isLoggedIn()) return;
+  if (!window.API) return;
   try {
     const data = await window.API.getAiHistory(80);
     aiConversation.innerHTML = '';
@@ -84,17 +84,13 @@ async function loadAiHistory() {
 function updateUsage(usage) {
   if (!usage) return;
   document.getElementById('ai-usage-pill').textContent =
-    `AI сообщения: ${usage.used} · тестовый режим без лимита`;
+    `AI сообщения: ${usage.used || 0} · без лимита`;
 }
 
 async function submitQuestion() {
   const value = aiInput.value.trim();
   if (!value) return;
-  if (!window.API || !window.API.isLoggedIn()) {
-    if (window.openAuthModal) window.openAuthModal('login');
-    else window.location.href = '/account/';
-    return;
-  }
+  if (!window.API) return;
 
   addMessage(value, 'user');
   aiInput.value = '';
@@ -120,12 +116,7 @@ async function submitQuestion() {
     }
   } catch (err) {
     assistant.msg.remove();
-    if (err.code === 'AI_LIMIT_REACHED') {
-      updateUsage(err.usage);
-      addMessage('Лимит сообщений на этот период закончился. Вернитесь к пути: можно продолжить через видео, аудио или практику.', 'assistant', { limitCta: true });
-    } else {
-      addMessage('Не удалось отправить сообщение. Попробуйте еще раз.', 'assistant');
-    }
+    addMessage('Не удалось отправить сообщение. Проверьте подключение сервера и ключ DeepSeek, затем попробуйте еще раз.', 'assistant');
   } finally {
     assistant.msg.classList.remove('streaming');
     aiSend.disabled = false;

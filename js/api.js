@@ -5,6 +5,17 @@
 const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.sistema-molodtsov.ru/api');
 const API_ORIGIN = new URL(API_BASE, location.href).origin;
 const CONTENT_CACHE_TTL = 5 * 60 * 1000;
+const SISTEMA_DEVICE_ID_KEY = 'sistema:device-id';
+
+function getSistemaDeviceId() {
+  let id = localStorage.getItem(SISTEMA_DEVICE_ID_KEY);
+  if (!id) {
+    const random = window.crypto?.randomUUID ? window.crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    id = `web:${random}`;
+    localStorage.setItem(SISTEMA_DEVICE_ID_KEY, id);
+  }
+  return id;
+}
 
 class ApiClient {
   constructor() {
@@ -17,7 +28,7 @@ class ApiClient {
   }
 
   getAuthHeaders() {
-    const h = { 'Content-Type': 'application/json' };
+    const h = { 'Content-Type': 'application/json', 'X-Sistema-Device-Id': getSistemaDeviceId() };
     if (this.accessToken) h['Authorization'] = 'Bearer ' + this.accessToken;
     return h;
   }
@@ -114,6 +125,10 @@ class ApiClient {
     // Access token expired — try refresh once
     if (res.status === 401) {
       const data = await res.json().catch(() => ({}));
+      if (data.code === 'USER_INVALID' || data.code === 'TOKEN_INVALID') {
+        this.clearLocalState();
+        throw Object.assign(data, { status: res.status });
+      }
       if (data.code === 'TOKEN_EXPIRED') {
         const refreshed = await this._doRefresh();
         if (refreshed) {
@@ -256,6 +271,7 @@ class ApiClient {
   getProgram(slug) { return this.request('GET', '/content/programs/' + slug); }
   getLesson(id)    { return this.request('GET', '/content/lessons/' + id); }
   saveProgress(data) { return this.request('POST', '/content/progress', data); }
+  updateProfile(data) { return this.request('PATCH', '/profile/me', data); }
 
   // --- Video ---
   getVideoToken(lessonId) { return this.request('POST', '/video/token', { lesson_id: lessonId }); }

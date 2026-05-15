@@ -9,7 +9,7 @@
 <title>Система — Руслан Молодцов</title>
   <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия и практики." />
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=91" />
+  <link rel="stylesheet" href="/css/style.css?v=92" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -68,11 +68,14 @@
           <div class="auth-gateway-copy">
             <img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="auth-gateway-logo" loading="eager" decoding="async">
             <h1>Найдем, с чего начать сегодня</h1>
-            <p>Два коротких вопроса. На выходе — две подходящие программы для старта.</p>
+            <p>Короткая настройка. На выходе — две подходящие программы для старта.</p>
             <div class="auth-gateway-dots" aria-hidden="true"><span></span><span class="active"></span><span></span></div>
           </div>
           <div class="auth-gateway-actions">
-            <button class="ios-auth-button ios-auth-button-primary" type="button" data-intro-login>Войти</button>
+            <button class="ios-auth-button ios-auth-button-primary auth-soon-button" type="button" data-intro-login disabled>
+              <span>Войти</span>
+              <em>Скоро</em>
+            </button>
             <button class="ios-auth-button ios-auth-button-secondary" type="button" data-onboarding-start>Подобрать первый шаг</button>
           </div>
         </div>
@@ -147,7 +150,6 @@
         <div>
           <p class="hub-kicker">Подходит под запрос</p>
         </div>
-        <a href="/programs/">Все программы <span aria-hidden="true">›</span></a>
       </div>
 
       <div class="today-grid">
@@ -182,7 +184,7 @@
             <h3>Не знаете, что выбрать?</h3>
             <p>Спросите AI, какая из двух программ лучше под ваш запрос.</p>
           </div>
-          <span class="today-support-icon" aria-hidden="true">✦</span>
+          <span class="today-support-button">Спросить</span>
         </a>
       </div>
     </section>
@@ -191,11 +193,11 @@
 
   <!-- iOS Glass Tab Bar (Mobile Only) -->
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=56"></script>
+  <script src="/js/api.js?v=57"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
   <script src="/js/main.js?v=2"></script>
   <script src="/js/program-catalog.js?v=8"></script>
-  <script src="/js/home-page.js?v=8"></script>
+  <script src="/js/home-page.js?v=9"></script>
 </body>
 </html>
