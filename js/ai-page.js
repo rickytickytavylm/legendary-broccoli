@@ -2,7 +2,6 @@ const aiInput = document.getElementById('ai-input');
 const aiSend = document.getElementById('ai-send');
 const aiConversation = document.getElementById('ai-conversation');
 const aiInputBar = document.querySelector('.ai-input-bar');
-let aiBackTimer = null;
 
 function syncAiIntroState() {
   const hasMessages = !!aiConversation.querySelector('.ai-message');
@@ -17,15 +16,6 @@ function scrollAiToBottom(delay = 0) {
       delete aiConversation.dataset.programmaticScroll;
     }, 120);
   }, delay);
-}
-
-function hideAiBackTemporarily() {
-  if (window.innerWidth > 768) return;
-  document.body.classList.add('ai-back-hidden');
-  clearTimeout(aiBackTimer);
-  aiBackTimer = setTimeout(() => {
-    document.body.classList.remove('ai-back-hidden');
-  }, 900);
 }
 
 function addMessage(text, role = 'user', options = {}) {
@@ -143,10 +133,6 @@ function updateAiLayoutMetrics() {
 loadAiUsage();
 loadAiHistory();
 aiSend.addEventListener('click', submitQuestion);
-aiConversation.addEventListener('scroll', () => {
-  if (aiConversation.dataset.programmaticScroll === '1') return;
-  hideAiBackTemporarily();
-}, { passive: true });
 aiInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') submitQuestion();
 });

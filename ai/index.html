@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>AI-помощник — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=90" />
+  <link rel="stylesheet" href="/css/style.css?v=100" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -427,19 +427,13 @@
         max-width: none;
       }
 
-      body.ai-back-hidden .ai-back-mobile {
-        opacity: 0 !important;
-        pointer-events: none !important;
-        transform: translateY(-8px) scale(.92) !important;
-      }
-
       body:not(.ai-input-focused):not(.ai-has-messages) .ai-back-mobile {
         opacity: 1 !important;
         pointer-events: auto !important;
       }
 
-      body.ai-has-messages:not(.ai-back-hidden) .ai-back-mobile,
-      body.ai-input-focused:not(.ai-back-hidden) .ai-back-mobile {
+      body.ai-has-messages .ai-back-mobile,
+      body.ai-input-focused .ai-back-mobile {
         opacity: 1 !important;
         pointer-events: auto !important;
         transform: scale(.92) !important;
@@ -520,6 +514,6 @@
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
-  <script src="/js/ai-page.js?v=1"></script>
+  <script src="/js/ai-page.js?v=2"></script>
 </body>
 </html>

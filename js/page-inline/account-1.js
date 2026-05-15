@@ -67,20 +67,17 @@ function escapeHtml(value) {
 
       document.getElementById('dash-sub').textContent = 'Профиль устройства. Авторизацию подключим позже.';
 
-      // Streak
-      const streak = stats.streak_days || 0;
-      document.getElementById('streak-val').textContent = streak;
-      document.getElementById('ring-streak').style.setProperty?.('--value', Math.min(100, Math.round((streak / 7) * 100)));
-      document.getElementById('streak-big').textContent = 'Открыто';
-      document.getElementById('member-since').textContent = 'Маршрут собирается';
-      document.getElementById('pro-cta').textContent = 'Продолжить путь';
+      document.getElementById('streak-val')?.replaceChildren(document.createTextNode(String(stats.streak_days || 0)));
+      document.getElementById('ring-streak')?.style.setProperty?.('--value', Math.min(100, Math.round(((stats.streak_days || 0) / 7) * 100)));
+      document.getElementById('streak-big')?.replaceChildren(document.createTextNode('Открыто'));
+      document.getElementById('member-since')?.replaceChildren(document.createTextNode('Маршрут собирается'));
+      document.getElementById('pro-cta')?.replaceChildren(document.createTextNode('Продолжить путь'));
 
-      // Streak dots (last 7 days)
       const dotsEl = document.getElementById('streak-dots');
       const days7 = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
       const activeDates = new Set(daily_chart.map(d => d.day ? d.day.split('T')[0] : ''));
       const today = new Date();
-      dotsEl.innerHTML = days7.map((d, i) => {
+      if (dotsEl) dotsEl.innerHTML = days7.map((d, i) => {
         const dt = new Date(today);
         const dayOfWeek = today.getDay(); // 0=sun
         const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
@@ -94,25 +91,23 @@ function escapeHtml(value) {
         </div>`;
       }).join('');
 
-      // Access status
       const pct = 100;
-      document.getElementById('prog-bar').style.width = pct + '%';
-      document.getElementById('access-desc').textContent = profile.route
+      document.getElementById('prog-bar')?.style && (document.getElementById('prog-bar').style.width = pct + '%');
+      document.getElementById('access-desc')?.replaceChildren(document.createTextNode(profile.route
         ? `Выбранное направление: ${profile.route}. На сегодня собраны две программы для старта.`
-        : 'Материалы открыты. Пройдите онбординг, чтобы собрать личный маршрут.';
-      document.getElementById('profile-main-direction').textContent = profile.route || 'Не выбрано';
-      document.getElementById('profile-entry-format').textContent = profile.entry === 'audio' ? 'Аудио' : profile.entry === 'short' ? 'Коротко' : 'Видео';
+        : 'Материалы открыты. Пройдите онбординг, чтобы собрать личный маршрут.'));
+      document.getElementById('profile-main-direction')?.replaceChildren(document.createTextNode(profile.route || 'Не выбрано'));
+      document.getElementById('profile-entry-format')?.replaceChildren(document.createTextNode(profile.entry === 'audio' ? 'Аудио' : profile.entry === 'short' ? 'Коротко' : 'Видео'));
 
       // Practice time
       const mins = stats.practice_minutes || 0;
       const h = Math.floor(mins / 60), m = mins % 60;
-      document.getElementById('practice-time').textContent =
-        h > 0 ? `${h} ч ${m} мин` : `${m} мин`;
+      document.getElementById('practice-time')?.replaceChildren(document.createTextNode(h > 0 ? `${h} ч ${m} мин` : `${m} мин`));
 
       // Bar chart
       const barEl = document.getElementById('bar-chart');
       const maxAct = Math.max(...daily_chart.map(d => parseInt(d.actions, 10) || 0), 1);
-      barEl.innerHTML = days7.map((lbl, i) => {
+      if (barEl) barEl.innerHTML = days7.map((lbl, i) => {
         const dt = new Date(today);
         const dayOfWeek = today.getDay();
         const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
@@ -129,24 +124,25 @@ function escapeHtml(value) {
       }).join('');
 
       // Goal (active days this week)
-      document.getElementById('goal-done').textContent = stats.active_days_this_week || 0;
-      document.getElementById('ring-week').style.setProperty?.('--value', Math.min(100, Math.round(((stats.active_days_this_week || 0) / 7) * 100)));
+      document.getElementById('goal-done')?.replaceChildren(document.createTextNode(String(stats.active_days_this_week || 0)));
+      document.getElementById('ring-week')?.style.setProperty?.('--value', Math.min(100, Math.round(((stats.active_days_this_week || 0) / 7) * 100)));
 
       // Product access cards
-      document.getElementById('diary-last').textContent = 'Сообщество подключаем как поддержку, а не как платный барьер.';
-      document.getElementById('open-diary-btn').textContent = 'Открыть Telegram';
-      document.getElementById('ai-usage-card').textContent = `${ai_usage?.used || 0}`;
-      document.getElementById('ai-usage-desc').textContent = 'без лимита';
+      document.getElementById('diary-last')?.replaceChildren(document.createTextNode('Сообщество подключаем как поддержку, а не как платный барьер.'));
+      document.getElementById('open-diary-btn')?.replaceChildren(document.createTextNode('Открыть Telegram'));
+      document.getElementById('ai-usage-card')?.replaceChildren(document.createTextNode(`${ai_usage?.used || 0}`));
+      document.getElementById('ai-usage-desc')?.replaceChildren(document.createTextNode('без лимита'));
       const aiLimit = Math.max(ai_usage?.used || 1, 20);
       const aiUsed = ai_usage?.used || 0;
-      document.getElementById('ring-ai').style.setProperty?.('--value', Math.min(100, Math.round((aiUsed / Math.max(1, aiLimit)) * 100)));
-      document.getElementById('gratitude-cnt').textContent = courses ? courses.length : 0;
-      document.getElementById('goal-done').textContent = stats.completed_lessons || 0;
-      document.getElementById('goal-target').textContent = courses ? courses.length : 11;
+      document.getElementById('ring-ai')?.style.setProperty?.('--value', Math.min(100, Math.round((aiUsed / Math.max(1, aiLimit)) * 100)));
+      document.getElementById('gratitude-cnt')?.replaceChildren(document.createTextNode(String(courses ? courses.length : 0)));
+      document.getElementById('goal-done')?.replaceChildren(document.createTextNode(String(stats.completed_lessons || 0)));
+      document.getElementById('goal-target')?.replaceChildren(document.createTextNode(String(courses ? courses.length : 11)));
 
       // Continue learning — show static course cards (extend later from API)
       const courseItems = Array.isArray(courses) ? courses : [];
-      document.getElementById('lessons-scroll').innerHTML = courseItems.map((c, i) => `
+      const lessonsScroll = document.getElementById('lessons-scroll');
+      if (lessonsScroll) lessonsScroll.innerHTML = courseItems.map((c, i) => `
         <a class="course-tile" href="${escapeHtml(safeInternalPath(c.href))}" style="--thumb:url('${escapeHtml(safeAssetPath(c.thumb))}')">
           <div class="course-tile-content">
             <p class="course-tile-title">${escapeHtml(c.title)}</p>

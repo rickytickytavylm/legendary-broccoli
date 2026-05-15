@@ -3,7 +3,6 @@ const ONBOARDING_PROFILE_KEY = 'sistema:onboarding-profile';
 const ONBOARDING_SCHEMA_KEY = 'sistema:onboarding-schema';
 const ONBOARDING_SCHEMA_VERSION = 'device-v1';
 const SPLASH_SEEN_KEY = 'sistema:intro-splash-seen';
-const SPLASH_AUDIO_SRC = '/assets/audio/opening-sistema.mp3';
 const TODAY_OPENED_PROGRAMS_KEY = 'sistema:today-opened-programs';
 const TODAY_LESSON_COUNT_ENDPOINTS = {
   geshtalt: '/content/geshtalt-lessons',
@@ -17,7 +16,6 @@ const TODAY_LESSON_COUNT_ENDPOINTS = {
   superviziya: '/content/superviziya-lessons',
   antologiya: '/content/antologiya-lessons',
 };
-let splashSoundPlayed = false;
 
 const onboardingSteps = [
   {
@@ -61,7 +59,7 @@ const routes = {
     title: 'Спокойствие',
     desc: 'Два мягких входа: через движение и через внимание к телу.',
     short: 'спокойствие',
-    heroImage: '/assets/webp/stop_panic.webp',
+    heroImage: '/assets/webp/calm_sss.webp',
     programs: [
       { title: 'Мини-йога', desc: 'Мягкое начало через дыхание и движение.', href: '/yoga/', image: '/assets/webp/mini-yoga.webp' },
       { title: 'Телесная терапия', desc: 'Вернуть внимание в тело и снизить внутреннее напряжение.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
@@ -81,7 +79,7 @@ const routes = {
     title: 'Отношения',
     desc: 'Два входа: зависимые сценарии и мужско-женская динамика.',
     short: 'отношения',
-    heroImage: '/assets/webp/soza_today.webp',
+    heroImage: '/assets/webp/relative_second.webp',
     programs: [
       { title: 'Созависимость', desc: 'Границы, привязанность и повторяющиеся сценарии.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
       { title: 'Мужское и Женское', desc: 'Психология отношений и природа полов.', href: '/mj/', image: '/assets/webp/man_woman.webp' },
@@ -258,15 +256,7 @@ function setTodayProgramState(prefix, program) {
 }
 
 function playSplashSound() {
-  if (splashSoundPlayed) return;
-  splashSoundPlayed = true;
-  try {
-    const audio = new Audio(SPLASH_AUDIO_SRC);
-    audio.preload = 'auto';
-    audio.volume = 0.9;
-    const playPromise = audio.play();
-    if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
-  } catch (e) {}
+  // Splash is intentionally silent.
 }
 
 function resetLocalOnboardingForFreshDevice() {
@@ -410,6 +400,7 @@ function renderOnboarding() {
   }
   if (step.result) {
     const route = routeConfig();
+    if (result) result.style.setProperty('--result-bg', `url('${route.hero}')`);
     document.querySelector('[data-result-kicker]').textContent = 'Сегодня';
     document.querySelector('[data-result-title]').textContent = route.title;
     document.querySelector('[data-result-desc]').textContent = `${route.primary.title} и ${route.secondary.title}. Две программы появятся на главной.`;
