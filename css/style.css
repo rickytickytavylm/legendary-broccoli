@@ -93,6 +93,20 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   padding-right: 0 !important;
 }
 
+.home-first-run-active,
+.home-splash-active,
+.home-onboarding-active:not(.home-today-active) {
+  height: 100svh;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+.home-first-run-active .main-content,
+.home-splash-active .main-content {
+  height: 100svh;
+  overflow: hidden !important;
+}
+
 .home-first-run-active .system-intro-screen:not(.hidden) {
   display: grid;
 }
@@ -190,26 +204,38 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .auth-gateway-shell {
   position: relative;
   width: 100vw;
+  height: 100svh;
   min-height: 100svh;
   overflow: hidden;
   border: 0;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.08), rgba(0,0,0,.06) 38%, rgba(0,0,0,.78) 100%),
-    url('/assets/webp/aut.webp') center bottom / cover no-repeat;
+  background: #000;
   box-shadow: none;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   padding: max(24px, env(safe-area-inset-top)) clamp(20px, 5vw, 72px) max(34px, env(safe-area-inset-bottom));
 }
 
 .auth-gateway-shell::before {
   content: "";
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: min(58svh, 560px);
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.04), rgba(0,0,0,.10) 48%, #000 100%),
+    url('/assets/webp/aut.webp') center top / cover no-repeat;
+  pointer-events: none;
+}
+
+.auth-gateway-shell::after {
+  content: "";
+  position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 58%, rgba(255,255,255,.07), transparent 18%),
-    linear-gradient(to bottom, rgba(0,0,0,.04), rgba(0,0,0,.26) 54%, rgba(0,0,0,.82));
+    radial-gradient(circle at 50% 48%, rgba(255,255,255,.07), transparent 18%),
+    linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.22) 46%, #000 86%);
   pointer-events: none;
 }
 
@@ -224,7 +250,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   justify-content: center;
   align-items: center;
   gap: 22px;
-  padding-block: clamp(16px, 4svh, 42px);
+  padding-block: 0 clamp(34px, 10svh, 92px);
 }
 
 .auth-provider-panel {
@@ -558,6 +584,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .onboarding-flow {
+  height: 100svh;
   min-height: 100svh;
   display: block;
   max-width: none;
@@ -574,11 +601,25 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   padding: max(12px, env(safe-area-inset-top)) 28px max(12px, env(safe-area-inset-bottom));
   border: 0;
   border-radius: 0;
-  background: #000;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.16), rgba(0,0,0,.42) 48%, #000 100%),
+    url('/assets/webp/onboarding.webp') center top / cover no-repeat,
+    #000;
   box-shadow: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.onboarding-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(255,255,255,.10), transparent 24%),
+    linear-gradient(to bottom, rgba(0,0,0,.06), rgba(0,0,0,.40) 48%, #000 94%);
+  z-index: 0;
 }
 
 .onboarding-topbar {
@@ -603,7 +644,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   z-index: 2;
   width: min(520px, 100%);
   margin: 0 auto;
-  padding: 14px 0 12px;
+  padding: clamp(8px, 2svh, 18px) 0 max(54px, calc(54px + env(safe-area-inset-bottom)));
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -703,6 +744,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   grid-template-columns: 1fr;
   gap: 7px;
   margin-top: 10px;
+  max-height: min(42svh, 340px);
+  overflow: hidden;
 }
 
 .onboarding-options button,
@@ -783,9 +826,9 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .onboarding-actions {
-  margin-top: auto;
-  padding-top: 14px;
-  padding-bottom: max(4px, env(safe-area-inset-bottom));
+  margin-top: clamp(14px, 4svh, 34px);
+  padding-top: 0;
+  padding-bottom: 0;
   display: flex;
   justify-content: center;
   gap: 12px;
@@ -851,12 +894,14 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   justify-content: space-between;
   gap: 24px;
   padding: calc(clamp(132px, 14vw, 178px) + 80px) clamp(24px, 6vw, 72px) clamp(52px, 8vw, 92px);
+  border: 0;
   border-radius: 0;
   min-height: clamp(500px, 68svh, 720px);
   align-items: flex-end;
   isolation: isolate;
   width: 100%;
   margin: -80px 0 0;
+  box-shadow: inset 0 -120px 90px #050506;
   transform: translateZ(0);
 }
 
@@ -873,10 +918,11 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -1px;
-  height: 34%;
+  bottom: -18px;
+  height: 48%;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(5,5,6,0), #050506 88%);
+  background:
+    linear-gradient(to bottom, rgba(5,5,6,0) 0%, rgba(5,5,6,.72) 56%, #050506 84%, #050506 100%);
   z-index: 0;
 }
 
@@ -1402,21 +1448,26 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
   .auth-gateway-shell {
     width: 100vw;
+    height: 100svh;
     min-height: 100svh;
     border-radius: 0;
     margin: 0;
-    padding: max(16px, env(safe-area-inset-top)) 20px max(18px, env(safe-area-inset-bottom));
+    padding: max(14px, env(safe-area-inset-top)) 20px max(18px, env(safe-area-inset-bottom));
+    background: #000;
+  }
+
+  .auth-gateway-shell::before {
+    height: 52svh;
     background:
-      linear-gradient(to bottom, rgba(0,0,0,.05), rgba(0,0,0,.14) 44%, rgba(0,0,0,.84) 100%),
-      url('/assets/webp/aut.webp') center bottom / auto 58% no-repeat,
-      #000;
+      linear-gradient(to bottom, rgba(0,0,0,.02), rgba(0,0,0,.12) 52%, #000 100%),
+      url('/assets/webp/aut.webp') center top / cover no-repeat;
   }
 
   .auth-gateway-panel {
     width: 100%;
     min-height: auto;
-    gap: 18px;
-    padding-block: clamp(10px, 2.6svh, 24px);
+    gap: 16px;
+    padding-block: 0 max(42px, 8svh);
   }
 
   .auth-gateway-logo {
@@ -1517,12 +1568,18 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
   .onboarding-flow {
     padding: 0;
+    height: 100svh;
+    overflow: hidden;
   }
 
   .onboarding-card {
     height: 100svh;
-    padding: max(10px, env(safe-area-inset-top)) 14px max(10px, env(safe-area-inset-bottom));
+    padding: max(10px, env(safe-area-inset-top)) 14px 0;
     overflow: hidden;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,.46) 46%, #000 100%),
+      url('/assets/webp/onboarding.webp') center top / cover no-repeat,
+      #000;
   }
 
   .onboarding-topbar {
@@ -1530,7 +1587,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .onboarding-sheet {
-    padding: 8px 0 6px;
+    padding: 8px 0 max(74px, calc(74px + env(safe-area-inset-bottom)));
+    min-height: 0;
   }
 
   .onboarding-progress-dots {
@@ -1571,7 +1629,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .onboarding-actions {
-    padding-top: 8px;
+    margin-top: clamp(12px, 3.2svh, 24px);
+    padding-top: 0;
   }
 
   .onboarding-actions .ios-auth-button {
