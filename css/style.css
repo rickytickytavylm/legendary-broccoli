@@ -676,21 +676,22 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   margin: 14px auto 0;
   padding: 0 18px;
   border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.26);
   outline: none;
   color: rgba(255,255,255,.94);
   text-align: center;
   font: 700 17px/1 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: -.02em;
   background:
-    radial-gradient(circle at 35% 0%, rgba(255,255,255,.18), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.035)),
-    rgba(0,0,0,.24);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
-  backdrop-filter: blur(24px) saturate(170%);
+    radial-gradient(circle at 30% 0%, rgba(255,255,255,.28), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.055)),
+    rgba(12,14,18,.32);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  backdrop-filter: blur(20px) saturate(190%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 16px 44px rgba(0,0,0,.24);
+    inset 0 1px 0 rgba(255,255,255,.24),
+    inset 0 -1px 0 rgba(255,255,255,.08),
+    0 18px 46px rgba(0,0,0,.32);
 }
 
 .onboarding-name-input::placeholder {
@@ -706,18 +707,24 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .onboarding-options button,
 .today-checkin-options button {
-  border: 1px solid rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.20);
   border-radius: 14px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.028)),
-    rgba(255,255,255,.025);
-  color: rgba(255,255,255,.76);
+    radial-gradient(circle at 24% 0%, rgba(255,255,255,.16), transparent 38%),
+    linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.045)),
+    rgba(12,14,18,.30);
+  color: rgba(255,255,255,.82);
   padding: 0 16px;
   cursor: pointer;
   font-weight: 620;
   text-align: left;
   min-height: 48px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    0 14px 34px rgba(0,0,0,.18);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -744,9 +751,10 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .onboarding-options button.active,
 .today-checkin-options button.active {
   background:
-    linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.055)),
-    rgba(255,255,255,.07);
-  border-color: rgba(255,255,255,.30);
+    radial-gradient(circle at 28% 0%, rgba(255,255,255,.30), transparent 38%),
+    linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.085)),
+    rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.38);
   color: #fff;
 }
 
@@ -1043,8 +1051,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .today-main-card,
 .today-support-card {
   background:
-    linear-gradient(0deg, rgba(5,5,6,.98) 0%, rgba(5,5,6,.92) 12%, rgba(5,5,6,.62) 48%, rgba(5,5,6,.14) 100%),
-    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.38) 46%, rgba(0,0,0,.88) 100%),
+    linear-gradient(0deg, #050506 0%, rgba(5,5,6,.99) 14%, rgba(5,5,6,.78) 54%, rgba(5,5,6,.20) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.42) 48%, #050506 100%),
     var(--ux-bg),
     #050506;
   background-position: center;
@@ -1059,8 +1067,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   pointer-events: none;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, rgba(5,5,6,0) 0%, rgba(5,5,6,.28) 34%, rgba(5,5,6,.84) 78%, rgba(5,5,6,.98) 100%),
-    linear-gradient(0deg, rgba(5,5,6,.98) 0 22px, rgba(5,5,6,0) 82px);
+    linear-gradient(180deg, rgba(5,5,6,0) 0%, rgba(5,5,6,.34) 30%, rgba(5,5,6,.90) 74%, #050506 100%),
+    linear-gradient(0deg, #050506 0 38px, rgba(5,5,6,.88) 64px, rgba(5,5,6,0) 116px);
   z-index: 0;
 }
 

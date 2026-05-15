@@ -22,7 +22,7 @@ let splashSoundPlayed = false;
 const onboardingSteps = [
   {
     key: 'name',
-    label: 'Шаг 1 из 4',
+    label: 'Шаг 1 из 3',
     title: 'Как вас зовут?',
     desc: 'Имя нужно только для личного обращения в профиле и рекомендациях.',
     input: {
@@ -31,34 +31,21 @@ const onboardingSteps = [
   },
   {
     key: 'focus',
-    label: 'Шаг 2 из 4',
+    label: 'Шаг 2 из 3',
     title: 'Что сейчас важнее?',
     desc: 'Выберите направление. Система покажет две подходящие программы для старта.',
     options: [
       { value: 'calm', label: 'Спокойствие' },
       { value: 'body', label: 'Тело / симптомы' },
       { value: 'relationships', label: 'Отношения' },
-      { value: 'selfworth', label: 'Самооценка / опора' },
+      { value: 'selfworth', label: 'Опора' },
       { value: 'selfstudy', label: 'Понять себя глубже' },
       { value: 'communication', label: 'Коммуникация / конфликты' },
-      { value: 'statework', label: 'Глубинная работа' },
-      { value: 'professional', label: 'Я специалист' },
-    ],
-  },
-  {
-    key: 'entry',
-    label: 'Шаг 3 из 4',
-    title: 'Как лучше начать?',
-    desc: 'Один формат входа. Контент тот же, меняется только способ начать.',
-    options: [
-      { value: 'short', label: 'Коротко' },
-      { value: 'video', label: 'Видео' },
-      { value: 'audio', label: 'Аудио' },
     ],
   },
   {
     key: 'result',
-    label: 'Шаг 4 из 4',
+    label: 'Шаг 3 из 3',
     title: 'Направление выбрано',
     desc: 'Покажем две подходящие программы. AI останется рядом и поможет выбрать между ними.',
     result: true,
@@ -74,6 +61,7 @@ const routes = {
     title: 'Спокойствие',
     desc: 'Два мягких входа: через движение и через внимание к телу.',
     short: 'спокойствие',
+    heroImage: '/assets/webp/stop_panic.webp',
     programs: [
       { title: 'Мини-йога', desc: 'Мягкое начало через дыхание и движение.', href: '/yoga/', image: '/assets/webp/mini-yoga.webp' },
       { title: 'Телесная терапия', desc: 'Вернуть внимание в тело и снизить внутреннее напряжение.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
@@ -83,6 +71,7 @@ const routes = {
     title: 'Тело и симптомы',
     desc: 'Два входа: понять психосоматику и мягко вернуться в телесное ощущение.',
     short: 'тело и симптомы',
+    heroImage: '/assets/webp/body.webp',
     programs: [
       { title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов.', href: '/psihosomatika/', image: '/assets/webp/psysomatic.webp' },
       { title: 'Телесная терапия', desc: 'Практики, которые возвращают внимание в тело.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
@@ -92,6 +81,7 @@ const routes = {
     title: 'Отношения',
     desc: 'Два входа: зависимые сценарии и мужско-женская динамика.',
     short: 'отношения',
+    heroImage: '/assets/webp/soza_today.webp',
     programs: [
       { title: 'Созависимость', desc: 'Границы, привязанность и повторяющиеся сценарии.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
       { title: 'Мужское и Женское', desc: 'Психология отношений и природа полов.', href: '/mj/', image: '/assets/webp/man_woman.webp' },
@@ -101,6 +91,7 @@ const routes = {
     title: 'Самооценка и опора',
     desc: 'Два входа: восстановление опоры и контакт с собой.',
     short: 'самооценка и опора',
+    heroImage: '/assets/webp/opora.webp',
     programs: [
       { title: 'Работа с травмами', desc: 'Кризисы, травматичный опыт и восстановление опоры.', href: '/dermer/', image: '/assets/webp/geshtalt.webp' },
       { title: 'Гештальт-подход', desc: 'Контакт, эмоции, границы и возвращение к себе.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
@@ -110,6 +101,7 @@ const routes = {
     title: 'Понять себя глубже',
     desc: 'Два входа: базовая программа для самопонимания и библиотека материалов.',
     short: 'самопонимание',
+    heroImage: '/assets/webp/find_myself.webp',
     programs: [
       { title: 'Гештальт-подход', desc: 'Эмоции, потребности, контакт и границы.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
       { title: 'Антология', desc: 'Сборник материалов и практик для более широкого входа.', href: '/antologiya/', image: '/assets/webp/antology.webp' },
@@ -119,32 +111,15 @@ const routes = {
     title: 'Коммуникация и конфликты',
     desc: 'Два входа: навыки общения и сценарии в отношениях.',
     short: 'коммуникация и конфликты',
+    heroImage: '/assets/webp/conflicts_programs.webp',
     programs: [
       { title: 'Мастер Коммуникаций', desc: 'Навыки общения, диалог и управление конфликтом.', href: '/master/', image: '/assets/webp/masterofcommication.webp' },
       { title: 'Созависимость', desc: 'Границы и повторяющиеся сценарии в контакте.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
     ],
   },
-  statework: {
-    title: 'Глубинная работа',
-    desc: 'Два входа: состояние, внимание и работа с внутренним опытом.',
-    short: 'глубинная работа',
-    programs: [
-      { title: 'Гипноз', desc: 'Техники и практики гипнотерапии.', href: '/gipnoz/', image: '/assets/webp/hipno.webp' },
-      { title: 'Гештальт-подход', desc: 'Контакт, эмоции и возвращение к себе.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
-    ],
-  },
-  professional: {
-    title: 'Профессиональный разбор',
-    desc: 'Два входа для специалистов: супервизия и коммуникация.',
-    short: 'профессиональный интерес',
-    programs: [
-      { title: 'Супервизия', desc: 'Профессиональная поддержка психологов.', href: '/superviziya/', image: '/assets/webp/supervision.webp' },
-      { title: 'Мастер Коммуникаций', desc: 'Навыки общения и профессионального контакта.', href: '/master/', image: '/assets/webp/masterofcommication.webp' },
-    ],
-  },
 };
 
-const todayRouteKeys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication', 'statework', 'professional'];
+const todayRouteKeys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication'];
 let currentTodayRouteKey = null;
 let todayTouchStartX = 0;
 let todayTouchStartY = 0;
@@ -179,15 +154,11 @@ function cleanName(value) {
 
 function routeConfig(profile = onboardingState, routeKey) {
   const route = routes[routeKey || selectedRouteKey(profile)] || routes.selfstudy;
-  const entry = profile.entry || 'material';
+  const entry = 'video';
   const programs = route.programs || routes.selfstudy.programs;
   const primary = programs[0];
   const secondary = programs[1] || programs[0];
-  const entryText = entry === 'audio'
-    ? 'Начните с аудиоформата внутри выбранной программы.'
-    : entry === 'short'
-      ? 'Начните с первого материала, без поиска по каталогу.'
-      : 'Начните с видео внутри выбранной программы.';
+  const entryText = 'Начните с первого материала внутри выбранной программы.';
   const copy = {
     ...route,
     primary,
@@ -196,7 +167,7 @@ function routeConfig(profile = onboardingState, routeKey) {
     firstStepDesc: `${primary.desc} ${entryText}`,
     href: primary.href,
     image: primary.image,
-    hero: primary.image,
+    hero: route.heroImage || primary.image,
   };
   return copy;
 }
