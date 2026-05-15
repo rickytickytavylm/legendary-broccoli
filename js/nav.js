@@ -40,10 +40,10 @@
       icon: icon('<path d="m3 10.5 9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/>')
     },
     {
-      id: 'programs',
-      href: '/programs/',
-      label: 'Программы',
-      icon: icon('<path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/>')
+      id: 'feed',
+      href: '/feed/',
+      label: 'Лента',
+      icon: icon('<path d="M5 5h14"/><path d="M5 12h14"/><path d="M5 19h10"/><path d="M4 4.5h.01"/><path d="M4 11.5h.01"/><path d="M4 18.5h.01"/>')
     },
     {
       id: 'community',

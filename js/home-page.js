@@ -9,13 +9,15 @@ const onboardingSteps = [
     key: 'focus',
     label: 'Шаг 1 из 3',
     title: 'Что сейчас важнее?',
-    desc: 'Выберите ближайший запрос. Система подберет одну программу для старта.',
+    desc: 'Выберите направление. Система покажет две подходящие программы для старта.',
     options: [
       { value: 'calm', label: 'Спокойствие' },
       { value: 'body', label: 'Тело / симптомы' },
       { value: 'relationships', label: 'Отношения' },
       { value: 'selfworth', label: 'Самооценка / опора' },
       { value: 'selfstudy', label: 'Понять себя глубже' },
+      { value: 'communication', label: 'Коммуникация / конфликты' },
+      { value: 'statework', label: 'Глубинная работа' },
       { value: 'professional', label: 'Я специалист' },
     ],
   },
@@ -28,14 +30,13 @@ const onboardingSteps = [
       { value: 'short', label: 'Коротко' },
       { value: 'video', label: 'Видео' },
       { value: 'audio', label: 'Аудио' },
-      { value: 'ai', label: 'С AI' },
     ],
   },
   {
     key: 'result',
     label: 'Шаг 3 из 3',
-    title: 'Программа выбрана',
-    desc: 'Это стартовая рекомендация. Весь каталог остается доступен в разделе “Программы”.',
+    title: 'Направление выбрано',
+    desc: 'Покажем две подходящие программы. AI останется рядом и поможет выбрать между ними.',
     result: true,
     options: [],
   },
@@ -46,66 +47,83 @@ let onboardingIndex = 0;
 
 const routes = {
   calm: {
-    title: 'Начните с Гештальта',
-    desc: 'Для спокойного входа: эмоции, контакт, границы и возвращение к себе.',
+    title: 'Спокойствие',
+    desc: 'Два мягких входа: через движение и через внимание к телу.',
     short: 'спокойствие',
-    firstStep: 'Гештальт-подход',
-    firstStepDesc: 'Откройте программу “Гештальт-подход” и начните с первого материала.',
-    href: '/geshtalt/',
-    image: '/assets/webp/courses.webp',
-    hero: '/assets/webp/new_geshtalt.webp',
+    programs: [
+      { title: 'Мини-йога', desc: 'Мягкое начало через дыхание и движение.', href: '/yoga/', image: '/assets/webp/mini-yoga.webp' },
+      { title: 'Телесная терапия', desc: 'Вернуть внимание в тело и снизить внутреннее напряжение.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
+    ],
   },
   body: {
-    title: 'Понять тело и симптомы',
-    desc: 'Сегодня: увидеть связь состояния и тела без самодиагностики.',
+    title: 'Тело и симптомы',
+    desc: 'Два входа: понять психосоматику и мягко вернуться в телесное ощущение.',
     short: 'тело и симптомы',
-    firstStep: 'Психосоматика',
-    firstStepDesc: 'Посмотрите первый материал по психосоматике и отметьте, где это проявляется в теле.',
-    href: '/psihosomatika/',
-    image: '/assets/webp/psysomatic.webp',
-    hero: '/assets/webp/psysomatic.webp',
+    programs: [
+      { title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов.', href: '/psihosomatika/', image: '/assets/webp/psysomatic.webp' },
+      { title: 'Телесная терапия', desc: 'Практики, которые возвращают внимание в тело.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
+    ],
   },
   relationships: {
-    title: 'Разобраться в отношениях',
-    desc: 'Сегодня: увидеть один повторяющийся сценарий в контакте.',
+    title: 'Отношения',
+    desc: 'Два входа: зависимые сценарии и мужско-женская динамика.',
     short: 'отношения',
-    firstStep: 'Границы и близость',
-    firstStepDesc: 'Откройте материал про границы и сформулируйте один пример из своей жизни.',
-    href: '/sozavisimost/',
-    image: '/assets/webp/coda2.webp',
-    hero: '/assets/webp/man_woman.webp',
+    programs: [
+      { title: 'Созависимость', desc: 'Границы, привязанность и повторяющиеся сценарии.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
+      { title: 'Мужское и Женское', desc: 'Психология отношений и природа полов.', href: '/mj/', image: '/assets/webp/man_woman.webp' },
+    ],
   },
   selfworth: {
-    title: 'Опора через Гештальт',
-    desc: 'Для работы с самооценкой начните с контакта с собой и своими потребностями.',
+    title: 'Самооценка и опора',
+    desc: 'Два входа: восстановление опоры и контакт с собой.',
     short: 'самооценка и опора',
-    firstStep: 'Гештальт-подход',
-    firstStepDesc: 'Откройте программу “Гештальт-подход”: это самый точный старт для опоры и самопонимания.',
-    href: '/geshtalt/',
-    image: '/assets/webp/courses.webp',
-    hero: '/assets/webp/new_geshtalt.webp',
+    programs: [
+      { title: 'Работа с травмами', desc: 'Кризисы, травматичный опыт и восстановление опоры.', href: '/dermer/', image: '/assets/webp/geshtalt.webp' },
+      { title: 'Гештальт-подход', desc: 'Контакт, эмоции, границы и возвращение к себе.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
+    ],
   },
   selfstudy: {
     title: 'Понять себя глубже',
-    desc: 'Сегодня: назвать эмоцию, потребность и то, что мешает контакту.',
+    desc: 'Два входа: базовая программа для самопонимания и библиотека материалов.',
     short: 'самопонимание',
-    firstStep: 'Гештальт-подход',
-    firstStepDesc: 'Откройте вводный материал по гештальту. Таймкоды и AI-разбор помогут взять главное.',
-    href: '/geshtalt/',
-    image: '/assets/webp/courses.webp',
-    hero: '/assets/webp/new_geshtalt.webp',
+    programs: [
+      { title: 'Гештальт-подход', desc: 'Эмоции, потребности, контакт и границы.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
+      { title: 'Антология', desc: 'Сборник материалов и практик для более широкого входа.', href: '/antologiya/', image: '/assets/webp/antology.webp' },
+    ],
+  },
+  communication: {
+    title: 'Коммуникация и конфликты',
+    desc: 'Два входа: навыки общения и сценарии в отношениях.',
+    short: 'коммуникация и конфликты',
+    programs: [
+      { title: 'Мастер Коммуникаций', desc: 'Навыки общения, диалог и управление конфликтом.', href: '/master/', image: '/assets/webp/masterofcommication.webp' },
+      { title: 'Созависимость', desc: 'Границы и повторяющиеся сценарии в контакте.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
+    ],
+  },
+  statework: {
+    title: 'Глубинная работа',
+    desc: 'Два входа: состояние, внимание и работа с внутренним опытом.',
+    short: 'глубинная работа',
+    programs: [
+      { title: 'Гипноз', desc: 'Техники и практики гипнотерапии.', href: '/gipnoz/', image: '/assets/webp/hipno.webp' },
+      { title: 'Гештальт-подход', desc: 'Контакт, эмоции и возвращение к себе.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
+    ],
   },
   professional: {
     title: 'Профессиональный разбор',
-    desc: 'Сегодня: взять один профессиональный разбор и применить его к практике.',
+    desc: 'Два входа для специалистов: супервизия и коммуникация.',
     short: 'профессиональный интерес',
-    firstStep: 'Супервизия',
-    firstStepDesc: 'Откройте супервизионный материал и сформулируйте вопрос для разбора.',
-    href: '/superviziya/',
-    image: '/assets/webp/supervision.webp',
-    hero: '/assets/webp/supervision.webp',
+    programs: [
+      { title: 'Супервизия', desc: 'Профессиональная поддержка психологов.', href: '/superviziya/', image: '/assets/webp/supervision.webp' },
+      { title: 'Мастер Коммуникаций', desc: 'Навыки общения и профессионального контакта.', href: '/master/', image: '/assets/webp/masterofcommication.webp' },
+    ],
   },
 };
+
+const todayRouteKeys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication', 'statework', 'professional'];
+let currentTodayRouteKey = null;
+let todayTouchStartX = 0;
+let todayTouchStartY = 0;
 
 function asArray(value) {
   if (Array.isArray(value)) return value;
@@ -124,22 +142,27 @@ function selectedRouteKey(profile = onboardingState) {
   return routes[profile.focus] ? profile.focus : 'selfstudy';
 }
 
-function routeConfig(profile = onboardingState) {
-  const route = routes[selectedRouteKey(profile)] || routes.selfstudy;
+function routeConfig(profile = onboardingState, routeKey) {
+  const route = routes[routeKey || selectedRouteKey(profile)] || routes.selfstudy;
   const entry = profile.entry || 'material';
-  const copy = { ...route };
-  if (entry === 'ai') {
-    copy.firstStep = 'Разобрать запрос с AI';
-    copy.firstStepDesc = `Скажите AI, что сейчас важнее: ${route.short}. Он предложит материал и поможет начать без поиска.`;
-    copy.href = '/ai/';
-    copy.image = '/assets/webp/ai_back.webp';
-  } else if (entry === 'audio') {
-    copy.firstStepDesc = `Откройте программу “${route.firstStep}” и переключитесь в аудиоформат.`;
-  } else if (entry === 'short') {
-    copy.firstStepDesc = `Начните с первого материала программы “${route.firstStep}”. Не нужно выбирать из каталога.`;
-  } else if (entry === 'video') {
-    copy.firstStepDesc = `Откройте видео в программе “${route.firstStep}”. Таймкоды и AI-разбор помогут взять главное.`;
-  }
+  const programs = route.programs || routes.selfstudy.programs;
+  const primary = programs[0];
+  const secondary = programs[1] || programs[0];
+  const entryText = entry === 'audio'
+    ? 'Начните с аудиоформата внутри выбранной программы.'
+    : entry === 'short'
+      ? 'Начните с первого материала, без поиска по каталогу.'
+      : 'Начните с видео внутри выбранной программы.';
+  const copy = {
+    ...route,
+    primary,
+    secondary,
+    firstStep: primary.title,
+    firstStepDesc: `${primary.desc} ${entryText}`,
+    href: primary.href,
+    image: primary.image,
+    hero: primary.image,
+  };
   return copy;
 }
 
@@ -174,25 +197,47 @@ function showAuthGatewayMode(mode) {
   if (providers) providers.classList.toggle('hidden', mode !== 'providers');
 }
 
-function renderToday() {
+function renderToday(routeKey) {
   const profile = JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}');
-  const route = routeConfig(profile);
+  currentTodayRouteKey = routeKey || currentTodayRouteKey || selectedRouteKey(profile);
+  const route = routeConfig(profile, currentTodayRouteKey);
+  const routeIndex = Math.max(0, todayRouteKeys.indexOf(currentTodayRouteKey));
   const todayTitle = document.querySelector('[data-today-title]');
   const todaySubtitle = document.querySelector('[data-today-subtitle]');
   const stepTitle = document.querySelector('[data-today-step-title]');
   const stepDesc = document.querySelector('[data-today-step-desc]');
   const hero = document.querySelector('[data-today-hero]');
   const main = document.querySelector('[data-today-main]');
+  const secondaryCard = document.querySelector('[data-today-secondary]');
+  const secondaryTitle = document.querySelector('[data-today-secondary-title]');
+  const secondaryDesc = document.querySelector('[data-today-secondary-desc]');
+  const secondaryLink = document.querySelector('[data-today-secondary-link]');
   const primary = document.querySelector('[data-today-primary]');
   const heroAction = document.querySelector('[data-today-hero-action]');
+  const progress = document.querySelector('[data-today-progress]');
+  const dots = document.querySelector('[data-today-dots]');
   if (todayTitle) todayTitle.textContent = route.title;
   if (todaySubtitle) todaySubtitle.textContent = route.desc;
   if (stepTitle) stepTitle.textContent = route.firstStep;
   if (stepDesc) stepDesc.textContent = route.firstStepDesc;
   if (hero) hero.style.setProperty('--ux-bg', `url('${route.hero}')`);
   if (main) main.style.setProperty('--ux-bg', `url('${route.image}')`);
+  if (secondaryCard && route.secondary) secondaryCard.style.setProperty('--ux-bg', `url('${route.secondary.image}')`);
+  if (secondaryTitle && route.secondary) secondaryTitle.textContent = route.secondary.title;
+  if (secondaryDesc && route.secondary) secondaryDesc.textContent = route.secondary.desc;
+  if (secondaryLink && route.secondary) secondaryLink.setAttribute('href', route.secondary.href);
   if (primary) primary.setAttribute('href', route.href);
   if (heroAction) heroAction.setAttribute('href', route.href);
+  if (progress) progress.textContent = `${routeIndex + 1} из ${todayRouteKeys.length}`;
+  if (dots) {
+    dots.innerHTML = todayRouteKeys.map((key) => `<span class="${key === currentTodayRouteKey ? 'active' : ''}"></span>`).join('');
+  }
+}
+
+function shiftTodayRoute(delta) {
+  const currentIndex = Math.max(0, todayRouteKeys.indexOf(currentTodayRouteKey || selectedRouteKey(JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}'))));
+  const nextIndex = (currentIndex + delta + todayRouteKeys.length) % todayRouteKeys.length;
+  renderToday(todayRouteKeys[nextIndex]);
 }
 
 function finishOnboarding() {
@@ -204,6 +249,8 @@ function finishOnboarding() {
     route: route.title,
     firstStep: route.firstStep,
     firstStepHref: route.href,
+    secondStep: route.secondary?.title,
+    secondStepHref: route.secondary?.href,
     completedAt: new Date().toISOString(),
   }));
   renderToday();
@@ -242,8 +289,8 @@ function renderOnboarding() {
   if (step.result) {
     const route = routeConfig();
     document.querySelector('[data-result-kicker]').textContent = 'Сегодня';
-    document.querySelector('[data-result-title]').textContent = route.firstStep;
-    document.querySelector('[data-result-desc]').textContent = `${route.desc} Первый шаг уже выбран, без каталога и лишнего поиска.`;
+    document.querySelector('[data-result-title]').textContent = route.title;
+    document.querySelector('[data-result-desc]').textContent = `${route.primary.title} и ${route.secondary.title}. Две программы появятся на главной.`;
     return;
   }
   const selected = asArray(onboardingState[step.key]);
@@ -318,6 +365,22 @@ function initOnboarding() {
     onboardingIndex += 1;
     renderOnboarding();
   });
+  document.querySelector('[data-today-prev]')?.addEventListener('click', () => shiftTodayRoute(-1));
+  document.querySelector('[data-today-next]')?.addEventListener('click', () => shiftTodayRoute(1));
+  document.querySelector('[data-today-hero]')?.addEventListener('touchstart', (event) => {
+    const touch = event.touches && event.touches[0];
+    if (!touch) return;
+    todayTouchStartX = touch.clientX;
+    todayTouchStartY = touch.clientY;
+  }, { passive: true });
+  document.querySelector('[data-today-hero]')?.addEventListener('touchend', (event) => {
+    const touch = event.changedTouches && event.changedTouches[0];
+    if (!touch) return;
+    const dx = touch.clientX - todayTouchStartX;
+    const dy = touch.clientY - todayTouchStartY;
+    if (Math.abs(dx) < 46 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+    shiftTodayRoute(dx < 0 ? 1 : -1);
+  }, { passive: true });
   const completed = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
   const splashSeen = localStorage.getItem(SPLASH_SEEN_KEY) === 'true';
   if (completed) {

@@ -9,7 +9,7 @@
 <title>Система — Руслан Молодцов</title>
   <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия и практики." />
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=86" />
+  <link rel="stylesheet" href="/css/style.css?v=88" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -42,7 +42,7 @@
       </a>
       
       <div class="nav-links desktop-only">
-        <a href="/programs/" class="nav-link">Программы</a>
+        <a href="/feed/" class="nav-link">Лента</a>
         <a href="/community/" class="nav-link">Сообщество</a>
         <a href="/ai/" class="nav-link">AI</a>
       </div>
@@ -68,7 +68,7 @@
           <div class="auth-gateway-copy">
             <img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="auth-gateway-logo" loading="eager" decoding="async">
             <h1>Найдем, с чего начать сегодня</h1>
-            <p>Два коротких вопроса. На выходе — одна программа для старта или AI-помощник.</p>
+            <p>Два коротких вопроса. На выходе — две подходящие программы для старта.</p>
             <div class="auth-gateway-dots" aria-hidden="true"><span></span><span class="active"></span><span></span></div>
           </div>
           <div class="auth-gateway-actions">
@@ -129,20 +129,28 @@
       <div class="today-hero-card" data-today-hero style="--ux-bg:url('/assets/webp/new_main.webp')">
         <div class="today-hero-copy">
           <p class="hub-kicker">Сегодня</p>
-          <h1 data-today-title>Ваша программа для старта</h1>
-          <p data-today-subtitle>Один вход в большую библиотеку, без поиска по всем курсам.</p>
+          <h1 data-today-title>Ваше направление</h1>
+          <p data-today-subtitle>Две подходящие программы без поиска по всей библиотеке.</p>
           <a class="today-hero-action" href="/programs/" data-today-hero-action>
             <span>Открыть шаг</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
           </a>
         </div>
         <div class="today-progress-pill"><span data-today-progress>День 1</span></div>
-        <div class="today-hero-dots" aria-hidden="true"><span class="active"></span><span></span><span></span></div>
+        <div class="today-carousel-controls" aria-label="Переключить направление">
+          <button type="button" data-today-prev aria-label="Предыдущее направление">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" data-today-next aria-label="Следующее направление">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="today-hero-dots" data-today-dots aria-hidden="true"><span class="active"></span><span></span><span></span></div>
       </div>
 
       <div class="today-section-title">
         <div>
-          <p class="hub-kicker">Начать здесь</p>
+          <p class="hub-kicker">Подходит под запрос</p>
         </div>
         <a href="/programs/">Все программы <span aria-hidden="true">›</span></a>
       </div>
@@ -151,7 +159,7 @@
         <article class="today-main-card" data-today-main style="--ux-bg:url('/assets/webp/ai_back.webp')">
           <div>
             <span class="today-day-pill">Старт</span>
-            <h2 data-today-step-title>Выбранная программа</h2>
+            <h2 data-today-step-title>Первая программа</h2>
             <p data-today-step-desc>Откройте программу, а затем при необходимости разберите материал с AI.</p>
           </div>
           <a class="today-play-button" href="/programs/" data-today-primary aria-label="Открыть программу">
@@ -160,10 +168,22 @@
           <div class="today-card-progress" aria-hidden="true"><span></span><em>20%</em></div>
         </article>
 
+        <article class="today-main-card" data-today-secondary style="--ux-bg:url('/assets/webp/courses.webp')">
+          <div>
+            <span class="today-day-pill">Вариант 2</span>
+            <h2 data-today-secondary-title>Вторая программа</h2>
+            <p data-today-secondary-desc>Второй подходящий вход по выбранному направлению.</p>
+          </div>
+          <a class="today-play-button" href="/programs/" data-today-secondary-link aria-label="Открыть вторую программу">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.75v12.5c0 .78.86 1.26 1.53.86l10.1-6.25a1 1 0 0 0 0-1.72L9.53 4.89A1 1 0 0 0 8 5.75Z"/></svg>
+          </a>
+          <div class="today-card-progress" aria-hidden="true"><span></span><em>подходит</em></div>
+        </article>
+
         <a href="/ai/" class="today-support-card" style="--ux-bg:url('/assets/webp/ai_back.webp')">
           <div>
-            <h3>Нужна поддержка?</h3>
-            <p>Спросите AI о том, что сейчас важно для вас.</p>
+            <h3>Не знаете, что выбрать?</h3>
+            <p>Спросите AI, какая из двух программ лучше под ваш запрос.</p>
           </div>
           <span class="today-support-icon" aria-hidden="true">✦</span>
         </a>
@@ -176,9 +196,9 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=71"></script>
+  <script src="/js/nav.js?v=72"></script>
   <script src="/js/main.js?v=2"></script>
   <script src="/js/program-catalog.js?v=8"></script>
-  <script src="/js/home-page.js?v=4"></script>
+  <script src="/js/home-page.js?v=6"></script>
 </body>
 </html>
