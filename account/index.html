@@ -6,7 +6,7 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=93" />
+  <link rel="stylesheet" href="/css/style.css?v=95" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -668,6 +668,55 @@
       font-weight: 800;
       text-align: right;
     }
+    .settings-list {
+      display: grid;
+      gap: 8px;
+    }
+    .settings-row {
+      min-height: 54px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,.075);
+    }
+    .settings-row:last-child {
+      border-bottom: 0;
+    }
+    .settings-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.1);
+      background:
+        radial-gradient(circle at 30% 0%, rgba(255,255,255,.14), transparent 34%),
+        rgba(255,255,255,.055);
+      color: rgba(255,255,255,.78);
+      font-size: 15px;
+      font-weight: 850;
+    }
+    .settings-row strong {
+      display: block;
+      color: rgba(255,255,255,.9);
+      font-size: 14px;
+      line-height: 1.15;
+    }
+    .settings-row small {
+      display: block;
+      margin-top: 3px;
+      color: rgba(255,255,255,.42);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+    .settings-chevron {
+      color: rgba(255,255,255,.28);
+      font-size: 20px;
+    }
     .billing-row {
       display: flex;
       align-items: center;
@@ -860,7 +909,7 @@
 
         <aside class="profile-stack">
           <section class="profile-card">
-            <h3 class="profile-card-title">Ваш статус</h3>
+            <h3 class="profile-card-title">Сводка</h3>
             <div class="mini-stat-list">
               <div class="mini-stat"><span>Статус</span><span id="streak-big">Открыто</span></div>
               <div class="mini-stat"><span>Период</span><span id="member-since">Маршрут собирается</span></div>
@@ -873,10 +922,32 @@
           </section>
 
           <section class="profile-card">
-            <h3 class="profile-card-title">Telegram</h3>
-            <p class="profile-muted" id="telegram-desc">Канал и сообщество подключим как поддержку маршрута, без ощущения платного барьера.</p>
-            <p class="mood-last" id="diary-last"></p>
-            <a href="#" class="profile-secondary u-mt-16" id="open-diary-btn">Открыть Telegram</a>
+            <h3 class="profile-card-title">Настройки и документы</h3>
+            <p class="profile-muted">Служебные разделы профиля, как в нормальном приложении.</p>
+            <div class="settings-list u-mt-16">
+              <a class="settings-row" href="/privacy/">
+                <span class="settings-icon">P</span>
+                <span><strong>Политика конфиденциальности</strong><small>Как хранятся данные и device id</small></span>
+                <span class="settings-chevron">›</span>
+              </a>
+              <a class="settings-row" href="/terms/">
+                <span class="settings-icon">D</span>
+                <span><strong>Условия использования</strong><small>Правила платформы и открытого beta-доступа</small></span>
+                <span class="settings-chevron">›</span>
+              </a>
+              <a class="settings-row" href="/community/">
+                <span class="settings-icon">S</span>
+                <span><strong>Поддержка и сообщество</strong><small>Канал, обратная связь и вопросы</small></span>
+                <span class="settings-chevron">›</span>
+              </a>
+              <a class="settings-row" href="/ai/">
+                <span class="settings-icon">AI</span>
+                <span><strong>AI-настройка маршрута</strong><small>Уточнить, что выбрать сегодня</small></span>
+                <span class="settings-chevron">›</span>
+              </a>
+            </div>
+            <p class="mood-last u-hidden" id="diary-last"></p>
+            <a href="#" class="profile-secondary u-hidden" id="open-diary-btn">Открыть Telegram</a>
           </section>
 
           <section class="profile-card">
@@ -896,9 +967,9 @@
 
           <section class="profile-card">
             <h3 class="profile-card-title">Аккаунт</h3>
-            <p class="profile-muted">Можно полностью удалить профиль, прогресс, историю AI и привязки входа.</p>
+            <p class="profile-muted">Профиль сейчас привязан к этому устройству. Удаление очистит device-профиль, прогресс и историю AI.</p>
             <button class="btn-logout btn-delete-account" id="delete-account-btn" type="button">Удалить аккаунт</button>
-            <p class="account-danger-note">После удаления вход через тот же Яндекс, Telegram, телефон или почту создаст новый аккаунт.</p>
+            <p class="account-danger-note">После удаления следующий заход начнется со сплеша и онбординга.</p>
           </section>
         </aside>
       </div>
@@ -924,9 +995,9 @@
   </div>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=58"></script>
+  <script src="/js/api.js?v=59"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=74"></script>
-  <script src="/js/page-inline/account-1.js?v=2"></script>
+  <script src="/js/page-inline/account-1.js?v=3"></script>
 </body>
 </html>

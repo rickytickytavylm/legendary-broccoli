@@ -213,9 +213,9 @@ function escapeHtml(value) {
   }
 
   async function deleteAccount() {
-    const firstConfirm = confirm('Удалить аккаунт полностью? Будут удалены профиль, прогресс, история AI и привязки входа.');
+    const firstConfirm = confirm('Удалить профиль на этом устройстве? Будут удалены прогресс, история AI и настройки маршрута.');
     if (!firstConfirm) return;
-    const secondConfirm = confirm('Это действие нельзя отменить. При следующем входе через тот же Яндекс или Telegram будет создан новый аккаунт.');
+    const secondConfirm = confirm('Это действие нельзя отменить. Следующий заход начнется со сплеша и онбординга.');
     if (!secondConfirm) return;
 
     const button = document.getElementById('delete-account-btn');
@@ -227,6 +227,7 @@ function escapeHtml(value) {
     try {
       await window.API.deleteAccount();
       window.API.clearLocalState();
+      localStorage.removeItem('sistema:device-id');
       window.location.href = '/';
     } catch (err) {
       alert(err.error || 'Не удалось удалить аккаунт. Попробуйте еще раз.');

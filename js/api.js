@@ -337,6 +337,7 @@ class ApiClient {
   getSubscription() { return this.request('GET', '/payment/subscription'); }
 
   // --- Profile ---
+  getProfileSession() { return this.request('GET', '/profile/session', null, { fresh: true }); }
   deleteAccount() { return this.request('DELETE', '/profile/account'); }
 
   // --- AI ---

@@ -257,17 +257,32 @@ function setTodayProgramState(prefix, program) {
   const link = document.querySelector(`[data-today-${prefix === 'primary' ? 'primary' : 'secondary-link'}]`);
   const action = document.querySelector(`[data-today-${prefix}-action]`);
   const tracker = document.querySelector(`[data-today-${prefix}-tracker]`);
+  const ring = document.querySelector(`[data-today-${prefix}-ring]`);
+  const ringText = document.querySelector(`[data-today-${prefix}-ring-text]`);
   const href = program?.href || '';
   if (link && program?.href) link.setAttribute('href', program.href);
   if (action) action.textContent = programOpened(href) ? 'Продолжить' : 'Начать';
   if (tracker) tracker.textContent = 'Считаем материалы';
+  if (ring) ring.style.setProperty('--pct', 0);
+  if (ringText) ringText.textContent = '0/0';
   fetchProgramLessonCount(href).then((count) => {
     if (!tracker || link?.getAttribute('href') !== href) return;
+    const done = programOpened(href) ? 1 : 0;
     if (!count) {
       tracker.textContent = programOpened(href) ? 'Программа открыта' : 'Материалы внутри';
+      if (ringText) ringText.textContent = programOpened(href) ? '1' : '0';
       return;
     }
-    tracker.textContent = `${programOpened(href) ? 1 : 0} из ${count} материалов`;
+    tracker.textContent = `${done} из ${count} дней`;
+    if (ring) {
+      ring.classList.remove('is-animated');
+      ring.style.setProperty('--pct', 0);
+      requestAnimationFrame(() => {
+        ring.classList.add('is-animated');
+        ring.style.setProperty('--pct', Math.round((done / count) * 100));
+      });
+    }
+    if (ringText) ringText.textContent = `${done}/${count}`;
   });
 }
 
@@ -538,10 +553,10 @@ function initOnboarding() {
     showNewHomeState('intro');
   };
 
-  if (window.API?.request) {
-    window.API.request('GET', '/profile/dashboard', null, { fresh: true })
+  if (window.API?.getProfileSession) {
+    window.API.getProfileSession()
       .then((data) => {
-        if (data?.device_created && localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true') {
+        if (data && data.exists === false && localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true') {
           resetLocalOnboardingForFreshDevice();
         }
       })
