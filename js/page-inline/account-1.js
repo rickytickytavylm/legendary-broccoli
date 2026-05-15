@@ -63,18 +63,17 @@ function escapeHtml(value) {
       const emailName = user.email ? user.email.split('@')[0] : '';
       const phoneName = user.phone ? user.phone.replace(/^\+7/, '+7 ') : '';
       const name = user.display_name || user.first_name || profile.name || emailName || phoneName || 'друг';
-      document.getElementById('dash-greeting').textContent = greet + ', ' + name;
+      document.getElementById('dash-greeting').textContent = name;
 
-      document.getElementById('dash-sub').textContent = 'Ваши программы, активность и AI-навигация в одном месте.';
+      document.getElementById('dash-sub').textContent = 'Профиль устройства. Авторизацию подключим позже.';
 
       // Streak
       const streak = stats.streak_days || 0;
       document.getElementById('streak-val').textContent = streak;
-      document.getElementById('ring-streak').style.setProperty('--value', Math.min(100, Math.round((streak / 7) * 100)));
+      document.getElementById('ring-streak').style.setProperty?.('--value', Math.min(100, Math.round((streak / 7) * 100)));
       document.getElementById('streak-big').textContent = 'Открыто';
       document.getElementById('member-since').textContent = 'Маршрут собирается';
       document.getElementById('pro-cta').textContent = 'Продолжить путь';
-      document.getElementById('pro-cta').onclick = null;
 
       // Streak dots (last 7 days)
       const dotsEl = document.getElementById('streak-dots');
@@ -131,7 +130,7 @@ function escapeHtml(value) {
 
       // Goal (active days this week)
       document.getElementById('goal-done').textContent = stats.active_days_this_week || 0;
-      document.getElementById('ring-week').style.setProperty('--value', Math.min(100, Math.round(((stats.active_days_this_week || 0) / 7) * 100)));
+      document.getElementById('ring-week').style.setProperty?.('--value', Math.min(100, Math.round(((stats.active_days_this_week || 0) / 7) * 100)));
 
       // Product access cards
       document.getElementById('diary-last').textContent = 'Сообщество подключаем как поддержку, а не как платный барьер.';
@@ -140,7 +139,7 @@ function escapeHtml(value) {
       document.getElementById('ai-usage-desc').textContent = 'без лимита';
       const aiLimit = Math.max(ai_usage?.used || 1, 20);
       const aiUsed = ai_usage?.used || 0;
-      document.getElementById('ring-ai').style.setProperty('--value', Math.min(100, Math.round((aiUsed / Math.max(1, aiLimit)) * 100)));
+      document.getElementById('ring-ai').style.setProperty?.('--value', Math.min(100, Math.round((aiUsed / Math.max(1, aiLimit)) * 100)));
       document.getElementById('gratitude-cnt').textContent = courses ? courses.length : 0;
       document.getElementById('goal-done').textContent = stats.completed_lessons || 0;
       document.getElementById('goal-target').textContent = courses ? courses.length : 11;

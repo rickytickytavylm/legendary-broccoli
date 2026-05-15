@@ -424,6 +424,42 @@
       box-shadow: 0 22px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.15);
       padding: 22px;
     }
+    .profile-user-card {
+      max-width: 760px;
+      margin: 0 auto 18px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 28px;
+    }
+    .profile-settings-shell {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+    .profile-settings-group h2 {
+      margin: 0 0 9px 4px;
+      color: rgba(255,255,255,.42);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .profile-settings-group .settings-list {
+      padding: 6px 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.1);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,.10), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)),
+        rgba(7,8,10,.66);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      backdrop-filter: blur(28px) saturate(160%);
+      box-shadow: 0 20px 60px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.12);
+    }
     .profile-card-title {
       margin: 0 0 6px;
       color: #fff;
@@ -681,7 +717,25 @@
       padding: 10px 0;
       color: inherit;
       text-decoration: none;
+      width: 100%;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+      background: transparent;
+      font: inherit;
+      text-align: left;
       border-bottom: 1px solid rgba(255,255,255,.075);
+    }
+    .settings-row-button {
+      cursor: pointer;
+    }
+    .settings-row-danger strong {
+      color: rgba(255,165,165,.92);
+    }
+    .settings-row-danger .settings-icon {
+      color: rgba(255,170,170,.86);
+      border-color: rgba(255,115,115,.18);
+      background: rgba(255,80,80,.07);
     }
     .settings-row:last-child {
       border-bottom: 0;
@@ -759,7 +813,16 @@
         margin-bottom: 16px;
       }
       .profile-avatar {
-        display: none;
+        width: 58px;
+        height: 58px;
+        border-radius: 20px;
+      }
+      .profile-user-card {
+        grid-template-columns: auto minmax(0, 1fr);
+        padding: 16px;
+      }
+      .profile-settings-shell {
+        gap: 16px;
       }
       .profile-title {
         font-size: 30px;
@@ -843,135 +906,111 @@
   <div id="dashboard" class="u-hidden" aria-hidden="true">
     <div class="profile-wrap">
 
-      <header class="profile-hero">
-        <div>
-          <p class="profile-eyebrow">Профиль пути</p>
-          <h1 class="profile-title" id="dash-greeting">Добрый день</h1>
-          <p class="profile-subtitle" id="dash-sub">Ваш доступ, маршрут и настройки аккаунта</p>
-        </div>
+      <section class="profile-card profile-user-card">
         <div class="profile-avatar" id="avatar-btn">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         </div>
-      </header>
-
-      <div class="profile-grid">
-        <div class="profile-stack">
-          <section class="profile-card profile-route-card">
-            <div class="pro-badge">Личная траектория</div>
-            <h2 class="pro-title">Ваш маршрут собирается</h2>
-            <p class="profile-muted" id="access-desc">Профиль показывает, что уже открыто: программы, активность, AI и ближайший шаг.</p>
-            <div class="profile-route-grid">
-              <div><span>Старт</span><strong id="profile-main-direction">Сегодня</strong></div>
-              <div><span>Формат</span><strong id="profile-entry-format">Видео / аудио</strong></div>
-              <div><span>Доступ</span><strong>Открыт</strong></div>
-            </div>
-            <div class="profile-actions">
-              <a class="profile-primary" id="pro-cta" href="/">Открыть сегодня</a>
-              <a class="profile-secondary" href="/ai/">Спросить AI</a>
-            </div>
-            <div class="progress-bar-track" style="margin-top:18px">
-              <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
-            </div>
-          </section>
-
-          <section class="profile-card">
-            <h3 class="profile-card-title">Дни в приложении</h3>
-            <p class="profile-muted">Активность за неделю в стиле Apple Watch.</p>
-            <div class="rings-grid u-mt-16">
-              <div class="ring-card">
-                <div class="ring" id="ring-streak" style="--value:0"><span id="streak-val">0</span></div>
-                <p class="ring-label">Серия</p>
-                <p class="ring-sub">дней подряд</p>
-              </div>
-              <div class="ring-card">
-                <div class="ring" id="ring-week" style="--value:0"><span id="goal-done">0</span></div>
-                <p class="ring-label">Неделя</p>
-                <p class="ring-sub">активных дней</p>
-              </div>
-              <div class="ring-card">
-                <div class="ring" id="ring-ai" style="--value:0"><span id="ai-usage-card">0/5</span></div>
-                <p class="ring-label">AI</p>
-                <p class="ring-sub" id="ai-usage-desc">сообщения</p>
-              </div>
-            </div>
-            <div id="streak-dots" class="u-hidden"></div>
-            <div id="bar-chart" class="u-hidden"></div>
-          </section>
-
-          <section class="profile-card">
-            <div class="section-head" style="margin-bottom:14px">
-              <h3>Ваши направления</h3>
-              <a href="/programs/">Все</a>
-            </div>
-            <div class="course-grid" id="lessons-scroll"></div>
-          </section>
+        <div>
+          <p class="profile-eyebrow">Профиль</p>
+          <h1 class="profile-title" id="dash-greeting">Ваш профиль</h1>
+          <p class="profile-subtitle" id="dash-sub">Настройки приложения, документы и управление данными.</p>
         </div>
+      </section>
 
-        <aside class="profile-stack">
-          <section class="profile-card">
-            <h3 class="profile-card-title">Сводка</h3>
-            <div class="mini-stat-list">
-              <div class="mini-stat"><span>Статус</span><span id="streak-big">Открыто</span></div>
-              <div class="mini-stat"><span>Период</span><span id="member-since">Маршрут собирается</span></div>
-              <div class="mini-stat"><span>Просмотрено</span><span><span id="goal-target">0</span> уроков</span></div>
-              <div class="mini-stat"><span>Практика</span><span id="practice-time">0 мин</span></div>
-            </div>
-            <div id="gratitude-cnt" class="u-hidden">0</div>
-            <div id="mindfulness-pct" class="u-hidden">Free</div>
-            <div id="goal-desc" class="u-hidden"></div>
-          </section>
-
-          <section class="profile-card">
-            <h3 class="profile-card-title">Настройки и документы</h3>
-            <p class="profile-muted">Служебные разделы профиля, как в нормальном приложении.</p>
-            <div class="settings-list u-mt-16">
-              <a class="settings-row" href="/privacy/">
-                <span class="settings-icon">P</span>
-                <span><strong>Политика конфиденциальности</strong><small>Как хранятся данные и device id</small></span>
-                <span class="settings-chevron">›</span>
-              </a>
-              <a class="settings-row" href="/terms/">
-                <span class="settings-icon">D</span>
-                <span><strong>Условия использования</strong><small>Правила платформы и открытого beta-доступа</small></span>
-                <span class="settings-chevron">›</span>
-              </a>
-              <a class="settings-row" href="/community/">
-                <span class="settings-icon">S</span>
-                <span><strong>Поддержка и сообщество</strong><small>Канал, обратная связь и вопросы</small></span>
-                <span class="settings-chevron">›</span>
-              </a>
-              <a class="settings-row" href="/ai/">
-                <span class="settings-icon">AI</span>
-                <span><strong>AI-настройка маршрута</strong><small>Уточнить, что выбрать сегодня</small></span>
-                <span class="settings-chevron">›</span>
-              </a>
-            </div>
-            <p class="mood-last u-hidden" id="diary-last"></p>
-            <a href="#" class="profile-secondary u-hidden" id="open-diary-btn">Открыть Telegram</a>
-          </section>
-
-          <section class="profile-card">
-            <h3 class="profile-card-title">Быстрые действия</h3>
-            <div class="profile-actions u-mt-14">
-              <a class="profile-secondary" href="/">Сегодня</a>
-              <a class="profile-secondary" href="/feed/">Лента</a>
-              <a class="profile-secondary" href="/ai/">Открыть AI</a>
-              <a class="profile-secondary" href="/community/">Сообщество</a>
-            </div>
-            <p class="reminders-empty" id="reminders-text">Продолжайте маршрут или спросите AI, с чего лучше начать сегодня.</p>
-          </section>
-
-          <div class="logout-row u-mt-0">
-            <button class="btn-logout" id="logout-btn" type="button">Сбросить сессию</button>
+      <div class="profile-settings-shell">
+        <section class="profile-settings-group">
+          <h2>Основное</h2>
+          <div class="settings-list">
+            <a class="settings-row" href="/">
+              <span class="settings-icon">S</span>
+              <span><strong>Сегодня</strong><small id="profile-main-direction">Перейти к текущему направлению</small></span>
+              <span class="settings-chevron">›</span>
+            </a>
+            <a class="settings-row" href="/ai/">
+              <span class="settings-icon">AI</span>
+              <span><strong>AI-помощник</strong><small>Помочь выбрать программу или следующий шаг</small></span>
+              <span class="settings-chevron">›</span>
+            </a>
+            <a class="settings-row" href="/feed/">
+              <span class="settings-icon">F</span>
+              <span><strong>Лента</strong><small>Новости, короткие материалы и обновления</small></span>
+              <span class="settings-chevron">›</span>
+            </a>
           </div>
+        </section>
 
-          <section class="profile-card">
-            <h3 class="profile-card-title">Аккаунт</h3>
-            <p class="profile-muted">Профиль сейчас привязан к этому устройству. Удаление очистит device-профиль, прогресс и историю AI.</p>
-            <button class="btn-logout btn-delete-account" id="delete-account-btn" type="button">Удалить аккаунт</button>
-            <p class="account-danger-note">После удаления следующий заход начнется со сплеша и онбординга.</p>
-          </section>
-        </aside>
+        <section class="profile-settings-group">
+          <h2>Данные и приватность</h2>
+          <div class="settings-list">
+            <a class="settings-row" href="/privacy/">
+              <span class="settings-icon">P</span>
+              <span><strong>Политика конфиденциальности</strong><small>Как используются данные и device id</small></span>
+              <span class="settings-chevron">›</span>
+            </a>
+            <a class="settings-row" href="/terms/">
+              <span class="settings-icon">T</span>
+              <span><strong>Условия использования</strong><small>Правила платформы и открытого beta-доступа</small></span>
+              <span class="settings-chevron">›</span>
+            </a>
+            <button class="settings-row settings-row-button" id="logout-btn" type="button">
+              <span class="settings-icon">R</span>
+              <span><strong>Сбросить локальную сессию</strong><small>Очистить данные на устройстве</small></span>
+              <span class="settings-chevron">›</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="profile-settings-group">
+          <h2>Поддержка</h2>
+          <div class="settings-list">
+            <a class="settings-row" href="/community/">
+              <span class="settings-icon">C</span>
+              <span><strong>Сообщество</strong><small>Канал, обратная связь и вопросы</small></span>
+              <span class="settings-chevron">›</span>
+            </a>
+            <a class="settings-row" href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer">
+              <span class="settings-icon">TG</span>
+              <span><strong>Написать в Telegram</strong><small>Связаться с проектом</small></span>
+              <span class="settings-chevron">›</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="profile-settings-group profile-danger-group">
+          <h2>Аккаунт</h2>
+          <div class="settings-list">
+            <button class="settings-row settings-row-button settings-row-danger" id="delete-account-btn" type="button">
+              <span class="settings-icon">!</span>
+              <span><strong>Удалить профиль</strong><small>Удалить device-профиль, прогресс и историю AI</small></span>
+              <span class="settings-chevron">›</span>
+            </button>
+          </div>
+          <p class="account-danger-note">После удаления следующий заход начнется со сплеша и онбординга.</p>
+        </section>
+      </div>
+
+      <div class="u-hidden" aria-hidden="true">
+        <span id="profile-entry-format"></span>
+        <span id="access-desc"></span>
+        <span id="pro-cta"></span>
+        <span id="prog-bar"></span>
+        <span id="streak-val"></span>
+        <span id="ring-streak"></span>
+        <span id="streak-big"></span>
+        <span id="member-since"></span>
+        <span id="practice-time"></span>
+        <span id="goal-done"></span>
+        <span id="ring-week"></span>
+        <span id="diary-last"></span>
+        <span id="open-diary-btn"></span>
+        <span id="ai-usage-card"></span>
+        <span id="ai-usage-desc"></span>
+        <span id="ring-ai"></span>
+        <span id="gratitude-cnt"></span>
+        <span id="goal-target"></span>
+        <span id="lessons-scroll"></span>
+        <span id="streak-dots"></span>
+        <span id="bar-chart"></span>
       </div>
 
     </div>
@@ -998,6 +1037,6 @@
   <script src="/js/api.js?v=59"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=74"></script>
-  <script src="/js/page-inline/account-1.js?v=3"></script>
+  <script src="/js/page-inline/account-1.js?v=4"></script>
 </body>
 </html>
