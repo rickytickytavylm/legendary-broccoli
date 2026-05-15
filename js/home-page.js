@@ -125,6 +125,13 @@ let currentTodayRouteKey = null;
 let todayTouchStartX = 0;
 let todayTouchStartY = 0;
 
+function displayUserName(user) {
+  if (!user) return '';
+  const emailName = user.email ? user.email.split('@')[0] : '';
+  const phoneName = user.phone ? user.phone.replace(/^\+7/, '+7 ') : '';
+  return user.display_name || user.first_name || emailName || phoneName || '';
+}
+
 function asArray(value) {
   if (Array.isArray(value)) return value;
   return value ? [value] : [];
@@ -400,10 +407,13 @@ function initOnboarding() {
 window.refreshAuthUI = function(user) {
   const btn = document.getElementById('nav-auth-btn');
   const link = document.getElementById('nav-account-link');
+  const greeting = document.querySelector('[data-today-greeting]');
+  const name = displayUserName(user);
   if (user || window.API.isLoggedIn()) {
     if (btn) btn.style.display = 'none';
     if (link) link.style.display = 'inline-flex';
   }
+  if (greeting) greeting.textContent = name ? `Добро пожаловать, ${name}` : 'Добро пожаловать';
 };
 
 if (window.API.isLoggedIn()) {

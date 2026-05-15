@@ -9,7 +9,7 @@
 <title>Система — Руслан Молодцов</title>
   <meta name="description" content="Авторский канал Руслана Молодцова. Курсы, телесная терапия и практики." />
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=88" />
+  <link rel="stylesheet" href="/css/style.css?v=90" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -126,6 +126,13 @@
     </section>
 
     <section class="today-screen hidden" id="today-screen" aria-label="Сегодня">
+      <header class="today-welcome">
+        <div>
+          <h2 data-today-greeting>Добро пожаловать</h2>
+          <p>Выберите направление или продолжите материалы под свой запрос.</p>
+        </div>
+      </header>
+
       <div class="today-hero-card" data-today-hero style="--ux-bg:url('/assets/webp/new_main.webp')">
         <div class="today-hero-copy">
           <p class="hub-kicker">Сегодня</p>
@@ -165,7 +172,6 @@
           <a class="today-play-button" href="/programs/" data-today-primary aria-label="Открыть программу">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.75v12.5c0 .78.86 1.26 1.53.86l10.1-6.25a1 1 0 0 0 0-1.72L9.53 4.89A1 1 0 0 0 8 5.75Z"/></svg>
           </a>
-          <div class="today-card-progress" aria-hidden="true"><span></span><em>20%</em></div>
         </article>
 
         <article class="today-main-card" data-today-secondary style="--ux-bg:url('/assets/webp/courses.webp')">
@@ -177,7 +183,6 @@
           <a class="today-play-button" href="/programs/" data-today-secondary-link aria-label="Открыть вторую программу">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.75v12.5c0 .78.86 1.26 1.53.86l10.1-6.25a1 1 0 0 0 0-1.72L9.53 4.89A1 1 0 0 0 8 5.75Z"/></svg>
           </a>
-          <div class="today-card-progress" aria-hidden="true"><span></span><em>подходит</em></div>
         </article>
 
         <a href="/ai/" class="today-support-card" style="--ux-bg:url('/assets/webp/ai_back.webp')">
@@ -196,9 +201,9 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=72"></script>
+  <script src="/js/nav.js?v=73"></script>
   <script src="/js/main.js?v=2"></script>
   <script src="/js/program-catalog.js?v=8"></script>
-  <script src="/js/home-page.js?v=6"></script>
+  <script src="/js/home-page.js?v=7"></script>
 </body>
 </html>
