@@ -7,81 +7,35 @@ let splashSoundPlayed = false;
 const onboardingSteps = [
   {
     key: 'focus',
-    label: 'Шаг 1 из 6',
-    title: 'С чем вы пришли сейчас?',
-    desc: 'Можно выбрать несколько. Мы не ставим диагноз, а собираем стартовую траекторию.',
-    multiple: true,
+    label: 'Шаг 1 из 3',
+    title: 'Что сейчас важнее?',
+    desc: 'Выберите ближайший запрос. Система подберет одну программу для старта.',
     options: [
-      { value: 'stress', label: 'Тревога / стресс' },
+      { value: 'calm', label: 'Спокойствие' },
       { value: 'body', label: 'Тело / симптомы' },
       { value: 'relationships', label: 'Отношения' },
       { value: 'selfworth', label: 'Самооценка / опора' },
-      { value: 'conflict', label: 'Коммуникация / конфликт' },
-      { value: 'selfstudy', label: 'Хочу понять себя' },
-      { value: 'professional', label: 'Профессиональный интерес' },
+      { value: 'selfstudy', label: 'Понять себя глубже' },
+      { value: 'professional', label: 'Я специалист' },
     ],
   },
   {
-    key: 'intensity',
-    label: 'Шаг 2 из 6',
-    title: 'Насколько это сейчас остро?',
-    desc: 'Это помогает не отправлять вас в длинную лекцию, когда нужен мягкий вход.',
+    key: 'entry',
+    label: 'Шаг 2 из 3',
+    title: 'Как лучше начать?',
+    desc: 'Один формат входа. Контент тот же, меняется только способ начать.',
     options: [
-      { value: 'calm', label: 'Спокойно, хочу разобраться' },
-      { value: 'daily', label: 'Мешает в течение дня' },
-      { value: 'strong', label: 'Сильно влияет на сон, работу или отношения' },
-      { value: 'gentle', label: 'Сейчас тяжело, нужен очень мягкий вход' },
-    ],
-  },
-  {
-    key: 'manifestation',
-    label: 'Шаг 3 из 6',
-    title: 'Где это больше проявляется?',
-    desc: 'Один запрос может жить в теле, мыслях, отношениях или действиях.',
-    multiple: true,
-    options: [
-      { value: 'body', label: 'В теле' },
-      { value: 'thoughts', label: 'В мыслях' },
-      { value: 'relations', label: 'В отношениях' },
-      { value: 'actions', label: 'В решениях и действиях' },
-      { value: 'work', label: 'В работе / профессии' },
-      { value: 'unclear', label: 'Пока не понимаю' },
-    ],
-  },
-  {
-    key: 'format',
-    label: 'Шаг 4 из 6',
-    title: 'Как вам проще начать?',
-    desc: 'Выберите реальные форматы, не идеальную версию себя.',
-    multiple: true,
-    options: [
-      { value: 'short', label: '5-10 минут' },
-      { value: 'audio', label: 'Аудио' },
+      { value: 'short', label: 'Коротко' },
       { value: 'video', label: 'Видео' },
-      { value: 'practice', label: 'Практика' },
-      { value: 'deep', label: 'Глубокий разбор' },
-      { value: 'ai', label: 'Разговор с AI' },
-      { value: 'group', label: 'Группа / эфир' },
-    ],
-  },
-  {
-    key: 'experience',
-    label: 'Шаг 5 из 6',
-    title: 'Какой у вас опыт?',
-    desc: 'От этого зависит язык маршрута: проще, глубже или профессиональнее.',
-    options: [
-      { value: 'first', label: 'Впервые' },
-      { value: 'studied', label: 'Уже изучал психологию' },
-      { value: 'therapy', label: 'Был опыт терапии' },
-      { value: 'specialist', label: 'Я специалист' },
-      { value: 'simple', label: 'Хочу без сложной теории' },
+      { value: 'audio', label: 'Аудио' },
+      { value: 'ai', label: 'С AI' },
     ],
   },
   {
     key: 'result',
-    label: 'Шаг 6 из 6',
-    title: 'Ваш стартовый маршрут',
-    desc: 'Это не диагноз. Это первый способ войти в Систему без перегруза.',
+    label: 'Шаг 3 из 3',
+    title: 'Программа выбрана',
+    desc: 'Это стартовая рекомендация. Весь каталог остается доступен в разделе “Программы”.',
     result: true,
     options: [],
   },
@@ -91,18 +45,20 @@ const onboardingState = {};
 let onboardingIndex = 0;
 
 const routes = {
-  stabilization: {
-    title: 'Стабилизация и опора',
-    desc: 'Сегодня: снизить напряжение, не уходя в длинную теорию.',
-    firstStep: 'Снизить стресс',
-    firstStepDesc: 'Откройте короткий материал по стрессу. Затем зафиксируйте один вывод через AI.',
-    href: '/marathons/#section-stress',
-    image: '/assets/webp/stress-mar.webp',
-    hero: '/assets/webp/ai_back.webp',
+  calm: {
+    title: 'Начните с Гештальта',
+    desc: 'Для спокойного входа: эмоции, контакт, границы и возвращение к себе.',
+    short: 'спокойствие',
+    firstStep: 'Гештальт-подход',
+    firstStepDesc: 'Откройте программу “Гештальт-подход” и начните с первого материала.',
+    href: '/geshtalt/',
+    image: '/assets/webp/courses.webp',
+    hero: '/assets/webp/new_geshtalt.webp',
   },
   body: {
-    title: 'Тело и симптомы',
-    desc: 'Сегодня: понять связь состояния и тела без самодиагностики.',
+    title: 'Понять тело и симптомы',
+    desc: 'Сегодня: увидеть связь состояния и тела без самодиагностики.',
+    short: 'тело и симптомы',
     firstStep: 'Психосоматика',
     firstStepDesc: 'Посмотрите первый материал по психосоматике и отметьте, где это проявляется в теле.',
     href: '/psihosomatika/',
@@ -110,8 +66,9 @@ const routes = {
     hero: '/assets/webp/psysomatic.webp',
   },
   relationships: {
-    title: 'Отношения и границы',
+    title: 'Разобраться в отношениях',
     desc: 'Сегодня: увидеть один повторяющийся сценарий в контакте.',
+    short: 'отношения',
     firstStep: 'Границы и близость',
     firstStepDesc: 'Откройте материал про границы и сформулируйте один пример из своей жизни.',
     href: '/sozavisimost/',
@@ -119,17 +76,19 @@ const routes = {
     hero: '/assets/webp/man_woman.webp',
   },
   selfworth: {
-    title: 'Самооценка и внутренняя опора',
-    desc: 'Сегодня: вернуть одну точку опоры вместо самокритики.',
-    firstStep: 'Самооценка',
-    firstStepDesc: 'Откройте блок по самооценке и выпишите одну мысль, которую стоит проверить.',
-    href: '/marathons/#section-samoocenka',
-    image: '/assets/webp/myself_mar.webp',
-    hero: '/assets/webp/myself_mar.webp',
+    title: 'Опора через Гештальт',
+    desc: 'Для работы с самооценкой начните с контакта с собой и своими потребностями.',
+    short: 'самооценка и опора',
+    firstStep: 'Гештальт-подход',
+    firstStepDesc: 'Откройте программу “Гештальт-подход”: это самый точный старт для опоры и самопонимания.',
+    href: '/geshtalt/',
+    image: '/assets/webp/courses.webp',
+    hero: '/assets/webp/new_geshtalt.webp',
   },
   selfstudy: {
     title: 'Понять себя глубже',
     desc: 'Сегодня: назвать эмоцию, потребность и то, что мешает контакту.',
+    short: 'самопонимание',
     firstStep: 'Гештальт-подход',
     firstStepDesc: 'Откройте вводный материал по гештальту. Таймкоды и AI-разбор помогут взять главное.',
     href: '/geshtalt/',
@@ -137,8 +96,9 @@ const routes = {
     hero: '/assets/webp/new_geshtalt.webp',
   },
   professional: {
-    title: 'Профессиональная траектория',
+    title: 'Профессиональный разбор',
     desc: 'Сегодня: взять один профессиональный разбор и применить его к практике.',
+    short: 'профессиональный интерес',
     firstStep: 'Супервизия',
     firstStepDesc: 'Откройте супервизионный материал и сформулируйте вопрос для разбора.',
     href: '/superviziya/',
@@ -161,20 +121,26 @@ function optionValue(option) {
 }
 
 function selectedRouteKey(profile = onboardingState) {
-  const focus = asArray(profile.focus);
-  const manifestation = asArray(profile.manifestation);
-  const intensity = profile.intensity;
-  const experience = profile.experience;
-  if (experience === 'specialist' || focus.includes('professional') || manifestation.includes('work')) return 'professional';
-  if (intensity === 'gentle' || intensity === 'strong' || focus.includes('stress')) return 'stabilization';
-  if (focus.includes('body') || manifestation.includes('body')) return 'body';
-  if (focus.includes('relationships') || focus.includes('conflict') || manifestation.includes('relations')) return 'relationships';
-  if (focus.includes('selfworth')) return 'selfworth';
-  return 'selfstudy';
+  return routes[profile.focus] ? profile.focus : 'selfstudy';
 }
 
 function routeConfig(profile = onboardingState) {
-  return routes[selectedRouteKey(profile)] || routes.selfstudy;
+  const route = routes[selectedRouteKey(profile)] || routes.selfstudy;
+  const entry = profile.entry || 'material';
+  const copy = { ...route };
+  if (entry === 'ai') {
+    copy.firstStep = 'Разобрать запрос с AI';
+    copy.firstStepDesc = `Скажите AI, что сейчас важнее: ${route.short}. Он предложит материал и поможет начать без поиска.`;
+    copy.href = '/ai/';
+    copy.image = '/assets/webp/ai_back.webp';
+  } else if (entry === 'audio') {
+    copy.firstStepDesc = `Откройте программу “${route.firstStep}” и переключитесь в аудиоформат.`;
+  } else if (entry === 'short') {
+    copy.firstStepDesc = `Начните с первого материала программы “${route.firstStep}”. Не нужно выбирать из каталога.`;
+  } else if (entry === 'video') {
+    copy.firstStepDesc = `Откройте видео в программе “${route.firstStep}”. Таймкоды и AI-разбор помогут взять главное.`;
+  }
+  return copy;
 }
 
 function playSplashSound() {
@@ -267,16 +233,17 @@ function renderOnboarding() {
   const result = document.querySelector('[data-onboarding-result]');
   if (hint) {
     hint.textContent = step.result
-      ? 'Маршрут можно изменить позже'
-      : (step.multiple ? 'Можно выбрать несколько вариантов' : 'Выберите один вариант');
+      ? 'Рекомендацию можно изменить позже'
+      : 'Выберите один вариант';
   }
   if (!options) return;
   options.classList.toggle('hidden', Boolean(step.result));
   if (result) result.classList.toggle('hidden', !step.result);
   if (step.result) {
     const route = routeConfig();
-    document.querySelector('[data-result-title]').textContent = route.title;
-    document.querySelector('[data-result-desc]').textContent = `${route.desc} Первый шаг: ${route.firstStep}.`;
+    document.querySelector('[data-result-kicker]').textContent = 'Сегодня';
+    document.querySelector('[data-result-title]').textContent = route.firstStep;
+    document.querySelector('[data-result-desc]').textContent = `${route.desc} Первый шаг уже выбран, без каталога и лишнего поиска.`;
     return;
   }
   const selected = asArray(onboardingState[step.key]);
@@ -365,13 +332,6 @@ function initOnboarding() {
     return;
   }
   showNewHomeState('intro');
-}
-
-if (window.ProgramCatalog) {
-  window.ProgramCatalog.renderRail('#home-program-rail', 4);
-  window.ProgramCatalog.renderWebinarRail('#home-webinar-rail');
-  window.ProgramCatalog.renderMarathonRail('#home-marathon-rail');
-  window.ProgramCatalog.renderResourceRail('#home-resource-rail');
 }
 
 window.refreshAuthUI = function(user) {

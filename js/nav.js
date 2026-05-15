@@ -40,10 +40,10 @@
       icon: icon('<path d="m3 10.5 9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/>')
     },
     {
-      id: 'practices',
-      href: '/practices/',
-      label: 'Практики',
-      icon: icon('<path d="M12 21c4.5-3.5 7-7 7-11a7 7 0 1 0-14 0c0 4 2.5 7.5 7 11Z"/><path d="M9 10h6"/><path d="M12 7v6"/>')
+      id: 'programs',
+      href: '/programs/',
+      label: 'Программы',
+      icon: icon('<path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/>')
     },
     {
       id: 'community',
