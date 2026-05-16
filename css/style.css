@@ -1167,17 +1167,16 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   isolation: isolate;
   overflow: hidden;
   background-color: rgba(4, 6, 12, .78);
-  background-image: var(--ux-bg);
   background-size: cover;
   background-position: center;
 }
 
-.ux-community-card::before {
+.ux-community-card::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(0,0,0,.06) 0%, rgba(0,0,0,.26) 50%, rgba(0,0,0,.72) 100%);
+  background: linear-gradient(to bottom, rgba(0,0,0,.06) 0%, rgba(0,0,0,.24) 50%, rgba(0,0,0,.68) 100%);
   z-index: 0;
 }
 
@@ -1843,14 +1842,64 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     padding-top: 0;
   }
 
-  body.community-page .ux-visual-hero {
-    min-height: min(52svh, 560px);
-    border-radius: 0 0 34px 34px;
+  .community-page-hero {
+    min-height: min(52svh, 540px);
     margin-left: calc(-1 * clamp(22px, 2.4vw, 36px));
     margin-right: calc(-1 * clamp(22px, 2.4vw, 36px));
     padding-left: clamp(28px, 4vw, 58px);
     padding-right: clamp(28px, 4vw, 58px);
   }
+}
+
+/* ── Community page hero ─────────────────────────────────── */
+.community-page-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: min(46svh, 420px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(26px, 4vw, 48px);
+  margin-bottom: 20px;
+  border-radius: 0 0 32px 32px;
+  background-color: #050506;
+  background-size: cover;
+  background-position: center;
+}
+
+.community-page-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      rgba(0,0,0,.0) 0%,
+      rgba(0,0,0,.18) 40%,
+      rgba(0,0,0,.72) 80%,
+      rgba(0,0,0,.90) 100%);
+  z-index: 0;
+}
+
+.community-page-hero-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.community-page-hero h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(38px, 7vw, 76px);
+  line-height: .92;
+  letter-spacing: -.07em;
+  color: #fff;
+}
+
+.community-page-hero p:not(.hub-kicker) {
+  max-width: 560px;
+  color: rgba(255,255,255,.62);
+  line-height: 1.6;
+  margin: 0;
 }
 
 .ux-page-hero {
@@ -1990,8 +2039,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     padding-top: 0;
   }
 
-  body.community-page .ux-visual-hero {
-    border-radius: 0 0 28px 28px;
+  .community-page-hero {
     min-height: min(44svh, 360px);
     margin-left: -14px;
     margin-right: -14px;
