@@ -87,10 +87,37 @@
         openTrack((next + tracks.length) % tracks.length);
       });
     });
-    card.querySelector('[data-progress]').addEventListener('click', (event) => {
-      if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-      const rect = event.currentTarget.getBoundingClientRect();
-      audio.currentTime = ((event.clientX - rect.left) / rect.width) * audio.duration;
+    const progressEl = card.querySelector('[data-progress]');
+    function seekFromProgressEvent(event) {
+      const total = audio.duration;
+      if (!Number.isFinite(total) || total <= 0) return;
+      const rect = progressEl.getBoundingClientRect();
+      const pct = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+      audio.currentTime = pct * total;
+    }
+    progressEl.addEventListener('click', (event) => {
+      seekFromProgressEvent(event);
+    });
+    progressEl.addEventListener('pointerdown', (event) => {
+      if (event.button > 0) return;
+      event.preventDefault();
+      try {
+        progressEl.setPointerCapture(event.pointerId);
+      } catch (e) {}
+      seekFromProgressEvent(event);
+      const onMove = (moveEvent) => seekFromProgressEvent(moveEvent);
+      function onDone(upEvent) {
+        seekFromProgressEvent(upEvent);
+        try {
+          progressEl.releasePointerCapture(event.pointerId);
+        } catch (e2) {}
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onDone);
+        window.removeEventListener('pointercancel', onDone);
+      }
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onDone, { once: true });
+      window.addEventListener('pointercancel', onDone, { once: true });
     });
     audio.addEventListener('play', () => card.classList.add('is-playing'));
     audio.addEventListener('pause', () => card.classList.remove('is-playing'));

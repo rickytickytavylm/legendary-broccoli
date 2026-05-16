@@ -89,10 +89,10 @@
       color: rgba(255, 255, 255, 0.4);
     }
 
+    /* Полный кадр постера без кропа: cover + фикс. aspect-ratio ломали разметку с текстом на изображении */
     .post-image {
       width: 100%;
-      aspect-ratio: 1 / 1.08;
-      object-fit: cover;
+      height: auto;
       display: block;
     }
 
@@ -240,11 +240,6 @@
         margin-bottom: 18px;
       }
 
-      .post-image {
-        aspect-ratio: 1 / 1;
-        object-position: center;
-      }
-
       .feed-header h1 {
         font-size: 24px;
       }
@@ -263,7 +258,7 @@
             <span class="post-time">Сегодня</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/new_post.webp?v=3" alt="Интервью с дочерью" loading="lazy" decoding="async" />
+        <img class="post-image" src="/assets/webp/new_post.webp?v=4" alt="Интервью с дочерью" loading="lazy" decoding="async" />
         <div class="post-actions">
           <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
