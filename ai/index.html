@@ -379,15 +379,15 @@
       .ai-time { display: none; }
       .ai-back-mobile {
         position: fixed !important;
-        top: calc(124px + env(safe-area-inset-top, 0px)) !important;
+        top: calc(68px + env(safe-area-inset-top, 0px)) !important;
         left: 14px !important;
         margin: 0 !important;
         opacity: 1;
         pointer-events: auto !important;
-        transform: scale(.92);
-        transform-origin: left top !important;
-        z-index: 10000;
         touch-action: manipulation;
+        z-index: 10001 !important;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
       }
       .ai-suggestions { gap: 6px; }
       .ai-chip { font-size: 11px; padding: 7px 11px; }
@@ -411,11 +411,11 @@
 
       body.ai-has-messages .ai-chat-panel {
         position: fixed;
-        top: calc(112px + env(safe-area-inset-top, 0px));
-        left: 14px;
-        right: 14px;
+        top: calc(120px + env(safe-area-inset-top, 0px));
+        left: 0;
+        right: 0;
         bottom: calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 22px + env(safe-area-inset-bottom, 0px));
-        z-index: 1000;
+        z-index: 999;
         min-height: 0;
         overflow: visible;
         display: block;
@@ -545,6 +545,6 @@
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
-  <script src="/js/ai-page.js?v=4"></script>
+  <script src="/js/ai-page.js?v=5"></script>
 </body>
 </html>

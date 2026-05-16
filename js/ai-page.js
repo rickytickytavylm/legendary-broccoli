@@ -164,6 +164,14 @@ if (window.visualViewport) {
 window.addEventListener('resize', updateAiLayoutMetrics);
 updateAiLayoutMetrics();
 
+document.addEventListener('touchstart', (event) => {
+  if (event.target.closest('[data-ai-back]')) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    window.location.assign('/');
+  }
+}, { capture: true, passive: false });
+
 document.addEventListener('pointerdown', (event) => {
   if (event.target.closest('[data-ai-back]')) goHomeFromAi(event);
 }, true);
@@ -171,7 +179,3 @@ document.addEventListener('pointerdown', (event) => {
 document.addEventListener('click', (event) => {
   if (event.target.closest('[data-ai-back]')) goHomeFromAi(event);
 }, true);
-
-if (aiBack) {
-  aiBack.addEventListener('touchend', goHomeFromAi, { capture: true, passive: false });
-}

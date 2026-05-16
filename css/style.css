@@ -1174,11 +1174,11 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .ux-community-card::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -1px;
+  border-radius: inherit;
   pointer-events: none;
   background:
-    radial-gradient(circle at 28% 0%, rgba(255,255,255,.10), transparent 34%),
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.46) 58%, rgba(0,0,0,.78));
+    linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.42) 60%, rgba(0,0,0,.76) 100%);
   z-index: 0;
 }
 
