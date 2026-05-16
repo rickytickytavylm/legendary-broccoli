@@ -59,12 +59,22 @@
       }
     }
 
+    button.short-card {
+      appearance: none;
+      margin: 0;
+      padding: 0;
+      border: none;
+      font: inherit;
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+    }
+
     .short-card {
       break-inside: avoid;
       margin-bottom: 16px;
       display: inline-block;
       width: 100%;
-      text-decoration: none;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
@@ -77,15 +87,18 @@
       .short-card { margin-bottom: 20px; }
     }
 
-    .short-card:hover {
+    button.short-card:hover,
+    button.short-card:focus-visible {
       transform: translateY(-4px);
       border-color: rgba(255,255,255,.15);
       box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      outline: none;
     }
 
     .short-card__poster {
       position: relative;
       overflow: hidden;
+      display: block;
       background: rgba(255,255,255,.03);
     }
 
@@ -97,8 +110,6 @@
     }
 
     .short-card--9x16 .short-card__poster { aspect-ratio: 9/16; }
-    .short-card--4x5  .short-card__poster { aspect-ratio: 4/5; }
-    .short-card--3x4  .short-card__poster { aspect-ratio: 3/4; }
 
     .short-card__overlay {
       position: absolute;
@@ -112,9 +123,11 @@
       align-items: center;
       justify-content: center;
       transition: background .3s ease;
+      pointer-events: none;
     }
 
-    .short-card:hover .short-card__overlay {
+    button.short-card:hover .short-card__overlay,
+    button.short-card:focus-visible .short-card__overlay {
       background: linear-gradient(
         180deg,
         rgba(5,5,6,.05) 0%,
@@ -136,7 +149,8 @@
       transition: background .3s ease, transform .3s ease;
     }
 
-    .short-card:hover .short-card__play {
+    button.short-card:hover .short-card__play,
+    button.short-card:focus-visible .short-card__play {
       background: rgba(255,255,255,.22);
       transform: scale(1.1);
     }
@@ -150,6 +164,7 @@
 
     .short-card__caption {
       padding: 14px 16px 16px;
+      display: block;
     }
 
     .short-card__caption span {
@@ -157,7 +172,10 @@
       font-size: 13px;
       font-weight: 500;
       line-height: 1.45;
-      display: block;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 5;
+      overflow: hidden;
     }
 
     .short-card__duration {
@@ -173,6 +191,87 @@
       font-weight: 600;
       color: rgba(255,255,255,.8);
       letter-spacing: 0.3px;
+      z-index: 2;
+    }
+
+    .shorts-page-error {
+      color: rgba(255,255,255,.52);
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    body.shorts-player-open {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .shorts-player-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      background: rgba(5, 5, 6, 0.94);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      padding:
+        calc(52px + env(safe-area-inset-top))
+        max(14px, env(safe-area-inset-right))
+        calc(24px + env(safe-area-inset-bottom))
+        max(14px, env(safe-area-inset-left));
+    }
+
+    .shorts-player-head {
+      flex: 0 0 auto;
+      margin-bottom: 12px;
+    }
+
+    .shorts-player-title {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: rgba(255,255,255,.78);
+      max-height: 3.9em;
+      overflow: hidden;
+    }
+
+    .shorts-player-wrap {
+      flex: 0 1 auto;
+      max-height: calc(100dvh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shorts-player-wrap video {
+      width: 100%;
+      max-width: min(100%, 560px);
+      max-height: 100%;
+      border-radius: 14px;
+      background: #000;
+    }
+
+    .shorts-player-close {
+      position: absolute;
+      top: max(14px, env(safe-area-inset-top));
+      right: max(14px, env(safe-area-inset-right));
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.09);
+      color: #fff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      z-index: 2;
+    }
+
+    .shorts-player-close:hover {
+      background: rgba(255,255,255,.16);
     }
   </style>
 </head>
@@ -184,134 +283,24 @@
         <p>Короткие видео с ключевыми идеями</p>
       </div>
 
-      <div class="masonry">
+      <div class="masonry" id="shorts-grid" aria-busy="true"></div>
+    </div>
 
-        <a href="#" class="short-card short-card--9x16">
-          <div class="short-card__poster">
-            <img src="/assets/webp/courses.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">0:58</span>
-          </div>
-          <div class="short-card__caption">
-            <span>Почему терапия — это не слабость, а навык сильных</span>
-          </div>
-        </a>
-
-        <a href="#" class="short-card short-card--4x5">
-          <div class="short-card__poster">
-            <img src="/assets/webp/theraphy.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">1:12</span>
-          </div>
-          <div class="short-card__caption">
-            <span>3 признака, что вы избегаете своих чувств</span>
-          </div>
-        </a>
-
-        <a href="#" class="short-card short-card--3x4">
-          <div class="short-card__poster">
-            <img src="/assets/webp/hipno.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">0:45</span>
-          </div>
-          <div class="short-card__caption">
-            <span>Гипноз: мифы, которые мешают вам измениться</span>
-          </div>
-        </a>
-
-        <a href="#" class="short-card short-card--9x16">
-          <div class="short-card__poster">
-            <img src="/assets/webp/psysomatic.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">1:30</span>
-          </div>
-          <div class="short-card__caption">
-            <span>Как тело говорит о том, о чём молчит разум</span>
-          </div>
-        </a>
-
-        <a href="#" class="short-card short-card--4x5">
-          <div class="short-card__poster">
-            <img src="/assets/webp/supervision.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">0:52</span>
-          </div>
-          <div class="short-card__caption">
-            <span>Супервизия: зачем психологу нужен свой психолог</span>
-          </div>
-        </a>
-
-        <a href="#" class="short-card short-card--3x4">
-          <div class="short-card__poster">
-            <img src="/assets/webp/geshtalt.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">1:05</span>
-          </div>
-          <div class="short-card__caption">
-            <span>Что значит «закрыть гештальт» на самом деле</span>
-          </div>
-        </a>
-
-        <a href="#" class="short-card short-card--9x16">
-          <div class="short-card__poster">
-            <img src="/assets/webp/mini-yoga.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">0:40</span>
-          </div>
-          <div class="short-card__caption">
-            <span>Одно дыхательное упражнение, которое снимает тревогу за 60 секунд</span>
-          </div>
-        </a>
-
-        <a href="#" class="short-card short-card--4x5">
-          <div class="short-card__poster">
-            <img src="/assets/webp/man_woman.webp" alt="" loading="lazy" />
-            <div class="short-card__overlay">
-              <div class="short-card__play">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z"/></svg>
-              </div>
-            </div>
-            <span class="short-card__duration">1:18</span>
-          </div>
-          <div class="short-card__caption">
-            <span>Почему мы выбираем «не тех» партнёров — и как это изменить</span>
-          </div>
-        </a>
-
+    <div id="shorts-player-overlay" class="shorts-player-overlay u-hidden" aria-hidden="true">
+      <button type="button" class="shorts-player-close" data-shorts-player-close aria-label="Закрыть">×</button>
+      <div class="shorts-player-head">
+        <p id="shorts-player-title" class="shorts-player-title"></p>
+      </div>
+      <div class="shorts-player-wrap">
+        <video id="shorts-player-video" controls playsinline></video>
       </div>
     </div>
   </main>
+
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=76"></script>
+  <script src="/js/shorts-page.js?v=1"></script>
 </body>
 </html>
