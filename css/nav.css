@@ -418,6 +418,25 @@
   letter-spacing: -.01em;
 }
 
+/* Шесть вкладок: компактнее, чтобы всё помещалось */
+@media (max-width: 768px) {
+  .app-tabbar .tabbar-item {
+    max-width: 56px;
+    padding: 6px 2px 5px;
+    gap: 3px;
+  }
+
+  .app-tabbar .tabbar-icon-wrap {
+    width: 34px;
+    height: 28px;
+  }
+
+  .app-tabbar .tabbar-label {
+    font-size: 7.5px;
+    letter-spacing: -.02em;
+  }
+}
+
 /* ── Mobile top glass header ─────────────────────────── */
 .app-mobile-header {
   visibility: visible;

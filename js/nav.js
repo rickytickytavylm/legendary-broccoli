@@ -11,7 +11,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=57';
+    link.href = '/css/nav.css?v=70';
     document.head.appendChild(link);
   }
 
@@ -44,6 +44,13 @@
       href: '/feed/',
       label: 'Лента',
       icon: icon('<path d="M5 5h14"/><path d="M5 12h14"/><path d="M5 19h10"/><path d="M4 4.5h.01"/><path d="M4 11.5h.01"/><path d="M4 18.5h.01"/>')
+    },
+    {
+      id: 'shorts',
+      href: '/shorts/',
+      label: 'Shorts',
+      labelShort: 'Shorts',
+      icon: icon('<path d="M9 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="m13 10 4 2.5-4 2.5z"/>')
     },
     {
       id: 'community',
@@ -101,7 +108,12 @@
 
   function isActive(href) {
     if (href === '/') return currentPath === '/' || currentPath.endsWith('/index.html');
-    return currentPath === href || currentPath.endsWith(href.replace(/^\/|\/$/g, '') + '.html');
+    var normalizedHref = href.replace(/\/+$/, '') || '/';
+    if (currentPath === href || currentPath === normalizedHref || currentPath === normalizedHref + '/') return true;
+    var segments = normalizedHref.split('/').filter(Boolean);
+    var slug = segments.length ? segments[segments.length - 1] : '';
+    if (!slug) return false;
+    return currentPath === '/' + slug + '/' || currentPath.endsWith('/' + slug + '/') || currentPath.endsWith('/' + slug + '.html');
   }
 
   function makeIcon(svgStr) {
