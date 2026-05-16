@@ -57,6 +57,7 @@
       if (window.setupVideoPreview) {
         window.setupVideoPreview(videoContainer, {
           poster: '/assets/webp/theraphy.webp',
+          disableMediaModeSwitch: true,
           onStart: loadVideo,
         });
       } else {

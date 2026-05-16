@@ -8,23 +8,24 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Сообщество — Система Молодцова</title>
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=108" />
+  <link rel="stylesheet" href="/css/style.css?v=109" />
   <link rel="stylesheet" href="/css/nav.css?v=71" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body class="dark-theme ux-route-page community-page">
-  <main class="ux-page-shell">
-    <div class="community-page-hero" style="background-image:url('/assets/webp/new_for_community.webp')">
-      <div class="community-page-hero-copy">
-        <p class="hub-kicker">Сообщество</p>
-        <h1>Рядом друг с другом</h1>
-        <p>Все каналы взаимодействия</p>
+  <main class="main-content">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/new_for_community.webp') center/cover no-repeat;">
+      <div class="hero-content text-left">
+        <p class="hub-kicker fade-up">Сообщество</p>
+        <h1 class="hero-title fade-up">Рядом друг с другом</h1>
+        <p class="hero-subtitle fade-up">Все каналы взаимодействия</p>
       </div>
-    </div>
+    </section>
 
-    <section class="ux-community-grid">
+    <div class="ux-page-shell community-after-hero">
+      <section class="ux-community-grid">
       <div class="ux-community-card ux-community-card-wide ux-community-card-disabled community-card-webinars" style="--ux-bg:url('/assets/webp/speaker.webp')" aria-disabled="true">
         <span>Скоро</span>
         <strong>Записи вебинаров</strong>
@@ -40,13 +41,14 @@
         <strong>Марафоны</strong>
         <p>Сезонные потоки с поддержкой группы и понятным ритмом.</p>
       </a>
-    </section>
+      </section>
+    </div>
   </main>
 
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=57"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=76"></script>
+  <script src="/js/nav.js?v=77"></script>
   <script src="/js/main.js?v=2"></script>
 </body>
 </html>

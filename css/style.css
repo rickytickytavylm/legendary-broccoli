@@ -1934,6 +1934,10 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   margin: 0;
 }
 
+body.community-page .community-after-hero {
+  padding-top: clamp(14px, 3.5vw, 26px);
+}
+
 .ux-page-hero {
   max-width: 760px;
   margin-bottom: 22px;
@@ -2148,6 +2152,10 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   /* Герой начинается от верха экрана; отступ под фикс-шапку — padding внутри блока */
   body.community-page .ux-page-shell {
     padding-top: 0;
+  }
+
+  body.community-page .community-after-hero {
+    padding-top: clamp(12px, 3.2vw, 22px);
   }
 
   .community-page-hero {

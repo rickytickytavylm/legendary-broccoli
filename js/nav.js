@@ -534,7 +534,10 @@
       window.prepareAudioMode(container, options.audioSlug);
     }
 
-    if (!container.previousElementSibling || !container.previousElementSibling.matches('.media-mode-switch')) {
+    if (
+      !options.disableMediaModeSwitch &&
+      (!container.previousElementSibling || !container.previousElementSibling.matches('.media-mode-switch'))
+    ) {
       var modeSwitch = document.createElement('div');
       modeSwitch.className = 'media-mode-switch media-mode-switch-preview';
       modeSwitch.innerHTML =
