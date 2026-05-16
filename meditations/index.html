@@ -34,15 +34,6 @@
     .meditation-duration { display: block; margin-top: 3px; color: rgba(255,255,255,.42); font-size: 12px; }
     .meditation-play-mini { color: rgba(255,255,255,.5); font-size: 18px; }
     .meditation-error { color: rgba(255,255,255,.48); padding: 16px; }
-    .meditation-space-video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-    .meditation-space-video-preview { position: absolute; inset: 0; z-index: -1; opacity: .96; }
-    .meditation-space-video-player { position: absolute; inset: 0; z-index: -2; opacity: 0; transition: opacity .3s ease; }
-    .meditation-space-active .meditation-space-video-player { opacity: .88; }
-    .meditation-space-active::before { z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.04), #050505 86%); filter: none; transform: none; }
-    .meditation-space-active::after { z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.24), rgba(0,0,0,.62) 56%, #050505 100%); }
-    .meditation-space-video-art { display: none; position: absolute; inset: 0; }
-    .meditation-space-active .audio-mode-art img { display: none; }
-    .meditation-space-active .meditation-space-video-art { display: block; }
     .meditation-index-space { background: radial-gradient(circle at 45% 28%, rgba(255,255,255,.72), rgba(122,144,255,.28) 36%, rgba(255,255,255,.08)); color: #fff; }
     @media (max-width: 1024px) { .meditations-grid { grid-template-columns: 1fr; } .meditation-player-preview { min-height: 420px; } }
     @media (max-width: 640px) { .meditations-page { padding: 24px 14px 92px; } .meditation-player-preview { min-height: 430px; border-radius: 28px; } .meditation-sidebar { border-radius: 24px; } }
@@ -91,7 +82,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=74"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="/js/meditations-page.js?v=1"></script>
 </body>
 </html>

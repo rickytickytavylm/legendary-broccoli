@@ -7,10 +7,6 @@
   let currentIndex = 0;
   let audio = null;
   let card = null;
-  let previewVideo = null;
-  let playerVideo = null;
-  let playerHls = null;
-  let previewHls = null;
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, (char) => ({
@@ -36,7 +32,6 @@
     card.className = 'audio-mode-card hidden meditation-audio-player';
     card.style.setProperty('--audio-artwork', `url("${artwork}")`);
     card.innerHTML = `
-      <video class="meditation-space-video meditation-space-video-player" muted playsinline loop preload="metadata" aria-hidden="true"></video>
       <div class="audio-mode-shell">
         <div class="audio-mode-topbar">
           <button type="button" class="audio-mode-close" data-close aria-label="Закрыть аудиоплеер">
@@ -45,7 +40,7 @@
           <div class="audio-mode-eyebrow">Медитация</div>
           <span></span>
         </div>
-        <div class="audio-mode-art"><video class="meditation-space-video meditation-space-video-art" muted playsinline loop preload="metadata" aria-hidden="true"></video><img src="${artwork}" alt="" loading="lazy" decoding="async"></div>
+        <div class="audio-mode-art"><img src="${artwork}" alt="" loading="lazy" decoding="async"></div>
         <div class="audio-mode-body">
           <div class="audio-mode-meta">
             <div class="audio-mode-title" data-title>Медитация</div>
@@ -75,7 +70,6 @@
     audio.playsInline = true;
     card.appendChild(audio);
     document.body.appendChild(card);
-    playerVideo = card.querySelector('.meditation-space-video-player');
 
     card.querySelector('[data-close]').addEventListener('click', closePlayer);
     card.querySelector('[data-play]').addEventListener('click', () => {
@@ -109,66 +103,6 @@
     return String(track?.title || '').trim().toLowerCase() === spaceTrackTitle.toLowerCase();
   }
 
-  function attachHls(video, onReady) {
-    if (!video || !window.API?.getMeditationBackgroundHlsUrl) return null;
-    const src = window.API.getMeditationBackgroundHlsUrl();
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = src;
-      video.addEventListener('loadedmetadata', onReady, { once: true });
-      return null;
-    }
-    if (window.Hls && window.Hls.isSupported()) {
-      const hls = new window.Hls({ enableWorker: true, lowLatencyMode: false });
-      hls.loadSource(src);
-      hls.attachMedia(video);
-      hls.on(window.Hls.Events.MANIFEST_PARSED, onReady);
-      return hls;
-    }
-    return null;
-  }
-
-  function startVideo(video) {
-    if (!video) return;
-    video.play().catch(() => {});
-  }
-
-  function stopVideo(video) {
-    if (!video) return;
-    video.pause();
-    video.currentTime = 0;
-  }
-
-  function ensurePreviewVideo() {
-    const preview = document.querySelector('.meditation-player-preview');
-    if (!preview || previewVideo) return;
-    previewVideo = document.createElement('video');
-    previewVideo.className = 'meditation-space-video meditation-space-video-preview';
-    previewVideo.muted = true;
-    previewVideo.playsInline = true;
-    previewVideo.loop = true;
-    previewVideo.preload = 'metadata';
-    previewVideo.setAttribute('aria-hidden', 'true');
-    preview.prepend(previewVideo);
-    previewHls = attachHls(previewVideo, () => startVideo(previewVideo));
-  }
-
-  function setSpaceMode(enabled) {
-    ensurePlayer();
-    const artVideo = card.querySelector('.meditation-space-video-art');
-    card.classList.toggle('meditation-space-active', enabled);
-    if (!playerHls && enabled) {
-      playerHls = attachHls(playerVideo, () => startVideo(playerVideo));
-      attachHls(artVideo, () => startVideo(artVideo));
-    }
-    if (enabled) {
-      startVideo(playerVideo);
-      startVideo(artVideo);
-    } else {
-      stopVideo(playerVideo);
-      stopVideo(artVideo);
-    }
-  }
-
   function updateProgress() {
     const current = card.querySelector('[data-current]');
     const duration = card.querySelector('[data-duration]');
@@ -189,12 +123,10 @@
     ensurePlayer();
     currentIndex = index;
     const track = tracks[index];
-    const spaceTrack = isSpaceTrack(track);
     list.querySelectorAll('.meditation-track').forEach((node, nodeIndex) => {
       node.classList.toggle('active', nodeIndex === index);
     });
     card.querySelector('[data-title]').textContent = track.title || 'Медитация';
-    setSpaceMode(spaceTrack);
     card.classList.remove('hidden');
     document.body.classList.add('audio-player-open');
     audio.pause();
@@ -236,7 +168,6 @@
 
   async function init() {
     try {
-      ensurePreviewVideo();
       const data = await window.API.getMeditations();
       render(data);
     } catch (e) {
