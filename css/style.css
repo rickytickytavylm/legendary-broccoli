@@ -788,50 +788,44 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   touch-action: pan-y;
 }
 
-.onboarding-options button,
-.today-checkin-options button {
+.onboarding-options button {
   position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,.24);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  overflow: visible;
+  border: 1px solid rgba(255,255,255,.17);
   border-radius: 18px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(255,255,255,.34), transparent 32%),
-    radial-gradient(circle at 88% 100%, rgba(255,255,255,.10), transparent 32%),
-    linear-gradient(135deg, rgba(255,255,255,.20), rgba(255,255,255,.055) 46%, rgba(255,255,255,.11)),
-    rgba(20,22,28,.24);
-  color: rgba(255,255,255,.88);
+    radial-gradient(ellipse 125% 82% at 50% -12%, rgba(255,255,255,.28), transparent 54%),
+    linear-gradient(168deg, rgba(255,255,255,.11), rgba(255,255,255,.028)),
+    rgba(14,16,22,.14);
+  color: rgba(255,255,255,.92);
   padding: 0 16px;
   cursor: pointer;
   font-weight: 620;
   text-align: left;
   min-height: 50px;
-  -webkit-backdrop-filter: blur(30px) saturate(210%) brightness(1.08);
-  backdrop-filter: blur(30px) saturate(210%) brightness(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(165%) brightness(1.03);
+  backdrop-filter: blur(16px) saturate(165%) brightness(1.03);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.36),
-    inset 0 -1px 0 rgba(255,255,255,.10),
-    inset 0 0 0 1px rgba(255,255,255,.035),
-    0 18px 48px rgba(0,0,0,.24);
+    0 14px 38px rgba(0,0,0,.26),
+    inset 0 0 0 1px rgba(255,255,255,.055),
+    inset 0 -14px 26px rgba(0,0,0,.09);
   -webkit-tap-highlight-color: transparent;
 }
 
 .onboarding-options button::before {
   content: "";
   position: absolute;
-  inset: 1px;
+  inset: 0;
   border-radius: inherit;
   pointer-events: none;
   background:
-    linear-gradient(110deg, rgba(255,255,255,.30), rgba(255,255,255,0) 34%),
-    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0) 46%);
-  opacity: .72;
-}
-
-.onboarding-options button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+    linear-gradient(125deg, rgba(255,255,255,.14), transparent 36%),
+    linear-gradient(215deg, rgba(255,255,255,.06), transparent 40%);
+  opacity: .48;
 }
 
 .onboarding-options button span {
@@ -851,20 +845,30 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   position: relative;
 }
 
-.onboarding-options button.active,
-.today-checkin-options button.active {
+.onboarding-options button.active {
   background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,.48), transparent 34%),
-    radial-gradient(circle at 86% 100%, rgba(210,224,255,.18), transparent 36%),
-    linear-gradient(135deg, rgba(255,255,255,.30), rgba(255,255,255,.10) 48%, rgba(255,255,255,.18)),
-    rgba(255,255,255,.10);
-  border-color: rgba(255,255,255,.46);
+    radial-gradient(ellipse 125% 88% at 48% -10%, rgba(255,255,255,.42), transparent 50%),
+    linear-gradient(168deg, rgba(255,255,255,.18), rgba(255,255,255,.055)),
+    rgba(255,255,255,.09);
+  border-color: rgba(255,255,255,.38);
   color: #fff;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.46),
-    inset 0 -1px 0 rgba(255,255,255,.14),
-    0 20px 58px rgba(0,0,0,.30),
-    0 0 0 1px rgba(255,255,255,.05);
+    0 18px 46px rgba(0,0,0,.30),
+    inset 0 0 0 1px rgba(255,255,255,.11),
+    inset 0 -16px 28px rgba(0,0,0,.08),
+    0 0 0 1px rgba(255,255,255,.04);
+}
+
+.today-checkin-options button.active {
+  background:
+    radial-gradient(circle at 34% 0%, rgba(255,255,255,.22), transparent 38%),
+    linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.045)),
+    rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.34);
+  color: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.26),
+    0 12px 28px rgba(0,0,0,.28);
 }
 
 .onboarding-options button.active i {
@@ -1200,36 +1204,6 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     rgba(6, 8, 13, .62);
   background-position: center;
   background-size: cover;
-}
-
-.ux-community-card {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background-color: rgba(4, 6, 12, .78);
-  background-size: cover;
-  background-position: center;
-}
-
-.ux-community-card::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.42) 60%, rgba(0,0,0,.76) 100%);
-  z-index: 0;
-}
-
-.ux-community-card > * {
-  position: relative;
-  z-index: 1;
-}
-
-.community-card-telegram::after {
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.62) 72%, rgba(0,0,0,.86));
 }
 
 .today-main-card,
@@ -2017,41 +1991,83 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 20px 70px rgba(0,0,0,.25);
 }
 
+/* Сообщество: те же слои, что у карточек «Сегодня» — без backdrop-filter (щели на Android) */
 .ux-community-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 190px;
   padding: 24px;
   border-radius: 30px;
   text-decoration: none;
   color: #fff;
   border: 1px solid rgba(255,255,255,.14);
-  background-color: rgba(6, 8, 13, .66);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
-  backdrop-filter: blur(18px) saturate(135%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 20px 70px rgba(0,0,0,.25);
+  border-bottom-color: transparent;
+  background: #050506;
+  background-clip: padding-box;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 20px 70px rgba(0,0,0,.25);
 }
 
-.community-card-webinars {
-  background-position: center 38%;
-  background-size: 112% auto;
-}
-
-.community-card-marathons {
-  background-position: center 42%;
-  background-size: 112% auto;
-}
-
-.community-card-telegram {
+.ux-community-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.62) 72%, rgba(0,0,0,.86)),
-    url('/assets/webp/tg_open.webp') center/cover no-repeat,
-    rgba(7,8,10,.66);
+    var(--ux-bg),
+    #050506;
+  background-position: var(--ux-pos, center);
+  background-size: var(--ux-size, cover);
+  background-repeat: no-repeat;
+}
+
+.ux-community-card::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(180deg,
+      rgba(5,5,6,.06) 0%,
+      rgba(5,5,6,.38) 52%,
+      rgba(5,5,6,.84) 88%,
+      rgba(5,5,6,.98) 100%);
 }
 
 .community-card-telegram::after {
-  display: none;
+  background:
+    linear-gradient(180deg,
+      rgba(0,0,0,.18) 0%,
+      rgba(0,0,0,.48) 52%,
+      rgba(0,0,0,.86) 88%,
+      rgba(5,5,6,.98) 100%);
+}
+
+.ux-community-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.community-card-webinars {
+  --ux-pos: center 38%;
+  --ux-size: 112% auto;
+}
+
+.community-card-marathons {
+  --ux-pos: center 42%;
+  --ux-size: 112% auto;
+}
+
+.community-card-telegram {
+  --ux-bg: url('/assets/webp/tg_open.webp');
+  --ux-pos: center;
+  --ux-size: cover;
 }
 
 .ux-community-card-disabled {
@@ -2129,8 +2145,9 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     padding: max(86px, calc(76px + env(safe-area-inset-top))) 14px 110px;
   }
 
+  /* Герой начинается от верха экрана; отступ под фикс-шапку — padding внутри блока */
   body.community-page .ux-page-shell {
-    padding-top: max(76px, calc(58px + env(safe-area-inset-top, 0px)));
+    padding-top: 0;
   }
 
   .community-page-hero {
@@ -2138,7 +2155,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     margin-top: 0;
     margin-left: -14px;
     margin-right: -14px;
-    padding-top: clamp(18px, 5vw, 28px);
+    padding-top: calc(max(76px, calc(58px + env(safe-area-inset-top, 0px))) + clamp(14px, 4vw, 22px));
     padding-bottom: clamp(22px, 6vw, 36px);
     padding-left: clamp(18px, 4vw, 22px);
     padding-right: clamp(18px, 4vw, 22px);
@@ -3170,9 +3187,7 @@ h1, h2, h3 {
 .ai-outline-btn,
 .lesson-action-btn,
 .btn-support-outline,
-.btn-footer-telegram,
-.audio-mode-close,
-.audio-mode-menu {
+.btn-footer-telegram {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -3197,9 +3212,7 @@ h1, h2, h3 {
 .ai-outline-btn::after,
 .lesson-action-btn::after,
 .btn-support-outline::after,
-.btn-footer-telegram::after,
-.audio-mode-close::after,
-.audio-mode-menu::after {
+.btn-footer-telegram::after {
   content: '';
   position: absolute;
   left: 12%;
@@ -3221,9 +3234,7 @@ h1, h2, h3 {
 .ai-outline-btn:focus-visible,
 .lesson-action-btn:hover,
 .btn-support-outline:hover,
-.btn-footer-telegram:hover,
-.audio-mode-close:hover,
-.audio-mode-menu:hover {
+.btn-footer-telegram:hover {
   border-color: var(--sm-glass-border-strong);
   background:
     radial-gradient(circle at 22% 0%, rgba(255,255,255,.22), transparent 36%),
@@ -5180,17 +5191,45 @@ h1, h2, h3 {
 
 .audio-mode-close,
 .audio-mode-menu {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.14);
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.9);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  color: rgba(255,255,255,.92);
+  background:
+    radial-gradient(ellipse 130% 90% at 50% -8%, rgba(255,255,255,.26), transparent 55%),
+    radial-gradient(circle at 72% 108%, rgba(255,255,255,.07), transparent 42%),
+    linear-gradient(165deg, rgba(255,255,255,.16), rgba(255,255,255,.045));
+  -webkit-backdrop-filter: blur(42px) saturate(190%) brightness(1.04);
+  backdrop-filter: blur(42px) saturate(190%) brightness(1.04);
+  box-shadow:
+    0 10px 32px rgba(0,0,0,.42),
+    inset 0 0 0 1px rgba(255,255,255,.07),
+    inset 0 -12px 28px rgba(0,0,0,.14);
+}
+
+.audio-mode-close::after,
+.audio-mode-menu::after {
+  content: none;
+}
+
+.audio-mode-close:active,
+.audio-mode-menu:active {
+  transform: scale(.97);
+}
+
+.audio-mode-close:hover,
+.audio-mode-menu:hover {
+  border-color: rgba(255,255,255,.22);
+  background:
+    radial-gradient(ellipse 130% 90% at 50% -8%, rgba(255,255,255,.32), transparent 55%),
+    radial-gradient(circle at 72% 108%, rgba(255,255,255,.10), transparent 44%),
+    linear-gradient(165deg, rgba(255,255,255,.20), rgba(255,255,255,.065));
 }
 
 .audio-mode-close svg,
@@ -5329,23 +5368,34 @@ h1, h2, h3 {
 }
 
 .audio-mode-controls button {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
   width: 46px;
   height: 46px;
   min-width: 46px;
-  border: 1px solid rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.14);
   border-radius: 999px;
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 32% 10%, rgba(255,255,255,.16), transparent 34%),
-    linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.035)),
-    rgba(0,0,0,.18);
-  color: rgba(255,255,255,.84);
+    radial-gradient(ellipse 125% 88% at 50% -10%, rgba(255,255,255,.22), transparent 52%),
+    radial-gradient(circle at 68% 112%, rgba(255,255,255,.06), transparent 40%),
+    linear-gradient(158deg, rgba(255,255,255,.13), rgba(255,255,255,.038)),
+    rgba(8,10,14,.22);
+  color: rgba(255,255,255,.86);
   font: 850 12px/1 Inter, sans-serif;
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  backdrop-filter: blur(18px) saturate(160%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 12px 28px rgba(0,0,0,.20);
+  -webkit-backdrop-filter: blur(40px) saturate(185%) brightness(1.03);
+  backdrop-filter: blur(40px) saturate(185%) brightness(1.03);
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.38),
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 -14px 26px rgba(0,0,0,.16);
   -webkit-tap-highlight-color: transparent;
+}
+
+.audio-mode-controls button::after {
+  content: none;
 }
 
 .audio-mode-controls [data-audio-seek],
@@ -5363,15 +5413,17 @@ h1, h2, h3 {
   height: 72px;
   min-width: 72px;
   color: #fff;
-  border-color: rgba(255,255,255,.24);
+  border-color: rgba(255,255,255,.28);
   background:
-    radial-gradient(circle at 35% 8%, rgba(255,255,255,.42), transparent 36%),
-    linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.07)),
-    rgba(255,255,255,.10);
+    radial-gradient(ellipse 115% 95% at 45% -5%, rgba(255,255,255,.52), transparent 48%),
+    radial-gradient(circle at 72% 108%, rgba(255,255,255,.18), transparent 38%),
+    linear-gradient(158deg, rgba(255,255,255,.30), rgba(255,255,255,.09)),
+    rgba(255,255,255,.12);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.34),
-    0 18px 46px rgba(0,0,0,.42),
-    0 0 0 8px rgba(255,255,255,.045);
+    0 22px 52px rgba(0,0,0,.48),
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    inset 0 -18px 34px rgba(0,0,0,.12),
+    0 0 0 7px rgba(255,255,255,.04);
 }
 
 .audio-mode-controls .audio-mode-play svg {

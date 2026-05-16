@@ -2,18 +2,6 @@ const aiInput = document.getElementById('ai-input');
 const aiSend = document.getElementById('ai-send');
 const aiConversation = document.getElementById('ai-conversation');
 const aiInputBar = document.querySelector('.ai-input-bar');
-const aiBack = document.querySelector('[data-ai-back]');
-
-function goHomeFromAi(event) {
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (typeof event.stopImmediatePropagation === 'function') {
-      event.stopImmediatePropagation();
-    }
-  }
-  window.location.assign('/');
-}
 
 function syncAiIntroState() {
   const hasMessages = !!aiConversation.querySelector('.ai-message');
@@ -189,19 +177,3 @@ if (window.visualViewport) {
 }
 window.addEventListener('resize', updateAiLayoutMetrics);
 updateAiLayoutMetrics();
-
-document.addEventListener('touchstart', (event) => {
-  if (event.target.closest('[data-ai-back]')) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    window.location.assign('/');
-  }
-}, { capture: true, passive: false });
-
-document.addEventListener('pointerdown', (event) => {
-  if (event.target.closest('[data-ai-back]')) goHomeFromAi(event);
-}, true);
-
-document.addEventListener('click', (event) => {
-  if (event.target.closest('[data-ai-back]')) goHomeFromAi(event);
-}, true);

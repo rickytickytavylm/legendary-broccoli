@@ -6,8 +6,8 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=101" />
-  <link rel="stylesheet" href="/css/nav.css?v=69" />
+  <link rel="stylesheet" href="/css/style.css?v=108" />
+  <link rel="stylesheet" href="/css/nav.css?v=71" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ─── Layout ─────────────────────────────────────── */
@@ -347,7 +347,7 @@
       max-width: none;
       width: 100%;
       box-sizing: border-box;
-      padding: 96px clamp(14px, 2.8vw, 34px) 110px;
+      padding: 76px clamp(14px, 2.8vw, 34px) 110px;
     }
     .profile-hero {
       display: grid;
@@ -384,7 +384,7 @@
     }
     .profile-subtitle {
       max-width: 620px;
-      margin: 14px 0 0;
+      margin: calc(14px * 4 / 3) 0 0;
       color: rgba(255,255,255,.56);
       font-size: 15px;
       line-height: 1.65;
@@ -433,6 +433,34 @@
       gap: 16px;
       padding: 18px;
       border-radius: 28px;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .profile-user-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-image: var(--profile-user-bg);
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .profile-user-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg, rgba(7, 8, 10, .92) 0%, rgba(7, 8, 10, .62) 48%, rgba(7, 8, 10, .82) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .profile-user-card > * {
+      position: relative;
+      z-index: 2;
     }
     .profile-settings-shell {
       width: min(100%, 680px);
@@ -823,7 +851,7 @@
     }
     @media (max-width: 600px) {
       .profile-wrap {
-        padding: calc(96px + env(safe-area-inset-top, 0px)) 16px 112px;
+        padding: calc(76px + env(safe-area-inset-top, 0px)) 16px 112px;
       }
       .profile-hero {
         grid-template-columns: 1fr;
@@ -924,7 +952,7 @@
   <div id="dashboard" class="u-hidden" aria-hidden="true">
     <div class="profile-wrap">
 
-      <section class="profile-card profile-user-card">
+      <section class="profile-card profile-user-card" style="--profile-user-bg:url('/assets/webp/for_profile2.webp')">
         <div class="profile-avatar" id="avatar-btn">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         </div>
@@ -1022,7 +1050,7 @@
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=59"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=74"></script>
+  <script src="/js/nav.js?v=76"></script>
   <script src="/js/page-inline/account-1.js?v=5"></script>
 </body>
 </html>

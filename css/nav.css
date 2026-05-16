@@ -418,6 +418,19 @@
   letter-spacing: -.01em;
 }
 
+.tabbar-item-shorts .tabbar-icon-wrap {
+  justify-content: center;
+}
+
+.tabbar-item-shorts .tabbar-icon-wrap svg {
+  display: block;
+  transform: translateX(-0.5px);
+}
+
+.tabbar-item-shorts.tabbar-item.active .tabbar-icon-wrap {
+  margin-inline: auto;
+}
+
 /* Шесть вкладок: компактнее, чтобы всё помещалось */
 @media (max-width: 768px) {
   .app-tabbar .tabbar-item {

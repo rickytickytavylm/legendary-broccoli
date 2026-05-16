@@ -11,7 +11,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=70';
+    link.href = '/css/nav.css?v=71';
     document.head.appendChild(link);
   }
 
@@ -50,7 +50,7 @@
       href: '/shorts/',
       label: 'Shorts',
       labelShort: 'Shorts',
-      icon: icon('<path d="M9 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="m13 10 4 2.5-4 2.5z"/>')
+      icon: icon('<path d="M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="m11 10 4 2.5-4 2.5z"/>')
     },
     {
       id: 'community',
@@ -165,7 +165,8 @@
   tabbar.className = 'app-tabbar';
 
   tabbar.innerHTML = NAV_ITEMS.map(function(item) {
-    return '<a href="' + item.href + '" class="tabbar-item' + (isActive(item.href) ? ' active' : '') + '">' +
+    var shortsCls = item.id === 'shorts' ? ' tabbar-item-shorts' : '';
+    return '<a href="' + item.href + '" class="tabbar-item' + shortsCls + (isActive(item.href) ? ' active' : '') + '">' +
       makeTabIcon(item.icon) +
       '<span class="tabbar-label">' + (item.labelShort || item.label) + '</span>' +
       '</a>';
