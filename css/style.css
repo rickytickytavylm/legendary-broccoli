@@ -251,7 +251,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   align-items: center;
   gap: 22px;
   padding-block: clamp(145px, 25svh, 230px) 0;
-  transform: translateY(-3svh);
+  transform: translateY(-8svh);
 }
 
 .auth-provider-panel {
@@ -846,15 +846,38 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   padding: 24px;
   border-radius: 28px;
   border: 1px solid rgba(255,255,255,.18);
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.10), rgba(0,0,0,.42) 46%, rgba(0,0,0,.88) 100%),
-    var(--result-bg, url('/assets/webp/ai_back.webp')) center/cover no-repeat;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #050506;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.20),
     0 24px 72px rgba(0,0,0,.34);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+
+.onboarding-result-card::before,
+.onboarding-result-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.onboarding-result-card::before {
+  z-index: -2;
+  background: var(--result-bg, url('/assets/webp/ai_back.webp')) center/cover no-repeat;
+}
+
+.onboarding-result-card::after {
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.14), transparent 30%),
+    linear-gradient(180deg, rgba(5,5,6,.28) 0%, rgba(5,5,6,.36) 42%, rgba(5,5,6,.78) 76%, rgba(5,5,6,.99) 100%),
+    linear-gradient(0deg, rgba(5,5,6,1) 0 48px, rgba(5,5,6,.86) 118px, rgba(5,5,6,0) 190px);
 }
 
 .onboarding-actions {
@@ -1101,7 +1124,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: stretch;
     gap: 16px;
   }
@@ -1543,7 +1566,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     min-height: auto;
     gap: 16px;
     padding-block: clamp(150px, 31svh, 230px) 0;
-    transform: translateY(-4svh);
+    transform: translateY(-9svh);
   }
 
   .auth-gateway-logo {
@@ -1788,6 +1811,19 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   body.ux-route-page .ux-visual-hero {
     min-height: min(42svh, 420px);
     flex: 0 0 auto;
+  }
+
+  body.community-page .ux-page-shell {
+    padding-top: 0;
+  }
+
+  body.community-page .ux-visual-hero {
+    min-height: min(52svh, 560px);
+    border-radius: 0 0 34px 34px;
+    margin-left: calc(-1 * clamp(22px, 2.4vw, 36px));
+    margin-right: calc(-1 * clamp(22px, 2.4vw, 36px));
+    padding-left: clamp(28px, 4vw, 58px);
+    padding-right: clamp(28px, 4vw, 58px);
   }
 }
 
@@ -5101,47 +5137,57 @@ h1, h2, h3 {
 }
 
 .audio-mode-controls {
-  display: grid;
-  grid-template-columns: 48px 50px 78px 50px 48px;
+  display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 8px;
   width: 100%;
 }
 
 .audio-mode-controls button {
-  width: 48px;
-  height: 48px;
-  border: 0;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border: 1px solid rgba(255,255,255,.13);
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: transparent;
-  color: rgba(255,255,255,.78);
+  background:
+    radial-gradient(circle at 32% 10%, rgba(255,255,255,.16), transparent 34%),
+    linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.035)),
+    rgba(0,0,0,.18);
+  color: rgba(255,255,255,.84);
   font: 850 12px/1 Inter, sans-serif;
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.13), 0 12px 28px rgba(0,0,0,.20);
   -webkit-tap-highlight-color: transparent;
 }
 
-.audio-mode-controls [data-audio-seek] {
-  border: 1px solid rgba(255,255,255,.1);
-  background: rgba(255,255,255,.07);
+.audio-mode-controls [data-audio-seek],
+.audio-mode-controls [data-seek] {
   color: rgba(255,255,255,.82);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
 }
 
-.audio-mode-controls [data-audio-track] {
+.audio-mode-controls [data-audio-track],
+.audio-mode-controls [data-track] {
   color: rgba(255,255,255,.58);
 }
 
 .audio-mode-controls .audio-mode-play {
-  width: 78px;
-  height: 78px;
-  color: #080808;
-  background: #fff;
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  color: #fff;
+  border-color: rgba(255,255,255,.24);
+  background:
+    radial-gradient(circle at 35% 8%, rgba(255,255,255,.42), transparent 36%),
+    linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.07)),
+    rgba(255,255,255,.10);
   box-shadow:
-    0 18px 46px rgba(0,0,0,.48),
-    0 0 0 10px rgba(255,255,255,.055);
+    inset 0 1px 0 rgba(255,255,255,.34),
+    0 18px 46px rgba(0,0,0,.42),
+    0 0 0 8px rgba(255,255,255,.045);
 }
 
 .audio-mode-controls .audio-mode-play svg {
@@ -6397,13 +6443,13 @@ body.audio-player-open {
   }
 
   .audio-mode-controls {
-    grid-template-columns: 46px 48px 76px 48px 46px;
-    gap: 6px;
+    gap: 7px;
   }
 
   .audio-mode-controls .audio-mode-play {
-    width: 76px;
-    height: 76px;
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
   }
 
   .audio-mode-chapters {

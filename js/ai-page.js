@@ -156,10 +156,7 @@ updateAiLayoutMetrics();
 if (aiBack) {
   aiBack.addEventListener('click', (event) => {
     event.preventDefault();
-    if (window.history.length > 1) {
-      window.history.back();
-      return;
-    }
+    event.stopPropagation();
     window.location.href = '/';
-  });
+  }, true);
 }

@@ -708,13 +708,25 @@ function ensureAudioMode(video, slug) {
       setTitle();
     } catch (err) {
       title.textContent = 'Аудио пока недоступно';
+      inline.querySelector('strong').textContent = 'Аудио пока недоступно';
+      inline.querySelector('span').textContent = 'Для этого материала сейчас доступно только видео';
+      throw err;
     } finally {
       audio.dataset.loading = 'false';
     }
   }
 
   modeButtons.forEach((button) => {
-    button.addEventListener('click', () => setMode(button.dataset.mediaMode));
+    button.addEventListener('click', async () => {
+      const nextMode = button.dataset.mediaMode;
+      setMode(nextMode);
+      if (nextMode !== 'audio') return;
+      try {
+        await loadAudio();
+      } catch (e) {
+        setMode('video');
+      }
+    });
   });
   inline.addEventListener('click', () => openPlayer(true));
   card.querySelector('[data-audio-close]')?.addEventListener('click', closePlayer);

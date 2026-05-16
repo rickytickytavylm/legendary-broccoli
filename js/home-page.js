@@ -59,7 +59,7 @@ const routes = {
     title: 'Спокойствие',
     desc: 'Два мягких входа: через движение и через внимание к телу.',
     short: 'спокойствие',
-    heroImage: '/assets/webp/calm_sss.webp',
+    heroImage: '/assets/webp/king_calm.webp',
     programs: [
       { title: 'Мини-йога', desc: 'Мягкое начало через дыхание и движение.', href: '/yoga/', image: '/assets/webp/mini-yoga.webp' },
       { title: 'Телесная терапия', desc: 'Вернуть внимание в тело и снизить внутреннее напряжение.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
@@ -79,7 +79,7 @@ const routes = {
     title: 'Отношения',
     desc: 'Два входа: зависимые сценарии и мужско-женская динамика.',
     short: 'отношения',
-    heroImage: '/assets/webp/relative_second.webp',
+    heroImage: '/assets/webp/new_soc.webp',
     programs: [
       { title: 'Созависимость', desc: 'Границы, привязанность и повторяющиеся сценарии.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
       { title: 'Мужское и Женское', desc: 'Психология отношений и природа полов.', href: '/mj/', image: '/assets/webp/man_woman.webp' },
@@ -225,34 +225,9 @@ async function fetchProgramLessonCount(href) {
 function setTodayProgramState(prefix, program) {
   const link = document.querySelector(`[data-today-${prefix === 'primary' ? 'primary' : 'secondary-link'}]`);
   const action = document.querySelector(`[data-today-${prefix}-action]`);
-  const tracker = document.querySelector(`[data-today-${prefix}-tracker]`);
-  const ring = document.querySelector(`[data-today-${prefix}-ring]`);
-  const ringText = document.querySelector(`[data-today-${prefix}-ring-text]`);
   const href = program?.href || '';
   if (link && program?.href) link.setAttribute('href', program.href);
   if (action) action.textContent = programOpened(href) ? 'Продолжить' : 'Начать';
-  if (tracker) tracker.textContent = 'Считаем материалы';
-  if (ring) ring.style.setProperty('--pct', 0);
-  if (ringText) ringText.textContent = '0/0';
-  fetchProgramLessonCount(href).then((count) => {
-    if (!tracker || link?.getAttribute('href') !== href) return;
-    const done = programOpened(href) ? 1 : 0;
-    if (!count) {
-      tracker.textContent = programOpened(href) ? 'Программа открыта' : 'Материалы внутри';
-      if (ringText) ringText.textContent = programOpened(href) ? '1' : '0';
-      return;
-    }
-    tracker.textContent = `${done} из ${count} дней`;
-    if (ring) {
-      ring.classList.remove('is-animated');
-      ring.style.setProperty('--pct', 0);
-      requestAnimationFrame(() => {
-        ring.classList.add('is-animated');
-        ring.style.setProperty('--pct', Math.round((done / count) * 100));
-      });
-    }
-    if (ringText) ringText.textContent = `${done}/${count}`;
-  });
 }
 
 function playSplashSound() {

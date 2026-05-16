@@ -1,7 +1,7 @@
 (function initMeditationsPage() {
   const list = document.getElementById('meditations-list');
   const count = document.querySelector('[data-meditations-count]');
-  const artwork = '/assets/webp/speaker.webp';
+  const artwork = '/assets/webp/mmeditation.webp';
   const spaceTrackTitle = 'Взгляд из космоса';
   let tracks = [];
   let currentIndex = 0;
@@ -227,6 +227,11 @@
     list.querySelectorAll('.meditation-track').forEach((button) => {
       button.addEventListener('click', () => openTrack(Number(button.dataset.index) || 0));
     });
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('play') === 'space') {
+      const spaceIndex = tracks.findIndex((track) => isSpaceTrack(track));
+      if (spaceIndex >= 0) window.setTimeout(() => openTrack(spaceIndex), 180);
+    }
   }
 
   async function init() {

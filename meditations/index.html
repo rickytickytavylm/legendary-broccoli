@@ -16,7 +16,7 @@
   <style>
     .meditations-page { padding: 32px 24px 100px; max-width: 1180px; margin: 0 auto; }
     .meditations-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start; margin-top: 20px; }
-    .meditation-player-preview { position: relative; min-height: 520px; border-radius: 32px; border: 1px solid rgba(255,255,255,.14); background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.62)), url('/assets/webp/speaker.webp') center/cover no-repeat; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 28px 88px rgba(0,0,0,.34); display: flex; align-items: flex-end; padding: clamp(24px, 4vw, 42px); overflow: hidden; isolation: isolate; }
+    .meditation-player-preview { position: relative; min-height: 520px; border-radius: 32px; border: 1px solid rgba(255,255,255,.14); background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.62)), url('/assets/webp/mmeditation.webp') center/cover no-repeat; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 28px 88px rgba(0,0,0,.34); display: flex; align-items: flex-end; padding: clamp(24px, 4vw, 42px); overflow: hidden; isolation: isolate; }
     .meditation-player-preview::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.38) 48%, rgba(0,0,0,.82)); }
     .meditation-preview-copy { position: relative; z-index: 1; max-width: 560px; }
     .meditation-preview-copy span { display: inline-flex; margin-bottom: 14px; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: rgba(255,255,255,.78); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
@@ -50,7 +50,7 @@
 </head>
 <body class="dark-theme">
   <main class="main-content">
-    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/speaker.webp') center/cover no-repeat;">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/mmeditation.webp') center/cover no-repeat;">
       <div class="hero-content text-left">
         <div class="hero-top-text fade-up">Практики</div>
         <h1 class="hero-title fade-up">Медитации</h1>
@@ -67,7 +67,7 @@
       <div class="meditations-grid">
         <section class="meditation-player-preview" aria-label="Медитации">
           <div class="meditation-preview-copy">
-            <span>Audio</span>
+            <span>Медитации</span>
             <h2>Выберите практику</h2>
             <p>Трек откроется в полноэкранном аудиоплеере в стиле программ. Файлы отдаются быстрыми подписанными ссылками без HLS-конвертации.</p>
           </div>
