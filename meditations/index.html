@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Медитации — Система Молодцова</title>
+  <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
+  <link rel="stylesheet" href="/css/style.css?v=100" />
+  <link rel="stylesheet" href="/css/nav.css?v=69" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .meditations-page { padding: 32px 24px 100px; max-width: 1180px; margin: 0 auto; }
+    .meditations-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start; margin-top: 20px; }
+    .meditation-player-preview { min-height: 520px; border-radius: 32px; border: 1px solid rgba(255,255,255,.14); background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.62)), url('/assets/webp/speaker.webp') center/cover no-repeat; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 28px 88px rgba(0,0,0,.34); display: flex; align-items: flex-end; padding: clamp(24px, 4vw, 42px); overflow: hidden; }
+    .meditation-preview-copy { max-width: 560px; }
+    .meditation-preview-copy span { display: inline-flex; margin-bottom: 14px; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: rgba(255,255,255,.78); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .meditation-preview-copy h2 { margin: 0 0 12px; color: #fff; font-size: clamp(34px, 6vw, 70px); line-height: .92; letter-spacing: -.07em; }
+    .meditation-preview-copy p { margin: 0; max-width: 520px; color: rgba(255,255,255,.66); line-height: 1.65; }
+    .meditation-sidebar { border-radius: 28px; border: 1px solid rgba(255,255,255,.1); background: radial-gradient(circle at 18% 0%, rgba(255,255,255,.1), transparent 34%), linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)), rgba(7,8,10,.72); box-shadow: 0 22px 70px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12); padding: 18px; }
+    .meditation-sidebar-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+    .meditation-sidebar-head h2 { margin: 0; color: #fff; font-size: 16px; }
+    .meditation-sidebar-head span { color: rgba(255,255,255,.42); font-size: 12px; font-weight: 650; }
+    .meditation-list { display: grid; gap: 8px; }
+    .meditation-track { width: 100%; min-height: 62px; display: grid; grid-template-columns: 36px minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 10px; border: 1px solid transparent; border-radius: 16px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+    .meditation-track:hover, .meditation-track.active { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.11); }
+    .meditation-index { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); font-size: 12px; font-weight: 850; }
+    .meditation-title { display: block; color: rgba(255,255,255,.9); font-size: 14px; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .meditation-duration { display: block; margin-top: 3px; color: rgba(255,255,255,.42); font-size: 12px; }
+    .meditation-play-mini { color: rgba(255,255,255,.5); font-size: 18px; }
+    .meditation-error { color: rgba(255,255,255,.48); padding: 16px; }
+    @media (max-width: 1024px) { .meditations-grid { grid-template-columns: 1fr; } .meditation-player-preview { min-height: 420px; } }
+    @media (max-width: 640px) { .meditations-page { padding: 24px 14px 92px; } .meditation-player-preview { min-height: 430px; border-radius: 28px; } .meditation-sidebar { border-radius: 24px; } }
+  </style>
+</head>
+<body class="dark-theme">
+  <main class="main-content">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/speaker.webp') center/cover no-repeat;">
+      <div class="hero-content text-left">
+        <div class="hero-top-text fade-up">Практики</div>
+        <h1 class="hero-title fade-up">Медитации</h1>
+        <p class="hero-subtitle fade-up">Аудиопрактики для восстановления внимания, контакта с телом и спокойного внутреннего ритма.</p>
+      </div>
+    </section>
+
+    <div class="meditations-page">
+      <a href="/community/" class="back-link-glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Назад
+      </a>
+
+      <div class="meditations-grid">
+        <section class="meditation-player-preview" aria-label="Медитации">
+          <div class="meditation-preview-copy">
+            <span>Audio</span>
+            <h2>Выберите практику</h2>
+            <p>Трек откроется в полноэкранном аудиоплеере в стиле программ. Файлы отдаются быстрыми подписанными ссылками без HLS-конвертации.</p>
+          </div>
+        </section>
+
+        <aside class="meditation-sidebar">
+          <div class="meditation-sidebar-head">
+            <h2>Треки</h2>
+            <span data-meditations-count>Загрузка</span>
+          </div>
+          <div class="meditation-list" id="meditations-list">
+            <p class="meditation-error">Загружаем медитации...</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js?v=60"></script>
+  <script src="/js/auth.js?v=18"></script>
+  <script src="/js/nav.js?v=74"></script>
+  <script src="/js/main.js?v=2"></script>
+  <script src="/js/meditations-page.js?v=1"></script>
+</body>
+</html>

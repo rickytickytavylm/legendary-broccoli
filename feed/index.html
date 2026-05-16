@@ -7,6 +7,9 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Лента — Система Молодцова</title>
+  <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
+  <meta property="og:title" content="Лента — Система Молодцова" />
+  <meta property="og:image" content="/assets/webp/logo2.webp" />
   <link rel="stylesheet" href="/css/style.css?v=100" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -109,6 +112,19 @@
       align-items: center;
       justify-content: center;
       transition: opacity 0.2s;
+    }
+
+    .post-action-btn.liked svg {
+      color: #ff4f76;
+    }
+
+    .post-action-btn.liked svg path {
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+    .post-action-btn.shared {
+      opacity: .68;
     }
 
     .post-action-btn:hover {
@@ -239,7 +255,7 @@
   <main>
     <div class="feed-container">
       <!-- Post 3: newest -->
-      <article class="post-card">
+      <article class="post-card" id="post-interview" data-post-id="interview" data-share-title="Интервью с дочерью" data-share-text="Руслан Молодцов — новый разговор с дочерью о подростках, отношениях и ролях.">
         <div class="post-author">
           <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
           <div class="post-author-info">
@@ -249,14 +265,14 @@
         </div>
         <img class="post-image" src="/assets/webp/post3.webp" alt="Интервью с дочерью" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится">
+          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться">
+          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes">Нравится: 214</div>
+        <div class="post-likes" data-base-likes="214" data-likes>Нравится: 214</div>
         <div class="post-caption">
           <p><strong>Руслан Молодцов</strong>Наконец-то, друзья!</p>
           <p>Случилось то, что вы давно просили. Четыре года назад я записывал интервью со старшей дочерью — ей тогда было 12, и это был такой разговор отца с ребенком.</p>
@@ -269,7 +285,7 @@
       </article>
 
       <!-- Post 2 -->
-      <article class="post-card">
+      <article class="post-card" id="post-meditation-day" data-post-id="meditation-day" data-share-title="День медитации" data-share-text="Руслан Молодцов выступает 24 мая на фестивале «День медитации».">
         <div class="post-author">
           <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
           <div class="post-author-info">
@@ -279,14 +295,14 @@
         </div>
         <img class="post-image" src="/assets/webp/post2.webp" alt="День медитации" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится">
+          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться">
+          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes">Нравится: 176</div>
+        <div class="post-likes" data-base-likes="176" data-likes>Нравится: 176</div>
         <div class="post-caption">
           <p><strong>Руслан Молодцов</strong>Ты с нами?</p>
           <p>24 мая выступаю на фестивале «ДЕНЬ МЕДИТАЦИИ» — большая лекция-практика про то, как тело на самом деле хранит стресс, эмоции и внутренние конфликты.</p>
@@ -300,7 +316,7 @@
       </article>
 
       <!-- Post 1: oldest -->
-      <article class="post-card">
+      <article class="post-card" id="post-note" data-post-id="note" data-share-title="Кто помнит это чувство?" data-share-text="Пост Руслана Молодцова о записке от родителей и чувстве детства.">
         <div class="post-author">
           <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
           <div class="post-author-info">
@@ -310,14 +326,14 @@
         </div>
         <img class="post-image" src="/assets/webp/post1.webp" alt="Записка от родителей" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится">
+          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться">
+          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes">Нравится: 243</div>
+        <div class="post-likes" data-base-likes="243" data-likes>Нравится: 243</div>
         <div class="post-caption">
           <p><strong>Руслан Молодцов</strong>Кто помнит это чувство?</p>
           <p>Просыпаешься с утра, родители уже ушли по делам, а на столе лежит записка ❤️‍🩹</p>
@@ -331,6 +347,6 @@
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
-  <script src="/js/page-inline/feed-1.js?v=1"></script>
+  <script src="/js/page-inline/feed-1.js?v=2"></script>
 </body>
 </html>

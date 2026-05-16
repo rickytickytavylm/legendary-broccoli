@@ -281,6 +281,8 @@ class ApiClient {
   saveProgress(data) { return this.request('POST', '/content/progress', data); }
   updateProfile(data) { return this.request('PATCH', '/profile/me', data); }
   logActivity(data) { return this.request('POST', '/profile/activity', data); }
+  getMeditations() { return this.request('GET', '/content/meditations-lessons'); }
+  getMeditationAudioUrl(key) { return this.request('GET', '/content/meditations-audio-url?key=' + encodeURIComponent(key)); }
 
   // --- Video ---
   getVideoToken(lessonId) { return this.request('POST', '/video/token', { lesson_id: lessonId }); }
