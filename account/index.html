@@ -6,7 +6,7 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=108" />
+  <link rel="stylesheet" href="/css/style.css?v=109" />
   <link rel="stylesheet" href="/css/nav.css?v=71" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -16,6 +16,29 @@
       max-width: 1100px;
       margin: 0 auto;
       padding: 36px 28px 80px;
+    }
+
+    @media (min-width: 900px) {
+      body.account-page .profile-wrap {
+        max-width: 720px;
+        margin-inline: auto;
+        padding: 88px 40px 100px;
+      }
+      body.account-page .profile-settings-shell {
+        max-width: 100%;
+      }
+      body.account-page .profile-card.profile-user-card {
+        border-radius: 28px;
+      }
+      body.account-page .profile-settings-group h2 {
+        margin-left: 2px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      body.account-page .profile-wrap {
+        max-width: min(760px, calc(100vw - 232px - 80px));
+      }
     }
 
     /* ─── Not-auth screen ───────────────────────────── */
@@ -928,7 +951,7 @@
     }
   </style>
 </head>
-<body class="dark-theme">
+<body class="dark-theme account-page">
 
   <!-- ─── NOT LOGGED IN ─────────────────────────────────── -->
   <div id="auth-gate" class="auth-gate u-hidden" aria-hidden="true">

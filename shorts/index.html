@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Shorts — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=108" />
+  <link rel="stylesheet" href="/css/style.css?v=109" />
   <link rel="stylesheet" href="/css/nav.css?v=71" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -43,21 +43,32 @@
     }
 
     .masonry {
-      max-width: 960px;
-      margin: 0 auto;
-      columns: 2;
-      column-gap: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 1080px;
+      margin-inline: auto;
+      width: 100%;
     }
 
-    @media (min-width: 768px) {
+    /* CSS columns давали странные переносы (2+1) на десктопе — сетка три в ряд */
+    @media (min-width: 900px) {
       .masonry {
-        columns: 3;
-        column-gap: 20px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: clamp(14px, 2vw, 22px);
+        max-width: 1140px;
       }
       .shorts-page {
-        padding: 120px 32px 120px;
+        padding-inline: clamp(28px, 4vw, 48px);
       }
     }
+
+    @media (min-width: 1200px) {
+      .masonry {
+        max-width: min(1180px, calc(100vw - 232px - 72px));
+      }
+    }
+
 
     button.short-card {
       appearance: none;
@@ -72,8 +83,8 @@
 
     .short-card {
       break-inside: avoid;
-      margin-bottom: 16px;
-      display: inline-block;
+      margin-bottom: 0;
+      display: block;
       width: 100%;
       border-radius: 16px;
       overflow: hidden;
@@ -84,7 +95,9 @@
     }
 
     @media (min-width: 768px) {
-      .short-card { margin-bottom: 20px; }
+      .shorts-page {
+        padding: 120px 32px 120px;
+      }
     }
 
     button.short-card:hover,
