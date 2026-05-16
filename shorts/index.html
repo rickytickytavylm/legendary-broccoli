@@ -194,6 +194,40 @@
       z-index: 2;
     }
 
+    button.short-card.short-card--busy {
+      opacity: 0.76;
+      pointer-events: none;
+    }
+
+    .shorts-toast {
+      position: fixed;
+      left: max(16px, env(safe-area-inset-left));
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(100px, calc(16px + env(safe-area-inset-bottom)));
+      z-index: 4000;
+      max-width: min(420px, 100%);
+      margin-inline: auto;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: rgba(12, 14, 22, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+      font-size: 14px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.92);
+      opacity: 0;
+      transform: translateY(14px);
+      pointer-events: none;
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease;
+    }
+
+    .shorts-toast.shorts-toast--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .shorts-page-error {
       color: rgba(255,255,255,.52);
       text-align: center;
@@ -267,11 +301,58 @@
       background: #000;
     }
 
+    .shorts-player-poster {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .shorts-player-poster.is-visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .shorts-player-spinner {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .shorts-player-spinner.is-visible {
+      display: flex;
+    }
+
+    .shorts-player-spinner span {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.22);
+      border-top-color: rgba(255, 255, 255, 0.9);
+      animation: shorts-spin 0.8s linear infinite;
+    }
+
+    @keyframes shorts-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     /* Вертикально «во весь экран»: под шапкой с кнопкой; contain — без обрезки кадра */
     .shorts-player-stage video {
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 3;
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -324,18 +405,24 @@
         </button>
       </div>
       <div class="shorts-player-stage" id="shorts-player-stage">
+        <img id="shorts-player-poster" class="shorts-player-poster" alt="" />
+        <div id="shorts-player-spinner" class="shorts-player-spinner" aria-hidden="true">
+          <span></span>
+        </div>
         <video id="shorts-player-video" controls playsinline webkit-playsinline></video>
       </div>
       <footer class="shorts-player-foot">
         <p id="shorts-player-title" class="shorts-player-title"></p>
       </footer>
     </div>
+
+    <div id="shorts-toast" class="shorts-toast" aria-live="polite"></div>
   </main>
 
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=76"></script>
-  <script src="/js/shorts-page.js?v=2"></script>
+  <script src="/js/shorts-page.js?v=5"></script>
 </body>
 </html>
