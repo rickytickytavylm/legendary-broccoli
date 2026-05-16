@@ -283,6 +283,7 @@ class ApiClient {
   logActivity(data) { return this.request('POST', '/profile/activity', data); }
   getMeditations() { return this.request('GET', '/content/meditations-lessons'); }
   getMeditationAudioUrl(key) { return this.request('GET', '/content/meditations-audio-url?key=' + encodeURIComponent(key)); }
+  getMeditationBackgroundHlsUrl() { return this.base + '/content/meditations-background-hls'; }
 
   // --- Video ---
   getVideoToken(lessonId) { return this.request('POST', '/video/token', { lesson_id: lessonId }); }

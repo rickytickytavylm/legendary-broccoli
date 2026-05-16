@@ -53,6 +53,13 @@
       icon: icon('<path d="M16 11a4 4 0 1 0-8 0"/><path d="M3 21a7 7 0 0 1 18 0"/><path d="M18 8a3 3 0 0 1 3 3"/><path d="M6 8a3 3 0 0 0-3 3"/>')
     },
     {
+      id: 'meditations',
+      href: '/meditations/',
+      label: 'Медитации',
+      labelShort: 'Медитации',
+      icon: icon('<path d="M12 4v16"/><path d="M8 7v10"/><path d="M16 7v10"/><path d="M4 10v4"/><path d="M20 10v4"/>')
+    },
+    {
       id: 'ai',
       href: '/ai/',
       label: 'AI-помощник',

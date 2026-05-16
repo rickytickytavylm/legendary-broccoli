@@ -370,12 +370,12 @@
   text-decoration: none;
   color: rgba(255, 255, 255, 0.48);
   font-family: 'Inter', sans-serif;
-  padding: 7px 5px 6px;
+  padding: 7px 3px 6px;
   border-radius: 18px;
   transition: color 0.15s, background .15s, box-shadow .15s;
   min-width: 0;
   flex: 1;
-  max-width: 72px;
+  max-width: 68px;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -411,7 +411,7 @@
 }
 
 .tabbar-label {
-  font-size: 8.8px;
+  font-size: 8.2px;
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;

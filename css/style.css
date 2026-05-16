@@ -1143,12 +1143,11 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .today-main-card,
 .today-support-card {
-  background:
-    var(--ux-bg),
-    #050506;
+  background: #050506;
   background-position: center;
   background-size: cover;
   isolation: isolate;
+  overflow: hidden;
 }
 
 .today-main-card {
@@ -1164,20 +1163,32 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .today-support-card::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -1px;
   pointer-events: none;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, rgba(5,5,6,.04) 0%, rgba(5,5,6,.18) 42%, rgba(5,5,6,.72) 74%, rgba(5,5,6,.94) 100%),
-    linear-gradient(0deg, rgba(5,5,6,.98) 0 34px, rgba(5,5,6,.74) 86px, rgba(5,5,6,0) 146px);
+    radial-gradient(circle at 24% 10%, rgba(255,255,255,.12), transparent 30%),
+    linear-gradient(180deg, rgba(5,5,6,.32) 0%, rgba(5,5,6,.34) 42%, rgba(5,5,6,.78) 76%, rgba(5,5,6,.98) 100%),
+    linear-gradient(0deg, rgba(5,5,6,1) 0 46px, rgba(5,5,6,.86) 108px, rgba(5,5,6,0) 178px);
   z-index: 0;
 }
 
 .today-main-card::after {
-  inset: 0;
   background:
-    linear-gradient(180deg, rgba(5,5,6,.02) 0%, rgba(5,5,6,.12) 38%, rgba(5,5,6,.64) 72%, rgba(5,5,6,.95) 100%),
-    linear-gradient(0deg, rgba(5,5,6,1) 0 30px, rgba(5,5,6,.78) 92px, rgba(5,5,6,0) 158px);
+    radial-gradient(circle at 24% 10%, rgba(255,255,255,.12), transparent 30%),
+    linear-gradient(180deg, rgba(5,5,6,.36) 0%, rgba(5,5,6,.34) 38%, rgba(5,5,6,.76) 72%, rgba(5,5,6,.99) 100%),
+    linear-gradient(0deg, rgba(5,5,6,1) 0 52px, rgba(5,5,6,.88) 120px, rgba(5,5,6,0) 192px);
+}
+
+.today-main-card::before,
+.today-support-card::before {
+  z-index: -1;
+  background:
+    var(--ux-bg),
+    #050506;
+  background-position: center;
+  background-size: cover;
+  opacity: 1;
 }
 
 .today-checkin-card {
@@ -1335,21 +1346,23 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   margin-bottom: 16px;
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.24);
   background:
-    radial-gradient(circle at 34% 0%, rgba(255,255,255,.18), transparent 34%),
-    rgba(255,255,255,.08);
-  color: rgba(255,255,255,.82);
+    radial-gradient(circle at 34% 0%, rgba(255,255,255,.24), transparent 34%),
+    rgba(0,0,0,.24);
+  color: rgba(255,255,255,.9);
   font-size: 11px;
-  font-weight: 650;
+  font-weight: 750;
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
 }
 
 .today-program-tracker {
   display: block;
   margin-top: 14px;
-  color: rgba(255,255,255,.56);
+  color: rgba(255,255,255,.72);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .today-program-ring {
