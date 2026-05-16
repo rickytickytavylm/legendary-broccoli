@@ -797,10 +797,28 @@
     }
     @media (min-width: 769px) {
       .profile-wrap {
-        width: calc(100vw - 232px) !important;
-        max-width: none !important;
+        width: min(980px, calc(100vw - 296px)) !important;
+        max-width: 980px !important;
         margin-left: 232px !important;
         margin-right: 0 !important;
+        padding: 38px 32px 88px !important;
+      }
+      .profile-user-card,
+      .profile-settings-shell {
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .profile-settings-shell {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
+      .profile-danger-group {
+        grid-column: span 2;
+      }
+      .settings-row {
+        min-height: 56px;
       }
     }
     @media (max-width: 600px) {

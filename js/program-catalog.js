@@ -14,9 +14,9 @@
     { href: '/mj/', title: 'Мужское и Женское', desc: 'Психология отношений и природа полов', image: '/assets/webp/man_woman.webp', full: true, endpoint: '/content/mj-lessons' },
   ];
   const MARATHON_RAIL = [
-    { href: '/marathons/#section-stress', title: 'Стресс', desc: 'Быстрые практики саморегуляции и восстановления управляемости', image: '/assets/webp/stress-mar.webp' },
     { href: '/marathons/#section-samoocenka', title: 'Самооценка', desc: 'Внутренняя опора, самоценность и мягкая пересборка отношения к себе', image: '/assets/webp/myself_mar.webp' },
     { href: '/marathons/#section-konflikty', title: 'Конфликты', desc: 'Границы и разговор о сложном без разрушения контакта', image: '/assets/webp/conflicts.webp' },
+    { href: '/marathons/#section-rezakina', title: 'Материнство и опора', desc: 'Беременность, эмоциональное состояние мамы, привязанность и родительское выгорание', image: '/assets/webp/maraphones.webp' },
   ];
   const RESOURCE_RAIL = [
     { href: '/profiling/', title: 'Профайлинг', desc: 'Психологический портрет личности и точка входа в самопонимание', image: '/assets/webp/way_block.webp' },

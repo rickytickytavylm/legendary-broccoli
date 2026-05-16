@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Вебинары — Система Молодцова</title>
+  <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
+  <link rel="stylesheet" href="/css/style.css?v=100" />
+  <link rel="stylesheet" href="/css/nav.css?v=69" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
+  <style>
+    .webinars-page { padding: 32px 24px 100px; max-width: 1280px; margin: 0 auto; }
+    .webinars-section { margin-bottom: 64px; }
+    .webinars-section-header { margin-bottom: 20px; }
+    .webinars-section-title { color: #fff; font-size: 30px; font-weight: 760; letter-spacing: -.04em; margin: 0 0 8px; }
+    .webinars-section-desc { max-width: 760px; color: rgba(255,255,255,.58); font-size: 15px; line-height: 1.65; margin: 0; }
+    .course-layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+    .course-main { min-width: 0; }
+    .video-container { position: relative; background: #000; border-radius: 18px; overflow: hidden; aspect-ratio: 16/9; }
+    .video-container video { width: 100%; height: 100%; display: block; border-radius: 18px; object-fit: contain; }
+    .watermark { position: absolute; top: 16px; left: 16px; z-index: 5; pointer-events: none; opacity: .55; }
+    .watermark img { height: 26px; width: auto; filter: brightness(1.2); }
+    .now-playing { color: rgba(255,255,255,.75); font-size: 14px; font-weight: 600; margin: 14px 0 0; min-height: 20px; }
+    .course-sidebar { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 22px; padding: 18px; height: fit-content; }
+    .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .sidebar-header h3 { color: #fff; font-size: 15px; font-weight: 700; margin: 0; }
+    .lessons-count { color: rgba(255,255,255,.5); font-size: 12px; }
+    .lesson-item { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-radius: 14px; cursor: pointer; transition: all .15s; border: 1px solid transparent; }
+    .lesson-item:hover { background: rgba(255,255,255,.04); }
+    .lesson-item.active { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.12); }
+    .lesson-number { width: 32px; height: 32px; border-radius: 10px; background: rgba(255,255,255,.08); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); font-size: 12px; font-weight: 800; flex-shrink: 0; }
+    .lesson-title { color: rgba(255,255,255,.86); font-size: 13px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lesson-dur { color: rgba(255,255,255,.4); font-size: 11px; margin-top: 2px; }
+    .video-loader { position: absolute; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center; border-radius: 18px; z-index: 10; transition: opacity .25s; }
+    .video-loader.hidden { opacity: 0; pointer-events: none; }
+    .apple-spinner { position: relative; width: 36px; height: 36px; }
+    .apple-spinner span { position: absolute; top: 0; left: 50%; width: 3px; height: 10px; margin-left: -1.5px; background: #fff; border-radius: 2px; transform-origin: 50% 18px; opacity: 0; animation: spin-fade 1s linear infinite; }
+    .apple-spinner span:nth-child(1){transform:rotate(0deg);animation-delay:0s}
+    .apple-spinner span:nth-child(2){transform:rotate(45deg);animation-delay:-.875s}
+    .apple-spinner span:nth-child(3){transform:rotate(90deg);animation-delay:-.75s}
+    .apple-spinner span:nth-child(4){transform:rotate(135deg);animation-delay:-.625s}
+    .apple-spinner span:nth-child(5){transform:rotate(180deg);animation-delay:-.5s}
+    .apple-spinner span:nth-child(6){transform:rotate(225deg);animation-delay:-.375s}
+    .apple-spinner span:nth-child(7){transform:rotate(270deg);animation-delay:-.25s}
+    .apple-spinner span:nth-child(8){transform:rotate(315deg);animation-delay:-.125s}
+    @keyframes spin-fade { 0%{opacity:1} 100%{opacity:0} }
+    @media (max-width: 1024px) { .course-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .webinars-page { padding: 24px 16px 92px; } .webinars-section-title { font-size: 25px; } }
+  </style>
+</head>
+<body class="dark-theme">
+  <main class="main-content">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.34) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/hope.webp') center/cover no-repeat;">
+      <div class="hero-content text-left">
+        <div class="hero-top-text fade-up">Сообщество</div>
+        <h1 class="hero-title fade-up">Вебинары</h1>
+        <p class="hero-subtitle fade-up">Записи открытых встреч и эфиров. Смотреть можно как обычные видео, а после транскрибации появятся таймкоды и AI-разборы.</p>
+      </div>
+    </section>
+
+    <div class="webinars-page">
+      <a href="/community/" class="back-link-glass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Назад
+      </a>
+      <div id="webinars-container">
+        <p class="u-error-muted">Загружаем вебинары...</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js?v=59"></script>
+  <script src="/js/auth.js?v=18"></script>
+  <script src="/js/nav.js?v=74"></script>
+  <script src="/js/main.js?v=2"></script>
+  <script src="/js/course-ai.js?v=2"></script>
+  <script src="/js/webinars-page.js?v=1"></script>
+</body>
+</html>

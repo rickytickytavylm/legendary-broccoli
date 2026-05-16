@@ -280,6 +280,7 @@ class ApiClient {
   getLesson(id)    { return this.request('GET', '/content/lessons/' + id); }
   saveProgress(data) { return this.request('POST', '/content/progress', data); }
   updateProfile(data) { return this.request('PATCH', '/profile/me', data); }
+  logActivity(data) { return this.request('POST', '/profile/activity', data); }
 
   // --- Video ---
   getVideoToken(lessonId) { return this.request('POST', '/video/token', { lesson_id: lessonId }); }

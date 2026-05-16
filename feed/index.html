@@ -7,7 +7,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Лента — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=90" />
+  <link rel="stylesheet" href="/css/style.css?v=100" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +24,7 @@
     }
 
     .feed-container {
-      width: min(100%, 680px);
+      width: min(100%, 640px);
       max-width: calc(100vw - 320px);
       margin: 0 auto;
       padding: 96px 20px 120px;
@@ -135,6 +135,15 @@
       font-size: 14px;
       line-height: 1.6;
       color: rgba(255, 255, 255, 0.75);
+      white-space: normal;
+    }
+
+    .post-caption p {
+      margin: 0 0 12px;
+    }
+
+    .post-caption p:last-child {
+      margin-bottom: 0;
     }
 
     .post-caption.is-collapsed {
@@ -148,6 +157,13 @@
       color: #fff;
       font-weight: 600;
       margin-right: 6px;
+    }
+
+    .post-caption a {
+      color: #fff;
+      text-decoration: underline;
+      text-decoration-color: rgba(255,255,255,.35);
+      text-underline-offset: 3px;
     }
 
     .post-expand-link {
@@ -168,6 +184,22 @@
 
     .post-expand-link:hover {
       color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (min-width: 901px) {
+      .feed-container {
+        width: min(620px, calc(100vw - 304px));
+        max-width: 620px;
+        margin-left: calc(232px + max(28px, (100vw - 232px - 620px) / 2));
+        margin-right: auto;
+        padding-top: 34px;
+      }
+
+      .post-card {
+        border-radius: 24px;
+        margin-bottom: 22px;
+        box-shadow: 0 18px 54px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+      }
     }
 
     @media (max-width: 900px) {
@@ -206,16 +238,16 @@
 <body class="dark-theme">
   <main>
     <div class="feed-container">
-      <!-- Post 1 -->
+      <!-- Post 3: newest -->
       <article class="post-card">
         <div class="post-author">
           <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
           <div class="post-author-info">
             <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">2 часа назад</span>
+            <span class="post-time">Сегодня</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/new_geshtalt.webp" alt="Гештальт-подход" />
+        <img class="post-image" src="/assets/webp/post3.webp" alt="Интервью с дочерью" loading="lazy" decoding="async" />
         <div class="post-actions">
           <button class="post-action-btn" aria-label="Нравится">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -224,9 +256,14 @@
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes">Нравится: 156</div>
+        <div class="post-likes">Нравится: 214</div>
         <div class="post-caption">
-          <strong>Руслан Молодцов</strong>Когда мы говорим «я не могу», часто это значит «я не хочу платить цену». Осознание этого — первый шаг к честности с собой. Гештальт-подход учит замечать, где мы прерываем контакт с собственными потребностями.
+          <p><strong>Руслан Молодцов</strong>Наконец-то, друзья!</p>
+          <p>Случилось то, что вы давно просили. Четыре года назад я записывал интервью со старшей дочерью — ей тогда было 12, и это был такой разговор отца с ребенком.</p>
+          <p>Сейчас ей 16. И это уже совсем другой разговор. Мы задавали друг другу непростые вопросы. Говорили о разном — от детско-родительских отношений до мужских и женских ролей. Затронули тему зависимостей и то, как подростки в них попадают. И главное — как на самом деле выстраивать отношения с подростками.</p>
+          <p>Спойлер: все проще, чем нам кажется.</p>
+          <p><a href="https://youtu.be/UkOKGeByz2U?si=Y6GsWqjsO6wm8ttx" target="_blank" rel="noopener noreferrer">Ссылка на видео</a></p>
+          <p>Смотрите, комментируйте, делитесь впечатлениями. Нам с дочкой очень важно.</p>
         </div>
         <button class="post-expand-link" type="button">Развернуть весь текст</button>
       </article>
@@ -237,10 +274,10 @@
           <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
           <div class="post-author-info">
             <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">5 часов назад</span>
+            <span class="post-time">Вчера</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/theraphy.webp" alt="Телесная терапия" />
+        <img class="post-image" src="/assets/webp/post2.webp" alt="День медитации" loading="lazy" decoding="async" />
         <div class="post-actions">
           <button class="post-action-btn" aria-label="Нравится">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -249,39 +286,20 @@
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes">Нравится: 89</div>
+        <div class="post-likes">Нравится: 176</div>
         <div class="post-caption">
-          <strong>Руслан Молодцов</strong>Тело помнит то, что разум предпочитает забыть. Телесная терапия помогает услышать эти сообщения — без анализа, через ощущение и движение.
+          <p><strong>Руслан Молодцов</strong>Ты с нами?</p>
+          <p>24 мая выступаю на фестивале «ДЕНЬ МЕДИТАЦИИ» — большая лекция-практика про то, как тело на самом деле хранит стресс, эмоции и внутренние конфликты.</p>
+          <p>Разберем подробно:</p>
+          <p>почему хроническое напряжение влияет не только на тело, но и на мышление;<br>как через телесные практики быстрее проходить внутренние изменения;<br>и почему связка психотерапии + йоги работает глубже, чем по отдельности.</p>
+          <p>Плюс дам конкретные техники и инструменты, которые можно будет применять сразу.</p>
+          <p>Кто давно хотел попасть ко мне вживую — жду 24 мая!</p>
+          <p>Информация и билеты — <a href="https://organic-people.com/events/meditationdayrussia" target="_blank" rel="noopener noreferrer">organic-people.com/events/meditationdayrussia</a></p>
         </div>
         <button class="post-expand-link" type="button">Развернуть весь текст</button>
       </article>
 
-      <!-- Post 3 -->
-      <article class="post-card">
-        <div class="post-author">
-          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
-          <div class="post-author-info">
-            <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">1 день назад</span>
-          </div>
-        </div>
-        <img class="post-image" src="/assets/webp/supervision.webp" alt="Супервизия" />
-        <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится">
-            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </button>
-          <button class="post-action-btn" aria-label="Поделиться">
-            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
-        </div>
-        <div class="post-likes">Нравится: 124</div>
-        <div class="post-caption">
-          <strong>Руслан Молодцов</strong>Супервизия — это не про «правильные ответы». Это про способность выдерживать незнание и оставаться рядом с человеком в его процессе.
-        </div>
-        <button class="post-expand-link" type="button">Развернуть весь текст</button>
-      </article>
-
-      <!-- Post 4 -->
+      <!-- Post 1: oldest -->
       <article class="post-card">
         <div class="post-author">
           <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
@@ -290,7 +308,7 @@
             <span class="post-time">2 дня назад</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/hero_course.webp" alt="Выгорание и практика" />
+        <img class="post-image" src="/assets/webp/post1.webp" alt="Записка от родителей" loading="lazy" decoding="async" />
         <div class="post-actions">
           <button class="post-action-btn" aria-label="Нравится">
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -299,11 +317,12 @@
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes">Нравится: 67</div>
+        <div class="post-likes">Нравится: 243</div>
         <div class="post-caption">
-          <strong>Руслан Молодцов</strong>Выгорание — не результат работы. Это результат длительного игнорирования себя. Практика начинается с простого: заметить, что вы устали, до того как тело заставит вас остановиться.
+          <p><strong>Руслан Молодцов</strong>Кто помнит это чувство?</p>
+          <p>Просыпаешься с утра, родители уже ушли по делам, а на столе лежит записка ❤️‍🩹</p>
+          <p>а впереди целая жизнь…</p>
         </div>
-        <button class="post-expand-link" type="button">Развернуть весь текст</button>
       </article>
 
     </div>

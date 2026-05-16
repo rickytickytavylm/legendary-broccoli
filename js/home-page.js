@@ -329,20 +329,33 @@ function shiftTodayRoute(delta) {
 function finishOnboarding() {
   const route = routeConfig();
   onboardingState.name = cleanName(onboardingState.name) || 'Гость';
-  localStorage.setItem(ONBOARDING_COMPLETE_KEY, 'true');
-  localStorage.setItem(ONBOARDING_SCHEMA_KEY, ONBOARDING_SCHEMA_VERSION);
-  localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify({
+  const completedAt = new Date().toISOString();
+  const savedProfile = {
     ...onboardingState,
     routeKey: selectedRouteKey(),
     route: route.title,
+    focusLabel: route.title,
     firstStep: route.firstStep,
     firstStepHref: route.href,
     secondStep: route.secondary?.title,
     secondStepHref: route.secondary?.href,
-    completedAt: new Date().toISOString(),
-  }));
+    primary: route.primary,
+    secondary: route.secondary,
+    completedAt,
+  };
+  localStorage.setItem(ONBOARDING_COMPLETE_KEY, 'true');
+  localStorage.setItem(ONBOARDING_SCHEMA_KEY, ONBOARDING_SCHEMA_VERSION);
+  localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(savedProfile));
   if (window.API?.updateProfile) {
     window.API.updateProfile({ display_name: onboardingState.name }).catch(() => {});
+  }
+  if (window.API?.logActivity) {
+    window.API.logActivity({
+      event_type: 'onboarding_complete',
+      entity_type: 'onboarding',
+      entity_id: savedProfile.routeKey,
+      metadata: savedProfile,
+    }).catch(() => {});
   }
   renderToday();
   showNewHomeState('today');

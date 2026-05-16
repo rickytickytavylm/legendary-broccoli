@@ -452,16 +452,45 @@
     }
 
     @media (min-width: 769px) {
+      .ai-main {
+        height: 100svh;
+        overflow: hidden;
+      }
+
+      .ai-page {
+        height: 100svh;
+        min-height: 100svh;
+        justify-content: flex-start;
+        padding: 40px 24px 36px;
+        overflow: hidden;
+      }
+
       .ai-back-mobile {
-        display: none !important;
+        position: fixed;
+        top: 34px;
+        left: calc(232px + 28px);
+        z-index: 20;
       }
 
       .ai-shell {
-        min-height: min(760px, calc(100dvh - 120px));
+        height: 100%;
+        min-height: 0;
       }
 
       .ai-chat-panel {
-        min-height: 520px;
+        min-height: 0;
+        flex: 1;
+        justify-content: flex-end;
+        overflow: hidden;
+        padding-top: 8px;
+      }
+
+      .ai-conversation {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+        padding: 16px 0 22px;
+        overflow-y: auto;
       }
 
       .ai-input-bar {
@@ -478,7 +507,7 @@
   <main class="main-content ai-main">
     <div class="ai-page">
       <div class="ai-shell">
-        <a href="/" class="back-link-glass ai-back-mobile" aria-label="Назад">
+        <a href="/" class="back-link-glass ai-back-mobile" aria-label="Назад" data-ai-back>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Назад
         </a>
@@ -514,6 +543,6 @@
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
-  <script src="/js/ai-page.js?v=2"></script>
+  <script src="/js/ai-page.js?v=3"></script>
 </body>
 </html>

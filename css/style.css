@@ -1144,12 +1144,11 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .today-main-card,
 .today-support-card {
   background:
-    linear-gradient(0deg, #050506 0%, rgba(5,5,6,.99) 14%, rgba(5,5,6,.78) 54%, rgba(5,5,6,.20) 100%),
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.42) 48%, #050506 100%),
     var(--ux-bg),
     #050506;
   background-position: center;
   background-size: cover;
+  isolation: isolate;
 }
 
 .today-main-card {
@@ -1165,20 +1164,20 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .today-support-card::after {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: 0;
   pointer-events: none;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, rgba(5,5,6,0) 0%, rgba(5,5,6,.34) 30%, rgba(5,5,6,.90) 74%, #050506 100%),
-    linear-gradient(0deg, #050506 0 38px, rgba(5,5,6,.88) 64px, rgba(5,5,6,0) 116px);
+    linear-gradient(180deg, rgba(5,5,6,.04) 0%, rgba(5,5,6,.18) 42%, rgba(5,5,6,.72) 74%, rgba(5,5,6,.94) 100%),
+    linear-gradient(0deg, rgba(5,5,6,.98) 0 34px, rgba(5,5,6,.74) 86px, rgba(5,5,6,0) 146px);
   z-index: 0;
 }
 
 .today-main-card::after {
-  inset: -1px -1px -18px;
+  inset: 0;
   background:
-    linear-gradient(180deg, rgba(5,5,6,0) 0%, rgba(5,5,6,.38) 28%, rgba(5,5,6,.94) 70%, #050506 92%, #050506 100%),
-    linear-gradient(0deg, #050506 0 54px, rgba(5,5,6,.96) 82px, rgba(5,5,6,0) 138px);
+    linear-gradient(180deg, rgba(5,5,6,.02) 0%, rgba(5,5,6,.12) 38%, rgba(5,5,6,.64) 72%, rgba(5,5,6,.95) 100%),
+    linear-gradient(0deg, rgba(5,5,6,1) 0 30px, rgba(5,5,6,.78) 92px, rgba(5,5,6,0) 158px);
 }
 
 .today-checkin-card {
@@ -1736,6 +1735,21 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 @media (min-width: 769px) {
+  body.home-first-run-active .onboarding-card,
+  body.home-onboarding-active .onboarding-card {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.09), transparent 28%),
+      linear-gradient(180deg, rgba(18,18,22,.82), #000 72%),
+      #000;
+  }
+
+  body.home-first-run-active .onboarding-card::after,
+  body.home-onboarding-active .onboarding-card::after {
+    background:
+      radial-gradient(circle at 50% 18%, rgba(255,255,255,.08), transparent 26%),
+      linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.34) 58%, #000 100%);
+  }
+
   body.ux-route-page .ux-page-shell,
   body.path-product-page .ux-page-shell {
     width: calc(100vw - 232px);
@@ -1748,6 +1762,19 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   body.path-product-page .path-app-shell {
     padding-left: clamp(22px, 2.4vw, 36px);
     padding-right: clamp(22px, 2.4vw, 36px);
+  }
+
+  body.ux-route-page .ux-page-shell {
+    min-height: 100svh;
+    height: 100svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-top: 32px;
+  }
+
+  body.ux-route-page .ux-visual-hero {
+    min-height: min(42svh, 420px);
+    flex: 0 0 auto;
   }
 }
 

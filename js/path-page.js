@@ -5,10 +5,10 @@
     stabilization: {
       title: 'Стабилизация и опора',
       desc: 'Сегодня: снизить напряжение, не уходя в длинную теорию.',
-      step: 'Снизить стресс',
-      stepDesc: 'Откройте короткий материал по стрессу. Затем зафиксируйте один вывод через AI.',
-      href: '/marathons/#section-stress',
-      image: '/assets/webp/stress-mar.webp',
+      step: 'Укрепить самооценку',
+      stepDesc: 'Откройте короткий материал про самооценку и внутреннюю опору. Затем зафиксируйте один вывод через AI.',
+      href: '/marathons/#section-samoocenka',
+      image: '/assets/webp/myself_mar.webp',
       hero: '/assets/webp/ai_back.webp',
     },
     body: {

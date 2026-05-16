@@ -2,6 +2,7 @@ const aiInput = document.getElementById('ai-input');
 const aiSend = document.getElementById('ai-send');
 const aiConversation = document.getElementById('ai-conversation');
 const aiInputBar = document.querySelector('.ai-input-bar');
+const aiBack = document.querySelector('[data-ai-back]');
 
 function syncAiIntroState() {
   const hasMessages = !!aiConversation.querySelector('.ai-message');
@@ -151,3 +152,14 @@ if (window.visualViewport) {
 }
 window.addEventListener('resize', updateAiLayoutMetrics);
 updateAiLayoutMetrics();
+
+if (aiBack) {
+  aiBack.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+    window.location.href = '/';
+  });
+}
