@@ -7,39 +7,37 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Shorts — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=109" />
-  <link rel="stylesheet" href="/css/nav.css?v=71" />
+  <link rel="stylesheet" href="/css/style.css?v=110" />
+  <link rel="stylesheet" href="/css/nav.css?v=72" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box}
 
-    .shorts-page {
-      min-height: 100vh;
+    html.shorts-input-cooldown #shorts-grid button.short-card {
+      pointer-events: none;
+    }
+
+    body.shorts-page {
       background: #050506;
-      padding: 100px 20px 120px;
       font-family: 'Inter', sans-serif;
     }
 
-    .shorts-header {
-      text-align: center;
-      margin-bottom: 48px;
+    body.shorts-page .shorts-after-hero {
+      padding-bottom: clamp(104px, 22vw, 128px);
     }
 
-    .shorts-header h1 {
-      color: #fff;
-      font-size: clamp(32px, 5vw, 48px);
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      margin: 0 0 12px;
+    /* Как сообщество: лишний верхний отступ у области сетки после hero */
+    @media (max-width: 620px) {
+      body.shorts-page .shorts-after-hero.ux-page-shell {
+        padding-top: clamp(12px, 3.2vw, 20px);
+      }
     }
 
-    .shorts-header p {
-      color: rgba(255,255,255,.4);
-      font-size: 16px;
-      font-weight: 400;
-      margin: 0;
-      letter-spacing: 0.2px;
+    @media (min-width: 621px) {
+      body.shorts-page .shorts-after-hero {
+        padding-top: clamp(14px, 3.5vw, 26px);
+      }
     }
 
     .masonry {
@@ -51,15 +49,11 @@
       width: 100%;
     }
 
-    /* CSS columns давали странные переносы (2+1) на десктопе — сетка три в ряд */
     @media (min-width: 900px) {
       .masonry {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: clamp(14px, 2vw, 22px);
         max-width: 1140px;
-      }
-      .shorts-page {
-        padding-inline: clamp(28px, 4vw, 48px);
       }
     }
 
@@ -68,7 +62,6 @@
         max-width: min(1180px, calc(100vw - 232px - 72px));
       }
     }
-
 
     button.short-card {
       appearance: none;
@@ -92,12 +85,6 @@
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.07);
       transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
-    }
-
-    @media (min-width: 768px) {
-      .shorts-page {
-        padding: 120px 32px 120px;
-      }
     }
 
     button.short-card:hover,
@@ -274,8 +261,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-top: env(safe-area-inset-top, 0);
-      padding-bottom: 8px;
+      padding-top: calc(env(safe-area-inset-top, 0px) + 28px);
+      padding-bottom: 12px;
       padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
       position: relative;
       z-index: 4;
@@ -283,7 +270,7 @@
 
     .shorts-player-dismiss {
       appearance: none;
-      margin: 0;
+      margin: 14px 0 0;
       padding: 0;
       width: 48px;
       height: 48px;
@@ -400,14 +387,17 @@
     }
   </style>
 </head>
-<body class="dark-theme">
-  <main>
-    <div class="shorts-page">
-      <div class="shorts-header">
-        <h1>Shorts</h1>
-        <p>Короткие видео с ключевыми идеями</p>
+<body class="dark-theme ux-route-page shorts-page">
+  <main class="main-content">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/shorts_hero.webp') center/cover no-repeat;">
+      <div class="hero-content text-left">
+        <p class="hub-kicker fade-up">Видео</p>
+        <h1 class="hero-title fade-up">Shorts</h1>
+        <p class="hero-subtitle fade-up">Короткие видео с ключевыми идеями</p>
       </div>
+    </section>
 
+    <div class="ux-page-shell shorts-after-hero">
       <div class="masonry" id="shorts-grid" aria-busy="true"></div>
     </div>
 
@@ -442,7 +432,8 @@
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=57"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=78"></script>
-  <script src="/js/shorts-page.js?v=6"></script>
+  <script src="/js/nav.js?v=79"></script>
+  <script src="/js/main.js?v=2"></script>
+  <script src="/js/shorts-page.js?v=9"></script>
 </body>
 </html>

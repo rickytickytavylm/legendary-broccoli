@@ -11,7 +11,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=71';
+    link.href = '/css/nav.css?v=72';
     document.head.appendChild(link);
   }
 
@@ -85,6 +85,74 @@
   ];
 
   var ALL_ITEMS = NAV_ITEMS.concat(BOTTOM_ITEMS);
+
+  /** Единый футер как на страницах курсов — подставляется, если в разметке нет <footer class="footer"> */
+  var APP_GLOBAL_FOOTER_HTML =
+    '<footer class="footer app-injected-footer">' +
+      '<div class="footer-content">' +
+        '<div class="footer-col footer-about">' +
+          '<img src="/assets/webp/logo2.webp" alt="Система" loading="lazy" decoding="async" class="footer-logo">' +
+          '<p class="footer-desc">Авторский проект Руслана Молодцова<br>о мышлении, психологии и практиках<br>для жизни.</p>' +
+          '<p class="footer-copy"> 2026 Система Молодцова.<br>Все права защищены.</p>' +
+        '</div>' +
+        '<div class="footer-col">' +
+          '<h4 class="footer-heading">О проекте</h4>' +
+          '<ul class="footer-list">' +
+            '<li><a href="/about/">О сообществе</a></li>' +
+            '<li><a href="/author/">Об авторе</a></li>' +
+            '<li><a href="#">Партнёрам</a></li>' +
+            '<li><a href="#">Контакты</a></li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="footer-col">' +
+          '<h4 class="footer-heading">Обучение</h4>' +
+          '<ul class="footer-list">' +
+            '<li><a href="/programs/">Все программы</a></li>' +
+            '<li><a href="/feed/">Лента</a></li>' +
+            '<li><a href="#">Библиотека</a></li>' +
+            '<li><a href="/terapiya/">Практики</a></li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="footer-col">' +
+          '<h4 class="footer-heading">Поддержка</h4>' +
+          '<ul class="footer-list">' +
+            '<li><a href="#">Вопросы и ответы</a></li>' +
+            '<li><a href="/terms/">Условия использования</a></li>' +
+            '<li><a href="/privacy/">Политика конфиденциальности</a></li>' +
+            '<li><a href="#">Возврат средств</a></li>' +
+          '</ul>' +
+        '</div>' +
+        '<div class="footer-col footer-cta">' +
+          '<h4 class="footer-heading">Будьте в курсе</h4>' +
+          '<p class="footer-desc">Получайте важные материалы<br>и анонсы прямо в Telegram.</p>' +
+          '<a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-footer-telegram">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>' +
+            'Подписаться в Telegram' +
+          '</a>' +
+          '<div class="footer-socials">' +
+            '<a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" aria-label="Telegram">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>' +
+            '</a>' +
+            '<a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>' +
+            '</a>' +
+            '<a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>' +
+            '</a>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="footer-bottom">' +
+        '<div class="footer-trust">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
+          'Ваши данные под надёжной защитой.' +
+        '</div>' +
+        '<div class="footer-craft">Сделано с вниманием к деталям' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"></path></svg>' +
+        '</div>' +
+      '</div>' +
+    '</footer>';
+
   var HOME_SCROLL_KEY = 'sistema:home-scroll-y';
   var RESTORE_HOME_SCROLL_KEY = 'sistema:restore-home-scroll';
   var VIDEO_ACCESS_BYPASS = window.VIDEO_ACCESS_BYPASS !== false;
@@ -152,7 +220,9 @@
     '<nav class="sidebar-nav">' + navItemsHTML + '</nav>' +
     '<div class="sidebar-flex-grow"></div>' +
     '<div class="sidebar-footer">' +
-      bottomItemsHTML +
+      '<div class="sidebar-account-wrap">' +
+        bottomItemsHTML +
+      '</div>' +
       '<div class="sidebar-promo">' +
         '<p class="sidebar-promo-title">Продолжайте путь</p>' +
         '<p class="sidebar-promo-desc">Дисциплина — это выбор,<br>который вы делаете каждый день.</p>' +
@@ -195,6 +265,17 @@
   document.body.insertBefore(sidebar, document.body.firstChild);
   document.body.insertBefore(mobileHeader, sidebar.nextSibling);
   document.body.appendChild(tabbar);
+
+  /** Футер с отступом под сайдбар (desktop) — только если страница его не содержит; не показываем поверх экранов онбординга */
+  (function injectGlobalFooterIfNeeded() {
+    if (document.querySelector('footer.footer')) return;
+    if (document.body.classList.contains('home-first-run-active')) return;
+    var tpl = document.createElement('template');
+    tpl.innerHTML = APP_GLOBAL_FOOTER_HTML;
+    var footerEl = tpl.content.firstElementChild;
+    if (!footerEl || !tabbar.parentNode) return;
+    tabbar.parentNode.insertBefore(footerEl, tabbar);
+  })();
 
   try {
     if ((location.pathname === '/' || location.pathname.endsWith('/index.html')) && sessionStorage.getItem(RESTORE_HOME_SCROLL_KEY) === '1') {

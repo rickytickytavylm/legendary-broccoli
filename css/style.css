@@ -1851,12 +1851,26 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     box-sizing: border-box;
   }
 
+  /* Оболочки внутри main: отступ уже задан у .main-content (nav.css) — второе смещение даёт «дыру» и съезжают Shorts/Сообщество */
+  body.ux-route-page main.main-content > .ux-page-shell,
+  body.path-product-page main.main-content > .ux-page-shell {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    min-height: 0;
+    height: auto;
+    overflow-y: visible;
+    overscroll-behavior: auto;
+  }
+
   body.path-product-page .path-app-shell {
     padding-left: clamp(22px, 2.4vw, 36px);
     padding-right: clamp(22px, 2.4vw, 36px);
   }
 
-  body.ux-route-page .ux-page-shell {
+  /* Только корневой <main class="ux-page-shell"> (напр. Практики). Внутри main.main-content — обычный поток */
+  body.ux-route-page main.ux-page-shell {
     min-height: 100svh;
     height: 100svh;
     overflow-y: auto;
@@ -1869,7 +1883,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     flex: 0 0 auto;
   }
 
-  body.community-page .ux-page-shell {
+  body.community-page main.main-content > .ux-page-shell {
     padding-top: 0;
   }
 
@@ -2150,7 +2164,7 @@ body.community-page .community-after-hero {
   }
 
   /* Герой начинается от верха экрана; отступ под фикс-шапку — padding внутри блока */
-  body.community-page .ux-page-shell {
+  body.community-page main.main-content > .ux-page-shell {
     padding-top: 0;
   }
 

@@ -156,14 +156,32 @@
 .sidebar-footer {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 10px;
   position: relative;
   z-index: 1;
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-account-wrap .sidebar-item {
+  border: 1px solid rgba(255, 255, 255, 0.088);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 12px;
+}
+
+.sidebar-account-wrap .sidebar-item:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.sidebar-account-wrap .sidebar-item.active {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Motivational promo card */
 .sidebar-promo {
-  margin-top: 12px;
+  margin-top: 4px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035));
   border: 1px solid rgba(255, 255, 255, 0.095);
   border-radius: 16px;
@@ -201,6 +219,11 @@
 /* ── Hide sidebar on mobile ──────────────────────────── */
 @media (max-width: 768px) {
   .app-sidebar { display: none !important; }
+
+  /* Футер из nav.js — запас над фиксированным таб-баром */
+  footer.footer.app-injected-footer {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 

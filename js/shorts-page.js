@@ -1,6 +1,7 @@
 /**
- * Shorts: превью из /data/shorts.json; видео — GET /api/video/shorts-mp4?slug=… (поток из бакета через API, без presign в плеере).
- * Без alert — только тост и состояния загрузки.
+ * Shorts: превью из /data/shorts.json; видео — GET /api/video/shorts-mp4?slug=…
+ * Совместимость с iOS: без «ложного» тапа по первой карточке после входа через таб,
+ * принудительный cache-bust у плеера, canplay как запасное к loadeddata.
  */
 (function initShortsPage() {
   var root = document.getElementById('shorts-grid');
@@ -11,11 +12,20 @@
   var spinnerEl = document.getElementById('shorts-player-spinner');
   var posterEl = document.getElementById('shorts-player-poster');
   var toastEl = document.getElementById('shorts-toast');
+  var stageEl = document.getElementById('shorts-player-stage');
   var toastTimer;
-
-  var vidListeners = { loaded: null, error: null };
+  /** @type {{ settle: Function | null, onErr: Function | null }} */
+  var vidListeners = { settle: null, onErr: null };
+  /** @type {ReturnType<typeof setTimeout> | null} */
+  var loadKickTimer = null;
 
   if (!root) return;
+
+  /* Блокируем клики по сетке ~0.45s после монтирования — снимает «ghost tap» с таб-бара на iOS */
+  document.documentElement.classList.add('shorts-input-cooldown');
+  window.setTimeout(function () {
+    document.documentElement.classList.remove('shorts-input-cooldown');
+  }, 460);
 
   function showToast(msg, ms) {
     if (!toastEl) return;
@@ -23,20 +33,29 @@
     toastEl.classList.add('shorts-toast--visible');
     toastEl.setAttribute('role', 'alert');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () {
+    toastTimer = window.setTimeout(function () {
       toastEl.classList.remove('shorts-toast--visible');
     }, ms || 4800);
   }
 
+  function clearLoadKickTimer() {
+    if (loadKickTimer) {
+      window.clearTimeout(loadKickTimer);
+      loadKickTimer = null;
+    }
+  }
+
   function detachVideoListeners() {
     if (!videoEl) return;
-    if (vidListeners.loaded) {
-      videoEl.removeEventListener('loadeddata', vidListeners.loaded);
-      vidListeners.loaded = null;
+    clearLoadKickTimer();
+    if (vidListeners.settle) {
+      videoEl.removeEventListener('loadeddata', vidListeners.settle);
+      videoEl.removeEventListener('canplay', vidListeners.settle);
+      vidListeners.settle = null;
     }
-    if (vidListeners.error) {
-      videoEl.removeEventListener('error', vidListeners.error);
-      vidListeners.error = null;
+    if (vidListeners.onErr) {
+      videoEl.removeEventListener('error', vidListeners.onErr);
+      vidListeners.onErr = null;
     }
   }
 
@@ -54,14 +73,13 @@
     return base + '/video/shorts-mp4?slug=' + encodeURIComponent(slug);
   }
 
-  /** Полный URL для <video>: API-стрим или опциональный статический playUrl из JSON */
   function playbackUrlFor(item, slug) {
     var raw = item && item.playUrl ? String(item.playUrl).trim() : '';
     if (raw) {
       if (/^https?:\/\//i.test(raw)) return raw;
       var path = raw.charAt(0) === '/' ? raw : '/' + raw;
       try {
-        return new URL(path, window.location.origin).href;
+        return new URL(path, location.href).href;
       } catch (e) {
         return raw;
       }
@@ -69,18 +87,41 @@
     return shortsStreamUrl(slug);
   }
 
+  /**
+   * Свежий <video>: на iOS Safari повторное назначение src после reset/load часто зависает
+   * («второе видео не грузится»). Проще пересмонтировать узел после закрытия плеера.
+   */
+  function remountFreshVideo() {
+    if (!stageEl) return;
+    detachVideoListeners();
+    try {
+      if (videoEl) videoEl.pause();
+    } catch (ignore) {}
+    var neu = document.createElement('video');
+    neu.id = 'shorts-player-video';
+    neu.controls = true;
+    neu.setAttribute('playsinline', '');
+    neu.setAttribute('webkit-playsinline', '');
+    neu.preload = 'auto';
+
+    var oldEl = stageEl.querySelector('#shorts-player-video');
+    if (oldEl && oldEl.parentNode === stageEl) {
+      stageEl.replaceChild(neu, oldEl);
+    } else {
+      stageEl.appendChild(neu);
+    }
+    videoEl = neu;
+  }
+
   function hidePlayer() {
-    if (!overlay || !videoEl) return;
+    if (!overlay || !stageEl) return;
     var ae = document.activeElement;
     if (ae && overlay.contains(ae)) {
       try {
         ae.blur();
       } catch (ignore) {}
     }
-    detachVideoListeners();
-    videoEl.pause();
-    videoEl.removeAttribute('src');
-    videoEl.load();
+    remountFreshVideo();
     overlay.classList.add('u-hidden');
     overlay.setAttribute('aria-hidden', 'true');
     if (titleEl) titleEl.textContent = '';
@@ -93,10 +134,12 @@
   }
 
   /**
-   * Открыть плеер: сразу понятный адрес (наш API или статика), спиннер до кадра данных.
+   * @param {string} url
+   * @param {string} title
+   * @param {string} posterHref
    */
   function openPlayerWithUrl(url, title, posterHref) {
-    if (!overlay || !videoEl || !url) return;
+    if (!overlay || !stageEl || !url) return;
 
     if (titleEl) titleEl.textContent = title || '';
     overlay.classList.remove('u-hidden');
@@ -104,29 +147,62 @@
     document.body.classList.add('shorts-player-open');
 
     setStageBusy(true, posterHref || '');
+    remountFreshVideo();
+    if (!videoEl) return;
 
-    detachVideoListeners();
+    var sep = url.indexOf('?') >= 0 ? '&' : '?';
+    var playUrl = url + sep + '__ts=' + Date.now();
 
-    vidListeners.loaded = function () {
+    /** @type {boolean} */
+    var settled = false;
+
+    function tryPlay() {
+      var p = videoEl.play ? videoEl.play() : null;
+      if (p && typeof p.then === 'function') {
+        p.catch(function () {});
+      }
+    }
+
+    function settle() {
+      if (settled) return;
+      settled = true;
+      clearLoadKickTimer();
+      detachVideoListeners();
       setStageBusy(false, '');
       if (posterEl) posterEl.classList.remove('is-visible');
-      videoEl.play().catch(function () {});
+      tryPlay();
+    }
+
+    vidListeners.settle = function () {
+      settle();
     };
 
-    vidListeners.error = function () {
+    vidListeners.onErr = function () {
+      clearLoadKickTimer();
       detachVideoListeners();
       setStageBusy(false, '');
       hidePlayer();
       showToast('Не удалось открыть видео. Обновите страницу или попробуйте через минуту.', 5500);
     };
 
-    videoEl.addEventListener('loadeddata', vidListeners.loaded);
-    videoEl.addEventListener('error', vidListeners.error);
+    videoEl.setAttribute('playsinline', '');
+    videoEl.setAttribute('webkit-playsinline', '');
+    videoEl.preload = 'auto';
 
-    videoEl.src = url;
+    videoEl.addEventListener('loadeddata', vidListeners.settle);
+    videoEl.addEventListener('canplay', vidListeners.settle);
+    videoEl.addEventListener('error', vidListeners.onErr);
+
+    loadKickTimer = window.setTimeout(function () {
+      if (settled) return;
+      if (videoEl.readyState >= 2) settle();
+    }, 1400);
+
+    videoEl.src = playUrl;
   }
 
   function playShort(cardBtn, slug, caption, item) {
+    if (document.documentElement.classList.contains('shorts-input-cooldown')) return;
     if (cardBtn.classList.contains('short-card--busy')) return;
 
     if (!window.API || !window.API.base) {
@@ -211,12 +287,16 @@
     })
     .catch(function () {
       root.setAttribute('aria-busy', 'false');
-      root.innerHTML =
-        '<p class="shorts-page-error">Не удалось загрузить список роликов.</p>';
+      root.innerHTML = '<p class="shorts-page-error">Не удалось загрузить список роликов.</p>';
       showToast('Список shorts не загрузился.', 5000);
     });
 
-  if (closeBtn) closeBtn.addEventListener('click', hidePlayer);
+  if (closeBtn)
+    closeBtn.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      hidePlayer();
+    });
   if (overlay) {
     overlay.addEventListener('click', function (ev) {
       if (ev.target === overlay) hidePlayer();
