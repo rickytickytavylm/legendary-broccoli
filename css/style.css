@@ -1176,13 +1176,20 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(0,0,0,.06) 0%, rgba(0,0,0,.24) 50%, rgba(0,0,0,.68) 100%);
+  background:
+    radial-gradient(circle at 28% 0%, rgba(255,255,255,.10), transparent 34%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.46) 58%, rgba(0,0,0,.78));
   z-index: 0;
 }
 
 .ux-community-card > * {
   position: relative;
   z-index: 1;
+}
+
+.community-card-telegram::after {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.62) 72%, rgba(0,0,0,.86));
 }
 
 .today-main-card,
@@ -1860,12 +1867,13 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: clamp(26px, 4vw, 48px);
+  padding: calc(clamp(26px, 4vw, 48px) + 80px) clamp(26px, 4vw, 48px) clamp(26px, 4vw, 48px);
+  margin-top: -80px;
   margin-bottom: 20px;
   border-radius: 0 0 32px 32px;
   background-color: #050506;
   background-size: cover;
-  background-position: center;
+  background-position: center top;
 }
 
 .community-page-hero::after {
@@ -1944,8 +1952,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .ux-path-card,
 .ux-path-stage,
-.ux-practice-card,
-.ux-community-card {
+.ux-practice-card {
   min-height: 190px;
   padding: 24px;
   border-radius: 30px;
@@ -1958,6 +1965,48 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   -webkit-backdrop-filter: blur(28px) saturate(145%);
   backdrop-filter: blur(28px) saturate(145%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 20px 70px rgba(0,0,0,.25);
+}
+
+.ux-community-card {
+  min-height: 190px;
+  padding: 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.14);
+  background-color: rgba(6, 8, 13, .66);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 20px 70px rgba(0,0,0,.25);
+}
+
+.community-card-webinars {
+  background-position: center 38%;
+  background-size: 112% auto;
+}
+
+.community-card-shorts {
+  background-position: center 36%;
+  background-size: 118% auto;
+}
+
+.community-card-marathons {
+  background-position: center 42%;
+  background-size: 112% auto;
+}
+
+.community-card-telegram {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.62) 72%, rgba(0,0,0,.86)),
+    url('/assets/webp/tg_open.webp') center/cover no-repeat,
+    rgba(7,8,10,.66);
+}
+
+.community-card-telegram::after {
+  display: none;
 }
 
 .ux-community-card-disabled {

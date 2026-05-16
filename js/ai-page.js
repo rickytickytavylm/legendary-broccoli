@@ -4,6 +4,17 @@ const aiConversation = document.getElementById('ai-conversation');
 const aiInputBar = document.querySelector('.ai-input-bar');
 const aiBack = document.querySelector('[data-ai-back]');
 
+function goHomeFromAi(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.stopImmediatePropagation === 'function') {
+      event.stopImmediatePropagation();
+    }
+  }
+  window.location.assign('/');
+}
+
 function syncAiIntroState() {
   const hasMessages = !!aiConversation.querySelector('.ai-message');
   document.body.classList.toggle('ai-has-messages', hasMessages);
@@ -153,10 +164,14 @@ if (window.visualViewport) {
 window.addEventListener('resize', updateAiLayoutMetrics);
 updateAiLayoutMetrics();
 
+document.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('[data-ai-back]')) goHomeFromAi(event);
+}, true);
+
+document.addEventListener('click', (event) => {
+  if (event.target.closest('[data-ai-back]')) goHomeFromAi(event);
+}, true);
+
 if (aiBack) {
-  aiBack.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    window.location.href = '/';
-  }, true);
+  aiBack.addEventListener('touchend', goHomeFromAi, { capture: true, passive: false });
 }

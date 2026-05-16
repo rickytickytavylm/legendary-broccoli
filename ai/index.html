@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>AI-помощник — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=101" />
+  <link rel="stylesheet" href="/css/style.css?v=103" />
   <link rel="stylesheet" href="/css/nav.css?v=69" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -386,7 +386,8 @@
         pointer-events: auto !important;
         transform: scale(.92);
         transform-origin: left top !important;
-        z-index: 2000;
+        z-index: 10000;
+        touch-action: manipulation;
       }
       .ai-suggestions { gap: 6px; }
       .ai-chip { font-size: 11px; padding: 7px 11px; }
@@ -469,7 +470,9 @@
         position: fixed;
         top: 52px;
         left: calc(232px + 28px);
-        z-index: 2000;
+        z-index: 10000;
+        pointer-events: auto;
+        touch-action: manipulation;
       }
 
       .ai-shell {
@@ -504,14 +507,13 @@
   </style>
 </head>
 <body class="dark-theme ai-chat-page">
+  <a href="/" class="back-link-glass ai-back-mobile" aria-label="Назад" data-ai-back>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Назад
+  </a>
   <main class="main-content ai-main">
     <div class="ai-page">
       <div class="ai-shell">
-        <button type="button" class="back-link-glass ai-back-mobile" aria-label="Назад" data-ai-back>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Назад
-        </button>
-
         <div class="ai-hero">
           <div class="ai-kicker">AI-помощник</div>
           <h1 class="ai-title">AI-помощник<br>по материалам системы</h1>
@@ -543,6 +545,6 @@
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
-  <script src="/js/ai-page.js?v=3"></script>
+  <script src="/js/ai-page.js?v=4"></script>
 </body>
 </html>
