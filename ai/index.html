@@ -25,6 +25,50 @@
 
     body.ai-chat-page .app-mobile-header {
       box-shadow: inset 0 1px 0 rgba(255,255,255,.13) !important;
+      display: grid !important;
+      grid-template-columns: 44px 1fr 44px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    body.ai-chat-page .mobile-header-brand {
+      grid-column: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body.ai-chat-page .mobile-header-actions {
+      grid-column: 3;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .ai-header-back {
+      grid-column: 1;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,.82);
+      border: 1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 40% 20%, rgba(255,255,255,.18), transparent 52%),
+        rgba(255,255,255,.06);
+      text-decoration: none;
+      flex-shrink: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .ai-header-back svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
     }
 
     .ai-page {
@@ -378,16 +422,7 @@
       .ai-message { gap: 8px; }
       .ai-time { display: none; }
       .ai-back-mobile {
-        position: fixed !important;
-        top: calc(68px + env(safe-area-inset-top, 0px)) !important;
-        left: 14px !important;
-        margin: 0 !important;
-        opacity: 1;
-        pointer-events: auto !important;
-        touch-action: manipulation;
-        z-index: 10001 !important;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
+        display: none !important;
       }
       .ai-suggestions { gap: 6px; }
       .ai-chip { font-size: 11px; padding: 7px 11px; }
@@ -411,9 +446,9 @@
 
       body.ai-has-messages .ai-chat-panel {
         position: fixed;
-        top: calc(120px + env(safe-area-inset-top, 0px));
-        left: 0;
-        right: 0;
+        top: calc(112px + env(safe-area-inset-top, 0px));
+        left: 14px;
+        right: 14px;
         bottom: calc(var(--ai-composer-height, 74px) + var(--ai-keyboard-offset, 0px) + 22px + env(safe-area-inset-bottom, 0px));
         z-index: 999;
         min-height: 0;
@@ -545,6 +580,6 @@
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=73"></script>
-  <script src="/js/ai-page.js?v=5"></script>
+  <script src="/js/ai-page.js?v=6"></script>
 </body>
 </html>

@@ -595,7 +595,15 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   overflow: hidden;
 }
 
+@supports (height: 100dvh) {
+  .onboarding-flow {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+
 .onboarding-card {
+  position: relative;
   width: 100%;
   height: 100svh;
   min-height: 0;
@@ -612,6 +620,13 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   overflow: hidden;
 }
 
+@supports (height: 100dvh) {
+  .onboarding-card {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+
 .onboarding-card::after {
   content: "";
   position: absolute;
@@ -624,6 +639,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .onboarding-topbar {
+  flex-shrink: 0;
   min-height: 38px;
   display: flex;
   align-items: center;
@@ -652,6 +668,23 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-height: 0;
+}
+
+.onboarding-sheet > .onboarding-progress-dots,
+.onboarding-sheet > .hub-kicker,
+.onboarding-sheet > h2,
+.onboarding-sheet > p {
+  flex-shrink: 0;
+}
+
+.onboarding-sheet > .onboarding-name-input {
+  flex-shrink: 0;
+}
+
+.onboarding-actions {
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 .onboarding-progress-dots {
@@ -745,8 +778,14 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   grid-template-columns: 1fr;
   gap: 7px;
   margin-top: 10px;
-  max-height: min(42svh, 340px);
-  overflow: hidden;
+  flex: 1 1 0%;
+  min-height: 0;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
 }
 
 .onboarding-options button,
@@ -841,6 +880,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .onboarding-result-card {
+  flex-shrink: 0;
   margin-top: 20px;
   min-height: clamp(230px, 34svh, 320px);
   padding: 24px;
@@ -1700,11 +1740,21 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   .onboarding-flow {
     padding: 0;
     height: 100svh;
+    min-height: 100svh;
     overflow: hidden;
+  }
+
+  @supports (height: 100dvh) {
+    .onboarding-flow,
+    .onboarding-card {
+      height: 100dvh;
+      min-height: 100dvh;
+    }
   }
 
   .onboarding-card {
     height: 100svh;
+    min-height: 100svh;
     padding: max(10px, env(safe-area-inset-top)) 14px 0;
     overflow: hidden;
     background:
@@ -1760,8 +1810,8 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .onboarding-actions {
-    margin-top: clamp(12px, 3.2svh, 24px);
-    padding-top: 0;
+    margin-top: auto;
+    padding-top: clamp(10px, 2.4svh, 18px);
   }
 
   .onboarding-actions .ios-auth-button {
