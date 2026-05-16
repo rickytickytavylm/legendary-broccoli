@@ -183,8 +183,6 @@
     ));
   }
 
-  var isLoggedIn = hasProfileIdentity();
-
   mobileHeader.innerHTML =
     '<a href="/" class="mobile-header-brand">' +
       '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="mobile-header-logo">' +
@@ -225,11 +223,15 @@
     bindMobileLoginButton();
   }
 
+  function hasJwtSession() {
+    return !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
+  }
+
   bindMobileLoginButton();
   window.addEventListener('auth:change', function(event) {
     renderMobileAuthAction(true);
     accessState = 'unknown';
-    if (window.API && window.API.getSubscription) {
+    if (hasJwtSession() && window.API && window.API.getSubscription) {
       window.API.getSubscription()
         .then(function(data) {
           var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
@@ -243,7 +245,7 @@
     }
   });
 
-  var accessState = isLoggedIn ? 'unknown' : 'free';
+  var accessState = hasJwtSession() ? 'unknown' : 'free';
 
   if (window.API && window.API.restoreSession) {
     window.API.restoreSession()
@@ -273,7 +275,7 @@
     });
   }
 
-  if (isLoggedIn && window.API) {
+  if (hasJwtSession() && window.API) {
     window.API.getSubscription()
       .then(function(data) {
         var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;

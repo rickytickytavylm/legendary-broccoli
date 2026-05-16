@@ -104,7 +104,12 @@ class ApiClient {
   }
 
   async request(method, path, body, opts = {}) {
-    const url = this.base + path;
+    const trimBase = String(this.base || '').replace(/\/+$/u, '');
+    let rel = path.startsWith('/') ? path : '/' + path;
+    if (/\/api$/iu.test(trimBase) && /^\/api\//u.test(rel)) {
+      rel = rel.replace(/^\/api/u, '') || '/';
+    }
+    const url = trimBase + rel;
     const canUseContentCache = method === 'GET' && path.startsWith('/content/');
     const cachedContent = canUseContentCache ? this.readContentCache(path) : null;
     const init = {
