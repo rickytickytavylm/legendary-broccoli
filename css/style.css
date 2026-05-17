@@ -1167,21 +1167,54 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   }
 
   .today-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
-    gap: 16px;
+    gap: clamp(22px, 2.6vw, 36px);
+    width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
   }
 
   .today-main-card,
   .today-support-card {
-    min-height: 330px;
+    min-height: clamp(360px, 44vh, 540px);
     align-items: end;
     grid-template-columns: 1fr;
+    padding: clamp(26px, 2.8vw, 36px);
+  }
+
+  .today-main-card h2,
+  .today-support-card h3 {
+    font-size: clamp(22px, 2.1vw, 30px);
+    letter-spacing: -0.035em;
+  }
+
+  .today-main-card > div > p,
+  .today-support-card > div > p {
+    font-size: clamp(14px, 1.1vw, 16px);
+    line-height: 1.65;
+    max-width: 42ch;
+  }
+
+  .today-day-pill {
+    padding: 7px 12px;
   }
 
   .today-program-button {
     justify-self: end;
     align-self: end;
+    min-height: 52px;
+    padding: 0 20px 0 22px;
+    font-size: 14px;
+  }
+
+  .today-support-button {
+    min-height: 50px;
+    font-size: 14px;
+    padding: 0 20px;
+  }
+
+  .today-program-button svg {
+    width: 19px;
+    height: 19px;
   }
 }
 
@@ -7022,4 +7055,75 @@ body.audio-player-open {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Сообщество: только десктоп — вводный абзац и более «живые» карточки */
+.community-desktop-lead {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  body.community-page .community-after-hero {
+    position: relative;
+    padding-top: clamp(6px, 1vw, 14px);
+  }
+
+  body.community-page .community-after-hero::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -32px;
+    transform: translateX(-50%);
+    width: min(96%, 820px);
+    height: 200px;
+    pointer-events: none;
+    background: radial-gradient(ellipse 72% 95% at 50% 0%, rgba(120, 112, 255, .13), transparent 68%);
+    z-index: 0;
+  }
+
+  body.community-page .community-desktop-lead {
+    display: block;
+    position: relative;
+    z-index: 1;
+    margin: 0 0 clamp(24px, 3.2vw, 40px);
+    max-width: 58ch;
+    font-size: clamp(15px, 1.2vw, 17px);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, .56);
+    letter-spacing: -0.012em;
+  }
+
+  body.community-page .ux-community-grid {
+    position: relative;
+    z-index: 1;
+    gap: clamp(18px, 2.1vw, 30px);
+  }
+
+  body.community-page .ux-community-card {
+    min-height: clamp(232px, 27vh, 318px);
+    padding: clamp(26px, 3vw, 36px);
+  }
+
+  body.community-page a.ux-community-card {
+    transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+  }
+
+  body.community-page a.ux-community-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, .2);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .2),
+      0 28px 76px rgba(0, 0, 0, .38);
+  }
+
+  body.community-page .ux-community-card strong {
+    font-size: clamp(22px, 1.9vw, 30px);
+    letter-spacing: -0.04em;
+  }
+
+  body.community-page .ux-community-card p {
+    font-size: clamp(14px, 1.05vw, 16px);
+    line-height: 1.58;
+    max-width: 46ch;
+  }
 }
