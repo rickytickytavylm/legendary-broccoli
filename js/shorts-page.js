@@ -145,6 +145,7 @@
     neu.setAttribute('webkit-playsinline', '');
     neu.preload = 'auto';
     neu.setAttribute('crossorigin', 'anonymous');
+    neu.muted = true;
 
     var oldEl = stageEl.querySelector('#shorts-player-video');
     if (oldEl && oldEl.parentNode === stageEl) {
@@ -242,6 +243,7 @@
     videoEl.setAttribute('webkit-playsinline', '');
     videoEl.preload = 'auto';
     videoEl.setAttribute('crossorigin', 'anonymous');
+    videoEl.muted = true;
 
     videoEl.addEventListener('loadeddata', vidListeners.settle);
     videoEl.addEventListener('canplay', vidListeners.settle);
@@ -253,6 +255,10 @@
     }, 1400);
 
     videoEl.src = playUrl;
+    try {
+      videoEl.load();
+      tryPlay();
+    } catch (e) {}
   }
 
   function playShort(cardBtn, itemIndex, slug, caption, item) {
@@ -273,10 +279,8 @@
     playingIndex = typeof itemIndex === 'number' && itemIndex >= 0 ? itemIndex : 0;
     var poster = item && item.poster ? String(item.poster) : '';
     cardBtn.classList.add('short-card--busy');
-    window.requestAnimationFrame(function () {
-      openPlayerWithUrl(url, caption || '', poster, false);
-      cardBtn.classList.remove('short-card--busy');
-    });
+    openPlayerWithUrl(url, caption || '', poster, false);
+    cardBtn.classList.remove('short-card--busy');
   }
 
   function render(items) {
