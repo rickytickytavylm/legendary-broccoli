@@ -144,6 +144,7 @@
     neu.setAttribute('playsinline', '');
     neu.setAttribute('webkit-playsinline', '');
     neu.preload = 'auto';
+    neu.setAttribute('crossorigin', 'anonymous');
 
     var oldEl = stageEl.querySelector('#shorts-player-video');
     if (oldEl && oldEl.parentNode === stageEl) {
@@ -240,6 +241,7 @@
     videoEl.setAttribute('playsinline', '');
     videoEl.setAttribute('webkit-playsinline', '');
     videoEl.preload = 'auto';
+    videoEl.setAttribute('crossorigin', 'anonymous');
 
     videoEl.addEventListener('loadeddata', vidListeners.settle);
     videoEl.addEventListener('canplay', vidListeners.settle);
