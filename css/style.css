@@ -1115,6 +1115,12 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   height: 18px;
 }
 
+@media (max-width: 768px) {
+  .today-carousel-controls {
+    display: none !important;
+  }
+}
+
 .today-hero-dots {
   position: absolute;
   left: 50%;

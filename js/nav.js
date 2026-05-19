@@ -11,7 +11,7 @@
   if (!document.querySelector('link[href*="nav.css"]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=72';
+    link.href = '/css/nav.css?v=73';
     document.head.appendChild(link);
   }
 
@@ -428,6 +428,24 @@
     // Set initial state (e.g. if page reloaded mid-scroll)
     setVisible(window.scrollY > SCROLL_THRESHOLD);
   }
+
+  var lastMobileHeaderScrollY = window.scrollY || 0;
+  var mobileHeaderTicking = false;
+  function updateMobileHeaderOnScroll() {
+    var currentY = Math.max(0, window.scrollY || 0);
+    var delta = currentY - lastMobileHeaderScrollY;
+    var shouldHide = currentY > 96 && delta > 8;
+    var shouldShow = delta < -6 || currentY <= 24;
+    if (shouldHide) mobileHeader.classList.add('mobile-header-hidden');
+    if (shouldShow) mobileHeader.classList.remove('mobile-header-hidden');
+    lastMobileHeaderScrollY = currentY;
+    mobileHeaderTicking = false;
+  }
+  window.addEventListener('scroll', function() {
+    if (mobileHeaderTicking) return;
+    mobileHeaderTicking = true;
+    requestAnimationFrame(updateMobileHeaderOnScroll);
+  }, { passive: true });
 
   var footer = document.querySelector('.footer');
   if (footer && 'IntersectionObserver' in window) {

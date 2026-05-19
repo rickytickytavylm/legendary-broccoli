@@ -2,8 +2,12 @@
  * Shorts: превью из /data/shorts.json; видео — GET /api/video/shorts-mp4?slug=…
  * Совместимость с iOS: без «ложного» тапа по первой карточке после входа через таб,
  * принудительный cache-bust у плеера, canplay как запасное к loadeddata.
+ * По окончании ролика — автоматически открывается следующий («рейл», как короткие видео).
+ * Свайпы вверх/вниз по области плеера (и подписи) — предыдущий / следующий; при малом числе роликов просто циклично.
  */
 (function initShortsPage() {
+  var shortsItems = [];
+  var playingIndex = 0;
   var root = document.getElementById('shorts-grid');
   var overlay = document.getElementById('shorts-player-overlay');
   var videoEl = document.getElementById('shorts-player-video');
@@ -14,10 +18,17 @@
   var toastEl = document.getElementById('shorts-toast');
   var stageEl = document.getElementById('shorts-player-stage');
   var toastTimer;
-  /** @type {{ settle: Function | null, onErr: Function | null }} */
-  var vidListeners = { settle: null, onErr: null };
+  /** @type {{ settle: Function | null, onErr: Function | null, onEnded: Function | null }} */
+  var vidListeners = { settle: null, onErr: null, onEnded: null };
   /** @type {ReturnType<typeof setTimeout> | null} */
   var loadKickTimer = null;
+  /** Свайпы: верх конца относительно начала точки (~ «ввод снизу») → следующий */
+  var swipeX0 = 0;
+  var swipeY0 = 0;
+  var swipeT0 = 0;
+  var swipeTracked = false;
+  /** Колёсо трекпада: не триггерить пачкой кадров */
+  var wheelStepLockUntil = 0;
 
   if (!root) return;
 
@@ -45,7 +56,7 @@
     }
   }
 
-  function detachVideoListeners() {
+  function detachLoadListenersOnly() {
     if (!videoEl) return;
     clearLoadKickTimer();
     if (vidListeners.settle) {
@@ -56,6 +67,14 @@
     if (vidListeners.onErr) {
       videoEl.removeEventListener('error', vidListeners.onErr);
       vidListeners.onErr = null;
+    }
+  }
+
+  function detachVideoListeners() {
+    detachLoadListenersOnly();
+    if (videoEl && vidListeners.onEnded) {
+      videoEl.removeEventListener('ended', vidListeners.onEnded);
+      vidListeners.onEnded = null;
     }
   }
 
@@ -71,6 +90,28 @@
     var base = (window.API && window.API.base ? String(window.API.base) : '').replace(/\/?$/u, '');
     if (!base) return '';
     return base + '/video/shorts-mp4?slug=' + encodeURIComponent(slug);
+  }
+
+  /**
+   * @param {number} delta +1 следующий шорт по списку, -1 предыдущий (по кругу)
+   */
+  function jumpShortBy(delta) {
+    if (!overlay || overlay.classList.contains('u-hidden')) return;
+    if (!shortsItems.length) return;
+
+    var n = shortsItems.length;
+    playingIndex = ((playingIndex + delta) % n + n) % n;
+    var item = shortsItems[playingIndex];
+    if (!item) return;
+
+    var slug = item.slug;
+    var url = playbackUrlFor(item, slug);
+    if (!url) {
+      showToast('Не удалось открыть ролик.', 3200);
+      return;
+    }
+    var poster = item.poster ? String(item.poster) : '';
+    openPlayerWithUrl(url, item.caption || '', poster, true);
   }
 
   function playbackUrlFor(item, slug) {
@@ -137,14 +178,17 @@
    * @param {string} url
    * @param {string} title
    * @param {string} posterHref
+   * @param {boolean} [reuseOverlay] уже открыт — только смена трека (автоплей следующего)
    */
-  function openPlayerWithUrl(url, title, posterHref) {
+  function openPlayerWithUrl(url, title, posterHref, reuseOverlay) {
     if (!overlay || !stageEl || !url) return;
 
     if (titleEl) titleEl.textContent = title || '';
-    overlay.classList.remove('u-hidden');
-    overlay.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('shorts-player-open');
+    if (!reuseOverlay) {
+      overlay.classList.remove('u-hidden');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('shorts-player-open');
+    }
 
     setStageBusy(true, posterHref || '');
     remountFreshVideo();
@@ -167,7 +211,7 @@
       if (settled) return;
       settled = true;
       clearLoadKickTimer();
-      detachVideoListeners();
+      detachLoadListenersOnly();
       setStageBusy(false, '');
       if (posterEl) posterEl.classList.remove('is-visible');
       tryPlay();
@@ -185,6 +229,14 @@
       showToast('Не удалось открыть видео. Обновите страницу или попробуйте через минуту.', 5500);
     };
 
+    if (shortsItems.length >= 2) {
+      vidListeners.onEnded = function () {
+        if (!overlay || overlay.classList.contains('u-hidden')) return;
+        jumpShortBy(1);
+      };
+      videoEl.addEventListener('ended', vidListeners.onEnded);
+    }
+
     videoEl.setAttribute('playsinline', '');
     videoEl.setAttribute('webkit-playsinline', '');
     videoEl.preload = 'auto';
@@ -201,7 +253,7 @@
     videoEl.src = playUrl;
   }
 
-  function playShort(cardBtn, slug, caption, item) {
+  function playShort(cardBtn, itemIndex, slug, caption, item) {
     if (document.documentElement.classList.contains('shorts-input-cooldown')) return;
     if (cardBtn.classList.contains('short-card--busy')) return;
 
@@ -216,17 +268,19 @@
       return;
     }
 
+    playingIndex = typeof itemIndex === 'number' && itemIndex >= 0 ? itemIndex : 0;
     var poster = item && item.poster ? String(item.poster) : '';
     cardBtn.classList.add('short-card--busy');
     window.requestAnimationFrame(function () {
-      openPlayerWithUrl(url, caption || '', poster);
+      openPlayerWithUrl(url, caption || '', poster, false);
       cardBtn.classList.remove('short-card--busy');
     });
   }
 
   function render(items) {
+    shortsItems = Array.isArray(items) ? items : [];
     root.textContent = '';
-    (items || []).forEach(function (item) {
+    shortsItems.forEach(function (item, itemIndex) {
       var slug = item.slug;
       var cap = item.caption || '';
 
@@ -269,7 +323,7 @@
       btn.appendChild(capWrap);
 
       btn.addEventListener('click', function () {
-        playShort(btn, slug, cap, item);
+        playShort(btn, itemIndex, slug, cap, item);
       });
 
       root.appendChild(btn);
@@ -291,6 +345,83 @@
       showToast('Список shorts не загрузился.', 5000);
     });
 
+  function attachSwipeGestures(el) {
+    if (!el) return;
+
+    el.addEventListener(
+      'touchstart',
+      function (ev) {
+        if (!overlay || overlay.classList.contains('u-hidden')) return;
+        if (shortsItems.length < 2) return;
+        if (ev.touches.length !== 1) return;
+        /* Не захватывать жест, начатый у крестика закрытия */
+        var t = ev.target;
+        if (t.closest && (t.closest('[data-shorts-player-close]') || t.closest('.shorts-player-dismiss')))
+          return;
+        swipeTracked = true;
+        swipeX0 = ev.touches[0].clientX;
+        swipeY0 = ev.touches[0].clientY;
+        swipeT0 = Date.now();
+      },
+      { passive: true }
+    );
+
+    el.addEventListener(
+      'touchend',
+      function (ev) {
+        if (!swipeTracked || !overlay || overlay.classList.contains('u-hidden')) {
+          swipeTracked = false;
+          return;
+        }
+        swipeTracked = false;
+        if (shortsItems.length < 2) return;
+
+        var t = ev.changedTouches[0];
+        var dx = t.clientX - swipeX0;
+        var dy = t.clientY - swipeY0;
+        var elapsed = Date.now() - swipeT0;
+        /** Порог + явное доминирование вертикали: реже конфликт с тапом по контролам видео */
+        var minPx = 56;
+        var vertRatio = 1.38;
+        if (elapsed > 950) return;
+        if (Math.abs(dy) < minPx) return;
+        if (Math.abs(dy) < Math.abs(dx) * vertRatio) return;
+
+        if (dy < 0) jumpShortBy(1);
+        else jumpShortBy(-1);
+      },
+      { passive: true }
+    );
+
+    el.addEventListener(
+      'touchcancel',
+      function () {
+        swipeTracked = false;
+      },
+      { passive: true }
+    );
+
+    el.addEventListener(
+      'wheel',
+      function (ev) {
+        if (!overlay || overlay.classList.contains('u-hidden')) return;
+        if (shortsItems.length < 2) return;
+
+        var now = Date.now();
+        if (now < wheelStepLockUntil) return;
+        if (Math.abs(ev.deltaY) < 48) return;
+
+        wheelStepLockUntil = now + 720;
+        if (ev.deltaY > 0) jumpShortBy(1);
+        else jumpShortBy(-1);
+      },
+      { passive: true }
+    );
+  }
+
+  /* Жест по полноэкранному оверлею: сцена видео + подпись; не шапка с крестиком */
+  attachSwipeGestures(overlay);
+
   if (closeBtn)
     closeBtn.addEventListener('click', function (ev) {
       ev.preventDefault();
@@ -304,6 +435,21 @@
   }
 
   document.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Escape' && overlay && !overlay.classList.contains('u-hidden')) hidePlayer();
+    if (!overlay || overlay.classList.contains('u-hidden')) return;
+    if (ev.key === 'Escape') {
+      hidePlayer();
+      return;
+    }
+    if (shortsItems.length < 2) return;
+
+    var k = ev.key;
+    if (ev.repeat) return;
+    if (k === 'ArrowDown' || k === 'PageDown') {
+      ev.preventDefault();
+      jumpShortBy(1);
+    } else if (k === 'ArrowUp' || k === 'PageUp') {
+      ev.preventDefault();
+      jumpShortBy(-1);
+    }
   });
 })();

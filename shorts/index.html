@@ -8,7 +8,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Shorts — Система Молодцова</title>
   <link rel="stylesheet" href="/css/style.css?v=110" />
-  <link rel="stylesheet" href="/css/nav.css?v=72" />
+  <link rel="stylesheet" href="/css/nav.css?v=73" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -244,7 +244,9 @@
       position: fixed;
       inset: 0;
       z-index: 2500;
-      background: #000;
+      background:
+        radial-gradient(ellipse 115% 90% at 50% 40%, rgba(24, 28, 40, 0.35) 0%, transparent 55%),
+        #020203;
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -266,6 +268,17 @@
       padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
       position: relative;
       z-index: 4;
+      background: linear-gradient(
+        180deg,
+        rgba(5, 6, 10, 0.95) 0%,
+        rgba(5, 6, 10, 0.55) 55%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    .shorts-player-topbar .shorts-player-dismiss {
+      pointer-events: auto;
     }
 
     .shorts-player-dismiss {
@@ -275,18 +288,24 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
       color: #fff;
       cursor: pointer;
       display: grid;
       place-items: center;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
     }
 
     .shorts-player-dismiss:hover,
     .shorts-player-dismiss:focus-visible {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.32);
       outline: none;
     }
 
@@ -329,7 +348,7 @@
     .shorts-player-spinner {
       position: absolute;
       inset: 0;
-      z-index: 2;
+      z-index: 8;
       display: none;
       align-items: center;
       justify-content: center;
@@ -364,26 +383,65 @@
       height: 100%;
       object-fit: contain;
       background: #000;
+      border-radius: 2px;
+    }
+
+    /* Краевая матовка поверх видео: усиливает кадр, не блокирует тапы (pointer-events: none) */
+    .shorts-player-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, transparent 22%),
+        linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.55) 0%,
+          transparent 14%,
+          transparent 86%,
+          rgba(0, 0, 0, 0.55) 100%
+        ),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0%, transparent min(120px, 22%));
     }
 
     .shorts-player-foot {
       flex: 0 0 auto;
+      position: relative;
+      z-index: 6;
+      padding-top: clamp(48px, 14vw, 72px);
       padding-bottom: max(14px, env(safe-area-inset-bottom));
       padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+      margin-top: -56px;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(0, 0, 0, 0.72) min(140px, 38%),
+        rgba(2, 2, 3, 0.92) 100%
+      );
     }
 
     .shorts-player-title {
       margin: 0;
       font-size: 14px;
       font-weight: 600;
-      line-height: 1.38;
-      color: rgba(255, 255, 255, 0.92);
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+      line-height: 1.42;
+      letter-spacing: -0.01em;
+      color: rgba(255, 255, 255, 0.94);
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
       max-height: 4.3em;
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
+      padding: 13px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
   </style>
 </head>
@@ -420,6 +478,7 @@
           <span></span>
         </div>
         <video id="shorts-player-video" controls playsinline webkit-playsinline></video>
+        <div class="shorts-player-vignette" aria-hidden="true"></div>
       </div>
       <footer class="shorts-player-foot">
         <p id="shorts-player-title" class="shorts-player-title"></p>
@@ -432,8 +491,8 @@
   <script src="/js/config.js"></script>
   <script src="/js/api.js?v=57"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=79"></script>
+  <script src="/js/nav.js?v=80"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/shorts-page.js?v=9"></script>
+  <script src="/js/shorts-page.js?v=11"></script>
 </body>
 </html>
