@@ -95,7 +95,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .home-first-run-active,
 .home-splash-active,
-.home-onboarding-active:not(.home-today-active) {
+.home-onboarding-active:not(body.home-today-active) {
   height: 100svh;
   overflow: hidden !important;
   overscroll-behavior: none;
@@ -893,7 +893,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: #050506;
+  background: var(--bg-main);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.20),
     0 24px 72px rgba(0,0,0,.34);
@@ -993,12 +993,12 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   background:
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.06), transparent 32%),
     radial-gradient(circle at 50% 42%, rgba(138,115,255,.10), transparent 38%),
-    #050506;
+    var(--bg-main);
   overscroll-behavior-y: none;
 }
 
 .home-today-active {
-  background: #050506;
+  background: var(--bg-main);
   overscroll-behavior-y: none;
 }
 
@@ -1014,7 +1014,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   isolation: isolate;
   width: 100%;
   margin: -80px 0 0;
-  box-shadow: inset 0 -120px 90px #050506;
+  box-shadow: inset 0 -120px 90px var(--bg-main);
   transform: translateZ(0);
 }
 
@@ -1035,7 +1035,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   height: 48%;
   pointer-events: none;
   background:
-    linear-gradient(to bottom, rgba(5,5,6,0) 0%, rgba(5,5,6,.72) 56%, #050506 84%, #050506 100%);
+    linear-gradient(to bottom, rgba(7,10,15,0) 0%, rgba(7,10,15,.72) 56%, var(--bg-main) 84%, var(--bg-main) 100%);
   z-index: 0;
 }
 
@@ -1247,7 +1247,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .today-main-card,
 .today-support-card {
-  background: #050506;
+  background: var(--bg-main);
   background-position: center;
   background-size: cover;
   isolation: isolate;
@@ -1293,7 +1293,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   z-index: -1;
   background:
     var(--ux-bg),
-    #050506;
+    var(--bg-main);
   background-position: center;
   background-size: cover;
   opacity: 1;
@@ -1948,7 +1948,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   margin-top: -80px;
   margin-bottom: 20px;
   border-radius: 0 0 32px 32px;
-  background-color: #050506;
+  background-color: var(--bg-main);
   background-size: cover;
   background-position: center top;
 }
@@ -2060,7 +2060,7 @@ body.community-page .community-after-hero {
   color: #fff;
   border: 1px solid rgba(255,255,255,.14);
   border-bottom-color: transparent;
-  background: #050506;
+  background: var(--bg-main);
   background-clip: padding-box;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.16),
@@ -2076,7 +2076,7 @@ body.community-page .community-after-hero {
   z-index: 0;
   background:
     var(--ux-bg),
-    #050506;
+    var(--bg-main);
   background-position: var(--ux-pos, center);
   background-size: var(--ux-size, cover);
   background-repeat: no-repeat;
@@ -2708,7 +2708,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #050506;
+  background-color: var(--bg-main);
   background-position: center;
   background-size: cover;
   overflow: hidden;
@@ -2897,8 +2897,8 @@ video::-internal-media-interstitial-panel { display: none !important; }
 
 :root {
   /* Colors */
-  --bg-main: #000000;
-  --bg-surface: #0a0a0a;
+  --bg-main: #070A0F;
+  --bg-surface: #0D111A;
   --bg-card: rgba(255, 255, 255, 0.03);
   --bg-card-hover: rgba(255, 255, 255, 0.06);
   
@@ -3019,7 +3019,10 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-main);
+  background:
+    radial-gradient(circle at 50% -12%, rgba(31, 44, 68, 0.28), transparent 34%),
+    radial-gradient(circle at 0% 18%, rgba(255, 107, 53, 0.045), transparent 30%),
+    var(--bg-main);
   color: var(--text-1);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -5015,7 +5018,7 @@ h1, h2, h3 {
   aspect-ratio: 16 / 9;
   background:
     linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)),
-    #050506;
+    var(--bg-main);
   border-radius: 22px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.14);
