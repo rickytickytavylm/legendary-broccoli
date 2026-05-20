@@ -7150,6 +7150,112 @@ body.audio-player-open {
   }
 }
 
+.meditation-audio-player {
+  background:
+    radial-gradient(circle at 50% 16%, rgba(216,191,155,.26), transparent 34%),
+    radial-gradient(circle at 50% 74%, rgba(180,145,62,.16), transparent 42%),
+    #07100E;
+}
+
+.meditation-audio-player::before {
+  background:
+    linear-gradient(180deg, rgba(216,191,155,.08), rgba(7,16,14,.88) 78%),
+    var(--audio-artwork, url('/assets/webp/mmeditation.webp')) center/cover no-repeat;
+  filter: blur(64px) brightness(.46) saturate(1.42);
+}
+
+.meditation-audio-player::after {
+  background:
+    radial-gradient(circle at 50% 8%, rgba(216,191,155,.32), transparent 32%),
+    radial-gradient(circle at 50% 58%, rgba(216,191,155,.14), transparent 44%),
+    linear-gradient(180deg, rgba(7,16,14,.02) 0%, rgba(7,16,14,.50) 54%, #07100E 100%);
+}
+
+.meditation-audio-player .audio-mode-progress span,
+.meditation-audio-player .audio-mode-progress span::after {
+  background: #D8BF9B;
+}
+
+.meditation-audio-player .audio-mode-progress span {
+  box-shadow: 0 0 22px rgba(216,191,155,.34);
+}
+
+.meditation-audio-player .audio-mode-controls .audio-mode-play {
+  border-color: rgba(216,191,155,.42);
+  background:
+    radial-gradient(ellipse 115% 95% at 45% -5%, rgba(255,255,255,.42), transparent 48%),
+    radial-gradient(circle at 72% 108%, rgba(216,191,155,.28), transparent 38%),
+    linear-gradient(158deg, rgba(216,191,155,.36), rgba(216,191,155,.12)),
+    rgba(216,191,155,.10);
+  box-shadow:
+    0 22px 52px rgba(0,0,0,.46),
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    inset 0 -18px 34px rgba(67,93,86,.14),
+    0 0 0 7px rgba(216,191,155,.055);
+}
+
+.system-intro-screen,
+.auth-gateway-shell {
+  background: #07100E;
+}
+
+.auth-gateway-shell {
+  justify-content: flex-end;
+  padding: max(18px, env(safe-area-inset-top)) clamp(20px, 5vw, 72px) max(34px, env(safe-area-inset-bottom));
+}
+
+.auth-gateway-shell::before {
+  height: min(68svh, 680px);
+  background:
+    linear-gradient(to bottom,
+      rgba(7,16,14,0) 0%,
+      rgba(7,16,14,.00) 50%,
+      rgba(7,16,14,.18) 72%,
+      rgba(7,16,14,.58) 92%,
+      #07100E 100%),
+    url('/assets/webp/aut.webp') center top / cover no-repeat;
+}
+
+.auth-gateway-shell::after {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(216,191,155,.045), transparent 34%),
+    radial-gradient(circle at 50% 62%, rgba(180,145,62,.035), transparent 42%),
+    linear-gradient(to bottom,
+      rgba(7,16,14,0) 0%,
+      rgba(7,16,14,.00) 48%,
+      rgba(7,16,14,.34) 82%,
+      #07100E 100%);
+}
+
+.auth-gateway-panel {
+  transform: none;
+  padding-block: clamp(330px, 52svh, 520px) 0;
+}
+
+@media (max-width: 768px) {
+  .auth-gateway-shell {
+    background: #07100E;
+    padding: max(10px, env(safe-area-inset-top)) 20px max(18px, env(safe-area-inset-bottom));
+  }
+
+  .auth-gateway-shell::before {
+    height: 64svh;
+    background:
+      linear-gradient(to bottom,
+        rgba(7,16,14,0) 0%,
+        rgba(7,16,14,.00) 48%,
+        rgba(7,16,14,.18) 70%,
+        rgba(7,16,14,.58) 92%,
+        #07100E 100%),
+      url('/assets/webp/aut.webp') center top / cover no-repeat;
+  }
+
+  .auth-gateway-panel {
+    transform: none;
+    padding-block: clamp(300px, 54svh, 430px) 0;
+  }
+}
+
 .u-inline-flex {
   display: inline-flex;
 }
