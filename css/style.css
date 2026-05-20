@@ -7037,6 +7037,119 @@ body.audio-player-open {
   margin-top: 80px;
 }
 
+.today-screen {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216,191,155,.08), transparent 28%),
+    radial-gradient(circle at 50% 42%, rgba(180,145,62,.10), transparent 38%),
+    radial-gradient(circle at 0% 18%, rgba(150,88,70,.055), transparent 32%),
+    #07100E;
+}
+
+.home-today-active {
+  background: #07100E;
+}
+
+.today-hero-card {
+  box-shadow: inset 0 -120px 90px #07100E;
+}
+
+.today-hero-card::after {
+  background:
+    linear-gradient(to bottom, rgba(7,16,14,0) 0%, rgba(7,16,14,.68) 56%, #07100E 84%, #07100E 100%);
+}
+
+.today-main-card {
+  border-color: rgba(216,191,155,.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    0 24px 72px rgba(0,0,0,.36),
+    0 0 90px rgba(216,191,155,.075);
+}
+
+.today-main-card::after {
+  background:
+    linear-gradient(180deg,
+      rgba(7,16,14,.02) 0%,
+      rgba(7,16,14,.12) 34%,
+      rgba(67,93,86,.42) 64%,
+      rgba(7,16,14,.88) 100%),
+    radial-gradient(circle at 18% 100%, rgba(216,191,155,.20), transparent 46%);
+}
+
+.today-main-card h2,
+.today-main-card p {
+  text-shadow: 0 2px 16px rgba(0,0,0,.52);
+}
+
+.today-main-card p {
+  color: rgba(246,240,231,.74);
+}
+
+.today-meditation-card {
+  border-color: rgba(216,191,155,.48);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.34),
+    0 26px 76px rgba(0,0,0,.32),
+    0 0 96px rgba(216,191,155,.16);
+}
+
+.today-meditation-card::after {
+  background:
+    linear-gradient(180deg,
+      rgba(216,191,155,.00) 0%,
+      rgba(216,191,155,.16) 36%,
+      rgba(216,191,155,.52) 74%,
+      rgba(216,191,155,.82) 100%);
+}
+
+.today-meditation-card h3 {
+  color: #F6F0E7;
+  text-shadow: 0 2px 16px rgba(0,0,0,.42);
+}
+
+.today-meditation-card p {
+  color: rgba(246,240,231,.78);
+  text-shadow: 0 2px 14px rgba(0,0,0,.34);
+}
+
+.today-meditation-card .today-support-button {
+  background: rgba(7,16,14,.88);
+  color: #F6F0E7;
+  border-color: rgba(216,191,155,.32);
+}
+
+.today-support-card:not(.today-meditation-card) {
+  border-color: rgba(180,145,62,.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 22px 64px rgba(0,0,0,.34),
+    0 0 84px rgba(180,145,62,.09);
+}
+
+.today-support-card:not(.today-meditation-card)::after {
+  background:
+    radial-gradient(circle at 72% 0%, rgba(180,145,62,.22), transparent 34%),
+    radial-gradient(circle at 10% 100%, rgba(150,88,70,.13), transparent 42%),
+    linear-gradient(180deg,
+      rgba(7,16,14,.04) 0%,
+      rgba(19,32,29,.28) 42%,
+      rgba(7,16,14,.84) 100%);
+}
+
+.today-day-pill {
+  color: rgba(246,240,231,.76);
+  border-color: rgba(216,191,155,.24);
+  background:
+    linear-gradient(180deg, rgba(216,191,155,.13), rgba(67,93,86,.18)),
+    rgba(19,32,29,.34);
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 .u-inline-flex {
   display: inline-flex;
 }
