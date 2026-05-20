@@ -7200,36 +7200,37 @@ body.audio-player-open {
 }
 
 .auth-gateway-shell {
-  justify-content: flex-end;
+  justify-content: center;
   padding: max(18px, env(safe-area-inset-top)) clamp(20px, 5vw, 72px) max(34px, env(safe-area-inset-bottom));
 }
 
 .auth-gateway-shell::before {
-  height: min(68svh, 680px);
+  top: -80px;
+  height: calc(min(70svh, 700px) + 80px);
   background:
     linear-gradient(to bottom,
       rgba(7,16,14,0) 0%,
-      rgba(7,16,14,.00) 50%,
-      rgba(7,16,14,.18) 72%,
-      rgba(7,16,14,.58) 92%,
+      rgba(7,16,14,.00) 62%,
+      rgba(7,16,14,.10) 78%,
+      rgba(7,16,14,.42) 94%,
       #07100E 100%),
     url('/assets/webp/aut.webp') center top / cover no-repeat;
 }
 
 .auth-gateway-shell::after {
   background:
-    radial-gradient(circle at 50% 18%, rgba(216,191,155,.045), transparent 34%),
-    radial-gradient(circle at 50% 62%, rgba(180,145,62,.035), transparent 42%),
+    radial-gradient(circle at 50% 18%, rgba(216,191,155,.025), transparent 36%),
+    radial-gradient(circle at 50% 62%, rgba(180,145,62,.025), transparent 44%),
     linear-gradient(to bottom,
       rgba(7,16,14,0) 0%,
-      rgba(7,16,14,.00) 48%,
-      rgba(7,16,14,.34) 82%,
+      rgba(7,16,14,.00) 58%,
+      rgba(7,16,14,.22) 86%,
       #07100E 100%);
 }
 
 .auth-gateway-panel {
   transform: none;
-  padding-block: clamp(330px, 52svh, 520px) 0;
+  padding-block: 0;
 }
 
 @media (max-width: 768px) {
@@ -7239,20 +7240,21 @@ body.audio-player-open {
   }
 
   .auth-gateway-shell::before {
-    height: 64svh;
+    top: -72px;
+    height: calc(68svh + 72px);
     background:
       linear-gradient(to bottom,
         rgba(7,16,14,0) 0%,
-        rgba(7,16,14,.00) 48%,
-        rgba(7,16,14,.18) 70%,
-        rgba(7,16,14,.58) 92%,
+        rgba(7,16,14,.00) 60%,
+        rgba(7,16,14,.10) 78%,
+        rgba(7,16,14,.42) 94%,
         #07100E 100%),
       url('/assets/webp/aut.webp') center top / cover no-repeat;
   }
 
   .auth-gateway-panel {
     transform: none;
-    padding-block: clamp(300px, 54svh, 430px) 0;
+    padding-block: 0;
   }
 }
 
