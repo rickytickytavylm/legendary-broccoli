@@ -7039,14 +7039,14 @@ body.audio-player-open {
 
 .today-screen {
   background:
-    radial-gradient(circle at 50% 0%, rgba(216,191,155,.08), transparent 28%),
-    radial-gradient(circle at 50% 42%, rgba(180,145,62,.10), transparent 38%),
-    radial-gradient(circle at 0% 18%, rgba(150,88,70,.055), transparent 32%),
-    #07100E;
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.24), transparent 28%),
+    radial-gradient(circle at 50% 42%, rgba(180,145,62,.16), transparent 38%),
+    radial-gradient(circle at 0% 18%, rgba(150,88,70,.08), transparent 32%),
+    #D8BF9B;
 }
 
 .home-today-active {
-  background: #07100E;
+  background: #D8BF9B;
 }
 
 .today-hero-card {
