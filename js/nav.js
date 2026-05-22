@@ -411,25 +411,8 @@
     }
   }
 
-  if (!hasHero) {
-    // Inner pages — show immediately
-    setVisible(true);
-  } else {
-    // Hero pages — appear on scroll, hide when back at top
-    var ticking = false;
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(function() {
-          setVisible(window.scrollY > SCROLL_THRESHOLD);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    // Set initial state (e.g. if page reloaded mid-scroll)
-    setVisible(window.scrollY > SCROLL_THRESHOLD);
-  }
+  // Always show immediately (except where hidden via page-specific CSS rules)
+  setVisible(true);
 
   var lastMobileHeaderScrollY = window.scrollY || 0;
   var mobileHeaderTicking = false;

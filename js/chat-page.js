@@ -159,5 +159,30 @@
     if (state.socket) state.socket.disconnect();
   });
 
+  function injectChatHeaderBack() {
+    var header = document.getElementById('app-mobile-header');
+    if (!header || header.querySelector('.chat-header-back')) return;
+    var btn = document.createElement('a');
+    btn.href = '/';
+    btn.className = 'ai-header-back chat-header-back';
+    btn.setAttribute('aria-label', 'Назад');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+    btn.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      window.location.assign('/');
+    });
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.assign('/');
+    });
+    header.insertBefore(btn, header.firstChild);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectChatHeaderBack);
+  } else {
+    setTimeout(injectChatHeaderBack, 0);
+  }
+
   boot();
 })();

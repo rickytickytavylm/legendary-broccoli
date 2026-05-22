@@ -7356,11 +7356,46 @@ body.audio-player-open {
 }
 
 .chat-page .app-tabbar,
-.chat-page .app-mobile-header,
 .chat-page .app-sidebar,
 .chat-page .footer,
 .chat-page .navbar {
   display: none !important;
+}
+
+.chat-page .app-mobile-header {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  body.chat-page .app-mobile-header {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13) !important;
+    display: grid !important;
+    grid-template-columns: 44px 1fr 44px;
+    align-items: center;
+    gap: 8px;
+  }
+
+  body.chat-page .mobile-header-brand {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  body.chat-page .mobile-header-actions {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .chat-panel-header {
+    display: none !important;
+  }
+
+  .chat-panel {
+    padding-top: calc(52px + env(safe-area-inset-top)) !important;
+  }
 }
 
 .chat-page.no-app-hero {
