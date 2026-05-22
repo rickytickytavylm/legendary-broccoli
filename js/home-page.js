@@ -505,11 +505,7 @@ function initOnboarding() {
 
   if (window.API?.getProfileSession) {
     window.API.getProfileSession()
-      .then((data) => {
-        if (data && data.exists === false && localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true') {
-          resetLocalOnboardingForFreshDevice();
-        }
-      })
+      .then(() => {})
       .catch(() => {
         if (!window.API?.isLoggedIn?.() && localStorage.getItem(ONBOARDING_SCHEMA_KEY) !== ONBOARDING_SCHEMA_VERSION) {
           resetLocalOnboardingForFreshDevice();

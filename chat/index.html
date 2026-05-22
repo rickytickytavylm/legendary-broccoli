@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.sistema-molodtsov.ru wss://api.sistema-molodtsov.ru https://web-production-3cb7a.up.railway.app wss://web-production-3cb7a.up.railway.app https://*.up.railway.app wss://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Общий чат — Система Молодцова</title>
+  <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
+  <link rel="stylesheet" href="/css/style.css?v=114" />
+  <link rel="stylesheet" href="/css/nav.css?v=73" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json" />
+</head>
+<body class="dark-theme chat-page">
+  <main class="chat-page-shell" data-chat-root>
+    <section class="chat-panel">
+      <header class="chat-panel-header">
+        <a class="chat-back-button" href="/" aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <div>
+          <p class="chat-kicker">Сообщество</p>
+          <h1>Общий чат</h1>
+        </div>
+        <div class="chat-live-dot" aria-hidden="true"></div>
+      </header>
+
+      <div class="chat-status" data-chat-status>Подключаемся…</div>
+
+      <div class="chat-messages-wrap">
+        <div class="chat-empty" data-chat-empty>
+          <strong>Пока тихо</strong>
+          <span>Напишите первое сообщение для теста общего чата.</span>
+        </div>
+        <div class="chat-messages" data-chat-messages></div>
+      </div>
+
+      <form class="chat-composer" data-chat-form>
+        <input data-chat-input type="text" maxlength="3000" autocomplete="off" placeholder="Написать сообщение…" />
+        <button data-chat-send type="submit" aria-label="Отправить">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.4 20.2 21.6 12 3.4 3.8l1.7 6.4L14 12l-8.9 1.8-1.7 6.4Z"/></svg>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js?v=60"></script>
+  <script src="/js/nav.js?v=80"></script>
+  <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+  <script src="/js/chat-page.js?v=2"></script>
+</body>
+</html>

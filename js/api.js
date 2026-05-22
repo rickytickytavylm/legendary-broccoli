@@ -348,6 +348,17 @@ class ApiClient {
   getProfileSession() { return this.request('GET', '/profile/session', null, { fresh: true }); }
   deleteAccount() { return this.request('DELETE', '/profile/account'); }
 
+  // --- Chat ---
+  getGeneralChat() { return this.request('GET', '/chat/general', null, { fresh: true }); }
+  getGeneralChatMessages(limit = 60, beforeId = null) {
+    const qs = new URLSearchParams({ limit: String(limit) });
+    if (beforeId) qs.set('before_id', String(beforeId));
+    return this.request('GET', '/chat/general/messages?' + qs.toString(), null, { fresh: true });
+  }
+  sendGeneralChatMessage(text) {
+    return this.request('POST', '/chat/general/messages', { type: 'text', text });
+  }
+
   // --- AI ---
   getAiUsage() { return this.request('GET', '/ai/usage'); }
   getAiHistory(limit = 80) { return this.request('GET', '/ai/history?limit=' + encodeURIComponent(limit)); }
