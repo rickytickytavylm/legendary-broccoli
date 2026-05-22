@@ -117,13 +117,20 @@
           <h2 data-onboarding-title>Что сейчас важнее?</h2>
           <p data-onboarding-desc>Выберите ближайший запрос. Это не диагноз, а точка входа в библиотеку.</p>
           <p class="onboarding-select-hint" data-onboarding-hint>Выберите один вариант</p>
+          
+          <input class="onboarding-name-input hidden" type="text" autocomplete="given-name" data-onboarding-name-input placeholder="Ваше имя..." />
           <div class="onboarding-options" data-onboarding-options></div>
+          
           <div class="onboarding-result-card hidden" data-onboarding-result>
             <span data-result-kicker>Сегодня</span>
             <strong data-result-title>Мягкий вход</strong>
             <p data-result-desc>Система соберет первый шаг после ответов.</p>
           </div>
-          <div class="onboarding-actions">
+          
+          <!-- Premium Liquid Glass Action Button -->
+          <button class="onboarding-inline-next" type="button" data-onboarding-inline-btn>Далее</button>
+          
+          <div class="onboarding-actions hidden">
             <button class="ios-auth-button ios-auth-button-primary" type="button" data-onboarding-next>Далее</button>
           </div>
         </div>

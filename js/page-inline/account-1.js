@@ -139,25 +139,57 @@ function escapeHtml(value) {
       document.getElementById('goal-done')?.replaceChildren(document.createTextNode(String(stats.completed_lessons || 0)));
       document.getElementById('goal-target')?.replaceChildren(document.createTextNode(String(courses ? courses.length : 11)));
 
-      // ─── Populate Apple Watch Activity Rings ───────────
-      const streakDays = stats.streak_days || 0;
-      document.getElementById('watch-streak-val')?.replaceChildren(document.createTextNode(`${streakDays} ${pluralDays(streakDays)} подряд`));
-      const streakPct = Math.min(1, streakDays / 7);
-      const streakOffset = 251.3 - (251.3 * streakPct);
-      document.getElementById('watch-ring-streak')?.setAttribute('stroke-dashoffset', String(streakOffset));
+      // ─── Populate Apple Watch Activity Ring ───────────
+      const activeDays = stats.active_days_this_week || stats.streak_days || 0;
+      const activeGoal = 7;
+      const targetPct = Math.min(1, activeDays / activeGoal);
+      const targetPercentVal = Math.round(targetPct * 100);
 
-      const practiceMins = stats.practice_minutes || 0;
-      document.getElementById('watch-practice-val')?.replaceChildren(document.createTextNode(`${practiceMins} мин / 30 мин`));
-      const practicePct = Math.min(1, practiceMins / 30);
-      const practiceOffset = 188.5 - (188.5 * practicePct);
-      document.getElementById('watch-ring-practice')?.setAttribute('stroke-dashoffset', String(practiceOffset));
+      const ringEl = document.getElementById('watch-single-ring');
+      const percentEl = document.getElementById('watch-ring-percent-text');
+      const labelEl = document.getElementById('watch-streak-val');
 
-      const completedLessons = stats.completed_lessons || 0;
-      const lessonsGoal = 5;
-      document.getElementById('watch-lessons-val')?.replaceChildren(document.createTextNode(`${completedLessons} из ${lessonsGoal}`));
-      const lessonsPct = Math.min(1, completedLessons / lessonsGoal);
-      const lessonsOffset = 125.7 - (125.7 * lessonsPct);
-      document.getElementById('watch-ring-lessons')?.setAttribute('stroke-dashoffset', String(lessonsOffset));
+      if (labelEl) {
+        labelEl.textContent = `${activeDays} из ${activeGoal} ${pluralDays(activeDays)} активности`;
+      }
+
+      if (ringEl) {
+        // Step 1: Start at 0% (dashoffset = 251.3)
+        ringEl.setAttribute('stroke-dashoffset', '251.3');
+        if (percentEl) percentEl.textContent = '0%';
+
+        // Helper for animating numbers
+        const animateCounter = (start, end, duration) => {
+          if (!percentEl) return;
+          const startTime = performance.now();
+          const update = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const currentVal = Math.round(start + (end - start) * progress);
+            percentEl.textContent = `${currentVal}%`;
+            if (progress < 1) {
+              requestAnimationFrame(update);
+            }
+          };
+          requestAnimationFrame(update);
+        };
+
+        // Step 2: Animate to 100% (dashoffset = 0) with rich ease-out
+        setTimeout(() => {
+          ringEl.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+          ringEl.setAttribute('stroke-dashoffset', '0');
+          animateCounter(0, 100, 800);
+
+          // Step 3: Settle at the final target with an elastic spring bounce
+          setTimeout(() => {
+            ringEl.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            const finalOffset = 251.3 - (251.3 * targetPct);
+            ringEl.setAttribute('stroke-dashoffset', String(finalOffset));
+            animateCounter(100, targetPercentVal, 1200);
+          }, 950);
+
+        }, 200);
+      }
 
       // Continue learning — show static course cards (extend later from API)
       const courseItems = Array.isArray(courses) ? courses : [];

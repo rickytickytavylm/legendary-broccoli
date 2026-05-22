@@ -357,7 +357,8 @@ function renderOnboarding() {
   if (next) next.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'Начать' : 'Далее';
   const hint = document.querySelector('[data-onboarding-hint]');
   const result = document.querySelector('[data-onboarding-result]');
-  let input = document.querySelector('[data-onboarding-name-input]');
+  const input = document.querySelector('[data-onboarding-name-input]');
+  const inlineBtn = document.querySelector('[data-onboarding-inline-btn]');
   if (hint) {
     hint.textContent = step.input
       ? 'Введите имя'
@@ -368,46 +369,32 @@ function renderOnboarding() {
   if (!options) return;
   options.classList.toggle('hidden', Boolean(step.result || step.input));
   if (result) result.classList.toggle('hidden', !step.result);
-  if (!input) {
-    input = document.createElement('input');
-    input.type = 'text';
-    input.autocomplete = 'given-name';
-    input.className = 'onboarding-name-input hidden';
-    input.setAttribute('data-onboarding-name-input', '');
-    input.addEventListener('input', () => {
-      onboardingState.name = cleanName(input.value);
-    });
-    options.parentElement?.insertBefore(input, options);
-  }
-  
-  let inlineNextBtn = document.querySelector('[data-onboarding-inline-next]');
-  if (!inlineNextBtn) {
-    inlineNextBtn = document.createElement('button');
-    inlineNextBtn.type = 'button';
-    inlineNextBtn.className = 'onboarding-inline-next hidden';
-    inlineNextBtn.setAttribute('data-onboarding-inline-next', '');
-    inlineNextBtn.textContent = 'Далее';
-    inlineNextBtn.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      const realNext = document.querySelector('[data-onboarding-next]');
-      if (realNext) realNext.click();
-    });
-    input.parentElement?.insertBefore(inlineNextBtn, input.nextSibling);
+
+  if (input) {
+    input.classList.toggle('hidden', !step.input);
+    if (step.input) {
+      input.placeholder = step.input.placeholder;
+      input.value = onboardingState.name || '';
+      if (!input.dataset.bound) {
+        input.setAttribute('data-bound', 'true');
+        input.addEventListener('input', () => {
+          onboardingState.name = cleanName(input.value);
+          if (inlineBtn) {
+            inlineBtn.disabled = !hasStepAnswer(step);
+          }
+        });
+      }
+      window.setTimeout(() => input.focus(), 80);
+    }
   }
 
-  input.classList.toggle('hidden', !step.input);
-  inlineNextBtn.classList.toggle('hidden', !step.input);
-
-  // Hide bottom actions container on name input screen to prevent keyboard overlap issues
-  const mainActions = document.querySelector('.onboarding-actions');
-  if (mainActions) {
-    mainActions.classList.toggle('hidden', step.input);
+  // Configure inline button
+  if (inlineBtn) {
+    inlineBtn.textContent = step.result ? 'Начать' : 'Далее';
+    inlineBtn.disabled = !hasStepAnswer(step);
   }
 
   if (step.input) {
-    input.placeholder = step.input.placeholder;
-    input.value = onboardingState.name || '';
-    window.setTimeout(() => input.focus(), 80);
     return;
   }
   if (step.result) {
@@ -465,6 +452,10 @@ function initOnboarding() {
     onboardingIndex = 0;
     renderOnboarding();
     showNewHomeState('onboarding');
+  });
+  document.querySelector('[data-onboarding-inline-btn]')?.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    document.querySelector('[data-onboarding-next]')?.click();
   });
   document.querySelector('[data-onboarding-options]')?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-onboarding-option]');
