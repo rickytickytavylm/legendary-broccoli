@@ -40,11 +40,36 @@
       </div>
 
       <form class="chat-composer" data-chat-form>
+        <button class="chat-media-trigger" type="button" id="chat-voice-rec-btn" aria-label="Записать голосовое">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v4M8 23h8"/></svg>
+        </button>
+        <button class="chat-media-trigger" type="button" id="chat-video-rec-btn" aria-label="Записать кружочек">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 10 10c0 1.25-.5 2.5-1.5 3.5l-2.5-2.5"/></svg>
+        </button>
+        
         <textarea data-chat-input rows="1" maxlength="3000" placeholder="Написать сообщение…"></textarea>
+        
         <button data-chat-send type="submit" aria-label="Отправить">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
         </button>
       </form>
+
+      <!-- Media Recording Overlay -->
+      <div id="chat-rec-overlay" class="chat-rec-overlay hidden">
+        <div class="rec-overlay-body">
+          <div class="rec-circular-preview-container hidden" id="rec-video-preview-wrap">
+            <video id="rec-video-preview" autoplay playsinline muted></video>
+          </div>
+          <div class="rec-status-wrap">
+            <span class="rec-dot"></span>
+            <span id="rec-timer">00:00</span>
+          </div>
+          <div class="rec-actions">
+            <button type="button" class="rec-btn rec-cancel-btn" id="rec-cancel-btn">Отмена</button>
+            <button type="button" class="rec-btn rec-stop-btn" id="rec-stop-btn">Готово</button>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 

@@ -7360,38 +7360,6 @@ body.audio-player-open {
   display: none !important;
 }
 
-@media (max-width: 768px) {
-  body.chat-page .app-mobile-header {
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.13) !important;
-    display: grid !important;
-    grid-template-columns: 44px 1fr 44px;
-    align-items: center;
-    gap: 8px;
-  }
-
-  body.chat-page .mobile-header-brand {
-    grid-column: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  body.chat-page .mobile-header-actions {
-    grid-column: 3;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  .chat-panel-header {
-    display: none !important;
-  }
-
-  .chat-panel {
-    padding-top: calc(52px + env(safe-area-inset-top)) !important;
-  }
-}
-
 .chat-page.no-app-hero {
   padding-top: 0;
 }
@@ -7405,7 +7373,7 @@ body.audio-player-open {
 
 .chat-panel {
   width: min(760px, 100%);
-  height: calc(100dvh - max(28px, env(safe-area-inset-top)) - max(14px, env(safe-area-inset-bottom)));
+  height: calc(100dvh - max(28px, env(safe-area-inset-top)) - max(14px, env(safe-area-inset-bottom)) - var(--keyboard-height, 0px));
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   overflow: hidden;
@@ -7704,7 +7672,7 @@ body.audio-player-open {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
   outline: none;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 16px !important;
   line-height: 1.4;
   resize: none;
   overflow-y: auto;
@@ -7718,6 +7686,208 @@ body.audio-player-open {
 
 .chat-composer textarea::placeholder {
   color: rgba(255,255,255,.34);
+}
+
+.chat-media-trigger {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s, color 0.2s;
+  margin-bottom: 1px;
+  outline: none;
+}
+
+.chat-media-trigger:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.chat-media-trigger:active {
+  transform: scale(0.95);
+}
+
+.chat-media-trigger svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ─── Media Recording Overlay ───────────────────── */
+.chat-rec-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 15, 14, 0.95);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.chat-rec-overlay:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.rec-overlay-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.rec-circular-preview-container {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #30d158;
+  box-shadow: 0 0 30px rgba(48, 209, 88, 0.3);
+  background: #000;
+  aspect-ratio: 1/1;
+}
+
+#rec-video-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.rec-status-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rec-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff3b30;
+  box-shadow: 0 0 12px #ff3b30;
+  animation: recPulse 1s infinite alternate;
+}
+
+@keyframes recPulse {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+#rec-timer {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: monospace;
+}
+
+.rec-actions {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.rec-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.rec-cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ff3b30;
+}
+
+.rec-stop-btn {
+  background: #30d158;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(48, 209, 88, 0.25);
+}
+
+.rec-btn:active {
+  transform: scale(0.97);
+}
+
+/* ─── Media Players inside chat ─────────────────── */
+.chat-audio-player {
+  display: block;
+  margin-top: 6px;
+  width: 100%;
+  max-width: 240px;
+  height: 36px;
+  border-radius: 18px;
+  outline: none;
+}
+
+.chat-video-circle-wrap {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  background: #000;
+  position: relative;
+  margin-top: 6px;
+  aspect-ratio: 1/1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.chat-video-circle {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─── Chat Loading Shimmer ──────────────────────── */
+.chat-loading-shimmer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 14px;
+}
+
+.shimmer-bubble {
+  width: 60%;
+  height: 48px;
+  border-radius: 18px 18px 18px 4px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.02) 75%);
+  background-size: 200% 100%;
+  animation: chatShimmer 1.4s infinite linear;
+}
+
+.shimmer-bubble.own {
+  align-self: flex-end;
+  border-radius: 18px 18px 4px 18px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.10) 50%, rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+  width: 50%;
+}
+
+@keyframes chatShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .chat-composer button {
@@ -7759,7 +7929,7 @@ body.audio-player-open {
 
   .chat-panel {
     width: 100%;
-    height: 100dvh;
+    height: calc(100dvh - var(--keyboard-height, 0px));
     border-radius: 0;
     border-left: 0;
     border-right: 0;
@@ -7906,4 +8076,112 @@ body.audio-player-open {
 
 .onboarding-inline-next:active {
   transform: scale(0.96) !important;
+}
+
+/* ─── iOS Action Sheet ─────────────────────────── */
+.ios-action-sheet {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.action-sheet-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.ios-action-sheet.active {
+  pointer-events: auto;
+}
+
+.ios-action-sheet.active .action-sheet-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.action-sheet-body {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 10px 16px max(16px, env(safe-area-inset-bottom));
+  background: rgba(25, 25, 25, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.ios-action-sheet.active .action-sheet-body {
+  transform: translateY(0);
+}
+
+.action-sheet-header {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 12px 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.action-sheet-group {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.action-sheet-btn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #007aff;
+  font-size: 17px;
+  font-weight: 500;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s;
+  outline: none;
+  font-family: inherit;
+}
+
+.action-sheet-btn:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.action-sheet-btn:active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.action-sheet-btn.text-danger {
+  color: #ff3b30 !important;
+}
+
+.action-sheet-btn.action-cancel {
+  font-weight: 600;
+  color: #ffffff;
 }

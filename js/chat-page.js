@@ -15,6 +15,7 @@
     userId: null,
     sending: false,
     editingMessageId: null,
+    loading: true,
   };
 
   // Create Edit Mode Banner dynamically above the composer
@@ -80,23 +81,36 @@
     if (!list) return;
     const keepBottom = shouldStickToBottom();
     const messages = Array.from(state.messages.values()).sort((a, b) => Number(a.id) - Number(b.id));
+
+    if (state.loading) {
+      if (empty) empty.classList.add('hidden');
+      list.innerHTML = `
+        <div class="chat-loading-shimmer">
+          <div class="shimmer-bubble"></div>
+          <div class="shimmer-bubble own"></div>
+          <div class="shimmer-bubble"></div>
+        </div>
+      `;
+      return;
+    }
+
     if (empty) empty.classList.toggle('hidden', messages.length > 0);
     list.innerHTML = messages.map((message) => {
       const own = message.is_own ? ' chat-message-own' : '';
       const avatarHtml = message.is_own 
         ? '' 
         : `<div class="chat-message-avatar">${escapeHtml((message.sender_name || 'У').slice(0, 1).toUpperCase())}</div>`;
-      
-      const actionsHtml = message.is_own 
-        ? `<div class="chat-message-actions">
-             <button class="chat-action-btn btn-edit" data-edit-id="${message.id}" aria-label="Редактировать">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-             </button>
-             <button class="chat-action-btn btn-delete" data-delete-id="${message.id}" aria-label="Удалить">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-             </button>
-           </div>`
-         : '';
+
+      let contentHtml = `<div class="chat-message-text">${escapeHtml(message.text_content || '').replace(/\n/g, '<br>')}</div>`;
+      if (message.type === 'audio_circle' && message.file_url) {
+        contentHtml = `<audio class="chat-audio-player" src="${escapeHtml(message.file_url)}" controls></audio>`;
+      } else if (message.type === 'video_circle' && message.file_url) {
+        contentHtml = `
+          <div class="chat-video-circle-wrap">
+            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline loop muted autoplay onclick="this.paused ? this.play() : this.pause()"></video>
+          </div>
+        `;
+      }
 
       return `
         <article class="chat-message${own}" data-message-id="${escapeHtml(message.id)}">
@@ -105,9 +119,8 @@
             <div class="chat-message-meta">
               <span>${escapeHtml(message.sender_name || 'Участник')}</span>
               <time>${escapeHtml(timeLabel(message.created_at))}</time>
-              ${actionsHtml}
             </div>
-            <div class="chat-message-text">${escapeHtml(message.text_content || '').replace(/\n/g, '<br>')}</div>
+            ${contentHtml}
           </div>
         </article>
       `;
@@ -150,6 +163,9 @@
       connectSocket();
     } catch (err) {
       setStatus(err?.error || 'Чат временно недоступен');
+    } finally {
+      state.loading = false;
+      render();
     }
   }
 
@@ -191,17 +207,76 @@
     });
   }
 
-  // Event Delegation for message edit & delete actions
-  list?.addEventListener('click', async (ev) => {
-    const editBtn = ev.target.closest('[data-edit-id]');
-    const deleteBtn = ev.target.closest('[data-delete-id]');
+  // Spawns iOS-style bottom Action Sheet context menu (Telegram style)
+  function showMessageContextMenu(messageId, isOwn, ev) {
+    ev?.preventDefault();
+    ev?.stopPropagation();
 
-    if (editBtn) {
-      ev.preventDefault();
-      const id = editBtn.getAttribute('data-edit-id');
-      const msg = state.messages.get(id);
-      if (msg) {
-        state.editingMessageId = id;
+    const msg = state.messages.get(String(messageId));
+    if (!msg) return;
+
+    // Remove existing sheet
+    const existing = document.getElementById('chat-action-sheet');
+    if (existing) existing.remove();
+
+    const sheet = document.createElement('div');
+    sheet.id = 'chat-action-sheet';
+    sheet.className = 'ios-action-sheet';
+
+    const ownButtons = `
+      <button class="action-sheet-btn action-edit" data-action="edit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>Редактировать</span>
+      </button>
+      <button class="action-sheet-btn action-delete-all text-danger" data-action="delete-all">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>Удалить у всех</span>
+      </button>
+    `;
+
+    const otherButtons = `
+      <button class="action-sheet-btn action-delete-self text-danger" data-action="delete-self">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>Удалить у себя</span>
+      </button>
+    `;
+
+    sheet.innerHTML = `
+      <div class="action-sheet-overlay"></div>
+      <div class="action-sheet-body">
+        <div class="action-sheet-header">Сообщение от ${escapeHtml(msg.sender_name || 'участника')}</div>
+        <div class="action-sheet-group">
+          ${isOwn ? ownButtons : otherButtons}
+        </div>
+        <div class="action-sheet-group">
+          <button class="action-sheet-btn action-cancel" data-action="cancel">Отмена</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(sheet);
+
+    // Smooth animation layout trigger
+    setTimeout(() => sheet.classList.add('active'), 20);
+
+    const closeSheet = () => {
+      sheet.classList.remove('active');
+      setTimeout(() => sheet.remove(), 300);
+    };
+
+    sheet.querySelector('.action-sheet-overlay').addEventListener('click', closeSheet);
+    sheet.querySelector('.action-cancel').addEventListener('click', closeSheet);
+
+    sheet.addEventListener('click', async (e) => {
+      const btn = e.target.closest('.action-sheet-btn');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      if (!action || action === 'cancel') return;
+
+      closeSheet();
+
+      if (action === 'edit') {
+        state.editingMessageId = String(messageId);
         input.value = msg.text_content || '';
         editBanner.classList.remove('hidden');
         input.focus();
@@ -209,22 +284,100 @@
           input.style.height = 'auto';
           input.style.height = input.scrollHeight + 'px';
         }
-      }
-    } else if (deleteBtn) {
-      ev.preventDefault();
-      const id = deleteBtn.getAttribute('data-delete-id');
-      if (confirm('Вы уверены, что хотите удалить это сообщение?')) {
-        try {
-          await window.API.deleteGeneralChatMessage(id);
-          state.messages.delete(id);
-          render();
-          setStatus('Сообщение удалено');
-          window.setTimeout(() => setStatus('Общий чат открыт'), 1200);
-        } catch (err) {
-          alert(err?.error || 'Не удалось удалить сообщение');
+      } else if (action === 'delete-all') {
+        if (confirm('Вы уверены, что хотите удалить это сообщение у всех участников?')) {
+          try {
+            await window.API.deleteGeneralChatMessage(messageId);
+            state.messages.delete(String(messageId));
+            render();
+            setStatus('Сообщение удалено');
+            window.setTimeout(() => setStatus('Общий чат открыт'), 1200);
+          } catch (err) {
+            alert(err?.error || 'Не удалось удалить сообщение');
+          }
         }
+      } else if (action === 'delete-self') {
+        // Local removal
+        state.messages.delete(String(messageId));
+        render();
+        setStatus('Сообщение удалено у вас');
+        window.setTimeout(() => setStatus('Общий чат открыт'), 1200);
       }
+    });
+  }
+
+  // Pure Hold/Long-press detection
+  let touchTimer = null;
+  let hasMoved = false;
+  let startX = 0;
+  let startY = 0;
+
+  const handleStart = (ev, targetMsg) => {
+    hasMoved = false;
+    const touch = ev.touches ? ev.touches[0] : ev;
+    startX = touch.clientX;
+    startY = touch.clientY;
+
+    const id = targetMsg.getAttribute('data-message-id');
+    const isOwn = targetMsg.classList.contains('chat-message-own');
+
+    touchTimer = setTimeout(() => {
+      if (!hasMoved) {
+        showMessageContextMenu(id, isOwn, ev);
+      }
+    }, 550); // 550ms Telegram-style hold threshold
+  };
+
+  const handleMove = (ev) => {
+    const touch = ev.touches ? ev.touches[0] : ev;
+    if (Math.abs(touch.clientX - startX) > 8 || Math.abs(touch.clientY - startY) > 8) {
+      hasMoved = true;
+      if (touchTimer) clearTimeout(touchTimer);
     }
+  };
+
+  const handleEnd = () => {
+    if (touchTimer) clearTimeout(touchTimer);
+  };
+
+  list?.addEventListener('touchstart', (ev) => {
+    const targetMsg = ev.target.closest('.chat-message');
+    if (targetMsg) handleStart(ev, targetMsg);
+  }, { passive: true });
+
+  list?.addEventListener('touchmove', handleMove, { passive: true });
+  list?.addEventListener('touchend', handleEnd, { passive: true });
+  list?.addEventListener('touchcancel', handleEnd, { passive: true });
+
+  list?.addEventListener('mousedown', (ev) => {
+    const targetMsg = ev.target.closest('.chat-message');
+    if (targetMsg) handleStart(ev, targetMsg);
+  });
+  list?.addEventListener('mousemove', handleMove);
+  list?.addEventListener('mouseup', handleEnd);
+  list?.addEventListener('mouseleave', handleEnd);
+
+  // Prevent browser context menus on messages
+  list?.addEventListener('contextmenu', (ev) => {
+    if (ev.target.closest('.chat-message')) {
+      ev.preventDefault();
+    }
+  });
+
+  // Handle visual viewports and software keyboard lifting
+  if (window.visualViewport) {
+    const onViewportResize = () => {
+      const keyboardHeight = window.innerHeight - window.visualViewport.height;
+      root.style.setProperty('--keyboard-height', `${Math.max(0, keyboardHeight)}px`);
+      scrollToBottom();
+    };
+    window.visualViewport.addEventListener('resize', onViewportResize);
+    window.visualViewport.addEventListener('scroll', onViewportResize);
+  }
+
+  // Prevent flying input box after iOS keyboard dismisses
+  input?.addEventListener('blur', () => {
+    window.scrollTo(0, 0);
   });
 
   form?.addEventListener('submit', async (event) => {
@@ -263,6 +416,173 @@
       input?.focus();
     }
   });
+
+  // ─── Media Recording Logic (Voice & Circular Videos) ───
+  const voiceRecBtn = document.getElementById('chat-voice-rec-btn');
+  const videoRecBtn = document.getElementById('chat-video-rec-btn');
+  const recOverlay = document.getElementById('chat-rec-overlay');
+  const previewWrap = document.getElementById('rec-video-preview-wrap');
+  const videoPreview = document.getElementById('rec-video-preview');
+  const recTimer = document.getElementById('rec-timer');
+  const cancelBtn = document.getElementById('rec-cancel-btn');
+  const stopBtn = document.getElementById('rec-stop-btn');
+
+  let mediaRecorder = null;
+  let recordedChunks = [];
+  let recordStream = null;
+  let timerInterval = null;
+  let recordingStartTime = 0;
+  let recordingType = null; // 'audio' or 'video'
+
+  const startRecording = async (type) => {
+    try {
+      recordingType = type;
+      recordedChunks = [];
+      
+      const constraints = {
+        audio: true,
+        video: type === 'video' ? { width: { ideal: 480 }, height: { ideal: 480 }, facingMode: 'user' } : false
+      };
+      
+      recordStream = await navigator.mediaDevices.getUserMedia(constraints);
+      
+      if (type === 'video') {
+        previewWrap?.classList.remove('hidden');
+        if (videoPreview) {
+          videoPreview.srcObject = recordStream;
+        }
+      } else {
+        previewWrap?.classList.add('hidden');
+      }
+      
+      // Determine optimal mime type
+      let mimeType = type === 'video' ? 'video/webm;codecs=vp9,opus' : 'audio/webm;codecs=opus';
+      if (type === 'video' && !MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = 'video/webm;codecs=vp8,opus';
+      }
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = type === 'video' ? 'video/webm' : 'audio/webm';
+      }
+      
+      mediaRecorder = new MediaRecorder(recordStream, { mimeType });
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+      };
+      
+      mediaRecorder.onstop = async () => {
+        const mime = mediaRecorder.mimeType || (type === 'video' ? 'video/webm' : 'audio/webm');
+        const blob = new Blob(recordedChunks, { type: mime });
+        
+        stopStream();
+        
+        if (recordedChunks.length === 0 || blob.size === 0) {
+          alert('Не удалось записать медиафайл.');
+          return;
+        }
+        
+        await uploadAndSendMedia(blob, type, mime);
+      };
+      
+      recOverlay?.classList.remove('hidden');
+      mediaRecorder.start();
+      
+      // Start timer
+      recordingStartTime = performance.now();
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 500);
+      
+    } catch (err) {
+      console.error(err);
+      alert('Ошибка доступа к микрофону или камере: ' + err.message);
+      stopStream();
+    }
+  };
+
+  const updateTimer = () => {
+    const elapsed = Math.floor((performance.now() - recordingStartTime) / 1000);
+    const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+    const ss = String(elapsed % 60).padStart(2, '0');
+    if (recTimer) recTimer.textContent = `${mm}:${ss}`;
+    
+    // Auto-stop at 1 minute
+    if (elapsed >= 60) {
+      stopRecording();
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    clearInterval(timerInterval);
+    recOverlay?.classList.add('hidden');
+  };
+
+  const cancelRecording = () => {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.onstop = null; // discard
+      mediaRecorder.stop();
+    }
+    clearInterval(timerInterval);
+    stopStream();
+    recOverlay?.classList.add('hidden');
+  };
+
+  const stopStream = () => {
+    if (recordStream) {
+      recordStream.getTracks().forEach(track => track.stop());
+      recordStream = null;
+    }
+    if (videoPreview) videoPreview.srcObject = null;
+  };
+
+  const uploadAndSendMedia = async (blob, type, mime) => {
+    try {
+      setStatus('Отправляем файл…');
+      
+      // 1. Upload raw blob buffer to our S3 endpoint
+      const response = await fetch(`${window.API.base}/chat/general/upload`, {
+        method: 'POST',
+        headers: {
+          ...window.API.getAuthHeaders(),
+          'Content-Type': mime,
+        },
+        body: blob,
+      });
+      
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+      
+      const uploadData = await response.json();
+      if (!uploadData.file_url) {
+        throw new Error('S3 upload returned empty URL');
+      }
+      
+      // 2. Send as chat message of type audio_circle or video_circle
+      const msgType = type === 'video' ? 'video_circle' : 'audio_circle';
+      const sendResponse = await window.API.request('POST', '/chat/general/messages', {
+        type: msgType,
+        file_url: uploadData.file_url,
+        text: msgType === 'video' ? 'Кружочек' : 'Голосовое сообщение'
+      });
+      
+      mergeMessages(sendResponse.message ? [sendResponse.message] : []);
+      setStatus('Общий чат открыт');
+      scrollToBottom();
+      
+    } catch (err) {
+      console.error(err);
+      setStatus('Не удалось отправить медиа');
+      alert('Ошибка при загрузке или отправке: ' + err.message);
+    }
+  };
+
+  // Bind recording events
+  voiceRecBtn?.addEventListener('click', () => startRecording('audio'));
+  videoRecBtn?.addEventListener('click', () => startRecording('video'));
+  cancelBtn?.addEventListener('click', cancelRecording);
+  stopBtn?.addEventListener('click', stopRecording);
 
   window.addEventListener('beforeunload', () => {
     if (state.socket) state.socket.disconnect();
