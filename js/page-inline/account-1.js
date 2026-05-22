@@ -140,33 +140,37 @@ function escapeHtml(value) {
       document.getElementById('goal-target')?.replaceChildren(document.createTextNode(String(courses ? courses.length : 11)));
 
       // ─── Populate Apple Watch Activity Ring ───────────
-      const activeDays = stats.active_days_this_week || stats.streak_days || 0;
+      const activeDays = stats.streak_days || 0;
       const activeGoal = 7;
       const targetPct = Math.min(1, activeDays / activeGoal);
-      const targetPercentVal = Math.round(targetPct * 100);
 
       const ringEl = document.getElementById('watch-single-ring');
-      const percentEl = document.getElementById('watch-ring-percent-text');
+      const countEl = document.getElementById('watch-ring-count');
+      const unitEl = document.getElementById('watch-ring-unit');
       const labelEl = document.getElementById('watch-streak-val');
 
       if (labelEl) {
-        labelEl.textContent = `${activeDays} из ${activeGoal} ${pluralDays(activeDays)} активности`;
+        labelEl.textContent = `${activeDays} ${pluralDays(activeDays)} подряд`;
       }
 
       if (ringEl) {
         // Step 1: Start at 0% (dashoffset = 251.3)
         ringEl.setAttribute('stroke-dashoffset', '251.3');
-        if (percentEl) percentEl.textContent = '0%';
+        if (countEl) countEl.textContent = '0';
+        if (unitEl) unitEl.textContent = pluralDays(0);
 
-        // Helper for animating numbers
-        const animateCounter = (start, end, duration) => {
-          if (!percentEl) return;
+        // Helper for animating numbers in the center
+        const animateCounter = (start, end, duration, showUnit = false) => {
+          if (!countEl) return;
           const startTime = performance.now();
           const update = (currentTime) => {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const currentVal = Math.round(start + (end - start) * progress);
-            percentEl.textContent = `${currentVal}%`;
+            countEl.textContent = String(currentVal);
+            if (unitEl) {
+              unitEl.textContent = pluralDays(currentVal);
+            }
             if (progress < 1) {
               requestAnimationFrame(update);
             }
@@ -174,18 +178,18 @@ function escapeHtml(value) {
           requestAnimationFrame(update);
         };
 
-        // Step 2: Animate to 100% (dashoffset = 0) with rich ease-out
+        // Step 2: Animate to 100% (dashoffset = 0) with ease-out
         setTimeout(() => {
           ringEl.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
           ringEl.setAttribute('stroke-dashoffset', '0');
-          animateCounter(0, 100, 800);
+          animateCounter(0, activeGoal, 800);
 
           // Step 3: Settle at the final target with an elastic spring bounce
           setTimeout(() => {
             ringEl.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
             const finalOffset = 251.3 - (251.3 * targetPct);
             ringEl.setAttribute('stroke-dashoffset', String(finalOffset));
-            animateCounter(100, targetPercentVal, 1200);
+            animateCounter(activeGoal, activeDays, 1200);
           }, 950);
 
         }, 200);

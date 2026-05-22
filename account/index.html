@@ -987,9 +987,10 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: #ffffff;
-      font-size: 25px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
@@ -1130,17 +1131,20 @@
               <circle id="watch-single-ring" class="ring-fill" cx="50" cy="50" r="40" stroke="url(#singleRingGrad)" stroke-width="9" stroke-linecap="round" fill="none"
                       stroke-dasharray="251.3" stroke-dashoffset="251.3" />
             </svg>
-            <div class="watch-ring-percent" id="watch-ring-percent-text">0%</div>
+            <div class="watch-ring-percent">
+              <span id="watch-ring-count" style="display:block;font-size:32px;font-weight:800;line-height:1">0</span>
+              <span id="watch-ring-unit" style="display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,.45);margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">дней</span>
+            </div>
           </div>
           
           <div class="rings-legend">
             <div class="legend-item">
               <div class="legend-header" style="color: #fa114f">
                 <span class="legend-bullet"></span>
-                <span class="legend-label">Активность за неделю</span>
+                <span class="legend-label">Серия дней в пути</span>
               </div>
-              <div class="legend-value" id="watch-streak-val">0 из 7 дней активности</div>
-              <div class="legend-sub-value" id="watch-streak-desc">Занимайтесь каждый день, чтобы закрыть кольцо.</div>
+              <div class="legend-value" id="watch-streak-val">0 дней подряд</div>
+              <div class="legend-sub-value" id="watch-streak-desc">Заходите каждый день, чтобы продлить серию и закрыть круг.</div>
             </div>
           </div>
         </div>
