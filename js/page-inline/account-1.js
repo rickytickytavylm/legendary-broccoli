@@ -139,6 +139,26 @@ function escapeHtml(value) {
       document.getElementById('goal-done')?.replaceChildren(document.createTextNode(String(stats.completed_lessons || 0)));
       document.getElementById('goal-target')?.replaceChildren(document.createTextNode(String(courses ? courses.length : 11)));
 
+      // ─── Populate Apple Watch Activity Rings ───────────
+      const streakDays = stats.streak_days || 0;
+      document.getElementById('watch-streak-val')?.replaceChildren(document.createTextNode(`${streakDays} ${pluralDays(streakDays)} подряд`));
+      const streakPct = Math.min(1, streakDays / 7);
+      const streakOffset = 251.3 - (251.3 * streakPct);
+      document.getElementById('watch-ring-streak')?.setAttribute('stroke-dashoffset', String(streakOffset));
+
+      const practiceMins = stats.practice_minutes || 0;
+      document.getElementById('watch-practice-val')?.replaceChildren(document.createTextNode(`${practiceMins} мин / 30 мин`));
+      const practicePct = Math.min(1, practiceMins / 30);
+      const practiceOffset = 188.5 - (188.5 * practicePct);
+      document.getElementById('watch-ring-practice')?.setAttribute('stroke-dashoffset', String(practiceOffset));
+
+      const completedLessons = stats.completed_lessons || 0;
+      const lessonsGoal = 5;
+      document.getElementById('watch-lessons-val')?.replaceChildren(document.createTextNode(`${completedLessons} из ${lessonsGoal}`));
+      const lessonsPct = Math.min(1, completedLessons / lessonsGoal);
+      const lessonsOffset = 125.7 - (125.7 * lessonsPct);
+      document.getElementById('watch-ring-lessons')?.setAttribute('stroke-dashoffset', String(lessonsOffset));
+
       // Continue learning — show static course cards (extend later from API)
       const courseItems = Array.isArray(courses) ? courses : [];
       const lessonsScroll = document.getElementById('lessons-scroll');

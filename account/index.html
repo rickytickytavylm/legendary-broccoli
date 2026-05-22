@@ -242,7 +242,7 @@
     .lesson-card-sm-title {
       font-size: 12px; font-weight: 600;
       margin: 0 0 4px;
-      display: -webkit-box; -webkit-line-clamp: 2;
+      display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
       -webkit-box-orient: vertical; overflow: hidden;
     }
     .lesson-card-sm-dur { font-size: 11px; color: rgba(255,255,255,.35); }
@@ -939,6 +939,118 @@
         width: 100%;
       }
     }
+
+    /* ─── Apple Watch Concentric Activity Rings ─────────── */
+    .activity-rings-card {
+      max-width: 680px;
+      margin: 0 auto 24px;
+      padding: 24px 28px !important;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%) !important;
+      backdrop-filter: blur(32px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        0 18px 46px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .rings-flex-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    
+    .watch-rings-container {
+      width: 130px;
+      height: 130px;
+      position: relative;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+    }
+    
+    .watch-activity-rings {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .ring-fill {
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    
+    .rings-legend {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .legend-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .legend-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .legend-bullet {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px currentColor;
+    }
+    
+    .legend-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.45);
+    }
+    
+    .legend-value {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      padding-left: 18px;
+    }
+    
+    @media (max-width: 600px) {
+      .activity-rings-card {
+        padding: 20px 18px !important;
+      }
+      .rings-flex-layout {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        text-align: center;
+      }
+      .watch-rings-container {
+        width: 140px;
+        height: 140px;
+      }
+      .rings-legend {
+        width: 100%;
+        gap: 12px;
+        align-items: center;
+      }
+      .legend-header {
+        justify-content: center;
+      }
+      .legend-value {
+        padding-left: 0;
+        font-size: 15px;
+      }
+    }
   </style>
 </head>
 <body class="dark-theme account-page">
@@ -973,6 +1085,71 @@
           <p class="profile-eyebrow">Профиль</p>
           <h1 class="profile-title" id="dash-greeting">Ваш профиль</h1>
           <p class="profile-subtitle" id="dash-sub">Настройки приложения, документы и управление данными.</p>
+        </div>
+      </section>
+
+      <!-- Apple Watch Concentric Activity Rings -->
+      <section class="profile-card activity-rings-card">
+        <div class="rings-flex-layout">
+          <div class="watch-rings-container">
+            <svg class="watch-activity-rings" viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="streakGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#fa114f" />
+                  <stop offset="100%" stop-color="#ff5e3a" />
+                </linearGradient>
+                <linearGradient id="practiceGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#0ddb22" />
+                  <stop offset="100%" stop-color="#a6ff00" />
+                </linearGradient>
+                <linearGradient id="lessonsGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#00d5ff" />
+                  <stop offset="100%" stop-color="#007aff" />
+                </linearGradient>
+              </defs>
+              
+              <!-- Outer Ring (Red): Streak Days. R=40, circum=251.3 -->
+              <circle cx="50" cy="50" r="40" stroke="rgba(250, 11, 79, 0.08)" stroke-width="8" fill="none" />
+              <circle id="watch-ring-streak" class="ring-fill" cx="50" cy="50" r="40" stroke="url(#streakGrad)" stroke-width="8" stroke-linecap="round" fill="none"
+                      stroke-dasharray="251.3" stroke-dashoffset="251.3" />
+                      
+              <!-- Middle Ring (Green): Practice Minutes. R=30, circum=188.5 -->
+              <circle cx="50" cy="50" r="30" stroke="rgba(13, 219, 34, 0.08)" stroke-width="8" fill="none" />
+              <circle id="watch-ring-practice" class="ring-fill" cx="50" cy="50" r="30" stroke="url(#practiceGrad)" stroke-width="8" stroke-linecap="round" fill="none"
+                      stroke-dasharray="188.5" stroke-dashoffset="188.5" />
+                      
+              <!-- Inner Ring (Blue): Completed Lessons. R=20, circum=125.7 -->
+              <circle cx="50" cy="50" r="20" stroke="rgba(0, 213, 255, 0.08)" stroke-width="8" fill="none" />
+              <circle id="watch-ring-lessons" class="ring-fill" cx="50" cy="50" r="20" stroke="url(#lessonsGrad)" stroke-width="8" stroke-linecap="round" fill="none"
+                      stroke-dasharray="125.7" stroke-dashoffset="125.7" />
+            </svg>
+          </div>
+          
+          <div class="rings-legend">
+            <div class="legend-item">
+              <div class="legend-header" style="color: #fa114f">
+                <span class="legend-bullet"></span>
+                <span class="legend-label">Серия дней</span>
+              </div>
+              <div class="legend-value" id="watch-streak-val">0 дней подряд</div>
+            </div>
+            
+            <div class="legend-item">
+              <div class="legend-header" style="color: #0ddb22">
+                <span class="legend-bullet"></span>
+                <span class="legend-label">Практики</span>
+              </div>
+              <div class="legend-value" id="watch-practice-val">0 мин сегодня</div>
+            </div>
+            
+            <div class="legend-item">
+              <div class="legend-header" style="color: #00d5ff">
+                <span class="legend-bullet"></span>
+                <span class="legend-label">Пройдено занятий</span>
+              </div>
+              <div class="legend-value" id="watch-lessons-val">0 из 5</div>
+            </div>
+          </div>
         </div>
       </section>
 
