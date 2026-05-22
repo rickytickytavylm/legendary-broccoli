@@ -8,10 +8,14 @@
   }
 
   // ── Inject CSS ─────────────────────────────────────────
-  if (!document.querySelector('link[href*="nav.css"]')) {
+  var navCssHref = '/css/nav.css?v=74';
+  var navCssLink = document.querySelector('link[href*="nav.css"]');
+  if (navCssLink) {
+    navCssLink.setAttribute('href', navCssHref);
+  } else {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/css/nav.css?v=73';
+    link.href = navCssHref;
     document.head.appendChild(link);
   }
 
@@ -432,8 +436,8 @@
   function updateMobileHeaderOnScroll() {
     var currentY = Math.max(0, window.scrollY || 0);
     var delta = currentY - lastMobileHeaderScrollY;
-    var shouldHide = currentY > 96 && delta > 8;
-    var shouldShow = delta < -6 || currentY <= 24;
+    var shouldHide = currentY > 42 && delta > 3;
+    var shouldShow = delta < -12 || currentY <= 12;
     if (shouldHide) mobileHeader.classList.add('mobile-header-hidden');
     if (shouldShow) mobileHeader.classList.remove('mobile-header-hidden');
     lastMobileHeaderScrollY = currentY;

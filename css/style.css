@@ -1115,7 +1115,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   height: 18px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
   .today-carousel-controls {
     display: none !important;
   }
@@ -7356,9 +7356,15 @@ body.audio-player-open {
 }
 
 .chat-page .app-tabbar,
+.chat-page .app-mobile-header,
+.chat-page .app-sidebar,
 .chat-page .footer,
 .chat-page .navbar {
   display: none !important;
+}
+
+.chat-page.no-app-hero {
+  padding-top: 0;
 }
 
 .chat-page-shell {
