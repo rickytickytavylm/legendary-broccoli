@@ -259,63 +259,50 @@
     }
 
     .shorts-player-topbar {
-      flex: 0 0 auto;
+      position: absolute;
+      top: max(12px, env(safe-area-inset-top));
+      left: max(12px, env(safe-area-inset-left));
+      right: max(12px, env(safe-area-inset-right));
+      z-index: 10;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-top: calc(env(safe-area-inset-top, 0px) + 28px);
-      padding-bottom: 12px;
-      padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
-      position: relative;
-      z-index: 4;
-      background: linear-gradient(
-        180deg,
-        rgba(5, 6, 10, 0.95) 0%,
-        rgba(5, 6, 10, 0.55) 55%,
-        transparent 100%
-      );
+      justify-content: flex-start;
       pointer-events: none;
-    }
-
-    .shorts-player-topbar .shorts-player-dismiss {
-      pointer-events: auto;
     }
 
     .shorts-player-dismiss {
       appearance: none;
-      margin: 14px 0 0;
+      margin: 0;
       padding: 0;
-      width: 48px;
-      height: 48px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow:
-        0 4px 24px rgba(0, 0, 0, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.38);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
       color: #fff;
       cursor: pointer;
       display: grid;
       place-items: center;
+      pointer-events: auto;
       transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
     }
 
     .shorts-player-dismiss:hover,
     .shorts-player-dismiss:focus-visible {
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(255, 255, 255, 0.32);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
       outline: none;
     }
 
     .shorts-player-dismiss:active {
-      transform: scale(0.96);
+      transform: scale(0.94);
     }
 
     .shorts-player-dismiss svg {
-      width: 26px;
-      height: 26px;
+      width: 20px;
+      height: 20px;
       display: block;
     }
 
@@ -386,6 +373,12 @@
       border-radius: 2px;
     }
 
+    @media (max-width: 768px) {
+      .shorts-player-stage video {
+        object-fit: cover !important;
+      }
+    }
+
     /* Краевая матовка поверх видео: усиливает кадр, не блокирует тапы (pointer-events: none) */
     .shorts-player-vignette {
       position: absolute;
@@ -442,6 +435,116 @@
       box-shadow:
         0 12px 40px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .shorts-player-title::after {
+      content: " ... Ещё";
+      display: inline-block;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 800;
+      margin-left: 4px;
+    }
+
+    /* Стеклянная выдвижная модалка для описания */
+    .shorts-desc-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      pointer-events: none;
+      transition: visibility 0.3s ease;
+    }
+
+    .shorts-desc-modal.u-hidden {
+      display: none !important;
+    }
+
+    .shorts-desc-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .shorts-desc-modal:not(.u-hidden) .shorts-desc-modal-backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .shorts-desc-modal-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(14, 18, 28, 0.85);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: 0;
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 -12px 42px rgba(0,0,0,0.5);
+      padding: 16px 20px max(24px, calc(12px + env(safe-area-inset-bottom)));
+      pointer-events: auto;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .shorts-desc-modal:not(.u-hidden) .shorts-desc-modal-content {
+      transform: translateY(0);
+    }
+
+    .shorts-desc-modal-handle {
+      width: 40px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.24);
+      border-radius: 99px;
+      margin: 0 auto 16px;
+      cursor: pointer;
+    }
+
+    .shorts-desc-modal-body {
+      max-height: clamp(200px, 50vh, 480px);
+      overflow-y: auto;
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+      padding-bottom: 12px;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .shorts-desc-modal-body p {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .shorts-desc-modal-close {
+      appearance: none;
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 11px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+
+    .shorts-desc-modal-close:hover {
+      background: rgba(255, 255, 255, 0.14);
     }
   </style>
 </head>
@@ -467,8 +570,8 @@
           data-shorts-player-close
           aria-label="Закрыть"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-            <path d="M6 10l6 6 6-6" />
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
       </div>
@@ -481,8 +584,20 @@
         <div class="shorts-player-vignette" aria-hidden="true"></div>
       </div>
       <footer class="shorts-player-foot">
-        <p id="shorts-player-title" class="shorts-player-title"></p>
+        <p id="shorts-player-title" class="shorts-player-title" title="Нажмите, чтобы раскрыть описание"></p>
       </footer>
+
+      <!-- Стеклянная выдвижная модалка описания -->
+      <div id="shorts-desc-modal" class="shorts-desc-modal u-hidden" aria-hidden="true">
+        <div class="shorts-desc-modal-backdrop" data-shorts-desc-close></div>
+        <div class="shorts-desc-modal-content">
+          <div class="shorts-desc-modal-handle" data-shorts-desc-close></div>
+          <div class="shorts-desc-modal-body">
+            <p id="shorts-desc-modal-text"></p>
+          </div>
+          <button type="button" class="shorts-desc-modal-close" data-shorts-desc-close>Свернуть</button>
+        </div>
+      </div>
     </div>
 
     <div id="shorts-toast" class="shorts-toast" aria-live="polite"></div>

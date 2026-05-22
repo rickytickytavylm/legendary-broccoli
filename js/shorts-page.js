@@ -145,7 +145,16 @@
     neu.setAttribute('webkit-playsinline', '');
     neu.preload = 'auto';
     neu.setAttribute('crossorigin', 'anonymous');
-    neu.muted = true;
+    neu.muted = false; // Start unmuted for premium user-initiated sound experience!
+
+    // Toggle play/pause on direct video click/tap (classic TikTok / Shorts behavior)
+    neu.addEventListener('click', function(ev) {
+      if (neu.paused) {
+        neu.play().catch(function() {});
+      } else {
+        neu.pause();
+      }
+    });
 
     var oldEl = stageEl.querySelector('#shorts-player-video');
     if (oldEl && oldEl.parentNode === stageEl) {
@@ -205,7 +214,12 @@
     function tryPlay() {
       var p = videoEl.play ? videoEl.play() : null;
       if (p && typeof p.then === 'function') {
-        p.catch(function () {});
+        p.catch(function () {
+          // If unmuted playback is blocked, fallback to muted play and prompt user to unmute!
+          videoEl.muted = true;
+          videoEl.play().catch(function() {});
+          showToast('Нажмите на экран, чтобы включить звук', 2800);
+        });
       }
     }
 
@@ -243,7 +257,7 @@
     videoEl.setAttribute('webkit-playsinline', '');
     videoEl.preload = 'auto';
     videoEl.setAttribute('crossorigin', 'anonymous');
-    videoEl.muted = true;
+    videoEl.muted = false; // Start unmuted!
 
     videoEl.addEventListener('loadeddata', vidListeners.settle);
     videoEl.addEventListener('canplay', vidListeners.settle);
@@ -458,4 +472,44 @@
       jumpShortBy(-1);
     }
   });
+
+  // ── Description Bottom Sheet Modal Logic ──────────────────
+  var descModal = document.getElementById('shorts-desc-modal');
+  var descModalText = document.getElementById('shorts-desc-modal-text');
+
+  function openDescModal() {
+    if (!descModal || !descModalText || !titleEl) return;
+    var currentItem = shortsItems[playingIndex];
+    if (currentItem && currentItem.caption) {
+      descModalText.textContent = currentItem.caption;
+      descModal.classList.remove('u-hidden');
+      descModal.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function closeDescModal() {
+    if (!descModal) return;
+    descModal.classList.add('u-hidden');
+    descModal.setAttribute('aria-hidden', 'true');
+  }
+
+  if (titleEl) {
+    titleEl.addEventListener('click', function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      openDescModal();
+    });
+  }
+
+  // Bind close buttons/backdrops using event delegation / loop
+  var closeTriggers = document.querySelectorAll('[data-shorts-desc-close]');
+  if (closeTriggers) {
+    closeTriggers.forEach(function(trigger) {
+      trigger.addEventListener('click', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        closeDescModal();
+      });
+    });
+  }
 })();
