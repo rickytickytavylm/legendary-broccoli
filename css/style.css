@@ -610,10 +610,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   padding: max(12px, env(safe-area-inset-top)) 28px max(12px, env(safe-area-inset-bottom));
   border: 0;
   border-radius: 0;
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.16), rgba(0,0,0,.42) 48%, #000 100%),
-    url('/assets/webp/onboarding.webp') center top / cover no-repeat,
-    #000;
+  background: #07100E;
   box-shadow: none;
   display: flex;
   flex-direction: column;
@@ -1770,10 +1767,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     min-height: 100svh;
     padding: max(10px, env(safe-area-inset-top)) 14px 0;
     overflow: hidden;
-    background:
-      linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,.46) 46%, #000 100%),
-      url('/assets/webp/onboarding.webp') center top / cover no-repeat,
-      #000;
+    background: #07100E;
   }
 
   .onboarding-topbar {
@@ -7521,6 +7515,7 @@ body.audio-player-open {
   display: flex;
   gap: 10px;
   align-items: flex-end;
+  margin-bottom: 12px;
 }
 
 .chat-message-own {
@@ -7541,26 +7536,35 @@ body.audio-player-open {
   font-weight: 800;
 }
 
+/* Premium Liquid Glass Chat Bubbles */
 .chat-message-bubble {
-  max-width: min(78%, 520px);
-  padding: 10px 12px 11px;
-  border-radius: 18px 18px 18px 6px;
-  color: rgba(255,255,255,.9);
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.09);
+  max-width: min(82%, 520px);
+  padding: 11px 15px 12px;
+  border-radius: 20px 20px 20px 6px;
+  color: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 6px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
 .chat-message-own .chat-message-bubble {
-  border-radius: 18px 18px 6px 18px;
-  background: linear-gradient(135deg, rgba(216,191,155,.32), rgba(216,191,155,.16));
-  border-color: rgba(216,191,155,.22);
+  border-radius: 20px 20px 6px 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.26) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 20px rgba(0, 0, 0, 0.2) !important;
 }
 
 .chat-message-meta {
   display: flex;
   gap: 9px;
-  align-items: baseline;
-  margin-bottom: 4px;
+  align-items: center;
+  margin-bottom: 5px;
   color: rgba(255,255,255,.52);
   font-size: 11px;
   font-weight: 700;
@@ -7575,38 +7579,151 @@ body.audio-player-open {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.45;
+}
+
+/* Edit / Delete action buttons in message bubbles */
+.chat-message-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.chat-message-bubble:hover .chat-message-actions,
+.chat-message-bubble:focus-within .chat-message-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.chat-action-btn {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
+}
+
+.chat-action-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.chat-action-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.chat-action-btn.btn-delete:hover {
+  color: rgba(255, 120, 120, 0.95);
+  background: rgba(255, 80, 80, 0.12);
+}
+
+/* Realtime Edit Mode Banner */
+.chat-edit-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  font-size: 13.5px;
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+.chat-edit-banner.hidden {
+  display: none !important;
+}
+
+.edit-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}
+
+.edit-banner-icon {
+  width: 15px;
+  height: 15px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.edit-banner-close {
+  appearance: none;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.edit-banner-close:hover {
+  color: #ffffff;
 }
 
 .chat-composer {
   display: flex;
   gap: 10px;
-  padding: 12px;
+  align-items: flex-end;
+  padding: 12px 16px max(14px, env(safe-area-inset-bottom));
   border-top: 1px solid rgba(255,255,255,.08);
-  background: rgba(0,0,0,.18);
+  background: rgba(7, 16, 14, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-.chat-composer input {
+.chat-composer textarea {
   min-width: 0;
   flex: 1;
-  height: 46px;
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 999px;
-  padding: 0 16px;
+  height: 42px;
+  min-height: 42px;
+  max-height: 120px;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  border-radius: 20px !important;
+  padding: 10px 16px;
   color: #fff;
-  background: rgba(255,255,255,.07);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
   outline: none;
-  font-size: 16px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  resize: none;
+  overflow-y: auto;
+  transition: border-color 0.25s, background 0.25s;
 }
 
-.chat-composer input::placeholder {
-  color: rgba(255,255,255,.38);
+.chat-composer textarea:focus {
+  border-color: rgba(255,255,255,.28) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+}
+
+.chat-composer textarea::placeholder {
+  color: rgba(255,255,255,.34);
 }
 
 .chat-composer button {
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   display: grid;
   place-items: center;
   border: 0;
@@ -7616,6 +7733,7 @@ body.audio-player-open {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+  margin-bottom: 1px; /* Align perfectly with textarea line heights */
 }
 
 .chat-composer button:hover {
@@ -7630,8 +7748,8 @@ body.audio-player-open {
 }
 
 .chat-composer button svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 @media (max-width: 640px) {
@@ -7656,7 +7774,7 @@ body.audio-player-open {
 /* ── iOS-style Section Headers & Compact Plates ─────────── */
 .ios-section-header {
   width: min(calc(100% - clamp(32px, 6vw, 112px)), 1100px);
-  margin: 42px auto 16px;
+  margin: 52px auto 18px;
   padding: 0 4px;
 }
 
@@ -7680,7 +7798,7 @@ body.audio-player-open {
 @media (max-width: 768px) {
   .ios-section-header {
     width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
-    margin: 28px auto 12px;
+    margin: 38px auto 12px;
   }
   
   .ios-section-title {
@@ -7717,4 +7835,75 @@ body.audio-player-open {
     font-weight: 700 !important;
     border-radius: 999px !important;
   }
+}
+
+/* ── Premium Liquid Glass Onboarding Elements ──────────── */
+.onboarding-options button,
+.onboarding-name-input {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(28px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.12),
+    0 12px 36px rgba(0, 0, 0, 0.3) !important;
+  transition: background 0.3s, border-color 0.3s, transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
+}
+
+.onboarding-options button:hover,
+.onboarding-name-input:focus {
+  border-color: rgba(255, 255, 255, 0.38) !important;
+  transform: translateY(-1.5px);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.14),
+    0 16px 44px rgba(0, 0, 0, 0.4) !important;
+}
+
+.onboarding-options button.active {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.48) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 0 24px rgba(255, 255, 255, 0.08),
+    0 14px 40px rgba(0, 0, 0, 0.35) !important;
+  transform: scale(0.99) !important;
+}
+
+.onboarding-options button.active i {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
+}
+
+.onboarding-inline-next {
+  display: block !important;
+  width: min(100%, 420px) !important;
+  margin: 16px auto 0 !important;
+  min-height: 52px !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  backdrop-filter: blur(28px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(220%) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    0 10px 30px rgba(0, 0, 0, 0.35) !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  color: #ffffff !important;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s, border-color 0.3s !important;
+}
+
+.onboarding-inline-next:hover,
+.onboarding-inline-next:focus {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.10) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  transform: translateY(-1.5px) !important;
+}
+
+.onboarding-inline-next:active {
+  transform: scale(0.96) !important;
 }

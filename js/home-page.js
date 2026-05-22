@@ -379,7 +379,31 @@ function renderOnboarding() {
     });
     options.parentElement?.insertBefore(input, options);
   }
+  
+  let inlineNextBtn = document.querySelector('[data-onboarding-inline-next]');
+  if (!inlineNextBtn) {
+    inlineNextBtn = document.createElement('button');
+    inlineNextBtn.type = 'button';
+    inlineNextBtn.className = 'onboarding-inline-next hidden';
+    inlineNextBtn.setAttribute('data-onboarding-inline-next', '');
+    inlineNextBtn.textContent = 'Далее';
+    inlineNextBtn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const realNext = document.querySelector('[data-onboarding-next]');
+      if (realNext) realNext.click();
+    });
+    input.parentElement?.insertBefore(inlineNextBtn, input.nextSibling);
+  }
+
   input.classList.toggle('hidden', !step.input);
+  inlineNextBtn.classList.toggle('hidden', !step.input);
+
+  // Hide bottom actions container on name input screen to prevent keyboard overlap issues
+  const mainActions = document.querySelector('.onboarding-actions');
+  if (mainActions) {
+    mainActions.classList.toggle('hidden', step.input);
+  }
+
   if (step.input) {
     input.placeholder = step.input.placeholder;
     input.value = onboardingState.name || '';

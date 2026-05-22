@@ -358,6 +358,12 @@ class ApiClient {
   sendGeneralChatMessage(text) {
     return this.request('POST', '/chat/general/messages', { type: 'text', text });
   }
+  updateGeneralChatMessage(id, text) {
+    return this.request('PUT', `/chat/general/messages/${id}`, { type: 'text', text });
+  }
+  deleteGeneralChatMessage(id) {
+    return this.request('DELETE', `/chat/general/messages/${id}`);
+  }
 
   // --- AI ---
   getAiUsage() { return this.request('GET', '/ai/usage'); }

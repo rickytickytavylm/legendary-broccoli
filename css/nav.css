@@ -739,6 +739,10 @@
   .app-mobile-header { display: flex; }
   body.no-app-hero { padding-top: 52px; }
   body.has-app-hero { padding-top: 0; }
+  body.home-first-run-active,
+  body.home-splash-active {
+    padding-top: 0 !important;
+  }
   .hero-actions { display: none !important; }
   .app-tabbar.nav-visible { transform: translateY(0); }
 

@@ -398,56 +398,50 @@
     }
 
     .shorts-player-foot {
-      flex: 0 0 auto;
-      position: relative;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 6;
-      padding-top: clamp(48px, 14vw, 72px);
-      padding-bottom: max(14px, env(safe-area-inset-bottom));
-      padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
-      margin-top: -56px;
-      background: linear-gradient(
-        180deg,
-        transparent 0%,
-        rgba(0, 0, 0, 0.72) min(140px, 38%),
-        rgba(2, 2, 3, 0.92) 100%
-      );
+      padding: 32px 18px max(24px, calc(16px + env(safe-area-inset-bottom)));
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 65%, transparent 100%);
+      pointer-events: none;
     }
 
     .shorts-player-title {
       margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.42;
+      font-size: 14.5px;
+      font-weight: 500;
+      line-height: 1.5;
       letter-spacing: -0.01em;
-      color: rgba(255, 255, 255, 0.94);
-      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
-      max-height: 4.3em;
+      color: rgba(255, 255, 255, 0.96);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9), 0 2px 14px rgba(0, 0, 0, 0.6);
+      max-height: 3.1em;
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-      padding: 13px 16px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      box-shadow:
-        0 12px 40px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      -webkit-line-clamp: 2;
       cursor: pointer;
       position: relative;
+      pointer-events: auto;
+      padding: 0;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
 
     .shorts-player-title::after {
       content: " ... Ещё";
       display: inline-block;
-      color: rgba(255, 255, 255, 0.95);
+      color: #ffffff;
       font-weight: 800;
       margin-left: 4px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
     }
 
-    /* Стеклянная выдвижная модалка для описания */
+    /* Жидкое стекло (Liquid Glass) Выдвижная модалка для описания */
     .shorts-desc-modal {
       position: fixed;
       inset: 0;
@@ -466,9 +460,9 @@
     .shorts-desc-modal-backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
@@ -485,17 +479,19 @@
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
-      background: rgba(14, 18, 28, 0.85);
-      backdrop-filter: blur(28px) saturate(160%);
-      -webkit-backdrop-filter: blur(28px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+      backdrop-filter: blur(40px) saturate(220%);
+      -webkit-backdrop-filter: blur(40px) saturate(220%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       border-bottom: 0;
-      border-radius: 24px 24px 0 0;
-      box-shadow: 0 -12px 42px rgba(0,0,0,0.5);
-      padding: 16px 20px max(24px, calc(12px + env(safe-area-inset-bottom)));
+      border-radius: 28px 28px 0 0;
+      box-shadow: 
+        0 -20px 60px rgba(0, 0, 0, 0.65),
+        inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
+      padding: 20px 24px max(32px, calc(16px + env(safe-area-inset-bottom)));
       pointer-events: auto;
       transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.1); /* springy easing */
     }
 
     .shorts-desc-modal:not(.u-hidden) .shorts-desc-modal-content {
