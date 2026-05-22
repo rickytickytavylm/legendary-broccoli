@@ -1121,30 +1121,30 @@
             <svg class="watch-activity-rings" viewBox="0 0 100 100">
               <defs>
                 <linearGradient id="singleRingGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#fa114f" />
-                  <stop offset="100%" stop-color="#ff9500" />
+                  <stop offset="0%" stop-color="#30d158" />
+                  <stop offset="100%" stop-color="#34c759" />
                 </linearGradient>
               </defs>
               
               <!-- Outer base track. R=40, circum=251.3 -->
-              <circle cx="50" cy="50" r="40" stroke="rgba(250, 17, 79, 0.08)" stroke-width="9" fill="none" />
+              <circle cx="50" cy="50" r="40" stroke="rgba(48, 209, 88, 0.08)" stroke-width="9" fill="none" />
               <circle id="watch-single-ring" class="ring-fill" cx="50" cy="50" r="40" stroke="url(#singleRingGrad)" stroke-width="9" stroke-linecap="round" fill="none"
                       stroke-dasharray="251.3" stroke-dashoffset="251.3" />
             </svg>
             <div class="watch-ring-percent">
-              <span id="watch-ring-count" style="display:block;font-size:32px;font-weight:800;line-height:1">0</span>
-              <span id="watch-ring-unit" style="display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,.45);margin-top:2px;text-transform:uppercase;letter-spacing:0.05em">дней</span>
+              <span id="watch-ring-count" style="display:block;font-size:30px;font-weight:800;line-height:1">0%</span>
+              <span id="watch-ring-unit" style="display:block;font-size:9px;font-weight:700;color:rgba(255,255,255,.45);margin-top:3px;text-transform:uppercase;letter-spacing:0.05em">от года</span>
             </div>
           </div>
           
           <div class="rings-legend">
             <div class="legend-item">
-              <div class="legend-header" style="color: #fa114f">
+              <div class="legend-header" style="color: #30d158">
                 <span class="legend-bullet"></span>
-                <span class="legend-label">Серия дней в пути</span>
+                <span class="legend-label">Дни в системе</span>
               </div>
-              <div class="legend-value" id="watch-streak-val">0 дней подряд</div>
-              <div class="legend-sub-value" id="watch-streak-desc">Заходите каждый день, чтобы продлить серию и закрыть круг.</div>
+              <div class="legend-value" id="watch-streak-val">0 дней</div>
+              <div class="legend-sub-value" id="watch-streak-desc">Цель — 365 дней (1 год)</div>
             </div>
           </div>
         </div>
