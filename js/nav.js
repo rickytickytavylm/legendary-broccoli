@@ -747,4 +747,43 @@
   window.addEventListener('scroll', updateMobileScrollState, { passive: true });
   window.addEventListener('resize', updateMobileScrollState);
   updateMobileScrollState();
+
+  // ── Auto-inject back button into mobile header ───────────
+  function autoInjectMobileHeaderBack() {
+    var originalBackBtn = document.querySelector('.back-link-glass');
+    if (!originalBackBtn) return;
+
+    var destHref = originalBackBtn.getAttribute('href') || '/';
+
+    // Hide original back buttons from pages on mobile (via inline styles just to be absolutely sure)
+    if (window.innerWidth <= 768) {
+      originalBackBtn.style.setProperty('display', 'none', 'important');
+    }
+
+    var header = document.getElementById('app-mobile-header');
+    if (!header || header.querySelector('.ai-header-back')) return;
+
+    header.classList.add('has-back-button');
+
+    var btn = document.createElement('a');
+    btn.href = destHref;
+    btn.className = 'ai-header-back';
+    btn.setAttribute('aria-label', 'Назад');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+
+    var navigate = function(e) {
+      e.preventDefault();
+      window.location.assign(destHref);
+    };
+    btn.addEventListener('touchstart', navigate);
+    btn.addEventListener('click', navigate);
+
+    header.insertBefore(btn, header.firstChild);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', autoInjectMobileHeaderBack);
+  } else {
+    setTimeout(autoInjectMobileHeaderBack, 0);
+  }
 })();

@@ -530,6 +530,33 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 768px) {
+  .app-mobile-header.has-back-button {
+    display: grid !important;
+    grid-template-columns: 44px 1fr 44px;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .app-mobile-header.has-back-button .mobile-header-brand {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .app-mobile-header.has-back-button .mobile-header-actions {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .back-link-glass {
+    display: none !important;
+  }
+}
+
 .app-mobile-header.mobile-header-hidden {
   opacity: 0;
   pointer-events: none;

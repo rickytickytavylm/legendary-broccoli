@@ -2897,7 +2897,7 @@ video::-internal-media-interstitial-panel { display: none !important; }
 
 :root {
   /* Colors */
-  --bg-main: #070A0F;
+  --bg-main: #07100E;
   --bg-surface: #0D111A;
   --bg-card: rgba(255, 255, 255, 0.03);
   --bg-card-hover: rgba(255, 255, 255, 0.06);
@@ -7596,6 +7596,7 @@ body.audio-player-open {
   color: #fff;
   background: rgba(255,255,255,.07);
   outline: none;
+  font-size: 16px;
 }
 
 .chat-composer input::placeholder {
@@ -7610,18 +7611,27 @@ body.audio-player-open {
   place-items: center;
   border: 0;
   border-radius: 50%;
-  color: #10110D;
-  background: #D8BF9B;
-  box-shadow: 0 14px 34px rgba(216,191,155,.22);
+  color: #050506;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+}
+
+.chat-composer button:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
 }
 
 .chat-composer button:disabled {
-  opacity: .55;
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .chat-composer button svg {
-  width: 21px;
-  height: 21px;
+  width: 20px;
+  height: 20px;
 }
 
 @media (max-width: 640px) {
@@ -7640,5 +7650,71 @@ body.audio-player-open {
 
   .chat-panel-header {
     padding-top: max(14px, env(safe-area-inset-top));
+  }
+}
+
+/* ── iOS-style Section Headers & Compact Plates ─────────── */
+.ios-section-header {
+  width: min(calc(100% - clamp(32px, 6vw, 112px)), 1100px);
+  margin: 42px auto 16px;
+  padding: 0 4px;
+}
+
+.ios-section-kicker {
+  margin: 0 0 4px 0 !important;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  letter-spacing: 0.14em;
+}
+
+.ios-section-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 760;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+
+@media (max-width: 768px) {
+  .ios-section-header {
+    width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
+    margin: 28px auto 12px;
+  }
+  
+  .ios-section-title {
+    font-size: 19px;
+  }
+
+  /* Make today program & support cards significantly more compact */
+  body .today-main-card,
+  body .today-support-card {
+    min-height: 155px !important;
+    padding: 20px 22px !important;
+    border-radius: 20px !important;
+  }
+
+  body .today-main-card h2,
+  body .today-support-card h3 {
+    font-size: 18px !important;
+    margin: 2px 0 6px !important;
+    letter-spacing: -0.02em;
+  }
+
+  body .today-main-card p,
+  body .today-support-card p {
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+  }
+
+  /* Compact button styles inside plates */
+  body .today-program-button,
+  body .today-support-button {
+    padding: 8px 18px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border-radius: 999px !important;
   }
 }
