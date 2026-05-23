@@ -220,15 +220,19 @@
 @media (max-width: 768px) {
   .app-sidebar { display: none !important; }
 
-  /* Футер из nav.js — запас над фиксированным таб-баром */
+  /* Футер из nav.js — запас над фиксированным таб-баром (по умолчанию уменьшен, увеличен только на странице профиля) */
   footer.footer.app-injected-footer {
-    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(34px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  body.account-page footer.footer.app-injected-footer {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 
 
 /* ── Tab Bar ─────────────────────────────────────────── */
 .app-tabbar {
+  display: none !important; /* Скрыт по умолчанию на всех страницах */
   visibility: visible;
   position: fixed;
   left: 14px;
@@ -244,7 +248,6 @@
   box-shadow:
     0 24px 70px rgba(0, 0, 0, 0.50),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 8px;
@@ -255,6 +258,10 @@
     opacity 0.22s ease;
   will-change: transform;
   overflow: hidden;
+}
+
+body.account-page .app-tabbar {
+  display: flex !important; /* Показывается только на странице профиля */
 }
 
 .app-tabbar.nav-visible {

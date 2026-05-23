@@ -427,6 +427,10 @@
   const cancelBtn = document.getElementById('rec-cancel-btn');
   const stopBtn = document.getElementById('rec-stop-btn');
 
+  const hasMediaSupport = typeof MediaRecorder !== 'undefined' && 
+                          navigator.mediaDevices && 
+                          typeof navigator.mediaDevices.getUserMedia === 'function';
+
   let mediaRecorder = null;
   let recordedChunks = [];
   let recordStream = null;
@@ -435,6 +439,10 @@
   let recordingType = null; // 'audio' or 'video'
 
   const startRecording = async (type) => {
+    if (!hasMediaSupport) {
+      alert('Запись аудио и кружочков не поддерживается вашим браузером, или соединение не защищено (требуется HTTPS).');
+      return;
+    }
     try {
       recordingType = type;
       recordedChunks = [];
@@ -455,22 +463,41 @@
         previewWrap?.classList.add('hidden');
       }
       
-      // Determine optimal mime type
-      let mimeType = type === 'video' ? 'video/webm;codecs=vp9,opus' : 'audio/webm;codecs=opus';
-      if (type === 'video' && !MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = 'video/webm;codecs=vp8,opus';
-      }
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = type === 'video' ? 'video/webm' : 'audio/webm';
+      // Determine optimal mime type for cross-platform support (Chrome/iOS Safari)
+      let options = {};
+      if (type === 'video') {
+        const candidates = [
+          'video/mp4;codecs=avc1,mp4a.40.2',
+          'video/mp4',
+          'video/quicktime',
+          'video/webm;codecs=vp9,opus',
+          'video/webm;codecs=vp8,opus',
+          'video/webm'
+        ];
+        const chosen = candidates.find(mime => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(mime));
+        if (chosen) {
+          options.mimeType = chosen;
+        }
+      } else {
+        const candidates = [
+          'audio/mp4',
+          'audio/aac',
+          'audio/webm;codecs=opus',
+          'audio/webm'
+        ];
+        const chosen = candidates.find(mime => typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(mime));
+        if (chosen) {
+          options.mimeType = chosen;
+        }
       }
       
-      mediaRecorder = new MediaRecorder(recordStream, { mimeType });
+      mediaRecorder = new MediaRecorder(recordStream, options);
       mediaRecorder.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) recordedChunks.push(e.data);
       };
       
       mediaRecorder.onstop = async () => {
-        const mime = mediaRecorder.mimeType || (type === 'video' ? 'video/webm' : 'audio/webm');
+        const mime = mediaRecorder.mimeType || (type === 'video' ? 'video/mp4' : 'audio/mp4');
         const blob = new Blob(recordedChunks, { type: mime });
         
         stopStream();
