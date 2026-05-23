@@ -103,11 +103,11 @@
 
       let contentHtml = `<div class="chat-message-text">${escapeHtml(message.text_content || '').replace(/\n/g, '<br>')}</div>`;
       if (message.type === 'audio_circle' && message.file_url) {
-        contentHtml = `<audio class="chat-audio-player" src="${escapeHtml(message.file_url)}" controls></audio>`;
+        contentHtml = `<audio class="chat-audio-player" src="${escapeHtml(message.file_url)}" controls preload="auto"></audio>`;
       } else if (message.type === 'video_circle' && message.file_url) {
         contentHtml = `
           <div class="chat-video-circle-wrap">
-            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline loop muted autoplay onclick="this.paused ? this.play() : this.pause()"></video>
+            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="auto" onclick="this.paused ? this.play() : this.pause()"></video>
           </div>
         `;
       }
@@ -449,7 +449,7 @@
       
       const constraints = {
         audio: true,
-        video: type === 'video' ? { width: { ideal: 480 }, height: { ideal: 480 }, facingMode: 'user' } : false
+        video: type === 'video' ? { facingMode: 'user' } : false
       };
       
       recordStream = await navigator.mediaDevices.getUserMedia(constraints);

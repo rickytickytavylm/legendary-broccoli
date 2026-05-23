@@ -7440,9 +7440,7 @@ body.chat-page {
 }
 
 .chat-status {
-  padding: 0 18px 12px 74px;
-  color: rgba(255,255,255,.46);
-  font-size: 12px;
+  display: none !important;
 }
 
 .chat-messages-wrap {
@@ -7962,14 +7960,6 @@ body.chat-page {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-
-  body.chat-page .chat-status {
-    padding: 8px 16px 12px;
-    text-align: center;
-    font-size: 11px;
-    letter-spacing: -0.1px;
-    opacity: 0.85;
   }
 }
 
