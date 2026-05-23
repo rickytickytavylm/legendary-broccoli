@@ -7349,6 +7349,18 @@ body.chat-page {
   overflow: hidden !important;
   position: fixed !important;
   width: 100% !important;
+  touch-action: manipulation !important;
+}
+
+html:has(body.chat-page) *,
+body.chat-page *,
+.chat-panel,
+.chat-message,
+.chat-composer,
+.chat-composer button,
+.chat-media-trigger,
+.voice-player {
+  touch-action: manipulation !important;
 }
 
 .chat-page {
