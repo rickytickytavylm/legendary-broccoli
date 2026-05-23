@@ -103,7 +103,20 @@
 
       let contentHtml = `<div class="chat-message-text">${escapeHtml(message.text_content || '').replace(/\n/g, '<br>')}</div>`;
       if (message.type === 'audio_circle' && message.file_url) {
-        contentHtml = `<audio class="chat-audio-player" src="${escapeHtml(message.file_url)}" controls preload="auto"></audio>`;
+        contentHtml = `
+          <div class="voice-player" data-src="${escapeHtml(message.file_url)}">
+            <button class="voice-play-btn" type="button" aria-label="Проиграть">
+              <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+            <div class="voice-waveform-wrap">
+              <div class="voice-timeline">
+                <div class="voice-progress"></div>
+              </div>
+              <span class="voice-duration">Голосовое сообщение</span>
+            </div>
+          </div>
+        `;
       } else if (message.type === 'video_circle' && message.file_url) {
         contentHtml = `
           <div class="chat-video-circle-wrap">
@@ -364,6 +377,103 @@
     }
   });
 
+  // Custom Audio Player click & seek handlers
+  let activeAudio = null;
+  let activePlayerEl = null;
+
+  list?.addEventListener('click', (e) => {
+    // 1. Handle Play/Pause Button
+    const playBtn = e.target.closest('.voice-play-btn');
+    if (playBtn) {
+      const playerEl = playBtn.closest('.voice-player');
+      const url = playerEl.dataset.src;
+      const playIcon = playBtn.querySelector('.play-icon');
+      const pauseIcon = playBtn.querySelector('.pause-icon');
+      const progressBar = playerEl.querySelector('.voice-progress');
+      const durationLabel = playerEl.querySelector('.voice-duration');
+
+      // If there is an active audio playing elsewhere, pause it
+      if (activeAudio && activePlayerEl !== playerEl) {
+        activeAudio.pause();
+        const oldPlayBtn = activePlayerEl.querySelector('.voice-play-btn');
+        if (oldPlayBtn) {
+          oldPlayBtn.querySelector('.play-icon').classList.remove('hidden');
+          oldPlayBtn.querySelector('.pause-icon').classList.add('hidden');
+        }
+      }
+
+      if (activePlayerEl === playerEl && activeAudio) {
+        if (activeAudio.paused) {
+          activeAudio.play()
+            .then(() => {
+              playIcon.classList.add('hidden');
+              pauseIcon.classList.remove('hidden');
+            })
+            .catch(err => console.error('Audio play failed:', err));
+        } else {
+          activeAudio.pause();
+          playIcon.classList.remove('hidden');
+          pauseIcon.classList.add('hidden');
+        }
+      } else {
+        const audio = new Audio(url);
+        audio.preload = 'auto';
+        activeAudio = audio;
+        activePlayerEl = playerEl;
+
+        audio.addEventListener('timeupdate', () => {
+          if (audio.duration) {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = percent + '%';
+            const curMin = Math.floor(audio.currentTime / 60);
+            const curSec = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+            const durMin = Math.floor(audio.duration / 60);
+            const durSec = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+            durationLabel.textContent = `${curMin}:${curSec} / ${durMin}:${durSec}`;
+          }
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+          const durMin = Math.floor(audio.duration / 60);
+          const durSec = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+          durationLabel.textContent = `0:00 / ${durMin}:${durSec}`;
+        });
+
+        audio.addEventListener('ended', () => {
+          playIcon.classList.remove('hidden');
+          pauseIcon.classList.add('hidden');
+          progressBar.style.width = '0%';
+          durationLabel.textContent = 'Голосовое сообщение';
+          activeAudio = null;
+          activePlayerEl = null;
+        });
+
+        audio.play()
+          .then(() => {
+            playIcon.classList.add('hidden');
+            pauseIcon.classList.remove('hidden');
+          })
+          .catch(err => {
+            console.error('Audio play failed:', err);
+          });
+      }
+      return;
+    }
+
+    // 2. Handle Timeline Clicks (seeking)
+    const timeline = e.target.closest('.voice-timeline');
+    if (timeline) {
+      const playerEl = timeline.closest('.voice-player');
+      if (activePlayerEl === playerEl && activeAudio && activeAudio.duration) {
+        const rect = timeline.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const width = rect.width;
+        const percent = clickX / width;
+        activeAudio.currentTime = percent * activeAudio.duration;
+      }
+    }
+  });
+
   // Handle visual viewports and software keyboard lifting
   if (window.visualViewport) {
     const onViewportResize = () => {
@@ -520,7 +630,11 @@
       
     } catch (err) {
       console.error(err);
-      alert('Ошибка доступа к микрофону или камере: ' + err.message);
+      if (err.name === 'NotAllowedError' || err.message.includes('not allowed') || err.message.includes('permission')) {
+        alert('Доступ к микрофону или камере заблокирован в настройках вашего iPhone.\n\nПожалуйста, нажмите на кнопку настроек (иконка "аА" или значок замка слева в адресной строке Safari) и разрешите доступ к Камере и Микрофону для этого сайта.');
+      } else {
+        alert('Ошибка доступа к микрофону или камере: ' + err.message);
+      }
       stopStream();
     }
   };

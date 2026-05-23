@@ -7378,8 +7378,8 @@ body.chat-page {
 .chat-panel {
   width: min(760px, 100%);
   height: calc(100dvh - max(28px, env(safe-area-inset-top)) - max(14px, env(safe-area-inset-bottom)) - var(--keyboard-height, 0px));
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 30px;
@@ -7444,6 +7444,7 @@ body.chat-page {
 }
 
 .chat-messages-wrap {
+  flex: 1;
   position: relative;
   min-height: 0;
   overflow: hidden;
@@ -8206,4 +8207,80 @@ body.chat-page {
 .action-sheet-btn.action-cancel {
   font-weight: 600;
   color: #ffffff;
+}
+
+/* ─── Premium Custom Voice Player ───────────────── */
+.voice-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 8px 14px;
+  min-width: 220px;
+  max-width: 280px;
+  user-select: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.voice-play-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #d8bf9b; /* Brand gold/bronze color */
+  border: none;
+  color: #07100e !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(216, 191, 155, 0.25);
+  padding: 0;
+}
+
+.voice-play-btn:active {
+  transform: scale(0.92);
+}
+
+.voice-play-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.voice-waveform-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.voice-timeline {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+  padding: 2px 0; /* padding for easier finger/cursor tap target */
+  background-clip: content-box;
+}
+
+.voice-progress {
+  height: 4px;
+  background: #d8bf9b;
+  border-radius: 2px;
+  width: 0%;
+  position: absolute;
+  left: 0;
+  top: 2px;
+}
+
+.voice-duration {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: -0.1px;
 }
