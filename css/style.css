@@ -3,6 +3,10 @@
    Style: Framer / Rork / Apple (Dark Mode)
    ============================================================ */
 
+:root, html {
+  color-scheme: dark;
+}
+
 /* Prevent flash of legacy/raw navigation before nav.js/nav.css initializes */
 .navbar,
 .glass-tab-bar {
