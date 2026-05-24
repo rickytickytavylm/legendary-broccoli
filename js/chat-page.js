@@ -167,6 +167,52 @@
     }
   }
 
+  // Helper to convert VAPID public key to Uint8Array for push manager
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  // Handle full Push subscription registration and saving to backend
+  async function setupPushNotifications() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      console.log('Push notifications not supported on this browser/device');
+      return;
+    }
+
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        console.log('Notification permission denied');
+        return;
+      }
+
+      const registration = await navigator.serviceWorker.ready;
+      const VAPID_PUBLIC_KEY = 'BJ2mtnvvuig_I_ZBVMQy4HaLMAeymgwY3fiSzLO81Vi7JQKpuknLALehKkQyEx7Y8RIqrzd0WTcP6xxxX7kTopI';
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+
+      console.log('Successfully registered PushSubscription:', subscription);
+
+      await window.API.request('POST', '/chat/subscribe', { subscription });
+      console.log('PushSubscription successfully saved on backend');
+    } catch (err) {
+      console.error('Failed to configure Push Notifications:', err);
+    }
+  }
+
   async function boot() {
     try {
       setStatus('Подключаемся…');
@@ -175,9 +221,9 @@
       await loadMessages(true);
       connectSocket();
 
-      // Request native notification permission on load
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().catch(() => {});
+      // Configure Web Push notifications on load
+      if ('Notification' in window) {
+        setupPushNotifications().catch(() => {});
       }
     } catch (err) {
       setStatus(err?.error || 'Чат временно недоступен');
