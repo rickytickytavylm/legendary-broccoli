@@ -405,10 +405,21 @@ function renderOnboarding() {
       } else {
         document.getElementById('install-title').textContent = 'Установите приложение';
         if (isAndroid) {
-          document.getElementById('install-desc').textContent = 'Установите Систему на главный экран для мгновенного доступа и пуш-уведомлений.';
-          if (androidBtn) {
-            androidBtn.classList.remove('hidden');
-            androidBtn.textContent = 'Установить';
+          const isYandex = /YaBrowser/i.test(navigator.userAgent);
+          if (deferredInstallPrompt) {
+            document.getElementById('install-desc').textContent = 'Установите Систему на главный экран для мгновенного доступа и пуш-уведомлений.';
+            if (androidBtn) {
+              androidBtn.classList.remove('hidden');
+              androidBtn.textContent = 'Установить';
+            }
+          } else {
+            // Android, but deferredInstallPrompt is not available (e.g. Yandex Browser or prompt not fired yet)
+            if (isYandex) {
+              document.getElementById('install-desc').textContent = 'Для установки Системы как приложения без адресной строки рекомендуем открыть сайт в Google Chrome. В Яндекс.Браузере вы можете добавить ярлык через меню (три точки → Добавить на главный экран).';
+            } else {
+              document.getElementById('install-desc').textContent = 'Для запуска во весь экран без адресной строки рекомендуем использовать Google Chrome. Вы также можете добавить ярлык через меню вашего текущего браузера.';
+            }
+            if (androidBtn) androidBtn.classList.add('hidden');
           }
           if (iosBtn) iosBtn.classList.add('hidden');
         } else if (isIOS) {
