@@ -3,6 +3,37 @@
  * Injected into every page. Handles scroll-triggered reveal via GPU transform only.
  */
 (function initNav() {
+  // ── Inject PWA Meta Headers ────────────────────────────
+  (function injectPWAMeta() {
+    if (!document.querySelector('link[rel="manifest"]')) {
+      var manifest = document.createElement('link');
+      manifest.rel = 'manifest';
+      manifest.href = '/manifest.json';
+      document.head.appendChild(manifest);
+    }
+    var metaCap = document.querySelector('meta[name="apple-mobile-web-app-capable"]') || document.createElement('meta');
+    metaCap.name = 'apple-mobile-web-app-capable';
+    metaCap.content = 'yes';
+    if (!metaCap.parentNode) document.head.appendChild(metaCap);
+
+    var metaStatus = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]') || document.createElement('meta');
+    metaStatus.name = 'apple-mobile-web-app-status-bar-style';
+    metaStatus.content = 'black-translucent';
+    if (!metaStatus.parentNode) document.head.appendChild(metaStatus);
+
+    var metaTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]') || document.createElement('meta');
+    metaTitle.name = 'apple-mobile-web-app-title';
+    metaTitle.content = 'Система';
+    if (!metaTitle.parentNode) document.head.appendChild(metaTitle);
+
+    if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+      var icon = document.createElement('link');
+      icon.rel = 'apple-touch-icon';
+      icon.href = '/assets/icon-192.png';
+      document.head.appendChild(icon);
+    }
+  })();
+
   function icon(paths) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
   }
@@ -220,7 +251,7 @@
   sidebar.innerHTML =
     '<div class="sidebar-head">' +
       '<a href="/" class="sidebar-brand">' +
-        '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
+        '<img src="/assets/webp/logo2.webp" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
       '</a>' +
     '</div>' +
     '<nav class="sidebar-nav">' + navItemsHTML + '</nav>' +
@@ -261,7 +292,7 @@
 
   mobileHeader.innerHTML =
     '<a href="/" class="mobile-header-brand">' +
-      '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="mobile-header-logo">' +
+      '<img src="/assets/webp/logo2.webp" alt="Система" class="mobile-header-logo">' +
     '</a>' +
     '<div class="mobile-header-actions">' +
       '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>' +
