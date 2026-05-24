@@ -13,8 +13,18 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Полностью пропускаем все запросы мимо Service Worker
-  return;
+  // To satisfy Google Chrome PWA/WebAPK criteria, we must call event.respondWith().
+  // We use a lightweight network-first fallback strategy.
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      // In case of network failure (offline), try to serve from cache if available
+      return caches.match(event.request);
+    })
+  );
 });
 
 // Listen for Web Push events from the server
