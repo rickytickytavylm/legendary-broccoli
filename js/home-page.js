@@ -404,15 +404,29 @@ function renderOnboarding() {
         if (iosBtn) iosBtn.classList.add('hidden');
       } else {
         document.getElementById('install-title').textContent = 'Установите приложение';
-        document.getElementById('install-desc').textContent = 'Для лучшего отображения и мгновенных push-уведомлений на экране блокировки.';
         if (isAndroid) {
-          if (androidBtn) androidBtn.classList.remove('hidden');
+          document.getElementById('install-desc').textContent = 'Установите Систему на главный экран для мгновенного доступа и пуш-уведомлений.';
+          if (androidBtn) {
+            androidBtn.classList.remove('hidden');
+            androidBtn.textContent = 'Установить';
+          }
           if (iosBtn) iosBtn.classList.add('hidden');
         } else if (isIOS) {
+          document.getElementById('install-desc').textContent = 'Для получения уведомлений и запуска во весь экран установите приложение на iPhone.';
           if (androidBtn) androidBtn.classList.add('hidden');
           if (iosBtn) iosBtn.classList.remove('hidden');
         } else {
-          if (androidBtn) androidBtn.classList.remove('hidden');
+          // Desktop PC
+          if (deferredInstallPrompt) {
+            document.getElementById('install-desc').textContent = 'Установите Систему на компьютер как полноценное приложение.';
+            if (androidBtn) {
+              androidBtn.classList.remove('hidden');
+              androidBtn.textContent = 'Установить';
+            }
+          } else {
+            document.getElementById('install-desc').textContent = 'Для лучшего отображения нажмите на иконку «Установить» в правой части адресной строки браузера.';
+            if (androidBtn) androidBtn.classList.add('hidden');
+          }
           if (iosBtn) iosBtn.classList.add('hidden');
         }
       }

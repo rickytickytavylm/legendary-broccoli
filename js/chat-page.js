@@ -64,7 +64,18 @@
   }
 
   function setStatus(text) {
-    if (status) status.textContent = text || '';
+    if (!status) return;
+    let pushStatus = '';
+    if ('Notification' in window) {
+      if (Notification.permission === 'granted') {
+        pushStatus = ' • Уведомления включены';
+      } else if (Notification.permission === 'denied') {
+        pushStatus = ' • Уведомления заблокированы';
+      } else {
+        pushStatus = ' • Уведомления не настроены';
+      }
+    }
+    status.textContent = (text || '') + pushStatus;
   }
 
   function shouldStickToBottom() {
