@@ -26,6 +26,20 @@
     <section class="chat-panel">
       <div class="chat-status" data-chat-status>Подключаемся…</div>
 
+      <!-- Notification Permission Prompt Banner -->
+      <div class="notification-prompt-banner hidden" id="notification-banner">
+        <div class="notification-banner-content">
+          <div class="notification-banner-text">
+            <strong>Включить push-уведомления?</strong>
+            <span>Получайте мгновенные ответы на заблокированный экран.</span>
+          </div>
+          <div class="notification-banner-buttons">
+            <button class="banner-btn-decline" id="notification-decline-btn">Позже</button>
+            <button class="banner-btn-accept" id="notification-accept-btn">Включить</button>
+          </div>
+        </div>
+      </div>
+
       <div class="chat-messages-wrap">
         <div class="chat-empty hidden" data-chat-empty>
           <strong>Пока тихо</strong>

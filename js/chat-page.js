@@ -184,13 +184,17 @@
   }
 
   // Handle full Push subscription registration and saving to backend
-  async function setupPushNotifications() {
+  async function setupPushNotifications(silent = false) {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
       console.log('Push notifications not supported on this browser/device');
       return;
     }
 
     try {
+      if (silent && Notification.permission !== 'granted') {
+        return;
+      }
+
       const permission = await Notification.requestPermission();
       if (permission !== 'granted') {
         console.log('Notification permission denied');
@@ -213,6 +217,50 @@
     }
   }
 
+  // Handle display and actions of the top interactive permission banner
+  function initNotificationBanner() {
+    const banner = document.getElementById('notification-banner');
+    if (!banner) return;
+
+    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+      return;
+    }
+
+    if (Notification.permission === 'granted') {
+      // Re-verify subscription with backend silently
+      setupPushNotifications(true).catch(() => {});
+      return;
+    }
+
+    if (Notification.permission === 'denied') {
+      return;
+    }
+
+    if (localStorage.getItem('notifications-prompt-dismissed') === 'true') {
+      return;
+    }
+
+    // Show banner since permission is default and user hasn't explicitly dismissed it
+    banner.classList.remove('hidden');
+
+    const acceptBtn = document.getElementById('notification-accept-btn');
+    const declineBtn = document.getElementById('notification-decline-btn');
+
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', async () => {
+        banner.classList.add('hidden');
+        await setupPushNotifications(false);
+      });
+    }
+
+    if (declineBtn) {
+      declineBtn.addEventListener('click', () => {
+        banner.classList.add('hidden');
+        localStorage.setItem('notifications-prompt-dismissed', 'true');
+      });
+    }
+  }
+
   async function boot() {
     try {
       setStatus('Подключаемся…');
@@ -221,10 +269,8 @@
       await loadMessages(true);
       connectSocket();
 
-      // Configure Web Push notifications on load
-      if ('Notification' in window) {
-        setupPushNotifications().catch(() => {});
-      }
+      // Configure interactive Web Push notification flow
+      initNotificationBanner();
     } catch (err) {
       setStatus(err?.error || 'Чат временно недоступен');
     } finally {
