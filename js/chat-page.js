@@ -120,7 +120,7 @@
       } else if (message.type === 'video_circle' && message.file_url) {
         contentHtml = `
           <div class="chat-video-circle-wrap">
-            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="auto"></video>
+            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video>
           </div>
         `;
       }
@@ -217,12 +217,55 @@
     }
   }
 
+  function isStandalonePWA() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function getMobileOS() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    if (/android/i.test(ua)) return 'android';
+    if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return 'ios';
+    return 'other';
+  }
+
   // Handle display and actions of the top interactive permission banner
   function initNotificationBanner() {
     const banner = document.getElementById('notification-banner');
     if (!banner) return;
 
     if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+      return;
+    }
+
+    const os = getMobileOS();
+    const isStandalone = isStandalonePWA();
+
+    // On iOS outside standalone PWA, push is technically impossible.
+    // Show a smart banner prompting them to add to Home Screen.
+    if (os === 'ios' && !isStandalone) {
+      const bannerText = banner.querySelector('.notification-banner-text');
+      const bannerButtons = banner.querySelector('.notification-banner-buttons');
+
+      if (bannerText && bannerButtons) {
+        bannerText.innerHTML = `
+          <strong>Установите приложение для PUSH-уведомлений</strong>
+          <span>Нажмите кнопку «Поделиться» внизу и выберите «На экран "Домой"».</span>
+        `;
+        bannerButtons.innerHTML = `
+          <button class="banner-btn-decline" id="notification-decline-btn">Позже</button>
+        `;
+
+        if (localStorage.getItem('pwa-install-prompt-dismissed') === 'true') {
+          return;
+        }
+
+        banner.classList.remove('hidden');
+
+        document.getElementById('notification-decline-btn').addEventListener('click', () => {
+          banner.classList.add('hidden');
+          localStorage.setItem('pwa-install-prompt-dismissed', 'true');
+        });
+      }
       return;
     }
 

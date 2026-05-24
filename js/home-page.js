@@ -17,10 +17,17 @@ const TODAY_LESSON_COUNT_ENDPOINTS = {
   antologiya: '/content/antologiya-lessons',
 };
 
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  console.log('Captured beforeinstallprompt event for PWA installation');
+});
+
 const onboardingSteps = [
   {
     key: 'name',
-    label: 'Шаг 1 из 3',
+    label: 'Шаг 1 из 4',
     title: 'Как вас зовут?',
     desc: 'Имя нужно только для личного обращения в профиле и рекомендациях.',
     input: {
@@ -29,7 +36,7 @@ const onboardingSteps = [
   },
   {
     key: 'focus',
-    label: 'Шаг 2 из 3',
+    label: 'Шаг 2 из 4',
     title: 'Что сейчас важнее?',
     desc: 'Выберите направление. Система покажет две подходящие программы для старта.',
     options: [
@@ -43,10 +50,17 @@ const onboardingSteps = [
   },
   {
     key: 'result',
-    label: 'Шаг 3 из 3',
+    label: 'Шаг 3 из 4',
     title: 'Направление выбрано',
     desc: 'Покажем две подходящие программы. AI останется рядом и поможет выбрать между ними.',
     result: true,
+  },
+  {
+    key: 'install',
+    label: 'Шаг 4 из 4',
+    title: 'Установка приложения',
+    desc: 'Для лучшего отображения и использования всех функций, таких как push-уведомления, лента новостей, вебинары и обновления.',
+    install: true,
     options: [],
   },
 ];
@@ -354,7 +368,7 @@ function renderOnboarding() {
     dots.innerHTML = onboardingSteps.map((_, index) => `<span class="${index === onboardingIndex ? 'active' : ''} ${index < onboardingIndex ? 'done' : ''}"></span>`).join('');
   }
   if (back) back.disabled = onboardingIndex === 0;
-  if (next) next.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'Начать' : 'Далее';
+  if (next) next.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'В систему' : 'Далее';
   const hint = document.querySelector('[data-onboarding-hint]');
   const result = document.querySelector('[data-onboarding-result]');
   const input = document.querySelector('[data-onboarding-name-input]');
@@ -364,11 +378,46 @@ function renderOnboarding() {
       ? 'Введите имя'
       : step.result
       ? 'Рекомендацию можно изменить позже'
+      : step.install
+      ? 'Установка займет всего пару секунд'
       : 'Выберите один вариант';
   }
   if (!options) return;
-  options.classList.toggle('hidden', Boolean(step.result || step.input));
+  options.classList.toggle('hidden', Boolean(step.result || step.input || step.install));
   if (result) result.classList.toggle('hidden', !step.result);
+
+  const installCard = document.getElementById('onboarding-install-card');
+  if (installCard) {
+    installCard.classList.toggle('hidden', !step.install);
+    if (step.install) {
+      const androidBtn = document.getElementById('onboarding-install-android-btn');
+      const iosBtn = document.getElementById('onboarding-install-ios-btn');
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isAndroid = /android/i.test(ua);
+      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+      if (isStandalone) {
+        document.getElementById('install-title').textContent = 'Приложение установлено!';
+        document.getElementById('install-desc').textContent = 'Система уже запущена как полноценное PWA приложение. Пользуйтесь с удовольствием!';
+        if (androidBtn) androidBtn.classList.add('hidden');
+        if (iosBtn) iosBtn.classList.add('hidden');
+      } else {
+        document.getElementById('install-title').textContent = 'Установите приложение';
+        document.getElementById('install-desc').textContent = 'Для лучшего отображения и мгновенных push-уведомлений на экране блокировки.';
+        if (isAndroid) {
+          if (androidBtn) androidBtn.classList.remove('hidden');
+          if (iosBtn) iosBtn.classList.add('hidden');
+        } else if (isIOS) {
+          if (androidBtn) androidBtn.classList.add('hidden');
+          if (iosBtn) iosBtn.classList.remove('hidden');
+        } else {
+          if (androidBtn) androidBtn.classList.remove('hidden');
+          if (iosBtn) iosBtn.classList.add('hidden');
+        }
+      }
+    }
+  }
 
   if (input) {
     input.classList.toggle('hidden', !step.input);
@@ -390,11 +439,14 @@ function renderOnboarding() {
 
   // Configure inline button
   if (inlineBtn) {
-    inlineBtn.textContent = step.result ? 'Начать' : 'Далее';
+    inlineBtn.textContent = step.install ? 'В систему' : step.result ? 'Начать' : 'Далее';
     inlineBtn.disabled = !hasStepAnswer(step);
   }
 
   if (step.input) {
+    return;
+  }
+  if (step.install) {
     return;
   }
   if (step.result) {
@@ -430,12 +482,46 @@ function selectOnboardingOption(step, value) {
 
 function hasStepAnswer(step) {
   if (step.result) return true;
+  if (step.install) return true;
   if (step.input) return cleanName(onboardingState[step.key]).length >= 2;
   const value = onboardingState[step.key];
   return step.multiple ? asArray(value).length > 0 : Boolean(value);
 }
 
 function initOnboarding() {
+  // Handle Android PWA installation click
+  document.getElementById('onboarding-install-android-btn')?.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) {
+      alert('Установка в данный момент недоступна. Браузер заблокировал системный диалог. Вы можете установить приложение через три точки в меню вашего браузера (Добавить на главный экран).');
+      return;
+    }
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    console.log(`User response to install prompt: ${outcome}`);
+    deferredInstallPrompt = null;
+    if (outcome === 'accepted') {
+      finishOnboarding();
+    }
+  });
+
+  // Handle iOS PWA guide modal triggers
+  const iosModal = document.getElementById('pwa-ios-modal');
+  const iosCloseBtn = document.getElementById('pwa-ios-close-btn');
+  const iosOverlay = document.getElementById('pwa-ios-overlay');
+  const iosConfirmBtn = document.getElementById('pwa-ios-confirm-btn');
+
+  document.getElementById('onboarding-install-ios-btn')?.addEventListener('click', () => {
+    if (iosModal) iosModal.classList.remove('hidden');
+  });
+
+  const closeIosModal = () => {
+    if (iosModal) iosModal.classList.add('hidden');
+  };
+
+  iosCloseBtn?.addEventListener('click', closeIosModal);
+  iosOverlay?.addEventListener('click', closeIosModal);
+  iosConfirmBtn?.addEventListener('click', closeIosModal);
+
   document.querySelector('[data-intro-login]')?.addEventListener('click', () => {
     return;
   });
