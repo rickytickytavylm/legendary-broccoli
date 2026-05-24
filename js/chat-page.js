@@ -174,6 +174,11 @@
       state.userId = chatData?.user?.id || null;
       await loadMessages(true);
       connectSocket();
+
+      // Request native notification permission on load
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().catch(() => {});
+      }
     } catch (err) {
       setStatus(err?.error || 'Чат временно недоступен');
     } finally {
@@ -199,7 +204,30 @@
       });
     });
     state.socket.on('chat.message.created', (message) => {
-      mergeMessages([{ ...message, is_own: Number(message.sender_id) === Number(state.userId) }]);
+      const isOwn = Number(message.sender_id) === Number(state.userId);
+      mergeMessages([{ ...message, is_own: isOwn }]);
+
+      // Trigger native notification if window is hidden/unfocused and message is from another user
+      if (!isOwn && 'Notification' in window && Notification.permission === 'granted') {
+        if (document.hidden || !document.hasFocus()) {
+          const senderName = message.sender_name || 'Собеседник';
+          let bodyText = message.text || '';
+          if (message.audio_key) {
+            bodyText = '🎵 Голосовое сообщение';
+          } else if (message.video_slug) {
+            bodyText = '🎥 Видеосообщение (кружочек)';
+          } else if (message.file_key) {
+            bodyText = '📎 Прикрепленный файл';
+          }
+
+          new Notification(senderName, {
+            body: bodyText,
+            icon: '/assets/icon-192.png',
+            tag: 'chat-msg-' + message.id,
+            renotify: true,
+          });
+        }
+      }
     });
     state.socket.on('chat.message.updated', (message) => {
       state.messages.set(String(message.id), {
