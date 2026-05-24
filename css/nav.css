@@ -232,7 +232,7 @@
 
 /* ── Tab Bar ─────────────────────────────────────────── */
 .app-tabbar {
-  display: none !important; /* Скрыт по умолчанию на всех страницах */
+  display: flex !important; /* Показывается по умолчанию на мобильных */
   visibility: visible;
   position: fixed;
   left: 14px;
@@ -258,10 +258,6 @@
     opacity 0.22s ease;
   will-change: transform;
   overflow: hidden;
-}
-
-body.account-page .app-tabbar {
-  display: flex !important; /* Показывается только на странице профиля */
 }
 
 .app-tabbar.nav-visible {

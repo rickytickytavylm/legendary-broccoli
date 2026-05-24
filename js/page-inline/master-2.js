@@ -46,6 +46,11 @@
       }
 
       async function loadLesson(lesson) {
+        const overlay = videoContainer?.querySelector('.video-preview-overlay');
+        if (overlay && !overlay.classList.contains('hidden')) {
+          overlay.click();
+          return;
+        }
         showVideoLoader();
         try {
           const video = document.getElementById('course-video');
@@ -57,6 +62,9 @@
           if (lessonTitleEl) lessonTitleEl.textContent = lesson.title;
           if (lessonDescEl) lessonDescEl.textContent = window.CourseAI ? window.CourseAI.summary(lesson) || '' : '';
           if (window.CourseAI) window.CourseAI.load(lesson);
+          
+          // Auto-play on switch
+          video.play().catch(() => {});
         } catch(e) {
           hideVideoLoader();
         }

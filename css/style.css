@@ -4438,8 +4438,7 @@ h1, h2, h3 {
   body.community-page .ux-community-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(14px, 2vw, 22px);
-    max-width: 1080px;
-    margin-inline: auto;
+    max-width: none !important;
     width: 100%;
   }
 
@@ -8295,4 +8294,91 @@ body.chat-page *,
   font-weight: 500;
   color: rgba(255, 255, 255, 0.45);
   letter-spacing: -0.1px;
+}
+
+/* ─── Telegram Style Video Modal ────────────────── */
+.telegram-video-modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.telegram-video-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.video-modal-backdrop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+.video-modal-content {
+  position: relative;
+  width: min(440px, 90%);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  transform: scale(0.85);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.telegram-video-modal.active .video-modal-content {
+  transform: scale(1);
+}
+
+.video-modal-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.video-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.video-modal-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.video-modal-close:active {
+  transform: scale(0.9);
+}
+
+.video-modal-close svg {
+  width: 16px;
+  height: 16px;
 }

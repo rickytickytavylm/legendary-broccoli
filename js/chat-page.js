@@ -120,7 +120,7 @@
       } else if (message.type === 'video_circle' && message.file_url) {
         contentHtml = `
           <div class="chat-video-circle-wrap">
-            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="auto" onclick="this.paused ? this.play() : this.pause()"></video>
+            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="auto"></video>
           </div>
         `;
       }
@@ -381,7 +381,44 @@
   let activeAudio = null;
   let activePlayerEl = null;
 
+  function openVideoModal(videoSrc) {
+    const modal = document.createElement('div');
+    modal.className = 'telegram-video-modal';
+    modal.innerHTML = `
+      <div class="video-modal-backdrop"></div>
+      <div class="video-modal-content">
+        <button class="video-modal-close" type="button" aria-label="Закрыть">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <video class="video-modal-player" src="${escapeHtml(videoSrc)}" autoplay playsinline controls loop></video>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Fade in
+    setTimeout(() => modal.classList.add('active'), 20);
+
+    const closeModal = () => {
+      modal.classList.remove('active');
+      const video = modal.querySelector('video');
+      if (video) video.pause();
+      setTimeout(() => modal.remove(), 300);
+    };
+
+    modal.querySelector('.video-modal-backdrop').addEventListener('click', closeModal);
+    modal.querySelector('.video-modal-close').addEventListener('click', closeModal);
+  }
+
   list?.addEventListener('click', (e) => {
+    // 0. Handle Video Circle Clicks
+    const videoCircle = e.target.closest('.chat-video-circle');
+    if (videoCircle) {
+      e.preventDefault();
+      e.stopPropagation();
+      openVideoModal(videoCircle.src);
+      return;
+    }
+
     // 1. Handle Play/Pause Button
     const playBtn = e.target.closest('.voice-play-btn');
     if (playBtn) {

@@ -21,11 +21,13 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.getRegistrations()
-        .then(function(registrations) {
-          registrations.forEach(function(registration) { registration.unregister(); });
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(reg) {
+          console.log('ServiceWorker registered with scope:', reg.scope);
         })
-        .catch(function() {});
+        .catch(function(err) {
+          console.warn('ServiceWorker registration failed:', err);
+        });
     }, { once: true });
   }
 
