@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v21-killswitch';
+const CACHE_NAME = 'sistema-static-v22-killswitch';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

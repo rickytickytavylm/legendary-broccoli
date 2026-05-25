@@ -173,6 +173,7 @@
       overflow: hidden;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
+      line-clamp: 3;
     }
 
     .post-caption strong {
@@ -206,6 +207,118 @@
 
     .post-expand-link:hover {
       color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ── Instagram-Style Comments Section ── */
+    .post-comments-section {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 14px 18px 16px;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .post-comments-list {
+      max-height: 240px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .post-comments-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .post-comments-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .post-comments-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    .comment-item {
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      animation: fadeInComment .25s ease both;
+    }
+
+    @keyframes fadeInComment {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .comment-item strong {
+      color: #fff;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .comment-item span {
+      word-break: break-word;
+    }
+
+    .comment-time {
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, 0.3);
+      margin-left: auto;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    .post-comment-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 4px 6px 4px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      transition: border-color .2s, background-color .2s;
+    }
+
+    .post-comment-form:focus-within {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .post-comment-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13.5px;
+      padding: 6px 0;
+    }
+
+    .post-comment-input::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .post-comment-submit-btn {
+      background: none;
+      border: none;
+      color: #57b59a;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 6px 10px;
+      transition: opacity .2s, color .2s;
+    }
+
+    .post-comment-submit-btn:hover {
+      color: #72cca7;
+    }
+
+    .post-comment-submit-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
     @media (min-width: 901px) {
@@ -283,6 +396,15 @@
           <p>Смотрите, комментируйте, делитесь впечатлениями. Нам с дочкой очень важно.</p>
         </div>
         <button class="post-expand-link" type="button">Развернуть весь текст</button>
+
+        <!-- Комментарии -->
+        <div class="post-comments-section">
+          <div class="post-comments-list" data-comments-list></div>
+          <form class="post-comment-form" data-comment-form>
+            <input type="text" class="post-comment-input" placeholder="Добавить комментарий..." required data-comment-input />
+            <button type="submit" class="post-comment-submit-btn" data-comment-submit>Опубликовать</button>
+          </form>
+        </div>
       </article>
 
       <!-- Post 2 -->
@@ -314,6 +436,15 @@
           <p>Информация и билеты — <a href="https://organic-people.com/events/meditationdayrussia" target="_blank" rel="noopener noreferrer">organic-people.com/events/meditationdayrussia</a></p>
         </div>
         <button class="post-expand-link" type="button">Развернуть весь текст</button>
+
+        <!-- Комментарии -->
+        <div class="post-comments-section">
+          <div class="post-comments-list" data-comments-list></div>
+          <form class="post-comment-form" data-comment-form>
+            <input type="text" class="post-comment-input" placeholder="Добавить комментарий..." required data-comment-input />
+            <button type="submit" class="post-comment-submit-btn" data-comment-submit>Опубликовать</button>
+          </form>
+        </div>
       </article>
 
       <!-- Post 1: oldest -->
@@ -340,6 +471,15 @@
           <p>Просыпаешься с утра, родители уже ушли по делам, а на столе лежит записка ❤️‍🩹</p>
           <p>а впереди целая жизнь…</p>
         </div>
+
+        <!-- Комментарии -->
+        <div class="post-comments-section">
+          <div class="post-comments-list" data-comments-list></div>
+          <form class="post-comment-form" data-comment-form>
+            <input type="text" class="post-comment-input" placeholder="Добавить комментарий..." required data-comment-input />
+            <button type="submit" class="post-comment-submit-btn" data-comment-submit>Опубликовать</button>
+          </form>
+        </div>
       </article>
 
     </div>
@@ -348,6 +488,7 @@
   <script src="/js/api.js?v=56"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=80"></script>
+  <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
   <script src="/js/page-inline/feed-1.js?v=2"></script>
 </body>
 </html>
