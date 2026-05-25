@@ -67,8 +67,12 @@
       function renderWeeks(weeks, firstLesson) {
         let totalLessons = 0;
         weeks.forEach(w => totalLessons += w.lessons.length);
-        countEl.textContent = totalLessons + ' ' + (totalLessons === 1 ? 'урок' : totalLessons < 5 ? 'урока' : 'уроков');
-        totalCountEl.textContent = totalLessons + ' уроков';
+        if (countEl) {
+          countEl.textContent = totalLessons + ' ' + (totalLessons === 1 ? 'урок' : totalLessons < 5 ? 'урока' : 'уроков');
+        }
+        if (totalCountEl) {
+          totalCountEl.textContent = totalLessons + ' уроков';
+        }
 
         lessonsList.innerHTML = '';
         weeks.forEach((week, wi) => {

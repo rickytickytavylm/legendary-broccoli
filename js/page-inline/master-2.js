@@ -78,8 +78,12 @@
       function renderGroups(groups) {
         let totalLessons = 0;
         groups.forEach(g => totalLessons += g.lessons.length);
-        countEl.textContent = totalLessons + ' ' + (totalLessons === 1 ? 'занятие' : totalLessons < 5 ? 'занятия' : 'занятий');
-        totalCountEl.textContent = totalLessons + ' занятий';
+        if (countEl) {
+          countEl.textContent = totalLessons + ' ' + (totalLessons === 1 ? 'занятие' : totalLessons < 5 ? 'занятия' : 'занятий');
+        }
+        if (totalCountEl) {
+          totalCountEl.textContent = totalLessons + ' занятий';
+        }
 
         lessonsList.innerHTML = '';
         groups.forEach((group, gi) => {
