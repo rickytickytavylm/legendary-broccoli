@@ -209,7 +209,30 @@
         try {
           const res = await fetch(lessonAiUrl(lesson), { cache: 'force-cache' });
           if (!res.ok) return;
-          renderAiAnalysis(await res.json());
+          const data = await res.json();
+          renderAiAnalysis(data);
+
+          // Populate chapters cache so the audio player has them
+          const chapters = data && data.ai && Array.isArray(data.ai.chapters) ? data.ai.chapters : [];
+          const slug = lesson.video_slug || data?.lesson?.video_slug || data?.source?.key;
+          if (slug) {
+            window.__courseAIChaptersByVideoSlug = window.__courseAIChaptersByVideoSlug || {};
+            const norm = (val) => String(val || '')
+              .toLowerCase()
+              .replace(/\\/g, '/')
+              .replace(/ё/g, 'е')
+              .replace(/\.[a-z0-9]+$/i, '')
+              .replace(/[^\p{L}\p{N}]+/gu, '');
+            window.__courseAIChaptersByVideoSlug[norm(slug)] = chapters;
+
+            window.dispatchEvent(new CustomEvent('course-ai:chapters', {
+              detail: {
+                lessonId: lesson.id,
+                videoSlug: slug,
+                chapters: chapters,
+              },
+            }));
+          }
         } catch (e) {}
       }
 

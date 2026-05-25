@@ -55,10 +55,34 @@
       navigator.serviceWorker.register('/sw.js')
         .then(function(reg) {
           console.log('ServiceWorker registered with scope:', reg.scope);
+          
+          // Force an immediate update check on app launch
+          reg.update().catch(function() {});
+
+          // Check if there is an update found
+          reg.onupdatefound = function() {
+            var installingWorker = reg.installing;
+            if (installingWorker) {
+              installingWorker.onstatechange = function() {
+                if (installingWorker.state === 'activated') {
+                  window.location.reload();
+                }
+              };
+            }
+          };
         })
         .catch(function(err) {
           console.warn('ServiceWorker registration failed:', err);
         });
+
+      // Handle controller change (fires immediately when skipWaiting finishes)
+      var refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
     }, { once: true });
   }
 
