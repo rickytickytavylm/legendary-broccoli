@@ -130,8 +130,13 @@
         `;
       } else if (message.type === 'video_circle' && message.file_url) {
         contentHtml = `
-          <div class="chat-video-circle-wrap">
-            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video>
+          <div class="chat-video-circle-wrap" style="position: relative; overflow: visible; cursor: pointer;">
+            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="metadata" style="display: block; border-radius: 50%;"></video>
+            <!-- SVG Progress Circle (fits exactly inside the 180px border) -->
+            <svg class="chat-video-progress-svg" width="180" height="180" style="position: absolute; top: 0; left: 0; transform: rotate(-90deg); pointer-events: none; overflow: visible; z-index: 5;">
+              <circle cx="90" cy="90" r="88" fill="transparent" stroke="rgba(255, 255, 255, 0.12)" stroke-width="3"></circle>
+              <circle class="chat-video-progress-circle-bar" cx="90" cy="90" r="88" fill="transparent" stroke="#8baaff" stroke-width="3" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553" style="transition: stroke-dashoffset 0.1s linear;"></circle>
+            </svg>
           </div>
         `;
       }
@@ -149,6 +154,22 @@
         </article>
       `;
     }).join('');
+
+    // Setup circular progress bars for video circles
+    const circles = list.querySelectorAll('.chat-video-circle');
+    circles.forEach((video) => {
+      const wrap = video.closest('.chat-video-circle-wrap');
+      const bar = wrap ? wrap.querySelector('.chat-video-progress-circle-bar') : null;
+      if (!bar) return;
+
+      video.addEventListener('timeupdate', () => {
+        if (!video.duration) return;
+        const progress = video.currentTime / video.duration;
+        const offset = 553 - (progress * 553);
+        bar.style.strokeDashoffset = offset;
+      });
+    });
+
     if (keepBottom) scrollToBottom();
   }
 
