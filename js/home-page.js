@@ -27,7 +27,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 const onboardingSteps = [
   {
     key: 'name',
-    label: 'Шаг 1 из 4',
+    label: 'Шаг 1 из 5',
     title: 'Как вас зовут?',
     desc: 'Имя нужно только для личного обращения в профиле и рекомендациях.',
     input: {
@@ -36,7 +36,7 @@ const onboardingSteps = [
   },
   {
     key: 'focus',
-    label: 'Шаг 2 из 4',
+    label: 'Шаг 2 из 5',
     title: 'Что сейчас важнее?',
     desc: 'Выберите направление. Система покажет две подходящие программы для старта.',
     options: [
@@ -50,18 +50,25 @@ const onboardingSteps = [
   },
   {
     key: 'result',
-    label: 'Шаг 3 из 4',
+    label: 'Шаг 3 из 5',
     title: 'Направление выбрано',
     desc: 'Покажем две подходящие программы. AI останется рядом и поможет выбрать между ними.',
     result: true,
   },
   {
     key: 'install',
-    label: 'Шаг 4 из 4',
+    label: 'Шаг 4 из 5',
     title: 'Установка приложения',
     desc: 'Для лучшего отображения и использования всех функций, таких как push-уведомления, лента новостей, вебинары и обновления.',
     install: true,
     options: [],
+  },
+  {
+    key: 'final',
+    label: 'Шаг 5 из 5',
+    title: 'Настройка уведомлений',
+    desc: 'Получайте напоминания о практиках, вебинарах и важных обновлениях.',
+    final: true,
   },
 ];
 
@@ -387,8 +394,12 @@ function renderOnboarding() {
   if (result) result.classList.toggle('hidden', !step.result);
 
   const installCard = document.getElementById('onboarding-install-card');
+  const skipBtn = document.getElementById('onboarding-install-skip-btn');
+  const finalCard = document.getElementById('onboarding-final-card');
+  if (finalCard) finalCard.classList.add('hidden');
   if (installCard) {
     installCard.classList.toggle('hidden', !step.install);
+    if (skipBtn) skipBtn.classList.toggle('hidden', !step.install);
     if (step.install) {
       const androidBtn = document.getElementById('onboarding-install-android-btn');
       const iosBtn = document.getElementById('onboarding-install-ios-btn');
@@ -464,7 +475,7 @@ function renderOnboarding() {
 
   // Configure inline button
   if (inlineBtn) {
-    inlineBtn.textContent = step.install ? 'В систему' : step.result ? 'Начать' : 'Далее';
+    inlineBtn.textContent = step.final ? 'В систему' : step.result ? 'Начать' : 'Далее';
     inlineBtn.disabled = !hasStepAnswer(step);
   }
 
@@ -472,6 +483,36 @@ function renderOnboarding() {
     return;
   }
   if (step.install) {
+    return;
+  }
+  if (step.final) {
+    if (finalCard) {
+      finalCard.classList.remove('hidden');
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isAndroid = /android/i.test(ua);
+      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      const finalTitle = document.getElementById('final-title');
+      const finalDesc = document.getElementById('final-desc');
+      const finalBadge = document.getElementById('final-badge');
+      if (isStandalone) {
+        if (finalTitle) finalTitle.textContent = 'Готово!';
+        if (finalDesc) finalDesc.textContent = 'Приложение установлено. Разрешите уведомления в настройках, чтобы не пропускать важные обновления.';
+        if (finalBadge) finalBadge.textContent = 'OK';
+      } else if (isIOS) {
+        if (finalTitle) finalTitle.textContent = 'Продолжение установки';
+        if (finalDesc) finalDesc.textContent = 'После добавления на домашний экран откройте приложение и разрешите уведомления. До этого оповещения будут приходить на почту.';
+        if (finalBadge) finalBadge.textContent = 'iOS';
+      } else if (isAndroid) {
+        if (finalTitle) finalTitle.textContent = 'Уведомления';
+        if (finalDesc) finalDesc.textContent = 'Push-уведомления будут приходить после установки приложения. Если установка пропущена — напоминания отправляем на почту.';
+        if (finalBadge) finalBadge.textContent = 'Android';
+      } else {
+        if (finalTitle) finalTitle.textContent = 'Настройка уведомлений';
+        if (finalDesc) finalDesc.textContent = 'Оповещения будут отправляться на почту. Установите приложение для push-уведомлений на рабочий стол.';
+        if (finalBadge) finalBadge.textContent = 'INFO';
+      }
+    }
     return;
   }
   if (step.result) {
@@ -508,6 +549,7 @@ function selectOnboardingOption(step, value) {
 function hasStepAnswer(step) {
   if (step.result) return true;
   if (step.install) return true;
+  if (step.final) return true;
   if (step.input) return cleanName(onboardingState[step.key]).length >= 2;
   const value = onboardingState[step.key];
   return step.multiple ? asArray(value).length > 0 : Boolean(value);
@@ -520,12 +562,23 @@ function initOnboarding() {
       alert('Установка в данный момент недоступна. Браузер заблокировал системный диалог. Вы можете установить приложение через три точки в меню вашего браузера (Добавить на главный экран).');
       return;
     }
+    const androidBtn = document.getElementById('onboarding-install-android-btn');
+    if (androidBtn) {
+      androidBtn.disabled = true;
+      androidBtn.dataset.originalText = androidBtn.textContent;
+      androidBtn.textContent = 'Установка…';
+    }
     deferredInstallPrompt.prompt();
     const { outcome } = await deferredInstallPrompt.userChoice;
     console.log(`User response to install prompt: ${outcome}`);
     deferredInstallPrompt = null;
+    if (androidBtn) {
+      androidBtn.disabled = false;
+      androidBtn.textContent = androidBtn.dataset.originalText || 'Установить';
+    }
     if (outcome === 'accepted') {
-      finishOnboarding();
+      onboardingIndex += 1;
+      renderOnboarding();
     }
   });
 
@@ -539,13 +592,25 @@ function initOnboarding() {
     if (iosModal) iosModal.classList.remove('hidden');
   });
 
+  document.getElementById('onboarding-install-skip-btn')?.addEventListener('click', () => {
+    onboardingIndex += 1;
+    renderOnboarding();
+  });
+
   const closeIosModal = () => {
     if (iosModal) iosModal.classList.add('hidden');
   };
 
   iosCloseBtn?.addEventListener('click', closeIosModal);
   iosOverlay?.addEventListener('click', closeIosModal);
-  iosConfirmBtn?.addEventListener('click', closeIosModal);
+  iosConfirmBtn?.addEventListener('click', () => {
+    closeIosModal();
+    const step = onboardingSteps[onboardingIndex];
+    if (step && step.install) {
+      onboardingIndex += 1;
+      renderOnboarding();
+    }
+  });
 
   document.querySelector('[data-intro-login]')?.addEventListener('click', () => {
     return;
@@ -583,6 +648,16 @@ function initOnboarding() {
     if (onboardingIndex === onboardingSteps.length - 1) {
       finishOnboarding();
       return;
+    }
+    if (onboardingIndex === onboardingSteps.length - 2 && onboardingSteps[onboardingIndex].install) {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (isIOS && !isStandalone) {
+        const iosModal = document.getElementById('pwa-ios-modal');
+        if (iosModal) iosModal.classList.remove('hidden');
+        return;
+      }
     }
     const step = onboardingSteps[onboardingIndex];
     if (!hasStepAnswer(step)) {

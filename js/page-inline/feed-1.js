@@ -58,31 +58,96 @@
     }
   }
 
+  let activePostId = null;
+
+  function updateCommentCount(postId, delta) {
+    const post = document.querySelector(`.post-card[data-post-id="${postId}"]`);
+    if (!post) return;
+    const countEl = post.querySelector('[data-comment-count]');
+    let count = parseInt(post.dataset.commentCount || '0', 10) + delta;
+    if (count < 0) count = 0;
+    post.dataset.commentCount = String(count);
+    if (countEl) {
+      countEl.textContent = String(count);
+      countEl.classList.toggle('visible', count > 0);
+    }
+  }
+
   function appendCommentToUI(comment, isRealtime = false) {
     if (!comment || !comment.post_id) return;
-    const postEl = document.querySelector(`.post-card[data-post-id="${comment.post_id}"]`);
-    if (!postEl) return;
+    const sheetList = document.getElementById('comment-sheet-list');
+    if (activePostId === comment.post_id && sheetList) {
+      const existing = sheetList.querySelector(`[data-comment-id="${comment.id}"]`);
+      if (existing) return;
+      const div = document.createElement('div');
+      div.className = 'comment-item';
+      div.dataset.commentId = comment.id;
+      div.innerHTML = `
+        <strong>${escapeHtml(comment.author_name)}</strong>
+        <span>${escapeHtml(comment.content)}</span>
+        <span class="comment-time">${formatTime(comment.created_at)}</span>
+      `;
+      sheetList.appendChild(div);
+      sheetList.scrollTop = sheetList.scrollHeight;
+    }
+    const post = document.querySelector(`.post-card[data-post-id="${comment.post_id}"]`);
+    if (post && post.dataset.commentCount !== undefined) {
+      updateCommentCount(comment.post_id, 1);
+    }
+  }
 
-    const listEl = postEl.querySelector('[data-comments-list]');
-    if (!listEl) return;
+  function openCommentSheet(postId) {
+    activePostId = postId;
+    const overlay = document.getElementById('comment-sheet-overlay');
+    const sheet = document.getElementById('comment-sheet');
+    const list = document.getElementById('comment-sheet-list');
+    const input = document.getElementById('comment-sheet-input');
 
-    // Check if duplicate
-    const existing = listEl.querySelector(`[data-comment-id="${comment.id}"]`);
-    if (existing) return;
+    if (!overlay || !sheet) return;
 
-    const div = document.createElement('div');
-    div.className = 'comment-item';
-    div.dataset.commentId = comment.id;
-    div.innerHTML = `
-      <strong>${escapeHtml(comment.author_name)}</strong>
-      <span>${escapeHtml(comment.content)}</span>
-      <span class="comment-time">${formatTime(comment.created_at)}</span>
-    `;
+    overlay.classList.remove('hidden');
+    sheet.classList.remove('hidden');
 
-    listEl.appendChild(div);
+    requestAnimationFrame(() => {
+      overlay.classList.add('visible');
+      sheet.classList.add('visible');
+    });
 
-    // Scroll to bottom
-    listEl.scrollTop = listEl.scrollHeight;
+    if (list) {
+      list.innerHTML = '';
+      list.scrollTop = 0;
+    }
+
+    if (window.API && list) {
+      window.API.request('GET', `/content/feed/comments?post_id=${postId}`)
+        .then((comments) => {
+          if (!Array.isArray(comments)) return;
+          list.innerHTML = '';
+          comments.forEach((c) => appendCommentToUI(c));
+          const post = document.querySelector(`.post-card[data-post-id="${postId}"]`);
+          if (post) {
+            post.dataset.commentCount = String(comments.length);
+            updateCommentCount(postId, 0);
+          }
+        })
+        .catch((err) => {
+          console.error('[feed] Error loading comments:', err);
+        });
+    }
+
+    if (input) setTimeout(() => input.focus(), 100);
+  }
+
+  function closeCommentSheet() {
+    const overlay = document.getElementById('comment-sheet-overlay');
+    const sheet = document.getElementById('comment-sheet');
+    overlay?.classList.remove('visible');
+    sheet?.classList.remove('visible');
+    setTimeout(() => {
+      overlay?.classList.add('hidden');
+      sheet?.classList.add('hidden');
+      activePostId = null;
+    }, 300);
   }
 
   // ── Post Card Setup ──
@@ -108,54 +173,36 @@
       renderLike();
     });
 
-    // ── Comments Setup inside each post ──
-    const commentForm = post.querySelector('[data-comment-form]');
-    const commentInput = post.querySelector('[data-comment-input]');
-    const commentsList = post.querySelector('[data-comments-list]');
+    // Comments button opens bottom sheet
+    const commentButton = post.querySelector('[data-comment-button]');
+    commentButton?.addEventListener('click', () => openCommentSheet(postId));
+  });
 
-    // 1. Initial Load of Comments
-    if (window.API && commentsList) {
-      window.API.request('GET', `/content/feed/comments?post_id=${postId}`)
-        .then((comments) => {
-          if (Array.isArray(comments)) {
-            commentsList.innerHTML = '';
-            comments.forEach((c) => appendCommentToUI(c));
-          }
-        })
-        .catch((err) => {
-          console.error('[feed] Error loading comments:', err);
-        });
+  // Sheet close handlers
+  document.getElementById('comment-sheet-overlay')?.addEventListener('click', closeCommentSheet);
+  document.getElementById('comment-sheet-close')?.addEventListener('click', closeCommentSheet);
+
+  // Sheet form submit
+  document.getElementById('comment-sheet-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!window.API || !activePostId) return;
+    const input = document.getElementById('comment-sheet-input');
+    const content = input?.value.trim();
+    if (!content) return;
+    const submitBtn = document.getElementById('comment-sheet-submit');
+    if (submitBtn) submitBtn.disabled = true;
+    try {
+      const comment = await window.API.request('POST', '/content/feed/comments', {
+        post_id: activePostId,
+        content: content,
+      });
+      input.value = '';
+      appendCommentToUI(comment);
+    } catch (err) {
+      console.error('[feed] Error submitting comment:', err);
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
     }
-
-    // 2. Submit new comment
-    commentForm?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!window.API || !commentInput) return;
-
-      const content = commentInput.value.trim();
-      if (!content) return;
-
-      // Disable submission while sending
-      const submitBtn = commentForm.querySelector('[data-comment-submit]');
-      if (submitBtn) submitBtn.disabled = true;
-
-      try {
-        const comment = await window.API.request('POST', '/content/feed/comments', {
-          post_id: postId,
-          content: content,
-        });
-
-        // Clear input
-        commentInput.value = '';
-
-        // Local append (in case of delay/offline socket, though socket will filter duplicates anyway)
-        appendCommentToUI(comment);
-      } catch (err) {
-        console.error('[feed] Error submitting comment:', err);
-      } finally {
-        if (submitBtn) submitBtn.disabled = false;
-      }
-    });
   });
 
   document.querySelectorAll('[data-share-button]').forEach((button) => {

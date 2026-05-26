@@ -148,6 +148,19 @@
             
             <!-- iOS instruction button -->
             <button class="install-primary-btn hidden" id="onboarding-install-ios-btn">Как установить?</button>
+
+            <!-- Skip installation button -->
+            <button class="install-skip-btn hidden" id="onboarding-install-skip-btn" type="button">Пропустить</button>
+          </div>
+
+          <!-- Onboarding Final Step Card (after PWA step) -->
+          <div class="onboarding-final-card hidden" id="onboarding-final-card">
+            <div class="final-card-graphic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#57b59a;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <div class="final-app-badge" id="final-badge">INFO</div>
+            </div>
+            <strong id="final-title">Настройка уведомлений</strong>
+            <p id="final-desc">Оповещения будут отправляться на почту.</p>
           </div>
           
           <!-- Premium Liquid Glass Action Button -->
@@ -265,6 +278,10 @@
         <p>Приложение будет работать во весь экран без рамок браузера и присылать важные уведомления.</p>
       </div>
       <div class="pwa-guide-steps">
+        <div class="pwa-step-row" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px;">
+          <div class="pwa-step-num" style="background: #e0984f; color: #000;">!</div>
+          <p>Инструкция работает <strong>только</strong> в стандартном браузере <strong>Safari</strong>. Если вы открыли ссылку внутри Telegram/Яндекс, скопируйте её и откройте в Safari.</p>
+        </div>
         <div class="pwa-step-row">
           <div class="pwa-step-num">1</div>
           <p>Нажмите на иконку <strong>«Поделиться»</strong> <svg class="inline-share-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin:0 2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg> на панели Safari (внизу).</p>
@@ -289,6 +306,6 @@
   <script src="/js/nav.js?v=81"></script>
   <script src="/js/main.js?v=2"></script>
   <script src="/js/program-catalog.js?v=8"></script>
-  <script src="/js/home-page.js?v=15"></script>
+  <script src="/js/home-page.js?v=16"></script>
 </body>
 </html>
