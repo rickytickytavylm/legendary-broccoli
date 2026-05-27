@@ -344,6 +344,48 @@
       display: inline-block;
     }
 
+    /* ── Post Comments Preview ── */
+    .post-comments-preview-section {
+      padding: 0 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .post-comment-preview-item {
+      font-size: 13px;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.7);
+      animation: fadeInComment .25s ease both;
+    }
+
+    .post-comment-preview-item strong {
+      color: #fff;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .post-comments-view-all-btn {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+      margin-top: 4px;
+      transition: color 0.2s;
+      width: fit-content;
+    }
+
+    .post-comments-view-all-btn:hover {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
     /* ── Comments Bottom Sheet ── */
     .comment-sheet-overlay {
       position: fixed;
@@ -592,6 +634,11 @@
         </div>
         <button class="post-expand-link" type="button">Развернуть весь текст</button>
 
+        <!-- Comments Preview Section -->
+        <div class="post-comments-preview-section hidden" data-comments-preview-container>
+          <div class="post-comments-preview-list" data-comments-preview-list></div>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+        </div>
       </article>
 
       <!-- Post 2 -->
@@ -628,6 +675,11 @@
         </div>
         <button class="post-expand-link" type="button">Развернуть весь текст</button>
 
+        <!-- Comments Preview Section -->
+        <div class="post-comments-preview-section hidden" data-comments-preview-container>
+          <div class="post-comments-preview-list" data-comments-preview-list></div>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+        </div>
       </article>
 
       <!-- Post 1: oldest -->
@@ -659,6 +711,11 @@
           <p>а впереди целая жизнь…</p>
         </div>
 
+        <!-- Comments Preview Section -->
+        <div class="post-comments-preview-section hidden" data-comments-preview-container>
+          <div class="post-comments-preview-list" data-comments-preview-list></div>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+        </div>
       </article>
 
     </div>
@@ -685,6 +742,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=80"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/page-inline/feed-1.js?v=3"></script>
+  <script src="/js/page-inline/feed-1.js?v=4"></script>
 </body>
 </html>

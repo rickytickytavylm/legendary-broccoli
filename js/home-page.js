@@ -59,21 +59,32 @@ const onboardingSteps = [
     key: 'install',
     label: 'Шаг 4 из 5',
     title: 'Установка приложения',
-    desc: 'Для лучшего отображения и использования всех функций, таких как push-уведомления, лента новостей, вебинары и обновления.',
+    desc: 'Для лучшего отображения и мгновенных уведомлений на экране блокировки.',
     install: true,
-    options: [],
   },
   {
     key: 'final',
     label: 'Шаг 5 из 5',
     title: 'Настройка уведомлений',
-    desc: 'Получайте напоминания о практиках, вебинарах и важных обновлениях.',
+    desc: 'Оповещения будут отправляться на почту или push.',
     final: true,
   },
 ];
 
 const onboardingState = {};
 let onboardingIndex = 0;
+
+function getDeviceContext() {
+  const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
+  const isAndroid = /android/i.test(ua);
+  const isIOS = /ipad|iphone|ipod/.test(ua) && !window.MSStream;
+  const isTelegram = /telegram/i.test(ua);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isChrome = /chrome|crios/i.test(ua) && !/edge|opr|yf/i.test(ua);
+  const isYandex = /yabrowser/i.test(ua);
+
+  return { isAndroid, isIOS, isTelegram, isStandalone, isChrome, isYandex };
+}
 
 const routes = {
   calm: {
@@ -367,6 +378,57 @@ function renderOnboarding() {
   const options = document.querySelector('[data-onboarding-options]');
   const back = document.querySelector('[data-onboarding-back]');
   const next = document.querySelector('[data-onboarding-next]');
+  const hint = document.querySelector('[data-onboarding-hint]');
+  const result = document.querySelector('[data-onboarding-result]');
+  const input = document.querySelector('[data-onboarding-name-input]');
+  const inlineBtn = document.querySelector('[data-onboarding-inline-btn]');
+
+  const ctx = getDeviceContext();
+
+  // Dynamic content overrides for PWA install and Final steps based on browser/device context
+  if (step.install) {
+    if (ctx.isStandalone) {
+      step.title = 'Приложение установлено!';
+      step.desc = 'Система уже запущена как полноценное PWA приложение. Пользуйтесь с удовольствием!';
+    } else if (ctx.isIOS) {
+      step.title = 'Установка на iPhone';
+      if (ctx.isTelegram) {
+        step.desc = 'Вы открыли Систему внутри Telegram. Чтобы установить PWA, нажмите на иконку Safari внизу, выберите «Открыть в Safari», а затем следуйте инструкции.';
+      } else {
+        step.desc = 'Для работы во весь экран без рамок браузера и мгновенного доступа установите приложение на домашний экран.';
+      }
+    } else if (ctx.isAndroid) {
+      step.title = 'Установка на Android';
+      if (deferredInstallPrompt) {
+        step.desc = 'Нажмите «Установить» ниже, чтобы добавить Систему на главный экран для мгновенного доступа и мгновенных push-уведомлений.';
+      } else if (ctx.isTelegram) {
+        step.desc = 'Вы открыли Систему внутри Telegram. Чтобы запустить установку, нажмите на три точки вверху, выберите «Открыть в Chrome», а затем нажмите кнопку «Установить».';
+      } else if (ctx.isYandex) {
+        step.desc = 'В Яндекс.Браузере вы можете добавить ярлык через меню (три точки → Добавить на главный экран). Или откройте сайт в Google Chrome для стандартной установки.';
+      } else {
+        step.desc = 'Для запуска во весь экран без адресной строки рекомендуем использовать Google Chrome. Вы также можете добавить ярлык через меню вашего текущего браузера.';
+      }
+    } else {
+      step.title = 'Установка приложения';
+      if (deferredInstallPrompt) {
+        step.desc = 'Установите Систему на компьютер как полноценное приложение.';
+      } else {
+        step.desc = 'Для лучшего отображения откройте сайт в браузере Google Chrome и нажмите на иконку «Установить» в правой части адресной строки.';
+      }
+    }
+  } else if (step.final) {
+    step.title = 'Настройка уведомлений';
+    if (ctx.isStandalone) {
+      step.desc = 'Всё готово! Разрешите отправку уведомлений при первом запуске, чтобы вовремя получать информацию о практиках, вебинарах и обновлениях.';
+    } else if (ctx.isIOS) {
+      step.desc = 'После добавления на домашний экран откройте приложение и разрешите уведомления. До установки напоминания будут приходить на почту.';
+    } else if (ctx.isAndroid) {
+      step.desc = 'Push-уведомления будут приходить после установки приложения. Если установка была пропущена — напоминания отправляем на почту.';
+    } else {
+      step.desc = 'Оповещения будут отправляться на указанную при регистрации почту. Установите PWA приложение для push-уведомлений на рабочий стол.';
+    }
+  }
+
   if (label) label.textContent = step.label;
   if (title) title.textContent = step.title;
   if (desc) desc.textContent = step.desc;
@@ -376,77 +438,61 @@ function renderOnboarding() {
   }
   if (back) back.disabled = onboardingIndex === 0;
   if (next) next.textContent = onboardingIndex === onboardingSteps.length - 1 ? 'В систему' : 'Далее';
-  const hint = document.querySelector('[data-onboarding-hint]');
-  const result = document.querySelector('[data-onboarding-result]');
-  const input = document.querySelector('[data-onboarding-name-input]');
-  const inlineBtn = document.querySelector('[data-onboarding-inline-btn]');
+  
   if (hint) {
+    hint.classList.toggle('hidden', Boolean(step.install || step.final));
     hint.textContent = step.input
       ? 'Введите имя'
       : step.result
       ? 'Рекомендацию можно изменить позже'
-      : step.install
-      ? 'Установка займет всего пару секунд'
       : 'Выберите один вариант';
   }
   if (!options) return;
-  options.classList.toggle('hidden', Boolean(step.result || step.input || step.install));
+  
+  options.classList.toggle('hidden', Boolean(step.result || step.input || step.install || step.final));
   if (result) result.classList.toggle('hidden', !step.result);
 
   const installCard = document.getElementById('onboarding-install-card');
   const skipBtn = document.getElementById('onboarding-install-skip-btn');
   const finalCard = document.getElementById('onboarding-final-card');
-  if (finalCard) finalCard.classList.add('hidden');
+  
+  if (finalCard) finalCard.classList.toggle('hidden', !step.final);
+  
   if (installCard) {
     installCard.classList.toggle('hidden', !step.install);
     if (skipBtn) skipBtn.classList.toggle('hidden', !step.install);
+    
     if (step.install) {
       const androidBtn = document.getElementById('onboarding-install-android-btn');
       const iosBtn = document.getElementById('onboarding-install-ios-btn');
-      const ua = navigator.userAgent || navigator.vendor || window.opera;
-      const isAndroid = /android/i.test(ua);
-      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-      if (isStandalone) {
-        document.getElementById('install-title').textContent = 'Приложение установлено!';
-        document.getElementById('install-desc').textContent = 'Система уже запущена как полноценное PWA приложение. Пользуйтесь с удовольствием!';
+      if (ctx.isStandalone) {
         if (androidBtn) androidBtn.classList.add('hidden');
         if (iosBtn) iosBtn.classList.add('hidden');
       } else {
-        document.getElementById('install-title').textContent = 'Установите приложение';
-        if (isAndroid) {
-          const isYandex = /YaBrowser/i.test(navigator.userAgent);
+        if (ctx.isAndroid) {
           if (deferredInstallPrompt) {
-            document.getElementById('install-desc').textContent = 'Установите Систему на главный экран для мгновенного доступа и пуш-уведомлений.';
             if (androidBtn) {
               androidBtn.classList.remove('hidden');
               androidBtn.textContent = 'Установить';
             }
           } else {
-            // Android, but deferredInstallPrompt is not available (e.g. Yandex Browser or prompt not fired yet)
-            if (isYandex) {
-              document.getElementById('install-desc').textContent = 'Для установки Системы как приложения без адресной строки рекомендуем открыть сайт в Google Chrome. В Яндекс.Браузере вы можете добавить ярлык через меню (три точки → Добавить на главный экран).';
-            } else {
-              document.getElementById('install-desc').textContent = 'Для запуска во весь экран без адресной строки рекомендуем использовать Google Chrome. Вы также можете добавить ярлык через меню вашего текущего браузера.';
-            }
             if (androidBtn) androidBtn.classList.add('hidden');
           }
           if (iosBtn) iosBtn.classList.add('hidden');
-        } else if (isIOS) {
-          document.getElementById('install-desc').textContent = 'Для получения уведомлений и запуска во весь экран установите приложение на iPhone.';
+        } else if (ctx.isIOS) {
           if (androidBtn) androidBtn.classList.add('hidden');
-          if (iosBtn) iosBtn.classList.remove('hidden');
+          if (iosBtn) {
+            iosBtn.classList.toggle('hidden', ctx.isTelegram);
+            iosBtn.textContent = 'Как установить?';
+          }
         } else {
-          // Desktop PC
           if (deferredInstallPrompt) {
-            document.getElementById('install-desc').textContent = 'Установите Систему на компьютер как полноценное приложение.';
             if (androidBtn) {
               androidBtn.classList.remove('hidden');
               androidBtn.textContent = 'Установить';
             }
           } else {
-            document.getElementById('install-desc').textContent = 'Для лучшего отображения нажмите на иконку «Установить» в правой части адресной строки браузера.';
             if (androidBtn) androidBtn.classList.add('hidden');
           }
           if (iosBtn) iosBtn.classList.add('hidden');
@@ -473,46 +519,13 @@ function renderOnboarding() {
     }
   }
 
-  // Configure inline button
   if (inlineBtn) {
+    inlineBtn.classList.toggle('hidden', Boolean(step.install));
     inlineBtn.textContent = step.final ? 'В систему' : step.result ? 'Начать' : 'Далее';
     inlineBtn.disabled = !hasStepAnswer(step);
   }
 
-  if (step.input) {
-    return;
-  }
-  if (step.install) {
-    return;
-  }
-  if (step.final) {
-    if (finalCard) {
-      finalCard.classList.remove('hidden');
-      const ua = navigator.userAgent || navigator.vendor || window.opera;
-      const isAndroid = /android/i.test(ua);
-      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-      const finalTitle = document.getElementById('final-title');
-      const finalDesc = document.getElementById('final-desc');
-      const finalBadge = document.getElementById('final-badge');
-      if (isStandalone) {
-        if (finalTitle) finalTitle.textContent = 'Готово!';
-        if (finalDesc) finalDesc.textContent = 'Приложение установлено. Разрешите уведомления в настройках, чтобы не пропускать важные обновления.';
-        if (finalBadge) finalBadge.textContent = 'OK';
-      } else if (isIOS) {
-        if (finalTitle) finalTitle.textContent = 'Продолжение установки';
-        if (finalDesc) finalDesc.textContent = 'После добавления на домашний экран откройте приложение и разрешите уведомления. До этого оповещения будут приходить на почту.';
-        if (finalBadge) finalBadge.textContent = 'iOS';
-      } else if (isAndroid) {
-        if (finalTitle) finalTitle.textContent = 'Уведомления';
-        if (finalDesc) finalDesc.textContent = 'Push-уведомления будут приходить после установки приложения. Если установка пропущена — напоминания отправляем на почту.';
-        if (finalBadge) finalBadge.textContent = 'Android';
-      } else {
-        if (finalTitle) finalTitle.textContent = 'Настройка уведомлений';
-        if (finalDesc) finalDesc.textContent = 'Оповещения будут отправляться на почту. Установите приложение для push-уведомлений на рабочий стол.';
-        if (finalBadge) finalBadge.textContent = 'INFO';
-      }
-    }
+  if (step.input || step.install || step.final) {
     return;
   }
   if (step.result) {

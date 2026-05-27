@@ -64,34 +64,100 @@
     const post = document.querySelector(`.post-card[data-post-id="${postId}"]`);
     if (!post) return;
     const countEl = post.querySelector('[data-comment-count]');
+    const viewAllBtn = post.querySelector('[data-view-comments-btn]');
     let count = parseInt(post.dataset.commentCount || '0', 10) + delta;
     if (count < 0) count = 0;
     post.dataset.commentCount = String(count);
+    
     if (countEl) {
       countEl.textContent = String(count);
       countEl.classList.toggle('visible', count > 0);
+    }
+    if (viewAllBtn) {
+      viewAllBtn.textContent = `Посмотреть все комментарии (${count})`;
+      viewAllBtn.classList.toggle('hidden', count <= 2);
+    }
+  }
+
+  function renderPostCommentsPreview(postId, comments) {
+    const post = document.querySelector(`.post-card[data-post-id="${postId}"]`);
+    if (!post) return;
+    const previewContainer = post.querySelector('[data-comments-preview-container]');
+    const previewList = post.querySelector('[data-comments-preview-list]');
+    const viewAllBtn = post.querySelector('[data-view-comments-btn]');
+
+    if (!previewContainer || !previewList) return;
+
+    post.dataset.commentCount = String(comments.length);
+    updateCommentCount(postId, 0);
+
+    if (comments.length === 0) {
+      previewContainer.classList.add('hidden');
+      return;
+    }
+
+    previewContainer.classList.remove('hidden');
+    previewList.innerHTML = '';
+
+    // Instagram style: show latest 2 comments
+    const latestComments = comments.slice(-2);
+    latestComments.forEach((c) => {
+      const p = document.createElement('div');
+      p.className = 'post-comment-preview-item';
+      p.dataset.commentId = c.id;
+      p.innerHTML = `<strong>${escapeHtml(c.author_name)}</strong><span>${escapeHtml(c.content)}</span>`;
+      previewList.appendChild(p);
+    });
+
+    if (viewAllBtn) {
+      viewAllBtn.classList.toggle('hidden', comments.length <= 2);
     }
   }
 
   function appendCommentToUI(comment, isRealtime = false) {
     if (!comment || !comment.post_id) return;
     const sheetList = document.getElementById('comment-sheet-list');
+    
+    // If bottom sheet is open for this post, append to bottom sheet
     if (activePostId === comment.post_id && sheetList) {
       const existing = sheetList.querySelector(`[data-comment-id="${comment.id}"]`);
-      if (existing) return;
-      const div = document.createElement('div');
-      div.className = 'comment-item';
-      div.dataset.commentId = comment.id;
-      div.innerHTML = `
-        <strong>${escapeHtml(comment.author_name)}</strong>
-        <span>${escapeHtml(comment.content)}</span>
-        <span class="comment-time">${formatTime(comment.created_at)}</span>
-      `;
-      sheetList.appendChild(div);
-      sheetList.scrollTop = sheetList.scrollHeight;
+      if (!existing) {
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        div.dataset.commentId = comment.id;
+        div.innerHTML = `
+          <strong>${escapeHtml(comment.author_name)}</strong>
+          <span>${escapeHtml(comment.content)}</span>
+          <span class="comment-time">${formatTime(comment.created_at)}</span>
+        `;
+        sheetList.appendChild(div);
+        sheetList.scrollTop = sheetList.scrollHeight;
+      }
     }
+
+    // Update previews and counts
     const post = document.querySelector(`.post-card[data-post-id="${comment.post_id}"]`);
-    if (post && post.dataset.commentCount !== undefined) {
+    if (post) {
+      const previewContainer = post.querySelector('[data-comments-preview-container]');
+      const previewList = post.querySelector('[data-comments-preview-list]');
+      if (previewContainer && previewList) {
+        // Check if duplicate in preview
+        const existingPreview = previewList.querySelector(`[data-comment-id="${comment.id}"]`);
+        if (!existingPreview) {
+          previewContainer.classList.remove('hidden');
+          const p = document.createElement('div');
+          p.className = 'post-comment-preview-item';
+          p.dataset.commentId = comment.id;
+          p.innerHTML = `<strong>${escapeHtml(comment.author_name)}</strong><span>${escapeHtml(comment.content)}</span>`;
+          previewList.appendChild(p);
+
+          // Maintain maximum of 2 comments in preview
+          const items = previewList.querySelectorAll('.post-comment-preview-item');
+          if (items.length > 2) {
+            items[0].remove();
+          }
+        }
+      }
       updateCommentCount(comment.post_id, 1);
     }
   }
@@ -123,12 +189,21 @@
         .then((comments) => {
           if (!Array.isArray(comments)) return;
           list.innerHTML = '';
-          comments.forEach((c) => appendCommentToUI(c));
-          const post = document.querySelector(`.post-card[data-post-id="${postId}"]`);
-          if (post) {
-            post.dataset.commentCount = String(comments.length);
-            updateCommentCount(postId, 0);
-          }
+          comments.forEach((c) => {
+            // Append to sheet list
+            const div = document.createElement('div');
+            div.className = 'comment-item';
+            div.dataset.commentId = c.id;
+            div.innerHTML = `
+              <strong>${escapeHtml(c.author_name)}</strong>
+              <span>${escapeHtml(c.content)}</span>
+              <span class="comment-time">${formatTime(c.created_at)}</span>
+            `;
+            list.appendChild(div);
+          });
+          list.scrollTop = list.scrollHeight;
+          
+          renderPostCommentsPreview(postId, comments);
         })
         .catch((err) => {
           console.error('[feed] Error loading comments:', err);
@@ -176,6 +251,22 @@
     // Comments button opens bottom sheet
     const commentButton = post.querySelector('[data-comment-button]');
     commentButton?.addEventListener('click', () => openCommentSheet(postId));
+
+    const viewCommentsBtn = post.querySelector('[data-view-comments-btn]');
+    viewCommentsBtn?.addEventListener('click', () => openCommentSheet(postId));
+
+    // Initial load of comments for previews and count badges
+    if (window.API) {
+      window.API.request('GET', `/content/feed/comments?post_id=${postId}`)
+        .then((comments) => {
+          if (Array.isArray(comments)) {
+            renderPostCommentsPreview(postId, comments);
+          }
+        })
+        .catch((err) => {
+          console.error('[feed] Error loading comments for preview:', err);
+        });
+    }
   });
 
   // Sheet close handlers
