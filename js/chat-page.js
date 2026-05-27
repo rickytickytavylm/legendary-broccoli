@@ -785,8 +785,9 @@
     const onViewportResize = () => {
       const viewport = window.visualViewport;
       const bottomGap = Math.max(0, Math.round(window.innerHeight - viewport.height - viewport.offsetTop));
-      const systemBottom = bottomGap > 0 && bottomGap < 96 ? bottomGap : 0;
-      const keyboardHeight = systemBottom ? 0 : bottomGap;
+      const inputFocused = document.activeElement === input;
+      const systemBottom = !inputFocused && bottomGap > 0 && bottomGap < 96 ? bottomGap : 0;
+      const keyboardHeight = inputFocused && bottomGap >= 96 ? bottomGap : 0;
 
       root.style.setProperty('--chat-viewport-height', `${Math.floor(viewport.height)}px`);
       root.style.setProperty('--chat-keyboard-height', `${keyboardHeight}px`);
@@ -796,6 +797,8 @@
     window.visualViewport.addEventListener('resize', onViewportResize);
     window.visualViewport.addEventListener('scroll', onViewportResize);
     window.addEventListener('resize', onViewportResize);
+    input?.addEventListener('focus', onViewportResize);
+    input?.addEventListener('blur', () => window.setTimeout(onViewportResize, 80));
     onViewportResize();
   }
 

@@ -474,6 +474,11 @@
   var lastMobileHeaderScrollY = window.scrollY || 0;
   var mobileHeaderTicking = false;
   function updateMobileHeaderOnScroll() {
+    if (document.body.classList.contains('chat-page')) {
+      mobileHeader.classList.remove('mobile-header-hidden');
+      mobileHeaderTicking = false;
+      return;
+    }
     var currentY = Math.max(0, window.scrollY || 0);
     var delta = currentY - lastMobileHeaderScrollY;
     var shouldHide = currentY > 42 && delta > 3;

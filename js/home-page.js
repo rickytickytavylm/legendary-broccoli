@@ -519,6 +519,11 @@ function renderOnboarding() {
 
   if (inlineBtn) {
     inlineBtn.classList.toggle('hidden', Boolean(step.install));
+    if (step.install) {
+      inlineBtn.style.setProperty('display', 'none', 'important');
+    } else {
+      inlineBtn.style.removeProperty('display');
+    }
     inlineBtn.textContent = step.final ? 'В систему' : step.result ? 'Начать' : 'Далее';
     inlineBtn.disabled = !hasStepAnswer(step);
   }
