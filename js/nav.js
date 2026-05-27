@@ -39,7 +39,7 @@
   }
 
   // ── Inject CSS ─────────────────────────────────────────
-  var navCssHref = '/css/nav.css?v=74';
+  var navCssHref = '/css/nav.css?v=75';
   var navCssLink = document.querySelector('link[href*="nav.css"]');
   if (navCssLink) {
     navCssLink.setAttribute('href', navCssHref);
@@ -52,7 +52,7 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
         .then(function(reg) {
           console.log('ServiceWorker registered with scope:', reg.scope);
           

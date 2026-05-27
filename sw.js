@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v30-killswitch';
+const CACHE_NAME = 'sistema-static-v31-killswitch';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -13,9 +13,18 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // To satisfy Google Chrome PWA/WebAPK criteria, we must call event.respondWith().
-  // We use a lightweight network-first fallback strategy.
   if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // For HTML document navigations, force the browser to check the server for updates
+  // (cache: 'no-cache' triggers validation) so they always load the latest index.html.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-cache' }).catch(() => {
+        return caches.match(event.request);
+      })
+    );
     return;
   }
 
