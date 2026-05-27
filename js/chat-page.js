@@ -709,7 +709,8 @@
   // Handle visual viewports and software keyboard lifting
   if (window.visualViewport) {
     const onViewportResize = () => {
-      const keyboardHeight = window.innerHeight - window.visualViewport.height;
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera);
+      const keyboardHeight = isIOS ? (window.innerHeight - window.visualViewport.height) : 0;
       root.style.setProperty('--keyboard-height', `${Math.max(0, keyboardHeight)}px`);
       scrollToBottom();
     };

@@ -15,7 +15,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Общий чат — Система Молодцова</title>
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=116" />
+  <link rel="stylesheet" href="/css/style.css?v=117" />
   <link rel="stylesheet" href="/css/nav.css?v=75" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -57,7 +57,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 10 10c0 1.25-.5 2.5-1.5 3.5l-2.5-2.5"/></svg>
         </button>
         
-        <textarea data-chat-input rows="1" maxlength="3000" placeholder="Написать сообщение…"></textarea>
+        <textarea data-chat-input rows="1" maxlength="3000" placeholder="Написать..." spellcheck="false" autocomplete="off" autocapitalize="sentences"></textarea>
         
         <button data-chat-send type="submit" aria-label="Отправить">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -87,6 +87,6 @@
   <script src="/js/api.js?v=61"></script>
   <script src="/js/nav.js?v=82"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/chat-page.js?v=4"></script>
+  <script src="/js/chat-page.js?v=5"></script>
 </body>
 </html>
