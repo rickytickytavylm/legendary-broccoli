@@ -4,8 +4,8 @@
   "description": "Авторский канал Руслана Молодцова",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#09090F",
-  "theme_color": "#09090F",
+  "background_color": "#030605",
+  "theme_color": "#030605",
   "orientation": "portrait-primary",
   "icons": [
     {

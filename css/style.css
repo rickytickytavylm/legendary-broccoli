@@ -7696,6 +7696,12 @@ body.chat-page *,
   -webkit-backdrop-filter: blur(20px);
 }
 
+@media all and (display-mode: standalone) {
+  .chat-composer {
+    padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 16px) !important;
+  }
+}
+
 .chat-composer textarea {
   min-width: 0;
   flex: 1;
