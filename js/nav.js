@@ -39,7 +39,7 @@
   }
 
   // ── Inject CSS ─────────────────────────────────────────
-  var navCssHref = '/css/nav.css?v=75';
+  var navCssHref = '/css/nav.css?v=76';
   var navCssLink = document.querySelector('link[href*="nav.css"]');
   if (navCssLink) {
     navCssLink.setAttribute('href', navCssHref);

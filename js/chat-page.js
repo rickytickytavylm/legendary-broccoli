@@ -127,6 +127,15 @@
     return `${remainingText}${renderZoomCard(zoom)}`;
   }
 
+  function triggerHapticFeedback() {
+    if (!navigator.vibrate) return;
+    try {
+      navigator.vibrate(18);
+    } catch (err) {
+      // Some browsers expose vibrate but block it silently outside supported contexts.
+    }
+  }
+
   function setStatus(text) {
     if (!status) return;
     let pushStatus = '';
@@ -595,6 +604,7 @@
 
     touchTimer = setTimeout(() => {
       if (!hasMoved) {
+        triggerHapticFeedback();
         showMessageContextMenu(id, isOwn, ev);
       }
     }, 550); // 550ms Telegram-style hold threshold

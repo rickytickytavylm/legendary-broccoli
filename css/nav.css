@@ -220,6 +220,11 @@
 @media (max-width: 768px) {
   .app-sidebar { display: none !important; }
 
+  body:not(.account-page) footer.footer,
+  body:not(.account-page) footer.footer.app-injected-footer {
+    display: none !important;
+  }
+
   /* Футер из nav.js — запас над фиксированным таб-баром (по умолчанию уменьшен, увеличен только на странице профиля) */
   footer.footer.app-injected-footer {
     padding-bottom: calc(34px + env(safe-area-inset-bottom, 0px)) !important;
