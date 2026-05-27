@@ -326,22 +326,7 @@
     }
 
     .post-comment-count {
-      position: absolute;
-      top: -2px;
-      right: -6px;
-      background: #57b59a;
-      color: #000;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 8px;
-      line-height: 1;
-      display: none;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .post-comment-count.visible {
-      display: inline-block;
+      display: none !important;
     }
 
     /* ── Post Comments Preview ── */
@@ -384,6 +369,60 @@
 
     .post-comments-view-all-btn:hover {
       color: rgba(255, 255, 255, 0.65);
+    }
+
+    /* ── Post Quick Comment Form (Instagram Style) ── */
+    .post-quick-comment-form {
+      display: flex;
+      align-items: center;
+      padding: 0 18px 16px;
+      position: relative;
+      margin-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      padding-top: 14px;
+    }
+
+    .post-quick-comment-input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 13px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 0;
+      outline: none;
+      padding-right: 90px;
+    }
+
+    .post-quick-comment-input::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .post-quick-comment-submit-btn {
+      position: absolute;
+      right: 18px;
+      background: none;
+      border: none;
+      color: #57b59a;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.95);
+    }
+
+    .post-quick-comment-submit-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    .post-quick-comment-submit-btn:disabled {
+      color: rgba(255, 255, 255, 0.3);
+      cursor: not-allowed;
     }
 
     /* ── Comments Bottom Sheet ── */
@@ -639,6 +678,12 @@
           <div class="post-comments-preview-list" data-comments-preview-list></div>
           <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
         </div>
+
+        <!-- Post Quick Comment Form (Instagram Style) -->
+        <form class="post-quick-comment-form" data-quick-comment-form>
+          <input type="text" class="post-quick-comment-input" placeholder="Добавить комментарий..." required data-quick-comment-input />
+          <button type="submit" class="post-quick-comment-submit-btn" disabled data-quick-comment-submit-btn>Опубликовать</button>
+        </form>
       </article>
 
       <!-- Post 2 -->
@@ -680,6 +725,12 @@
           <div class="post-comments-preview-list" data-comments-preview-list></div>
           <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
         </div>
+
+        <!-- Post Quick Comment Form (Instagram Style) -->
+        <form class="post-quick-comment-form" data-quick-comment-form>
+          <input type="text" class="post-quick-comment-input" placeholder="Добавить комментарий..." required data-quick-comment-input />
+          <button type="submit" class="post-quick-comment-submit-btn" disabled data-quick-comment-submit-btn>Опубликовать</button>
+        </form>
       </article>
 
       <!-- Post 1: oldest -->
@@ -716,6 +767,12 @@
           <div class="post-comments-preview-list" data-comments-preview-list></div>
           <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
         </div>
+
+        <!-- Post Quick Comment Form (Instagram Style) -->
+        <form class="post-quick-comment-form" data-quick-comment-form>
+          <input type="text" class="post-quick-comment-input" placeholder="Добавить комментарий..." required data-quick-comment-input />
+          <button type="submit" class="post-quick-comment-submit-btn" disabled data-quick-comment-submit-btn>Опубликовать</button>
+        </form>
       </article>
 
     </div>
@@ -742,6 +799,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=80"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/page-inline/feed-1.js?v=4"></script>
+  <script src="/js/page-inline/feed-1.js?v=5"></script>
 </body>
 </html>

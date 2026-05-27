@@ -255,6 +255,44 @@
     const viewCommentsBtn = post.querySelector('[data-view-comments-btn]');
     viewCommentsBtn?.addEventListener('click', () => openCommentSheet(postId));
 
+    // Inline quick comment form (Instagram style)
+    const quickForm = post.querySelector('[data-quick-comment-form]');
+    const quickInput = post.querySelector('[data-quick-comment-input]');
+    const quickSubmit = post.querySelector('[data-quick-comment-submit-btn]');
+
+    if (quickForm && quickInput && quickSubmit) {
+      quickInput.addEventListener('input', () => {
+        const val = quickInput.value.trim();
+        const hasText = val.length > 0;
+        quickSubmit.classList.toggle('visible', hasText);
+        quickSubmit.disabled = !hasText;
+      });
+
+      quickForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!window.API) return;
+        const content = quickInput.value.trim();
+        if (!content) return;
+
+        quickInput.disabled = true;
+        quickSubmit.disabled = true;
+
+        try {
+          const comment = await window.API.request('POST', '/content/feed/comments', {
+            post_id: postId,
+            content: content,
+          });
+          quickInput.value = '';
+          quickSubmit.classList.remove('visible');
+          appendCommentToUI(comment);
+        } catch (err) {
+          console.error('[feed] Error submitting quick comment:', err);
+        } finally {
+          quickInput.disabled = false;
+        }
+      });
+    }
+
     // Initial load of comments for previews and count badges
     if (window.API) {
       window.API.request('GET', `/content/feed/comments?post_id=${postId}`)
