@@ -63,6 +63,70 @@
     return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   }
 
+  function extractZoomMeeting(text) {
+    const source = String(text || '');
+    const match = source.match(/https?:\/\/(?:[a-z0-9-]+\.)*(?:zoom\.us|zoom\.com|zoomgov\.com)\/(?:j|s|w|my)\/[^\s<>"']+/i);
+    if (!match) return null;
+
+    const rawUrl = match[0];
+    const url = rawUrl.replace(/[),.;!?]+$/g, '');
+    let label = 'Zoom-встреча';
+    let hasPasscode = false;
+
+    try {
+      const parsed = new URL(url);
+      const meetingMatch = parsed.pathname.match(/\/(?:j|s|w)\/(\d+)/i);
+      const personalMatch = parsed.pathname.match(/\/my\/([^/?#]+)/i);
+      if (meetingMatch) {
+        label = `ID ${meetingMatch[1].replace(/(\d{3})(?=\d)/g, '$1 ').trim()}`;
+      } else if (personalMatch) {
+        label = `/${decodeURIComponent(personalMatch[1])}`;
+      }
+      hasPasscode = parsed.searchParams.has('pwd') || parsed.searchParams.has('passcode');
+    } catch (err) {
+      hasPasscode = /[?&](pwd|passcode)=/i.test(url);
+    }
+
+    return {
+      url,
+      label,
+      hasPasscode,
+      textWithoutUrl: source.replace(rawUrl, '').trim(),
+    };
+  }
+
+  function renderZoomCard(zoom) {
+    return `
+      <div class="chat-zoom-card">
+        <div class="chat-zoom-card-main">
+          <div class="chat-zoom-logo" aria-hidden="true">
+            <svg viewBox="0 0 28 28" fill="none">
+              <rect width="28" height="28" rx="8" fill="currentColor"/>
+              <path d="M8 10.2c0-.66.54-1.2 1.2-1.2h6.2c.66 0 1.2.54 1.2 1.2v5.6c0 .66-.54 1.2-1.2 1.2H9.2c-.66 0-1.2-.54-1.2-1.2v-5.6Zm9.8 1.85 3.25-2.05c.4-.25.95.03.95.5v7c0 .47-.55.75-.95.5l-3.25-2.05v-3.9Z" fill="#fff"/>
+            </svg>
+          </div>
+          <div class="chat-zoom-copy">
+            <strong>Встреча в Zoom</strong>
+            <span>${escapeHtml(zoom.label)}${zoom.hasPasscode ? ' • пароль в ссылке' : ''}</span>
+          </div>
+        </div>
+        <a class="chat-zoom-join" href="${escapeHtml(zoom.url)}" target="_blank" rel="noopener noreferrer">Подключиться</a>
+      </div>
+    `;
+  }
+
+  function renderTextContent(text) {
+    const zoom = extractZoomMeeting(text);
+    if (!zoom) {
+      return `<div class="chat-message-text">${escapeHtml(text || '').replace(/\n/g, '<br>')}</div>`;
+    }
+
+    const remainingText = zoom.textWithoutUrl
+      ? `<div class="chat-message-text">${escapeHtml(zoom.textWithoutUrl).replace(/\n/g, '<br>')}</div>`
+      : '';
+    return `${remainingText}${renderZoomCard(zoom)}`;
+  }
+
   function setStatus(text) {
     if (!status) return;
     let pushStatus = '';
@@ -112,7 +176,7 @@
         ? '' 
         : `<div class="chat-message-avatar">${escapeHtml((message.sender_name || 'У').slice(0, 1).toUpperCase())}</div>`;
 
-      let contentHtml = `<div class="chat-message-text">${escapeHtml(message.text_content || '').replace(/\n/g, '<br>')}</div>`;
+      let contentHtml = renderTextContent(message.text_content || '');
       if (message.type === 'audio_circle' && message.file_url) {
         contentHtml = `
           <div class="voice-player" data-src="${escapeHtml(message.file_url)}">

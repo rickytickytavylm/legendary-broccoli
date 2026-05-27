@@ -420,6 +420,8 @@ function renderOnboarding() {
     step.title = 'Настройка уведомлений';
     if (ctx.isStandalone) {
       step.desc = 'Всё готово! Разрешите отправку уведомлений при первом запуске, чтобы вовремя получать информацию о практиках, вебинарах и обновлениях.';
+    } else if (onboardingState.installChoice === 'skipped') {
+      step.desc = 'Установку можно будет сделать позже. Пока важные напоминания и материалы будем отправлять на почту.';
     } else if (ctx.isIOS) {
       step.desc = 'После добавления на домашний экран откройте приложение и разрешите уведомления. До установки напоминания будут приходить на почту.';
     } else if (ctx.isAndroid) {
@@ -471,13 +473,9 @@ function renderOnboarding() {
         if (iosBtn) iosBtn.classList.add('hidden');
       } else {
         if (ctx.isAndroid) {
-          if (deferredInstallPrompt) {
-            if (androidBtn) {
-              androidBtn.classList.remove('hidden');
-              androidBtn.textContent = 'Установить';
-            }
-          } else {
-            if (androidBtn) androidBtn.classList.add('hidden');
+          if (androidBtn) {
+            androidBtn.classList.remove('hidden');
+            androidBtn.textContent = 'Установить';
           }
           if (iosBtn) iosBtn.classList.add('hidden');
         } else if (ctx.isIOS) {
@@ -523,6 +521,9 @@ function renderOnboarding() {
     inlineBtn.classList.toggle('hidden', Boolean(step.install));
     inlineBtn.textContent = step.final ? 'В систему' : step.result ? 'Начать' : 'Далее';
     inlineBtn.disabled = !hasStepAnswer(step);
+  }
+  if (next) {
+    next.closest('.onboarding-actions')?.classList.add('hidden');
   }
 
   if (step.input || step.install || step.final) {
@@ -590,6 +591,7 @@ function initOnboarding() {
       androidBtn.textContent = androidBtn.dataset.originalText || 'Установить';
     }
     if (outcome === 'accepted') {
+      onboardingState.installChoice = 'accepted';
       onboardingIndex += 1;
       renderOnboarding();
     }
@@ -606,6 +608,7 @@ function initOnboarding() {
   });
 
   document.getElementById('onboarding-install-skip-btn')?.addEventListener('click', () => {
+    onboardingState.installChoice = 'skipped';
     onboardingIndex += 1;
     renderOnboarding();
   });
@@ -620,6 +623,7 @@ function initOnboarding() {
     closeIosModal();
     const step = onboardingSteps[onboardingIndex];
     if (step && step.install) {
+      onboardingState.installChoice = 'guided';
       onboardingIndex += 1;
       renderOnboarding();
     }
