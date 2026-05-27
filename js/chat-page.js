@@ -706,16 +706,23 @@
     }
   });
 
-  // Handle visual viewports and software keyboard lifting
+  // Keep the fixed chat composer above mobile keyboards and Android system navigation.
   if (window.visualViewport) {
     const onViewportResize = () => {
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera);
-      const keyboardHeight = isIOS ? (window.innerHeight - window.visualViewport.height) : 0;
-      root.style.setProperty('--keyboard-height', `${Math.max(0, keyboardHeight)}px`);
+      const viewport = window.visualViewport;
+      const bottomGap = Math.max(0, Math.round(window.innerHeight - viewport.height - viewport.offsetTop));
+      const systemBottom = bottomGap > 0 && bottomGap < 96 ? bottomGap : 0;
+      const keyboardHeight = systemBottom ? 0 : bottomGap;
+
+      root.style.setProperty('--chat-viewport-height', `${Math.floor(viewport.height)}px`);
+      root.style.setProperty('--chat-keyboard-height', `${keyboardHeight}px`);
+      root.style.setProperty('--chat-system-bottom', `${systemBottom}px`);
       scrollToBottom();
     };
     window.visualViewport.addEventListener('resize', onViewportResize);
     window.visualViewport.addEventListener('scroll', onViewportResize);
+    window.addEventListener('resize', onViewportResize);
+    onViewportResize();
   }
 
   // Prevent flying input box after iOS keyboard dismisses
