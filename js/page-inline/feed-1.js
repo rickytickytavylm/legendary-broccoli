@@ -38,6 +38,38 @@
   }
 
   const likedPosts = readLikedPosts();
+  const seenCommentIds = new Map();
+
+  function seenForPost(postId) {
+    if (!seenCommentIds.has(postId)) seenCommentIds.set(postId, new Set());
+    return seenCommentIds.get(postId);
+  }
+
+  function markCommentSeen(comment) {
+    if (!comment || !comment.post_id || !comment.id) return true;
+    const seen = seenForPost(comment.post_id);
+    const key = String(comment.id);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }
+
+  function authorInitial(comment) {
+    return escapeHtml((comment?.author_name || 'У').trim().slice(0, 1).toUpperCase() || 'У');
+  }
+
+  function renderCommentItem(comment) {
+    return `
+      <div class="comment-avatar" aria-hidden="true">${authorInitial(comment)}</div>
+      <div class="comment-body">
+        <div class="comment-line">
+          <strong>${escapeHtml(comment.author_name)}</strong>
+          <span>${escapeHtml(comment.content)}</span>
+        </div>
+        <span class="comment-time">${formatTime(comment.created_at)}</span>
+      </div>
+    `;
+  }
 
   // ── Sockets Real-Time Setup ──
   let socket = null;
@@ -89,6 +121,8 @@
     if (!previewContainer || !previewList) return;
 
     post.dataset.commentCount = String(comments.length);
+    seenForPost(postId).clear();
+    comments.forEach(markCommentSeen);
     updateCommentCount(postId, 0);
 
     if (comments.length === 0) {
@@ -116,6 +150,7 @@
 
   function appendCommentToUI(comment, isRealtime = false) {
     if (!comment || !comment.post_id) return;
+    const isNewComment = markCommentSeen(comment);
     const sheetList = document.getElementById('comment-sheet-list');
     
     // If bottom sheet is open for this post, append to bottom sheet
@@ -125,17 +160,14 @@
         const div = document.createElement('div');
         div.className = 'comment-item';
         div.dataset.commentId = comment.id;
-        div.innerHTML = `
-          <strong>${escapeHtml(comment.author_name)}</strong>
-          <span>${escapeHtml(comment.content)}</span>
-          <span class="comment-time">${formatTime(comment.created_at)}</span>
-        `;
+        div.innerHTML = renderCommentItem(comment);
         sheetList.appendChild(div);
         sheetList.scrollTop = sheetList.scrollHeight;
       }
     }
 
     // Update previews and counts
+    if (!isNewComment) return;
     const post = document.querySelector(`.post-card[data-post-id="${comment.post_id}"]`);
     if (post) {
       const previewContainer = post.querySelector('[data-comments-preview-container]');
@@ -194,11 +226,7 @@
             const div = document.createElement('div');
             div.className = 'comment-item';
             div.dataset.commentId = c.id;
-            div.innerHTML = `
-              <strong>${escapeHtml(c.author_name)}</strong>
-              <span>${escapeHtml(c.content)}</span>
-              <span class="comment-time">${formatTime(c.created_at)}</span>
-            `;
+            div.innerHTML = renderCommentItem(c);
             list.appendChild(div);
           });
           list.scrollTop = list.scrollHeight;
