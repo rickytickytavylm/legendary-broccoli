@@ -80,6 +80,11 @@ function escapeHtml(value) {
         usernameEl.textContent = login ? '@' + login : '';
       }
 
+      const shortIdEl = document.getElementById('dash-short-id');
+      if (shortIdEl) {
+        shortIdEl.textContent = user.short_id ? 'ID: ' + user.short_id : '';
+      }
+
       document.getElementById('dash-sub').textContent = 'Настройки, документы и управление данными.';
 
       document.getElementById('streak-val')?.replaceChildren(document.createTextNode(String(stats.streak_days || 0)));

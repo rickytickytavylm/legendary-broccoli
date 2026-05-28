@@ -450,6 +450,14 @@
       font-weight: 500;
       letter-spacing: .01em;
     }
+    .profile-short-id {
+      margin: 4px 0 0;
+      color: rgba(255,255,255,.35);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    }
     .profile-avatar {
       width: 72px;
       height: 72px;
@@ -1145,7 +1153,7 @@
   <div id="dashboard" class="u-hidden" aria-hidden="true">
     <div class="profile-wrap">
 
-      <section class="profile-card profile-user-card" style="--profile-user-bg:url('/assets/webp/for_profile2.webp')">
+      <section class="profile-card profile-user-card" style="--profile-user-bg:url('/assets/webp/hero.webp')">
         <div class="profile-user-avatar" id="avatar-btn">
           <img class="profile-user-avatar-img" id="dash-avatar-img" src="" alt="">
           <svg class="profile-user-avatar-fallback" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -1154,6 +1162,7 @@
           <p class="profile-eyebrow">Профиль</p>
           <h1 class="profile-title" id="dash-greeting">Ваш профиль</h1>
           <p class="profile-username" id="dash-username"></p>
+          <p class="profile-short-id" id="dash-short-id"></p>
           <p class="profile-subtitle" id="dash-sub">Настройки приложения, документы и управление данными.</p>
         </div>
       </section>
