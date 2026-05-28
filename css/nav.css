@@ -637,6 +637,13 @@
   background: rgba(255,255,255,.62);
 }
 
+.mobile-profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 /* ── Desktop: sidebar is permanent, content is fixed beside it ── */
 @media (min-width: 769px) {
   .app-sidebar {

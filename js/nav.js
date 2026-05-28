@@ -361,7 +361,13 @@
   function renderMobileAuthAction(loggedIn) {
     var actions = mobileHeader.querySelector('.mobile-header-actions');
     if (!actions) return;
-    actions.innerHTML = '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>';
+    var user = window.__sistemaCurrentUser || {};
+    var avatarUrl = user.avatar_url || '';
+    var fallback = '<span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span>';
+    var avatar = avatarUrl
+      ? '<img class="mobile-profile-avatar-img" src="' + String(avatarUrl).replace(/"/g, '&quot;') + '" alt="">'
+      : fallback;
+    actions.innerHTML = '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль">' + avatar + '</a>';
     bindMobileLoginButton();
   }
 
@@ -371,6 +377,7 @@
 
   bindMobileLoginButton();
   window.addEventListener('auth:change', function(event) {
+    if (event && event.detail && event.detail.user) window.__sistemaCurrentUser = event.detail.user;
     renderMobileAuthAction(true);
     accessState = 'unknown';
     if (hasJwtSession() && window.API && window.API.getSubscription) {
@@ -393,6 +400,7 @@
     window.API.restoreSession()
       .then(function(user) {
         if (!user) return;
+        window.__sistemaCurrentUser = user;
         renderMobileAuthAction(true);
         window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: user } }));
         if (window.refreshAuthUI) window.refreshAuthUI(user);

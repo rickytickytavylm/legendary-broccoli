@@ -3,6 +3,7 @@ const ONBOARDING_PROFILE_KEY = 'sistema:onboarding-profile';
 const ONBOARDING_SCHEMA_KEY = 'sistema:onboarding-schema';
 const ONBOARDING_SCHEMA_VERSION = 'device-v1';
 const SPLASH_SEEN_KEY = 'sistema:intro-splash-seen';
+const ONBOARDING_AFTER_AUTH_KEY = 'sistema:onboarding-after-auth';
 const TODAY_OPENED_PROGRAMS_KEY = 'sistema:today-opened-programs';
 const TODAY_LESSON_COUNT_ENDPOINTS = {
   geshtalt: '/content/geshtalt-lessons',
@@ -158,7 +159,7 @@ function displayUserName(user) {
   if (!user) return '';
   const emailName = user.email ? user.email.split('@')[0] : '';
   const phoneName = user.phone ? user.phone.replace(/^\+7/, '+7 ') : '';
-  return user.display_name || user.first_name || emailName || phoneName || '';
+  return user.display_name || user.first_name || user.yandex_login || emailName || phoneName || '';
 }
 
 function asArray(value) {
@@ -335,7 +336,7 @@ function shiftTodayRoute(delta) {
 
 function finishOnboarding() {
   const route = routeConfig();
-  onboardingState.name = cleanName(onboardingState.name) || 'Гость';
+  onboardingState.name = cleanName(onboardingState.name) || displayUserName(window.__sistemaCurrentUser) || 'Пользователь';
   const completedAt = new Date().toISOString();
   const savedProfile = {
     ...onboardingState,
@@ -575,6 +576,11 @@ function hasStepAnswer(step) {
 }
 
 function initOnboarding() {
+  function startYandexOnboardingLogin() {
+    if (!window.API?.yandexLoginUrl) return;
+    localStorage.setItem(ONBOARDING_AFTER_AUTH_KEY, 'true');
+    window.location.href = window.API.yandexLoginUrl('/');
+  }
   // Handle Android PWA installation click
   document.getElementById('onboarding-install-android-btn')?.addEventListener('click', async () => {
     if (!deferredInstallPrompt) {
@@ -644,7 +650,7 @@ function initOnboarding() {
     return;
   });
   document.querySelector('[data-yandex-login]')?.addEventListener('click', () => {
-    return;
+    startYandexOnboardingLogin();
   });
   document.querySelector('[data-onboarding-start]')?.addEventListener('click', () => {
     onboardingIndex = 0;
@@ -709,35 +715,48 @@ function initOnboarding() {
     if (Math.abs(dx) < 46 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
     shiftTodayRoute(dx < 0 ? 1 : -1);
   }, { passive: true });
-  const boot = () => {
+  const boot = (user) => {
+    window.__sistemaCurrentUser = user || null;
     const completed = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
-    const splashSeen = localStorage.getItem(SPLASH_SEEN_KEY) === 'true';
-    if (completed) {
-      renderToday();
-      showNewHomeState('today');
-      return;
-    }
-    if (!splashSeen) {
-      showNewHomeState('splash');
-      localStorage.setItem(SPLASH_SEEN_KEY, 'true');
-      window.setTimeout(() => showNewHomeState('intro'), 2400);
-      return;
-    }
-    showNewHomeState('intro');
+    const continueOnboarding = localStorage.getItem(ONBOARDING_AFTER_AUTH_KEY) === 'true';
+    showNewHomeState('splash');
+    window.setTimeout(() => {
+      if (user && continueOnboarding && !completed) {
+        localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
+        onboardingIndex = 0;
+        onboardingState.name = displayUserName(user);
+        renderOnboarding();
+        showNewHomeState('onboarding');
+        return;
+      }
+      if (!user) {
+        localStorage.removeItem(ONBOARDING_COMPLETE_KEY);
+        showNewHomeState('intro');
+        return;
+      }
+      if (completed) {
+        renderToday();
+        showNewHomeState('today');
+        return;
+      }
+      onboardingIndex = 0;
+      onboardingState.name = displayUserName(user);
+      renderOnboarding();
+      showNewHomeState('onboarding');
+    }, 1200);
   };
 
-  if (window.API?.getProfileSession) {
-    window.API.getProfileSession()
-      .then(() => {})
-      .catch(() => {
-        if (!window.API?.isLoggedIn?.() && localStorage.getItem(ONBOARDING_SCHEMA_KEY) !== ONBOARDING_SCHEMA_VERSION) {
-          resetLocalOnboardingForFreshDevice();
-        }
-      })
-      .finally(boot);
-    return;
-  }
-  boot();
+  const restoreAndBoot = () => {
+    if (window.API?.restoreSession) {
+      window.API.restoreSession()
+        .then((user) => boot(user))
+        .catch(() => boot(null));
+      return;
+    }
+    boot(null);
+  };
+
+  restoreAndBoot();
 }
 
 window.refreshAuthUI = function(user) {

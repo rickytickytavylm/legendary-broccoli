@@ -448,6 +448,26 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   backdrop-filter: blur(18px) saturate(140%);
 }
 
+.yandex-id-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.yandex-id-mark {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fc3f1d;
+  color: #fff;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .auth-provider-panel .auth-gateway-copy {
   margin-top: 0;
 }
