@@ -5293,7 +5293,12 @@ h1, h2, h3 {
   background: #050505;
   color: #fff;
   overflow: hidden;
+  scrollbar-width: none;
   isolation: isolate;
+}
+
+.audio-mode-card::-webkit-scrollbar {
+  display: none;
 }
 
 .audio-mode-card::before,
@@ -7570,6 +7575,8 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   flex-direction: column;
   gap: 12px;
   scrollbar-width: none;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -7867,6 +7874,9 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   background: rgba(7, 16, 14, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
 @media all and (display-mode: standalone) {
@@ -7898,6 +7908,7 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   overflow-y: hidden;
   scrollbar-width: none;
   transition: border-color 0.25s, background 0.25s;
+  touch-action: manipulation;
 }
 
 .chat-composer textarea::-webkit-scrollbar {

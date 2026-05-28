@@ -181,6 +181,7 @@
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 5;
+      line-clamp: 5;
       overflow: hidden;
     }
 
@@ -242,6 +243,10 @@
 
     body.shorts-player-open {
       overflow: hidden;
+      scrollbar-width: none;
+    }
+    body.shorts-player-open::-webkit-scrollbar {
+      display: none;
     }
 
     /* Полноэкранный вертикальный режим как в Shorts/Reels — без touch-action:none (ломало тапы по controls на iOS)
@@ -427,6 +432,7 @@
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       cursor: pointer;
       position: relative;
       pointer-events: auto;
