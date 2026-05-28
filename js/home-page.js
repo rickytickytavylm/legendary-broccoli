@@ -732,7 +732,9 @@ function initOnboarding() {
     const continueOnboarding = localStorage.getItem(ONBOARDING_AFTER_AUTH_KEY) === 'true';
     const navEntry = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
     const isBackForward = navEntry && (navEntry.type === 'back_forward' || navEntry.type === 'prerender');
-    const skipSplashDelay = isBackForward && realUser && completed;
+    const skipHomeSplash = sessionStorage.getItem('skipHomeSplash') === '1';
+    if (skipHomeSplash) sessionStorage.removeItem('skipHomeSplash');
+    const skipSplashDelay = (isBackForward || skipHomeSplash) && realUser && completed;
     showNewHomeState('splash');
     if (realUser && !realUser.pwa_installed && isPWA()) {
       window.API?.updateProfile?.({ pwa_installed: true }).catch(() => {});

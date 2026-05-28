@@ -327,6 +327,13 @@
   document.body.insertBefore(mobileHeader, sidebar.nextSibling);
   document.body.appendChild(tabbar);
 
+  // ── Skip splash on internal home navigation ───────────────
+  document.body.addEventListener('click', function(e) {
+    var a = e.target.closest('a[href="/"], a[href="/index.html"]');
+    if (!a) return;
+    sessionStorage.setItem('skipHomeSplash', '1');
+  });
+
   /** Футер с отступом под сайдбар (desktop) — только если страница его не содержит; не показываем поверх экранов онбординга */
   (function injectGlobalFooterIfNeeded() {
     if (document.querySelector('footer.footer')) return;
