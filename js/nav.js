@@ -843,7 +843,11 @@
 
     var navigate = function(e) {
       e.preventDefault();
-      window.location.assign(destHref);
+      if (history.length > 1) {
+        history.back();
+      } else {
+        window.location.assign(destHref);
+      }
     };
     btn.addEventListener('touchstart', navigate);
     btn.addEventListener('click', navigate);

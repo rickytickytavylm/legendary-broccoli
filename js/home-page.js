@@ -730,6 +730,9 @@ function initOnboarding() {
     window.__sistemaCurrentUser = realUser;
     const completed = !!realUser?.onboarding_complete;
     const continueOnboarding = localStorage.getItem(ONBOARDING_AFTER_AUTH_KEY) === 'true';
+    const navEntry = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    const isBackForward = navEntry && (navEntry.type === 'back_forward' || navEntry.type === 'prerender');
+    const skipSplashDelay = isBackForward && realUser && completed;
     showNewHomeState('splash');
     if (realUser && !realUser.pwa_installed && isPWA()) {
       window.API?.updateProfile?.({ pwa_installed: true }).catch(() => {});
@@ -759,7 +762,7 @@ function initOnboarding() {
       onboardingState.name = displayUserName(realUser);
       renderOnboarding();
       showNewHomeState('onboarding');
-    }, 1200);
+    }, skipSplashDelay ? 0 : 1200);
   };
 
   const restoreAndBoot = () => {

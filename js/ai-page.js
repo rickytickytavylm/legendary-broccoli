@@ -141,11 +141,11 @@ function injectAiHeaderBack() {
   btn.addEventListener('touchstart', function(e) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    window.location.assign('/');
+    if (history.length > 1) history.back(); else window.location.assign('/');
   }, { capture: true, passive: false });
   btn.addEventListener('click', function(e) {
     e.preventDefault();
-    window.location.assign('/');
+    if (history.length > 1) history.back(); else window.location.assign('/');
   });
   header.insertBefore(btn, header.firstChild);
 }
