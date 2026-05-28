@@ -720,12 +720,20 @@ function initOnboarding() {
     return !!(u.yandex_id || u.telegram_id || u.email || u.phone);
   };
 
+  const isPWA = () => {
+    if (window.navigator?.standalone === true) return true;
+    return window.matchMedia?.('(display-mode: standalone)')?.matches || false;
+  };
+
   const boot = (user) => {
     const realUser = isRealUser(user) ? user : null;
     window.__sistemaCurrentUser = realUser;
     const completed = !!realUser?.onboarding_complete;
     const continueOnboarding = localStorage.getItem(ONBOARDING_AFTER_AUTH_KEY) === 'true';
     showNewHomeState('splash');
+    if (realUser && !realUser.pwa_installed && isPWA()) {
+      window.API?.updateProfile?.({ pwa_installed: true }).catch(() => {});
+    }
     window.setTimeout(() => {
       if (realUser && continueOnboarding && !completed) {
         localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
