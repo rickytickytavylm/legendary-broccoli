@@ -514,7 +514,17 @@
       isolation: isolate;
       overflow: hidden;
     }
-    .profile-user-card::before,
+    .profile-user-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: var(--profile-user-bg, none);
+      background-size: cover;
+      background-position: center;
+      opacity: .45;
+      pointer-events: none;
+    }
     .profile-user-card::after {
       display: none !important;
     }
