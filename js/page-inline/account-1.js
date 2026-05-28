@@ -65,7 +65,22 @@ function escapeHtml(value) {
       const name = user.display_name || user.first_name || profile.name || emailName || phoneName || 'друг';
       document.getElementById('dash-greeting').textContent = name;
 
-      document.getElementById('dash-sub').textContent = 'Профиль устройства. Авторизацию подключим позже.';
+      const avatarImg = document.getElementById('dash-avatar-img');
+      if (avatarImg) {
+        if (user.avatar_url) {
+          avatarImg.src = String(user.avatar_url).replace(/"/g, '&quot;');
+        } else {
+          avatarImg.removeAttribute('src');
+        }
+      }
+
+      const usernameEl = document.getElementById('dash-username');
+      if (usernameEl) {
+        const login = user.yandex_login || (user.email ? user.email.split('@')[0] : '') || user.phone || '';
+        usernameEl.textContent = login ? '@' + login : '';
+      }
+
+      document.getElementById('dash-sub').textContent = 'Настройки, документы и управление данными.';
 
       document.getElementById('streak-val')?.replaceChildren(document.createTextNode(String(stats.streak_days || 0)));
       document.getElementById('ring-streak')?.style.setProperty?.('--value', Math.min(100, Math.round(((stats.streak_days || 0) / 7) * 100)));
@@ -205,6 +220,10 @@ function escapeHtml(value) {
 
     } catch (e) {
       console.error('Dashboard load error', e);
+      if (e && (e.status === 401 || e.code === 'USER_INVALID' || e.code === 'TOKEN_INVALID')) {
+        showAuthGate();
+        return;
+      }
     }
 
     // Log page view

@@ -715,21 +715,27 @@ function initOnboarding() {
     if (Math.abs(dx) < 46 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
     shiftTodayRoute(dx < 0 ? 1 : -1);
   }, { passive: true });
+  const isRealUser = (u) => {
+    if (!u) return false;
+    return !!(u.yandex_id || u.telegram_id || u.email || u.phone);
+  };
+
   const boot = (user) => {
-    window.__sistemaCurrentUser = user || null;
+    const realUser = isRealUser(user) ? user : null;
+    window.__sistemaCurrentUser = realUser;
     const completed = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
     const continueOnboarding = localStorage.getItem(ONBOARDING_AFTER_AUTH_KEY) === 'true';
     showNewHomeState('splash');
     window.setTimeout(() => {
-      if (user && continueOnboarding && !completed) {
+      if (realUser && continueOnboarding && !completed) {
         localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
         onboardingIndex = 0;
-        onboardingState.name = displayUserName(user);
+        onboardingState.name = displayUserName(realUser);
         renderOnboarding();
         showNewHomeState('onboarding');
         return;
       }
-      if (!user) {
+      if (!realUser) {
         localStorage.removeItem(ONBOARDING_COMPLETE_KEY);
         showNewHomeState('intro');
         return;
@@ -740,7 +746,7 @@ function initOnboarding() {
         return;
       }
       onboardingIndex = 0;
-      onboardingState.name = displayUserName(user);
+      onboardingState.name = displayUserName(realUser);
       renderOnboarding();
       showNewHomeState('onboarding');
     }, 1200);

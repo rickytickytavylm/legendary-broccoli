@@ -418,6 +418,38 @@
       font-size: 15px;
       line-height: 1.65;
     }
+    .profile-user-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.045));
+      border: 2.5px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.14);
+    }
+    .profile-user-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    .profile-user-avatar-img[src]:not([src=""]) {
+      display: block;
+    }
+    .profile-user-avatar-img[src]:not([src=""]) + .profile-user-avatar-fallback {
+      display: none;
+    }
+    .profile-username {
+      margin: 6px 0 0;
+      color: rgba(255,255,255,.5);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: .01em;
+    }
     .profile-avatar {
       width: 72px;
       height: 72px;
@@ -877,6 +909,10 @@
         gap: 14px;
         margin-bottom: 16px;
       }
+      .profile-user-avatar {
+        width: 64px;
+        height: 64px;
+      }
       .profile-avatar {
         width: 58px;
         height: 58px;
@@ -1110,12 +1146,14 @@
     <div class="profile-wrap">
 
       <section class="profile-card profile-user-card" style="--profile-user-bg:url('/assets/webp/for_profile2.webp')">
-        <div class="profile-avatar" id="avatar-btn">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <div class="profile-user-avatar" id="avatar-btn">
+          <img class="profile-user-avatar-img" id="dash-avatar-img" src="" alt="">
+          <svg class="profile-user-avatar-fallback" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.62)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         </div>
         <div>
           <p class="profile-eyebrow">Профиль</p>
           <h1 class="profile-title" id="dash-greeting">Ваш профиль</h1>
+          <p class="profile-username" id="dash-username"></p>
           <p class="profile-subtitle" id="dash-sub">Настройки приложения, документы и управление данными.</p>
         </div>
       </section>
