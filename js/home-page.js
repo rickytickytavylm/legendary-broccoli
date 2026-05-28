@@ -355,7 +355,7 @@ function finishOnboarding() {
   localStorage.setItem(ONBOARDING_SCHEMA_KEY, ONBOARDING_SCHEMA_VERSION);
   localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(savedProfile));
   if (window.API?.updateProfile) {
-    window.API.updateProfile({ display_name: onboardingState.name }).catch(() => {});
+    window.API.updateProfile({ display_name: onboardingState.name, onboarding_complete: true }).catch(() => {});
   }
   if (window.API?.logActivity) {
     window.API.logActivity({
@@ -723,7 +723,7 @@ function initOnboarding() {
   const boot = (user) => {
     const realUser = isRealUser(user) ? user : null;
     window.__sistemaCurrentUser = realUser;
-    const completed = localStorage.getItem(ONBOARDING_COMPLETE_KEY) === 'true';
+    const completed = !!realUser?.onboarding_complete;
     const continueOnboarding = localStorage.getItem(ONBOARDING_AFTER_AUTH_KEY) === 'true';
     showNewHomeState('splash');
     window.setTimeout(() => {
