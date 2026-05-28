@@ -191,7 +191,7 @@ class ApiClient {
       if (!refreshed) return null;
     }
     try {
-      const data = await this.me();
+      const data = await this.me({ fresh: true });
       return data.user || null;
     } catch (err) {
       return null;
@@ -284,7 +284,15 @@ class ApiClient {
   getProgram(slug) { return this.request('GET', '/content/programs/' + slug); }
   getLesson(id)    { return this.request('GET', '/content/lessons/' + id); }
   saveProgress(data) { return this.request('POST', '/content/progress', data); }
-  updateProfile(data) { return this.request('PATCH', '/profile/me', data); }
+  updateProfile(data) {
+    return this.request('PATCH', '/profile/me', data).then((res) => {
+      this.meCache = null;
+      this.meCacheAt = 0;
+      this.mePromise = null;
+      try { sessionStorage.removeItem(this.getMeCacheKey()); } catch (e) {}
+      return res;
+    });
+  }
   logActivity(data) { return this.request('POST', '/profile/activity', data); }
   getMeditations() { return this.request('GET', '/content/meditations-lessons'); }
   getMeditationAudioUrl(key) { return this.request('GET', '/content/meditations-audio-url?key=' + encodeURIComponent(key)); }

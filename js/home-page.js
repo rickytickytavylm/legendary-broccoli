@@ -745,9 +745,11 @@ function initOnboarding() {
       }
       if (!realUser) {
         localStorage.removeItem(ONBOARDING_COMPLETE_KEY);
+        showAuthGatewayMode('welcome');
         showNewHomeState('intro');
         return;
       }
+      localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
       if (completed) {
         renderToday();
         showNewHomeState('today');
@@ -769,6 +771,23 @@ function initOnboarding() {
     }
     boot(null);
   };
+
+  window.addEventListener('auth:change', (event) => {
+    const user = event?.detail?.user || window.__sistemaCurrentUser;
+    if (user && isRealUser(user)) {
+      const completed = !!user.onboarding_complete;
+      localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
+      if (completed) {
+        renderToday();
+        showNewHomeState('today');
+      } else {
+        onboardingIndex = 0;
+        onboardingState.name = displayUserName(user);
+        renderOnboarding();
+        showNewHomeState('onboarding');
+      }
+    }
+  });
 
   restoreAndBoot();
 }
