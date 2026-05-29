@@ -181,9 +181,21 @@
     if (empty) empty.classList.toggle('hidden', messages.length > 0);
     list.innerHTML = messages.map((message) => {
       const own = message.is_own ? ' chat-message-own' : '';
+      const pendingCls = message.pending ? ' pending' : '';
+      const errorCls = message.error ? ' error' : '';
       const avatarHtml = message.is_own 
         ? '' 
-        : `<div class="chat-message-avatar">${escapeHtml((message.sender_name || 'У').slice(0, 1).toUpperCase())}</div>`;
+        : (message.sender_avatar_url 
+            ? `<div class="chat-message-avatar"><img src="${escapeHtml(message.sender_avatar_url)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;"></div>`
+            : `<div class="chat-message-avatar">${escapeHtml((message.sender_name || 'У').slice(0, 1).toUpperCase())}</div>`
+          );
+
+      let statusIcon = '';
+      if (message.pending) {
+        statusIcon = '<span class="msg-status-icon pending-icon" style="opacity: 0.5; font-size: 10px; margin-left: 6px;" title="Отправка...">🕒</span>';
+      } else if (message.error) {
+        statusIcon = '<span class="msg-status-icon error-icon" style="color: #ff5555; font-size: 10px; margin-left: 6px;" title="Ошибка отправки">⚠️</span>';
+      }
 
       let contentHtml = renderTextContent(message.text_content || '');
       if (message.type === 'audio_circle' && message.file_url) {
@@ -215,12 +227,12 @@
       }
 
       return `
-        <article class="chat-message${own}" data-message-id="${escapeHtml(message.id)}">
+        <article class="chat-message${own}${pendingCls}${errorCls}" data-message-id="${escapeHtml(message.id)}">
           ${avatarHtml}
           <div class="chat-message-bubble">
             <div class="chat-message-meta">
               <span>${escapeHtml(message.sender_name || 'Участник')}</span>
-              <time>${escapeHtml(timeLabel(message.created_at))}</time>
+              <time>${escapeHtml(timeLabel(message.created_at))}${statusIcon}</time>
             </div>
             ${contentHtml}
           </div>
@@ -438,11 +450,42 @@
       transports: ['websocket', 'polling'],
       withCredentials: true,
     });
+    
     state.socket.on('connect', () => {
       state.socket.emit('chat:join', { room: 'general' }, (ack) => {
         setStatus(ack && ack.ok ? 'Общий чат онлайн' : 'Чат открыт');
       });
+      
+      // Auto Catch-up Sync after connection (if we missed messages while offline)
+      if (state.latestId > 0) {
+        window.API.getGeneralChatMessages(100, null, state.latestId)
+          .then((res) => {
+            if (res && res.messages && res.messages.length > 0) {
+              mergeMessages(res.messages);
+            }
+          })
+          .catch((err) => console.error('[reconnect-sync] Failed:', err));
+      }
     });
+
+    // Handle Page Visibility change (revive socket immediately when app wakes up from freeze)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && state.socket) {
+        if (!state.socket.connected) {
+          setStatus('Восстанавливаем подключение…');
+          state.socket.connect();
+        } else if (state.latestId > 0) {
+          window.API.getGeneralChatMessages(100, null, state.latestId)
+            .then((res) => {
+              if (res && res.messages && res.messages.length > 0) {
+                mergeMessages(res.messages);
+              }
+            })
+            .catch((err) => console.error('[visibility-sync] Failed:', err));
+        }
+      }
+    });
+
     state.socket.on('chat.message.created', (message) => {
       const isOwn = Number(message.sender_id) === Number(state.userId);
       mergeMessages([{ ...message, is_own: isOwn }]);
@@ -914,9 +957,38 @@
         editBanner.classList.add('hidden');
         setStatus('Сообщение изменено');
       } else {
-        const data = await window.API.sendGeneralChatMessage(text);
-        mergeMessages(data.message ? [data.message] : []);
-        setStatus('Сообщение отправлено');
+        // Optimistic UI Send
+        const tempId = `optimistic-${Date.now()}`;
+        const mockMsg = {
+          id: tempId,
+          sender_id: state.userId,
+          sender_name: window.__sistemaCurrentUser?.display_name || 'Я',
+          type: 'text',
+          text_content: text,
+          created_at: new Date().toISOString(),
+          is_own: true,
+          pending: true
+        };
+        
+        // Render instantly
+        state.messages.set(tempId, mockMsg);
+        render();
+        scrollToBottom();
+
+        try {
+          const data = await window.API.sendGeneralChatMessage(text);
+          // Clean up temp and merge actual published message
+          state.messages.delete(tempId);
+          mergeMessages(data.message ? [data.message] : []);
+          setStatus('Сообщение отправлено');
+        } catch (err) {
+          // Mark error state so user can retry or see failure
+          mockMsg.pending = false;
+          mockMsg.error = true;
+          state.messages.set(tempId, mockMsg);
+          render();
+          throw err;
+        }
       }
       input.value = '';
       if (input.tagName === 'TEXTAREA') {
@@ -1085,6 +1157,27 @@
   };
 
   const uploadAndSendMedia = async (blob, type, mime) => {
+    // Generate local Object URL for instant playback/rendering
+    const localUrl = URL.createObjectURL(blob);
+    const tempId = `optimistic-media-${Date.now()}`;
+    const msgType = type === 'video' ? 'video_circle' : 'audio_circle';
+    
+    const mockMsg = {
+      id: tempId,
+      sender_id: state.userId,
+      sender_name: window.__sistemaCurrentUser?.display_name || 'Я',
+      type: msgType,
+      file_url: localUrl,
+      created_at: new Date().toISOString(),
+      is_own: true,
+      pending: true
+    };
+
+    // Render instantly in the view
+    state.messages.set(tempId, mockMsg);
+    render();
+    scrollToBottom();
+
     try {
       setStatus('Отправляем файл…');
       
@@ -1108,12 +1201,15 @@
       }
       
       // 2. Send as chat message of type audio_circle or video_circle
-      const msgType = type === 'video' ? 'video_circle' : 'audio_circle';
       const sendResponse = await window.API.request('POST', '/chat/general/messages', {
         type: msgType,
         file_url: uploadData.file_url,
         text: msgType === 'video' ? 'Кружочек' : 'Голосовое сообщение'
       });
+      
+      // Remove optimistic mock and merge published message
+      state.messages.delete(tempId);
+      URL.revokeObjectURL(localUrl); // Free memory
       
       mergeMessages(sendResponse.message ? [sendResponse.message] : []);
       setStatus('Общий чат открыт');
@@ -1122,6 +1218,13 @@
     } catch (err) {
       console.error(err);
       setStatus('Не удалось отправить медиа');
+      
+      // Update optimistic message with error status
+      mockMsg.pending = false;
+      mockMsg.error = true;
+      state.messages.set(tempId, mockMsg);
+      render();
+      
       alert('Ошибка при загрузке или отправке: ' + err.message);
     }
   };

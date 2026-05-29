@@ -358,9 +358,10 @@ class ApiClient {
 
   // --- Chat ---
   getGeneralChat() { return this.request('GET', '/chat/general', null, { fresh: true }); }
-  getGeneralChatMessages(limit = 60, beforeId = null) {
+  getGeneralChatMessages(limit = 60, beforeId = null, afterId = null) {
     const qs = new URLSearchParams({ limit: String(limit) });
     if (beforeId) qs.set('before_id', String(beforeId));
+    if (afterId) qs.set('after_id', String(afterId));
     return this.request('GET', '/chat/general/messages?' + qs.toString(), null, { fresh: true });
   }
   sendGeneralChatMessage(text) {
