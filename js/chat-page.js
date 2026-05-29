@@ -204,11 +204,11 @@
       } else if (message.type === 'video_circle' && message.file_url) {
         contentHtml = `
           <div class="chat-video-circle-wrap" style="position: relative; overflow: visible; cursor: pointer;">
-            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline loop muted autoplay preload="metadata" style="display: block; border-radius: 50%;"></video>
+            <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline muted autoplay preload="metadata" style="display: block; border-radius: 50%;"></video>
             <!-- SVG Progress Circle (fits exactly inside the 180px border) -->
             <svg class="chat-video-progress-svg" width="180" height="180" style="position: absolute; top: 0; left: 0; transform: rotate(-90deg); pointer-events: none; overflow: visible; z-index: 5;">
               <circle cx="90" cy="90" r="88" fill="transparent" stroke="rgba(255, 255, 255, 0.12)" stroke-width="3"></circle>
-              <circle class="chat-video-progress-circle-bar" cx="90" cy="90" r="88" fill="transparent" stroke="#8baaff" stroke-width="3" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553" style="transition: stroke-dashoffset 0.1s linear;"></circle>
+              <circle class="chat-video-progress-circle-bar" cx="90" cy="90" r="88" fill="transparent" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553" style="transition: stroke-dashoffset 0.1s linear;"></circle>
             </svg>
           </div>
         `;
@@ -655,27 +655,117 @@
     modal.className = 'telegram-video-modal';
     modal.innerHTML = `
       <div class="video-modal-backdrop"></div>
-      <div class="video-modal-content">
-        <button class="video-modal-close" type="button" aria-label="Закрыть">
+      <div class="video-modal-content" style="position: relative;">
+        <button class="video-modal-close" type="button" aria-label="Закрыть" style="z-index: 12;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <video class="video-modal-player" src="${escapeHtml(videoSrc)}" autoplay playsinline controls loop></video>
+        <video class="video-modal-player" src="${escapeHtml(videoSrc)}" autoplay playsinline loop style="display: block; border-radius: 50%; width: 100%; height: 100%; object-fit: cover;"></video>
+        
+        <!-- White Circular Progress SVG -->
+        <svg class="video-modal-progress-svg" width="100%" height="100%" viewBox="0 0 180 180" style="position: absolute; inset: 0; transform: rotate(-90deg); pointer-events: none; overflow: visible; z-index: 5;">
+          <circle cx="90" cy="90" r="88" fill="transparent" stroke="rgba(255, 255, 255, 0.15)" stroke-width="3"></circle>
+          <circle class="video-modal-progress-circle-bar" cx="90" cy="90" r="88" fill="transparent" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553" style="transition: stroke-dashoffset 0.1s linear;"></circle>
+        </svg>
+
+        <!-- Custom Glassmorphic Controls Overlay -->
+        <div class="video-modal-controls" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 20px; z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.25s ease;">
+          <button class="modal-control-btn seek-back" style="pointer-events: auto; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 46px; height: 46px; display: grid; place-items: center; color: white; cursor: pointer; position: relative;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:20px;height:20px;"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span style="font-size: 8px; font-weight: 800; position: absolute; margin-top: 1px; color: #fff; font-family: system-ui, sans-serif;">10</span>
+          </button>
+          <button class="modal-control-btn play-pause" style="pointer-events: auto; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 58px; height: 58px; display: grid; place-items: center; color: white; cursor: pointer;">
+            <svg class="modal-play-icon" viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px;display:none;"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="modal-pause-icon" viewBox="0 0 24 24" fill="currentColor" style="width:24px;height:24px;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <button class="modal-control-btn seek-forward" style="pointer-events: auto; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 46px; height: 46px; display: grid; place-items: center; color: white; cursor: pointer; position: relative;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:20px;height:20px;"><path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+            <span style="font-size: 8px; font-weight: 800; position: absolute; margin-top: 1px; color: #fff; font-family: system-ui, sans-serif;">10</span>
+          </button>
+        </div>
       </div>
     `;
     document.body.appendChild(modal);
 
+    const video = modal.querySelector('.video-modal-player');
+    const bar = modal.querySelector('.video-modal-progress-circle-bar');
+    const controls = modal.querySelector('.video-modal-controls');
+    const playBtn = modal.querySelector('.play-pause');
+    const playIcon = modal.querySelector('.modal-play-icon');
+    const pauseIcon = modal.querySelector('.modal-pause-icon');
+    const seekBack = modal.querySelector('.seek-back');
+    const seekForward = modal.querySelector('.seek-forward');
+
     // Fade in
     setTimeout(() => modal.classList.add('active'), 20);
 
+    let controlsTimeout;
+    const showControls = () => {
+      controls.style.opacity = '1';
+      clearTimeout(controlsTimeout);
+      controlsTimeout = setTimeout(() => {
+        if (!video.paused) {
+          controls.style.opacity = '0';
+        }
+      }, 2500);
+    };
+
+    modal.querySelector('.video-modal-content').addEventListener('click', (e) => {
+      if (e.target.closest('.modal-control-btn') || e.target.closest('.video-modal-close')) return;
+      showControls();
+    });
+
+    video.addEventListener('timeupdate', () => {
+      if (!video.duration) return;
+      const progress = video.currentTime / video.duration;
+      const offset = 553 - (progress * 553);
+      bar.style.strokeDashoffset = offset;
+    });
+
+    const updatePlayPauseIcons = () => {
+      if (video.paused) {
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        controls.style.opacity = '1';
+        clearTimeout(controlsTimeout);
+      } else {
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+        showControls();
+      }
+    };
+
+    playBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+      updatePlayPauseIcons();
+    });
+
+    seekBack.addEventListener('click', (e) => {
+      e.stopPropagation();
+      video.currentTime = Math.max(0, video.currentTime - 10);
+      showControls();
+    });
+
+    seekForward.addEventListener('click', (e) => {
+      e.stopPropagation();
+      video.currentTime = Math.min(video.duration || 0, video.currentTime + 10);
+      showControls();
+    });
+
     const closeModal = () => {
       modal.classList.remove('active');
-      const video = modal.querySelector('video');
-      if (video) video.pause();
+      video.pause();
       setTimeout(() => modal.remove(), 300);
     };
 
     modal.querySelector('.video-modal-backdrop').addEventListener('click', closeModal);
     modal.querySelector('.video-modal-close').addEventListener('click', closeModal);
+
+    showControls();
   }
 
   list?.addEventListener('click', (e) => {

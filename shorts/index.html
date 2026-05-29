@@ -145,27 +145,29 @@
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      background: rgba(255,255,255,.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background .3s ease, transform .3s ease;
+      transition: background .25s ease, transform .25s ease, border-color .25s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     }
 
     button.short-card:hover .short-card__play,
     button.short-card:focus-visible .short-card__play {
-      background: rgba(255,255,255,.22);
-      transform: scale(1.1);
+      background: rgba(0, 0, 0, 0.7);
+      border-color: rgba(255, 255, 255, 0.45);
+      transform: scale(1.08);
     }
 
     .short-card__play svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       color: #fff;
-      margin-left: 2px;
+      transform: translateX(1.5px);
     }
 
     .short-card__caption {
