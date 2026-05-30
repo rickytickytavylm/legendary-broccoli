@@ -9131,8 +9131,8 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   perspective: 1200px;
   display: flex;
   justify-content: center;
-  overflow: visible;
-  padding: 10px 0 20px 0;
+  overflow: hidden; /* Prevent horizontal page scroll on mobile */
+  padding: 10px 0 24px 0;
   user-select: none;
   -webkit-user-select: none;
 }
