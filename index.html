@@ -222,64 +222,73 @@
         </article>
       </div>
 
-      <!-- SECTION 2: ЕЖЕДНЕВНЫЕ ПРАКТИКИ -->
+      <!-- SECTION 2: ЕЖЕДНЕВНЫЕ ИНСАЙТЫ -->
       <header class="ios-section-header">
-        <p class="ios-section-kicker">Тактильный фокус</p>
-        <h2 class="ios-section-title">Карты-практики дня</h2>
+        <p class="ios-section-kicker">Фокус внимания</p>
+        <h2 class="ios-section-title">Инсайт дня</h2>
       </header>
 
-      <div class="cards-deck-container">
-        <div class="cards-deck" id="mak-deck">
-          <!-- Card 1 -->
-          <div class="mak-card" data-index="0" style="background-image: url('/assets/webp/ai_back.webp');">
-            <div class="mak-card-content">
-              <span class="mak-card-tag">Медитация</span>
-              <h3 class="mak-card-title">Космический покой</h3>
-              <span class="mak-card-hint">Нажмите, чтобы открыть</span>
-            </div>
-          </div>
-          <!-- Card 2 -->
-          <div class="mak-card" data-index="1" style="background-image: url('/assets/webp/new_main.webp');">
-            <div class="mak-card-content">
-              <span class="mak-card-tag">Гештальт</span>
-              <h3 class="mak-card-title">Встреча с тревогами</h3>
-              <span class="mak-card-hint">Нажмите, чтобы открыть</span>
-            </div>
-          </div>
-          <!-- Card 3 -->
-          <div class="mak-card" data-index="2" style="background-image: url('/assets/webp/coman.webp');">
-            <div class="mak-card-content">
-              <span class="mak-card-tag">Телесная терапия</span>
-              <h3 class="mak-card-title">Телесный резонанс</h3>
-              <span class="mak-card-hint">Нажмите, чтобы открыть</span>
-            </div>
-          </div>
+      <div class="insight-stack-container">
+        <!-- The physical photo stack of cards -->
+        <div class="insight-cards-stack" id="insight-deck">
+          <div class="insight-card" data-index="0" style="background-image: url('/assets/webp/ai_back.webp');"></div>
+          <div class="insight-card" data-index="1" style="background-image: url('/assets/webp/king_calm.webp');"></div>
+          <div class="insight-card" data-index="2" style="background-image: url('/assets/webp/coman.webp');"></div>
+          <div class="insight-card" data-index="3" style="background-image: url('/assets/webp/hipno.webp');"></div>
+          <div class="insight-card" data-index="4" style="background-image: url('/assets/webp/courses.webp');"></div>
         </div>
         
-        <!-- Deck Navigation Controls -->
-        <div class="deck-controls">
-          <button class="deck-nav-btn" id="deck-prev-btn" type="button" aria-label="Назад">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <span class="deck-counter" id="deck-counter-text">1 из 3</span>
-          <button class="deck-nav-btn" id="deck-next-btn" type="button" aria-label="Далее">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
+        <!-- Text details and controls -->
+        <div class="insight-details">
+          <span class="insight-counter" id="insight-counter-text">1 / 5</span>
+          <p class="insight-quote" id="insight-quote-text">«Ваш фокус определяет вашу реальность. Где внимание — там и сила.»</p>
+          <p class="insight-author" id="insight-author-text">Руслан Молодцов</p>
+          
+          <div class="insight-nav-controls">
+            <button class="insight-nav-btn" id="insight-prev-btn" type="button" aria-label="Назад">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="insight-nav-btn" id="insight-next-btn" type="button" aria-label="Далее">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Liquid Glass MAK Modal Window -->
-      <div class="mak-modal hidden" id="mak-modal">
-        <div class="mak-modal-overlay" id="mak-modal-overlay"></div>
-        <div class="mak-modal-sheet">
-          <div class="mak-modal-indicator"></div>
-          <button class="mak-modal-close" id="mak-modal-close-btn" type="button" aria-label="Закрыть">&times;</button>
-          <div class="mak-modal-banner" id="mak-modal-banner"></div>
-          <div class="mak-modal-body">
-            <span class="mak-modal-tag" id="mak-modal-tag">Медитация</span>
-            <h3 class="mak-modal-title" id="mak-modal-title">Космический покой</h3>
-            <p class="mak-modal-desc" id="mak-modal-desc">Расслабляющая аудиосессия для мгновенного заземления.</p>
-            <a href="#" class="mak-modal-btn" id="mak-modal-btn-link">Запустить практику</a>
+      <!-- SECTION 2.5: ЛЕНТА ПОСТОВ (3D CAROUSEL) -->
+      <header class="ios-section-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <p class="ios-section-kicker">Новости и мысли</p>
+          <h2 class="ios-section-title">Свежее в ленте</h2>
+        </div>
+        <a href="/feed/" class="feed-view-all-link" style="font-size: 13px; font-weight: 600; color: #e0984f; text-decoration: none; margin-bottom: 4px; border: 1px solid rgba(224, 152, 79, 0.3); padding: 4px 12px; border-radius: 20px; background: rgba(224, 152, 79, 0.05); transition: background 0.2s;">Открыть все</a>
+      </header>
+
+      <div class="carousel-3d-container">
+        <div class="carousel-3d-stage" id="feed-carousel">
+          <!-- Post 1: Interview -->
+          <div class="carousel-3d-card" data-index="0" data-post-id="interview" style="background-image: url('/assets/webp/new_post.webp?v=4');">
+            <div class="carousel-3d-card-content">
+              <span class="carousel-3d-card-tag">Интервью</span>
+              <h3 class="carousel-3d-card-title">Интервью с дочерью</h3>
+              <p class="carousel-3d-card-desc">Новый глубокий разговор с 16-летней дочерью о подростках, отношениях и ролях в семье.</p>
+            </div>
+          </div>
+          <!-- Post 2: Meditation Day -->
+          <div class="carousel-3d-card" data-index="1" data-post-id="meditation-day" style="background-image: url('/assets/webp/post2.webp');">
+            <div class="carousel-3d-card-content">
+              <span class="carousel-3d-card-tag">Событие</span>
+              <h3 class="carousel-3d-card-title">День Медитации</h3>
+              <p class="carousel-3d-card-desc">Выступление 24 мая на фестивале с лекцией-практикой о телесном хранении стресса и конфликтов.</p>
+            </div>
+          </div>
+          <!-- Post 3: Parents' Note -->
+          <div class="carousel-3d-card" data-index="2" data-post-id="note" style="background-image: url('/assets/webp/post1.webp');">
+            <div class="carousel-3d-card-content">
+              <span class="carousel-3d-card-tag">Заметка</span>
+              <h3 class="carousel-3d-card-title">Записка от родителей</h3>
+              <p class="carousel-3d-card-desc">Кто помнит то теплое утреннее чувство из детства, когда просыпаешься, а на столе лежит записка?</p>
+            </div>
           </div>
         </div>
       </div>

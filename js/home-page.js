@@ -812,136 +812,146 @@ if (window.API.isLoggedIn()) {
 
 initOnboarding();
 
-/* ─── Premium 3D MAK Cards Deck Logic ─── */
-function initMakDeck() {
-  const deck = document.getElementById('mak-deck');
-  const prevBtn = document.getElementById('deck-prev-btn');
-  const nextBtn = document.getElementById('deck-next-btn');
-  const counterText = document.getElementById('deck-counter-text');
+/* ─── Premium Physical Polaroid Quotes Stack Logic ─── */
+function initInsightDeck() {
+  const deck = document.getElementById('insight-deck');
+  const prevBtn = document.getElementById('insight-prev-btn');
+  const nextBtn = document.getElementById('insight-next-btn');
+  const counterText = document.getElementById('insight-counter-text');
+  const quoteText = document.getElementById('insight-quote-text');
+  const authorText = document.getElementById('insight-author-text');
   
   if (!deck) return;
 
-  const cardData = [
+  const quotesData = [
     {
-      tag: 'Медитация',
-      title: 'Космический покой',
-      desc: 'Расслабляющая аудиопрактика с живым космическим видеофоном. Помогает переключить фокус с внешнего шума на внутреннюю тишину, растворить накопившийся стресс и обрести опору.',
-      href: '/meditations/?play=space',
+      quote: '«Ваш фокус определяет вашу реальность. Где внимание — там и сила.»',
+      author: 'Руслан Молодцов',
       image: '/assets/webp/ai_back.webp'
     },
     {
-      tag: 'Гештальт',
-      title: 'Встреча с тревогами',
-      desc: 'Экспресс-техника гештальт-терапии для глубокой проработки страхов и тревожных состояний. Научитесь безопасно соприкасаться со сложными эмоциями и отпускать их.',
-      href: '/geshtalt/',
-      image: '/assets/webp/new_main.webp'
+      quote: '«Тревога — это просто заблокированное возбуждение и энергия, которые ждут вашего разрешения проявиться.»',
+      author: 'Руслан Молодцов',
+      image: '/assets/webp/king_calm.webp'
     },
     {
-      tag: 'Телесная терапия',
-      title: 'Телесный резонанс',
-      desc: 'Психосоматическая сессия для снятия мышечных зажимов, расслабления шеи, плеч и челюсти. Верните глубокий контакт с физическим Я всего за 5 минут.',
-      href: '/dermer/',
+      quote: '«Тело никогда не врет. Когда разум придумывает оправдания, тело всегда показывает чистую правду.»',
+      author: 'Руслан Молодцов',
       image: '/assets/webp/coman.webp'
+    },
+    {
+      quote: '«Истинная сила начинается там, где вы прекращаете бороться с собой и начинаете себя исследовать.»',
+      author: 'Руслан Молодцов',
+      image: '/assets/webp/hipno.webp'
+    },
+    {
+      quote: '«Каждый симптом в теле — это не поломка, а зашифрованное послание от вашего подсознания.»',
+      author: 'Руслан Молодцов',
+      image: '/assets/webp/courses.webp'
     }
   ];
 
   let activeIndex = 0;
-  const cards = deck.querySelectorAll('.mak-card');
+  let isAnimating = false;
+  const cards = deck.querySelectorAll('.insight-card');
 
   function updateDeck() {
     cards.forEach((card, i) => {
       const relIndex = (i - activeIndex + cards.length) % cards.length;
       
+      // Reset normal transitions
+      card.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.5s ease, z-index 0.6s';
+
       if (relIndex === 0) {
+        // Active top card
         card.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
         card.style.opacity = '1';
-        card.style.zIndex = '3';
+        card.style.zIndex = '10';
         card.style.pointerEvents = 'auto';
       } else if (relIndex === 1) {
-        card.style.transform = 'translate3d(12px, 12px, -30px) rotate(3.5deg) scale(0.93)';
+        // Second card, slightly rotated right, scaled down
+        card.style.transform = 'translate3d(6px, -4px, -20px) rotate(4.5deg) scale(0.95)';
         card.style.opacity = '0.85';
-        card.style.zIndex = '2';
+        card.style.zIndex = '5';
         card.style.pointerEvents = 'none';
       } else if (relIndex === 2) {
-        card.style.transform = 'translate3d(-12px, 8px, -60px) rotate(-3.5deg) scale(0.86)';
-        card.style.opacity = '0.65';
+        // Third card, slightly rotated left, scaled down more
+        card.style.transform = 'translate3d(-8px, -2px, -40px) rotate(-5.5deg) scale(0.9)';
+        card.style.opacity = '0.6';
+        card.style.zIndex = '2';
+        card.style.pointerEvents = 'none';
+      } else if (relIndex === 3) {
+        // Fourth card, rotated right
+        card.style.transform = 'translate3d(10px, 2px, -60px) rotate(3deg) scale(0.85)';
+        card.style.opacity = '0.4';
         card.style.zIndex = '1';
         card.style.pointerEvents = 'none';
       } else {
-        card.style.transform = 'translate3d(0, 0, -100px) scale(0.8)';
+        card.style.transform = 'translate3d(0, 0, -80px) rotate(0deg) scale(0.8)';
         card.style.opacity = '0';
         card.style.zIndex = '0';
         card.style.pointerEvents = 'none';
       }
     });
 
+    // Update quote details on the side/below
+    const data = quotesData[activeIndex];
+    if (quoteText) quoteText.textContent = data.quote;
+    if (authorText) authorText.textContent = data.author;
     if (counterText) {
-      counterText.textContent = `${activeIndex + 1} из ${cards.length}`;
+      counterText.textContent = `${activeIndex + 1} / ${cards.length}`;
     }
+  }
+
+  function changeCard(nextIdx, direction = 'next') {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    const prevIdx = activeIndex;
+    const prevCardEl = cards[prevIdx];
+
+    const slideX = direction === 'next' ? '-140%' : '140%';
+    const slideRotate = direction === 'next' ? '-15deg' : '15deg';
+
+    // Smooth physical toss animation
+    prevCardEl.style.transition = 'transform 0.45s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.4s ease';
+    prevCardEl.style.transform = `translate3d(${slideX}, -10px, 0) rotate(${slideRotate}) scale(0.95)`;
+    prevCardEl.style.opacity = '0.1';
+    prevCardEl.style.zIndex = '15'; // Keep on top during slide
+
+    activeIndex = nextIdx;
+
+    setTimeout(() => {
+      // Re-render other cards positions in background
+      updateDeck();
+
+      // Smoothly place the tossed card to its new background position
+      setTimeout(() => {
+        isAnimating = false;
+      }, 350);
+    }, 200);
   }
 
   function nextCard() {
-    activeIndex = (activeIndex + 1) % cards.length;
-    updateDeck();
+    const nextIdx = (activeIndex + 1) % cards.length;
+    changeCard(nextIdx, 'next');
   }
 
   function prevCard() {
-    activeIndex = (activeIndex - 1 + cards.length) % cards.length;
-    updateDeck();
+    const nextIdx = (activeIndex - 1 + cards.length) % cards.length;
+    changeCard(nextIdx, 'prev');
   }
 
-  // Tapping the top card area opens the modal, tapping side triggers cycle
+  // Tapping the card deck advances it
   deck.addEventListener('click', (e) => {
-    const clickedCard = e.target.closest('.mak-card');
-    if (!clickedCard) return;
-
-    const idx = parseInt(clickedCard.dataset.index, 10);
-    const relIndex = (idx - activeIndex + cards.length) % cards.length;
-
-    if (relIndex === 0) {
-      openMakModal(idx);
-    } else {
-      nextCard();
-    }
+    e.stopPropagation();
+    nextCard();
   });
 
   if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prevCard(); });
   if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); nextCard(); });
 
-  // Initialize Modal logic
-  const modal = document.getElementById('mak-modal');
-  const modalOverlay = document.getElementById('mak-modal-overlay');
-  const modalCloseBtn = document.getElementById('mak-modal-close-btn');
-  const modalBanner = document.getElementById('mak-modal-banner');
-  const modalTag = document.getElementById('mak-modal-tag');
-  const modalTitle = document.getElementById('mak-modal-title');
-  const modalDesc = document.getElementById('mak-modal-desc');
-  const modalBtnLink = document.getElementById('mak-modal-btn-link');
-
-  function openMakModal(index) {
-    if (!modal) return;
-    const data = cardData[index];
-    
-    if (modalBanner) modalBanner.style.backgroundImage = `url('${data.image}')`;
-    if (modalTag) modalTag.textContent = data.tag;
-    if (modalTitle) modalTitle.textContent = data.title;
-    if (modalDesc) modalDesc.textContent = data.desc;
-    if (modalBtnLink) modalBtnLink.href = data.href;
-
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // Lock background scroll
-  }
-
-  function closeMakModal() {
-    if (!modal) return;
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
-
-  if (modalOverlay) modalOverlay.addEventListener('click', closeMakModal);
-  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeMakModal);
-
-  // Swipe support for mobile card tossing
+  // Swipe support for mobile card throwing
   let startX = 0;
   let startY = 0;
   
@@ -967,10 +977,91 @@ function initMakDeck() {
 }
 
 // Initialise deck on page load
-document.addEventListener('DOMContentLoaded', initMakDeck);
+document.addEventListener('DOMContentLoaded', () => {
+  initInsightDeck();
+  initFeedCarousel();
+});
 // Also initialize when rendering Today screen just in case of state changes
 const originalRenderToday = window.renderToday;
 window.renderToday = function(routeKey) {
   if (originalRenderToday) originalRenderToday(routeKey);
-  initMakDeck();
+  initInsightDeck();
+  initFeedCarousel();
 };
+
+/* ─── Premium 3D Coverflow Feed Carousel Logic ─── */
+function initFeedCarousel() {
+  const stage = document.getElementById('feed-carousel');
+  if (!stage) return;
+
+  const cards = stage.querySelectorAll('.carousel-3d-card');
+  let activeIndex = 1; // start with center card (Index 1: Meditation Day) as focused
+
+  function updateCarousel() {
+    cards.forEach((card, i) => {
+      // Find relative difference in a 3-element loop
+      let diff = i - activeIndex;
+      if (diff < -1) diff += 3;
+      if (diff > 1) diff -= 3;
+
+      if (diff === 0) {
+        // Focused Center card
+        card.style.transform = 'translate3d(0, 0, 0) rotateY(0deg) scale(1)';
+        card.style.opacity = '1';
+        card.style.zIndex = '10';
+        card.classList.add('active-focus');
+      } else if (diff === 1) {
+        // Right card - rotated towards center, pushed back
+        card.style.transform = 'translate3d(82%, 0, -140px) rotateY(-40deg) scale(0.85)';
+        card.style.opacity = '0.75';
+        card.style.zIndex = '5';
+        card.classList.remove('active-focus');
+      } else if (diff === -1) {
+        // Left card - rotated towards center, pushed back
+        card.style.transform = 'translate3d(-82%, 0, -140px) rotateY(40deg) scale(0.85)';
+        card.style.opacity = '0.75';
+        card.style.zIndex = '5';
+        card.classList.remove('active-focus');
+      }
+    });
+  }
+
+  stage.addEventListener('click', (e) => {
+    const card = e.target.closest('.carousel-3d-card');
+    if (!card) return;
+
+    const idx = parseInt(card.dataset.index, 10);
+    const postId = card.dataset.postId;
+
+    if (idx === activeIndex) {
+      // Already focused, open the post directly in the feed!
+      location.href = `/feed/#post-${postId}`;
+    } else {
+      // Zoom focus on this item
+      activeIndex = idx;
+      updateCarousel();
+    }
+  });
+
+  // Swipe gestures support for carousel on mobile
+  let startX = 0;
+  stage.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  stage.addEventListener('touchend', (e) => {
+    const diffX = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diffX) > 50) {
+      if (diffX > 0) {
+        // Swipe Right -> show previous card
+        activeIndex = (activeIndex - 1 + 3) % 3;
+      } else {
+        // Swipe Left -> show next card
+        activeIndex = (activeIndex + 1) % 3;
+      }
+      updateCarousel();
+    }
+  }, { passive: true });
+
+  updateCarousel();
+}
