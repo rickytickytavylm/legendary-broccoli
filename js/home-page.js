@@ -978,14 +978,12 @@ function initInsightDeck() {
 
 // Initialise deck on page load
 document.addEventListener('DOMContentLoaded', () => {
-  initInsightDeck();
   initFeedCarousel();
 });
 // Also initialize when rendering Today screen just in case of state changes
 const originalRenderToday = window.renderToday;
 window.renderToday = function(routeKey) {
   if (originalRenderToday) originalRenderToday(routeKey);
-  initInsightDeck();
   initFeedCarousel();
 };
 
