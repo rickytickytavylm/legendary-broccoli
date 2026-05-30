@@ -193,7 +193,7 @@
       <!-- SECTION 1: РЕКОМЕНДОВАННЫЙ ТРЕК -->
       <header class="ios-section-header">
         <p class="ios-section-kicker">Рекомендованный трек</p>
-        <h2 class="ios-section-title">Основные программы</h2>
+        <h2 class="ios-section-title">Основная программа</h2>
       </header>
 
       <div class="today-grid">
@@ -208,10 +208,56 @@
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.75v12.5c0 .78.86 1.26 1.53.86l10.1-6.25a1 1 0 0 0 0-1.72L9.53 4.89A1 1 0 0 0 8 5.75Z"/></svg>
           </a>
         </article>
+      </div>
 
+      <!-- SECTION 2.5: ЛЕНТА ПОСТОВ (3D CAROUSEL) -->
+      <header class="ios-section-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <p class="ios-section-kicker">Новости и мысли</p>
+          <h2 class="ios-section-title">Свежее в ленте</h2>
+        </div>
+        <a href="/feed/" class="feed-view-all-link" style="font-size: 13px; font-weight: 600; color: #e0984f; text-decoration: none; margin-bottom: 4px; border: 1px solid rgba(224, 152, 79, 0.3); padding: 4px 12px; border-radius: 20px; background: rgba(224, 152, 79, 0.05); transition: background 0.2s;">Открыть все</a>
+      </header>
+
+      <div class="carousel-3d-container">
+        <div class="carousel-3d-stage" id="feed-carousel">
+          <!-- Post 1: Interview -->
+          <div class="carousel-3d-card" data-index="0" data-post-id="interview" style="background-image: url('/assets/webp/new_post.webp?v=4');">
+            <div class="carousel-3d-card-content">
+              <span class="carousel-3d-card-tag">Интервью</span>
+              <h3 class="carousel-3d-card-title">Интервью с дочерью</h3>
+              <p class="carousel-3d-card-desc">Новый глубокий разговор с 16-летней дочерью о подростках, отношениях и ролях в семье.</p>
+            </div>
+          </div>
+          <!-- Post 2: Meditation Day -->
+          <div class="carousel-3d-card" data-index="1" data-post-id="meditation-day" style="background-image: url('/assets/webp/post2.webp');">
+            <div class="carousel-3d-card-content">
+              <span class="carousel-3d-card-tag">Событие</span>
+              <h3 class="carousel-3d-card-title">День Медитации</h3>
+              <p class="carousel-3d-card-desc">Выступление 24 мая на фестивале с лекцией-практикой о телесном хранении стресса и конфликтов.</p>
+            </div>
+          </div>
+          <!-- Post 3: Parents' Note -->
+          <div class="carousel-3d-card" data-index="2" data-post-id="note" style="background-image: url('/assets/webp/post1.webp');">
+            <div class="carousel-3d-card-content">
+              <span class="carousel-3d-card-tag">Заметка</span>
+              <h3 class="carousel-3d-card-title">Записка от родителей</h3>
+              <p class="carousel-3d-card-desc">Кто помнит то теплое утреннее чувство из детства, когда просыпаешься, а на столе лежит записка?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 1.5: ДОПОЛНИТЕЛЬНАЯ ПРОГРАММА -->
+      <header class="ios-section-header">
+        <p class="ios-section-kicker">Второй фокус</p>
+        <h2 class="ios-section-title">Дополнительная программа</h2>
+      </header>
+
+      <div class="today-grid">
         <article class="today-main-card" data-today-secondary style="--ux-bg:url('/assets/webp/courses.webp')">
           <div>
-            <span class="today-day-pill">Дополнительная программа</span>
+            <span class="today-day-pill">Дополнительно</span>
             <h2 data-today-secondary-title>Вторая программа</h2>
             <p data-today-secondary-desc>Второй подходящий вход по выбранному направлению.</p>
           </div>
@@ -251,44 +297,6 @@
             <button class="insight-nav-btn" id="insight-next-btn" type="button" aria-label="Далее">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECTION 2.5: ЛЕНТА ПОСТОВ (3D CAROUSEL) -->
-      <header class="ios-section-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
-        <div>
-          <p class="ios-section-kicker">Новости и мысли</p>
-          <h2 class="ios-section-title">Свежее в ленте</h2>
-        </div>
-        <a href="/feed/" class="feed-view-all-link" style="font-size: 13px; font-weight: 600; color: #e0984f; text-decoration: none; margin-bottom: 4px; border: 1px solid rgba(224, 152, 79, 0.3); padding: 4px 12px; border-radius: 20px; background: rgba(224, 152, 79, 0.05); transition: background 0.2s;">Открыть все</a>
-      </header>
-
-      <div class="carousel-3d-container">
-        <div class="carousel-3d-stage" id="feed-carousel">
-          <!-- Post 1: Interview -->
-          <div class="carousel-3d-card" data-index="0" data-post-id="interview" style="background-image: url('/assets/webp/new_post.webp?v=4');">
-            <div class="carousel-3d-card-content">
-              <span class="carousel-3d-card-tag">Интервью</span>
-              <h3 class="carousel-3d-card-title">Интервью с дочерью</h3>
-              <p class="carousel-3d-card-desc">Новый глубокий разговор с 16-летней дочерью о подростках, отношениях и ролях в семье.</p>
-            </div>
-          </div>
-          <!-- Post 2: Meditation Day -->
-          <div class="carousel-3d-card" data-index="1" data-post-id="meditation-day" style="background-image: url('/assets/webp/post2.webp');">
-            <div class="carousel-3d-card-content">
-              <span class="carousel-3d-card-tag">Событие</span>
-              <h3 class="carousel-3d-card-title">День Медитации</h3>
-              <p class="carousel-3d-card-desc">Выступление 24 мая на фестивале с лекцией-практикой о телесном хранении стресса и конфликтов.</p>
-            </div>
-          </div>
-          <!-- Post 3: Parents' Note -->
-          <div class="carousel-3d-card" data-index="2" data-post-id="note" style="background-image: url('/assets/webp/post1.webp');">
-            <div class="carousel-3d-card-content">
-              <span class="carousel-3d-card-tag">Заметка</span>
-              <h3 class="carousel-3d-card-title">Записка от родителей</h3>
-              <p class="carousel-3d-card-desc">Кто помнит то теплое утреннее чувство из детства, когда просыпаешься, а на столе лежит записка?</p>
-            </div>
           </div>
         </div>
       </div>
