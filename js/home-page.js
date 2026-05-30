@@ -811,3 +811,166 @@ if (window.API.isLoggedIn()) {
 }
 
 initOnboarding();
+
+/* ─── Premium 3D MAK Cards Deck Logic ─── */
+function initMakDeck() {
+  const deck = document.getElementById('mak-deck');
+  const prevBtn = document.getElementById('deck-prev-btn');
+  const nextBtn = document.getElementById('deck-next-btn');
+  const counterText = document.getElementById('deck-counter-text');
+  
+  if (!deck) return;
+
+  const cardData = [
+    {
+      tag: 'Медитация',
+      title: 'Космический покой',
+      desc: 'Расслабляющая аудиопрактика с живым космическим видеофоном. Помогает переключить фокус с внешнего шума на внутреннюю тишину, растворить накопившийся стресс и обрести опору.',
+      href: '/meditations/?play=space',
+      image: '/assets/webp/ai_back.webp'
+    },
+    {
+      tag: 'Гештальт',
+      title: 'Встреча с тревогами',
+      desc: 'Экспресс-техника гештальт-терапии для глубокой проработки страхов и тревожных состояний. Научитесь безопасно соприкасаться со сложными эмоциями и отпускать их.',
+      href: '/geshtalt/',
+      image: '/assets/webp/new_main.webp'
+    },
+    {
+      tag: 'Телесная терапия',
+      title: 'Телесный резонанс',
+      desc: 'Психосоматическая сессия для снятия мышечных зажимов, расслабления шеи, плеч и челюсти. Верните глубокий контакт с физическим Я всего за 5 минут.',
+      href: '/dermer/',
+      image: '/assets/webp/coman.webp'
+    }
+  ];
+
+  let activeIndex = 0;
+  const cards = deck.querySelectorAll('.mak-card');
+
+  function updateDeck() {
+    cards.forEach((card, i) => {
+      const relIndex = (i - activeIndex + cards.length) % cards.length;
+      
+      if (relIndex === 0) {
+        card.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+        card.style.opacity = '1';
+        card.style.zIndex = '3';
+        card.style.pointerEvents = 'auto';
+      } else if (relIndex === 1) {
+        card.style.transform = 'translate3d(12px, 12px, -30px) rotate(3.5deg) scale(0.93)';
+        card.style.opacity = '0.85';
+        card.style.zIndex = '2';
+        card.style.pointerEvents = 'none';
+      } else if (relIndex === 2) {
+        card.style.transform = 'translate3d(-12px, 8px, -60px) rotate(-3.5deg) scale(0.86)';
+        card.style.opacity = '0.65';
+        card.style.zIndex = '1';
+        card.style.pointerEvents = 'none';
+      } else {
+        card.style.transform = 'translate3d(0, 0, -100px) scale(0.8)';
+        card.style.opacity = '0';
+        card.style.zIndex = '0';
+        card.style.pointerEvents = 'none';
+      }
+    });
+
+    if (counterText) {
+      counterText.textContent = `${activeIndex + 1} из ${cards.length}`;
+    }
+  }
+
+  function nextCard() {
+    activeIndex = (activeIndex + 1) % cards.length;
+    updateDeck();
+  }
+
+  function prevCard() {
+    activeIndex = (activeIndex - 1 + cards.length) % cards.length;
+    updateDeck();
+  }
+
+  // Tapping the top card area opens the modal, tapping side triggers cycle
+  deck.addEventListener('click', (e) => {
+    const clickedCard = e.target.closest('.mak-card');
+    if (!clickedCard) return;
+
+    const idx = parseInt(clickedCard.dataset.index, 10);
+    const relIndex = (idx - activeIndex + cards.length) % cards.length;
+
+    if (relIndex === 0) {
+      openMakModal(idx);
+    } else {
+      nextCard();
+    }
+  });
+
+  if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prevCard(); });
+  if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); nextCard(); });
+
+  // Initialize Modal logic
+  const modal = document.getElementById('mak-modal');
+  const modalOverlay = document.getElementById('mak-modal-overlay');
+  const modalCloseBtn = document.getElementById('mak-modal-close-btn');
+  const modalBanner = document.getElementById('mak-modal-banner');
+  const modalTag = document.getElementById('mak-modal-tag');
+  const modalTitle = document.getElementById('mak-modal-title');
+  const modalDesc = document.getElementById('mak-modal-desc');
+  const modalBtnLink = document.getElementById('mak-modal-btn-link');
+
+  function openMakModal(index) {
+    if (!modal) return;
+    const data = cardData[index];
+    
+    if (modalBanner) modalBanner.style.backgroundImage = `url('${data.image}')`;
+    if (modalTag) modalTag.textContent = data.tag;
+    if (modalTitle) modalTitle.textContent = data.title;
+    if (modalDesc) modalDesc.textContent = data.desc;
+    if (modalBtnLink) modalBtnLink.href = data.href;
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Lock background scroll
+  }
+
+  function closeMakModal() {
+    if (!modal) return;
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  if (modalOverlay) modalOverlay.addEventListener('click', closeMakModal);
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeMakModal);
+
+  // Swipe support for mobile card tossing
+  let startX = 0;
+  let startY = 0;
+  
+  deck.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  deck.addEventListener('touchend', (e) => {
+    const diffX = e.changedTouches[0].clientX - startX;
+    const diffY = e.changedTouches[0].clientY - startY;
+
+    if (Math.abs(diffX) > 60 && Math.abs(diffY) < 100) {
+      if (diffX > 0) {
+        prevCard();
+      } else {
+        nextCard();
+      }
+    }
+  }, { passive: true });
+
+  updateDeck();
+}
+
+// Initialise deck on page load
+document.addEventListener('DOMContentLoaded', initMakDeck);
+// Also initialize when rendering Today screen just in case of state changes
+const originalRenderToday = window.renderToday;
+window.renderToday = function(routeKey) {
+  if (originalRenderToday) originalRenderToday(routeKey);
+  initMakDeck();
+};

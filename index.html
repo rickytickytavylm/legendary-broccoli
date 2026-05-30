@@ -224,18 +224,64 @@
 
       <!-- SECTION 2: ЕЖЕДНЕВНЫЕ ПРАКТИКИ -->
       <header class="ios-section-header">
-        <p class="ios-section-kicker">Ежедневный фокус</p>
-        <h2 class="ios-section-title">Практики дня</h2>
+        <p class="ios-section-kicker">Тактильный фокус</p>
+        <h2 class="ios-section-title">Карты-практики дня</h2>
       </header>
 
-      <div class="today-grid">
-        <a href="/meditations/?play=space" class="today-support-card today-meditation-card" style="--ux-bg:url('/assets/webp/mmeditation.webp')">
-          <div>
-            <h3>Медитация дня</h3>
-            <p>Взгляд из космоса: мягкая аудиопрактика с видеофоном для спокойного переключения.</p>
+      <div class="cards-deck-container">
+        <div class="cards-deck" id="mak-deck">
+          <!-- Card 1 -->
+          <div class="mak-card" data-index="0" style="background-image: url('/assets/webp/ai_back.webp');">
+            <div class="mak-card-content">
+              <span class="mak-card-tag">Медитация</span>
+              <h3 class="mak-card-title">Космический покой</h3>
+              <span class="mak-card-hint">Нажмите, чтобы открыть</span>
+            </div>
           </div>
-          <span class="today-support-button">Слушать</span>
-        </a>
+          <!-- Card 2 -->
+          <div class="mak-card" data-index="1" style="background-image: url('/assets/webp/new_main.webp');">
+            <div class="mak-card-content">
+              <span class="mak-card-tag">Гештальт</span>
+              <h3 class="mak-card-title">Встреча с тревогами</h3>
+              <span class="mak-card-hint">Нажмите, чтобы открыть</span>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="mak-card" data-index="2" style="background-image: url('/assets/webp/coman.webp');">
+            <div class="mak-card-content">
+              <span class="mak-card-tag">Телесная терапия</span>
+              <h3 class="mak-card-title">Телесный резонанс</h3>
+              <span class="mak-card-hint">Нажмите, чтобы открыть</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Deck Navigation Controls -->
+        <div class="deck-controls">
+          <button class="deck-nav-btn" id="deck-prev-btn" type="button" aria-label="Назад">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span class="deck-counter" id="deck-counter-text">1 из 3</span>
+          <button class="deck-nav-btn" id="deck-next-btn" type="button" aria-label="Далее">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Liquid Glass MAK Modal Window -->
+      <div class="mak-modal hidden" id="mak-modal">
+        <div class="mak-modal-overlay" id="mak-modal-overlay"></div>
+        <div class="mak-modal-sheet">
+          <div class="mak-modal-indicator"></div>
+          <button class="mak-modal-close" id="mak-modal-close-btn" type="button" aria-label="Закрыть">&times;</button>
+          <div class="mak-modal-banner" id="mak-modal-banner"></div>
+          <div class="mak-modal-body">
+            <span class="mak-modal-tag" id="mak-modal-tag">Медитация</span>
+            <h3 class="mak-modal-title" id="mak-modal-title">Космический покой</h3>
+            <p class="mak-modal-desc" id="mak-modal-desc">Расслабляющая аудиосессия для мгновенного заземления.</p>
+            <a href="#" class="mak-modal-btn" id="mak-modal-btn-link">Запустить практику</a>
+          </div>
+        </div>
       </div>
 
       <!-- SECTION 3: AI И ОБЩЕНИЕ -->

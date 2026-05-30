@@ -8997,3 +8997,295 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
 .pwa-guide-confirm-btn:hover {
   background: rgba(255,255,255,0.9);
 }
+
+/* ─── Premium 3D MAK Cards Deck ────────────────── */
+.cards-deck-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto 30px auto;
+  perspective: 1000px;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cards-deck {
+  position: relative;
+  width: min(88vw, 300px);
+  height: min(115vw, 400px);
+  margin-bottom: 24px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.mak-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px 20px;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.6s ease, border-color 0.4s;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.mak-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.3) 55%, rgba(0, 0, 0, 0) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.mak-card-content {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+.mak-card-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.mak-card-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.mak-card-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  display: block;
+}
+
+/* Controls */
+.deck-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 14px;
+  border-radius: 100px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.deck-nav-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  padding: 0;
+}
+
+.deck-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.deck-nav-btn:active {
+  transform: scale(0.9);
+}
+
+.deck-nav-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.deck-counter {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 44px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Liquid Glass MAK Modal Window ─────────────── */
+.mak-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+}
+
+.mak-modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mak-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.mak-modal-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(135deg, rgba(25, 33, 30, 0.8) 0%, rgba(13, 20, 18, 0.95) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 32px 32px 0 0;
+  padding: 30px 24px 44px 24px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.3, 1);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mak-modal:not(.hidden) .mak-modal-sheet {
+  transform: translateY(0);
+}
+
+.mak-modal-indicator {
+  width: 36px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  margin: -16px auto 18px auto;
+}
+
+.mak-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  padding: 0;
+  z-index: 10;
+}
+
+.mak-modal-close:active {
+  transform: scale(0.9);
+}
+
+.mak-modal-banner {
+  width: 100%;
+  height: 180px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.mak-modal-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13, 20, 18, 0.5) 0%, rgba(0,0,0,0) 100%);
+}
+
+.mak-modal-body {
+  color: #ffffff;
+}
+
+.mak-modal-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #e0984f;
+  margin-bottom: 8px;
+}
+
+.mak-modal-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+}
+
+.mak-modal-desc {
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 28px 0;
+  font-weight: 400;
+}
+
+.mak-modal-btn {
+  display: block;
+  text-align: center;
+  width: 100%;
+  padding: 16px;
+  background: #ffffff;
+  color: #07100e;
+  text-decoration: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+  transition: transform 0.1s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.mak-modal-btn:active {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.95);
+}
