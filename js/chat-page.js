@@ -421,6 +421,285 @@
     }
   }
 
+  function openSubscriptionModal() {
+    if (document.getElementById('ios-subscription-modal')) return;
+
+    const style = document.createElement('style');
+    style.id = 'ios-sub-modal-styles';
+    style.textContent = `
+      .ios-sub-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .ios-sub-modal.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .ios-sub-modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .ios-sub-modal-card {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.12), transparent 45%), #0c0d12;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 38px;
+        padding: 32px 24px 28px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        color: #fff;
+        text-align: center;
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+      }
+      .ios-sub-modal.active .ios-sub-modal-card {
+        transform: scale(1) translateY(0);
+      }
+      .ios-sub-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 20px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+        padding: 0;
+        line-height: 1;
+      }
+      .ios-sub-modal-close:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+      .ios-sub-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 100px;
+        padding: 6px 14px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.85);
+        margin-bottom: 20px;
+      }
+      .ios-sub-title {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin: 0 0 10px;
+        line-height: 1.1;
+      }
+      .ios-sub-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.55);
+        margin: 0 0 24px;
+        line-height: 1.5;
+        max-width: 300px;
+      }
+      .ios-sub-features {
+        width: 100%;
+        list-style: none;
+        padding: 0;
+        margin: 0 0 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        text-align: left;
+      }
+      .ios-sub-feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.4;
+      }
+      .ios-sub-feature-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .ios-sub-btn-buy {
+        width: 100%;
+        min-height: 52px;
+        border-radius: 100px;
+        background: #fff;
+        color: #000;
+        border: none;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15);
+      }
+      .ios-sub-btn-buy:hover {
+        opacity: 0.92;
+        transform: translateY(-1px);
+      }
+      .ios-sub-btn-buy:active {
+        transform: translateY(1px);
+      }
+      .ios-sub-footer {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.35);
+        margin-top: 14px;
+        line-height: 1.4;
+      }
+    `;
+    document.head.appendChild(style);
+
+    const modal = document.createElement('div');
+    modal.id = 'ios-subscription-modal';
+    modal.className = 'ios-sub-modal';
+    modal.innerHTML = `
+      <div class="ios-sub-modal-backdrop"></div>
+      <div class="ios-sub-modal-card">
+        <button class="ios-sub-modal-close" type="button" aria-label="Закрыть">×</button>
+        <div class="ios-sub-badge">Подписка Pro</div>
+        <h2 class="ios-sub-title">Доступ в общий чат<br>Системы Молодцова</h2>
+        <p class="ios-sub-desc">Общение с экспертами, поддержка сообщества единомышленников и неограниченный доступ к AI-ассистенту.</p>
+        
+        <ul class="ios-sub-features">
+          <li class="ios-sub-feature-item">
+            <span class="ios-sub-feature-icon">✓</span>
+            <span><strong>Общий чат:</strong> Общение в реальном времени, обмен опытом, видеокружочки и голосовые.</span>
+          </li>
+          <li class="ios-sub-feature-item">
+            <span class="ios-sub-feature-icon">✓</span>
+            <span><strong>Безлимитный AI:</strong> Индивидуальный психолог-ассистент, готовый помочь 24/7.</span>
+          </li>
+          <li class="ios-sub-feature-item">
+            <span class="ios-sub-feature-icon">✓</span>
+            <span><strong>Персональный путь:</strong> Умные рекомендации и подборки практик каждый день.</span>
+          </li>
+        </ul>
+
+        <button class="ios-sub-btn-buy" id="ios-sub-buy-btn" type="button">
+          <span>Активировать подписку Pro</span>
+          <span style="font-weight: 400; opacity: 0.6;">—</span>
+          <span id="ios-sub-price-val">Загрузка...</span>
+        </button>
+        <p class="ios-sub-footer">Оплата проходит через защищенный шлюз Робокассы. Отмена подписки в любое время в профиле.</p>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    setTimeout(() => modal.classList.add('active'), 20);
+
+    const closeBtn = modal.querySelector('.ios-sub-modal-close');
+    const backdrop = modal.querySelector('.ios-sub-modal-backdrop');
+    const buyBtn = modal.querySelector('#ios-sub-buy-btn');
+
+    const handleClose = () => {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.remove();
+        style.remove();
+        window.location.href = '/';
+      }, 400);
+    };
+
+    closeBtn.addEventListener('click', handleClose);
+    backdrop.addEventListener('click', handleClose);
+
+    let targetPlanSlug = 'pro';
+    window.API.getPlans()
+      .then(data => {
+        const proPlan = data.plans.find(p => p.slug === 'pro' || p.slug === 'sistema_pro' || p.title.toLowerCase().includes('pro')) || data.plans[0];
+        if (proPlan) {
+          targetPlanSlug = proPlan.slug;
+          modal.querySelector('#ios-sub-price-val').textContent = `${proPlan.price_rub} ₽/мес`;
+        } else {
+          modal.querySelector('#ios-sub-price-val').textContent = '990 ₽/мес';
+        }
+      })
+      .catch(() => {
+        modal.querySelector('#ios-sub-price-val').textContent = '990 ₽/мес';
+      });
+
+    buyBtn.addEventListener('click', async () => {
+      buyBtn.disabled = true;
+      buyBtn.style.opacity = '0.7';
+      const originalText = buyBtn.innerHTML;
+      buyBtn.innerHTML = 'Подготовка оплаты...';
+
+      if (!window.API.isLoggedIn()) {
+        if (window.openAuthModal) {
+          window.openAuthModal('login');
+          window.addEventListener('auth:change', function handler() {
+            window.removeEventListener('auth:change', handler);
+            buyBtn.disabled = false;
+            buyBtn.style.opacity = '1';
+            buyBtn.innerHTML = originalText;
+            buyBtn.click();
+          }, { once: true });
+        } else {
+          alert('Пожалуйста, авторизуйтесь для совершения покупки.');
+          buyBtn.disabled = false;
+          buyBtn.style.opacity = '1';
+          buyBtn.innerHTML = originalText;
+        }
+        return;
+      }
+
+      try {
+        const res = await window.API.createPayment({ plan_slug: targetPlanSlug, provider: 'robokassa' });
+        if (res.payment_url) {
+          window.location.href = res.payment_url;
+        } else {
+          alert('Ошибка создания платежа');
+          buyBtn.disabled = false;
+          buyBtn.style.opacity = '1';
+          buyBtn.innerHTML = originalText;
+        }
+      } catch (err) {
+        alert(err.error || 'Ошибка при переходе к оплате. Попробуйте позже.');
+        buyBtn.disabled = false;
+        buyBtn.style.opacity = '1';
+        buyBtn.innerHTML = originalText;
+      }
+    });
+  }
+
   async function boot() {
     try {
       setStatus('Подключаемся…');
@@ -432,7 +711,12 @@
       // Configure interactive Web Push notification flow
       initNotificationBanner();
     } catch (err) {
-      setStatus(err?.error || 'Чат временно недоступен');
+      if (err && (err.status === 403 || err.code === 'NO_SUBSCRIPTION')) {
+        setStatus('Требуется подписка Pro');
+        openSubscriptionModal();
+      } else {
+        setStatus(err?.error || 'Чат временно недоступен');
+      }
     } finally {
       state.loading = false;
       render();

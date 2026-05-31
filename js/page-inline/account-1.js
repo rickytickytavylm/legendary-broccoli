@@ -87,6 +87,39 @@ function escapeHtml(value) {
 
       document.getElementById('dash-sub').textContent = 'Настройки, документы и управление данными.';
 
+      // Subscription status UI
+      const statusEl = document.getElementById('dash-subscription-status');
+      const badgeEl = document.getElementById('dash-subscription-badge');
+      const actionEl = document.getElementById('dash-subscription-action');
+
+      if (statusEl && badgeEl) {
+        if (user.subscription_active) {
+          let dateStr = '';
+          if (user.subscription_expires_at) {
+            const date = new Date(user.subscription_expires_at);
+            dateStr = ' до ' + date.toLocaleDateString('ru-RU');
+          }
+          statusEl.textContent = 'Активирована подписка Pro' + dateStr;
+          badgeEl.textContent = 'активна';
+          badgeEl.style.background = 'rgba(48, 209, 88, 0.15)';
+          badgeEl.style.color = '#30d158';
+          badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
+          if (actionEl) actionEl.style.display = 'none';
+        } else {
+          statusEl.textContent = 'Доступ ограничен. Оформите подписку.';
+          badgeEl.textContent = 'неактивна';
+          badgeEl.style.background = 'rgba(255, 255, 255, 0.08)';
+          badgeEl.style.color = 'rgba(255, 255, 255, 0.4)';
+          badgeEl.style.border = '1px solid rgba(255, 255, 255, 0.05)';
+          if (actionEl) {
+            actionEl.style.display = 'grid';
+            actionEl.onclick = () => {
+              window.location.href = '/subscription/';
+            };
+          }
+        }
+      }
+
       document.getElementById('streak-val')?.replaceChildren(document.createTextNode(String(stats.streak_days || 0)));
       document.getElementById('ring-streak')?.style.setProperty?.('--value', Math.min(100, Math.round(((stats.streak_days || 0) / 7) * 100)));
       document.getElementById('streak-big')?.replaceChildren(document.createTextNode('Открыто'));
