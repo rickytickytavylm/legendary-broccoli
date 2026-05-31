@@ -60,7 +60,7 @@ function escapeHtml(value) {
       }
       try {
         const res = await window.API.createPayment({ plan_slug: planSlug, provider: 'robokassa' });
-        if (res.payment_url) window.location.href = res.payment_url;
+        if (window.API.redirectToPayment(res)) return;
         else alert('Ошибка создания платежа');
       } catch (err) {
         alert(err.error || 'Ошибка. Попробуйте позже.');

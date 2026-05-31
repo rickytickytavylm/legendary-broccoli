@@ -683,8 +683,8 @@
 
       try {
         const res = await window.API.createPayment({ plan_slug: targetPlanSlug, provider: 'robokassa' });
-        if (res.payment_url) {
-          window.location.href = res.payment_url;
+        if (window.API.redirectToPayment(res)) {
+          return;
         } else {
           alert('Ошибка создания платежа');
           buyBtn.disabled = false;

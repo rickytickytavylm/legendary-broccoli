@@ -350,6 +350,27 @@ class ApiClient {
   // --- Payment ---
   getPlans()       { return this.request('GET', '/payment/plans'); }
   createPayment(data) { return this.request('POST', '/payment/create', data); }
+  redirectToPayment(payment) {
+    if (!payment || !payment.payment_url) return false;
+    if (payment.payment_method === 'post' && payment.payment_fields) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = payment.payment_url;
+      form.style.display = 'none';
+      Object.entries(payment.payment_fields).forEach(([name, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value == null ? '' : String(value);
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      form.submit();
+      return true;
+    }
+    window.location.href = payment.payment_url;
+    return true;
+  }
   getSubscription() { return this.request('GET', '/payment/subscription'); }
 
   // --- Profile ---
