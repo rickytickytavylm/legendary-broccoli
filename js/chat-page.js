@@ -1,4 +1,5 @@
 (function initCommunityChat() {
+  function fmtPrice(n) { return Number(n).toLocaleString('ru-RU'); }
   const root = document.querySelector('[data-chat-root]');
   if (!root || !window.API) return;
 
@@ -641,19 +642,17 @@
     closeBtn.addEventListener('click', handleClose);
     backdrop.addEventListener('click', handleClose);
 
-    let targetPlanSlug = 'pro';
+    let targetPlanSlug = 'monthly';
     window.API.getPlans()
       .then(data => {
-        const proPlan = data.plans.find(p => p.slug === 'pro' || p.slug === 'sistema_pro' || p.title.toLowerCase().includes('pro')) || data.plans[0];
-        if (proPlan) {
-          targetPlanSlug = proPlan.slug;
-          modal.querySelector('#ios-sub-price-val').textContent = `${proPlan.price_rub} ₽/мес`;
-        } else {
-          modal.querySelector('#ios-sub-price-val').textContent = '990 ₽/мес';
+        var p = data && data.plans && data.plans[0];
+        if (p) {
+          targetPlanSlug = p.slug;
+          modal.querySelector('#ios-sub-price-val').textContent = fmtPrice(p.price_rub) + ' ₽';
         }
       })
       .catch(() => {
-        modal.querySelector('#ios-sub-price-val').textContent = '990 ₽/мес';
+        modal.querySelector('#ios-sub-price-val').textContent = '990 ₽';
       });
 
     buyBtn.addEventListener('click', async () => {

@@ -20,34 +20,71 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .ios-sub-page { display:flex;flex-direction:column;align-items:center;padding:24px 20px 40px;min-height:calc(100vh - 64px); }
-    .ios-sub-icon-wrap { width:80px;height:80px;border-radius:22px;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);margin-bottom:16px; }
-    .ios-sub-icon-wrap img { width:48px;height:48px; }
-    .ios-sub-title { font-size:26px;font-weight:700;color:#fff;text-align:center;letter-spacing:-.3px;margin-bottom:6px; }
-    .ios-sub-subtitle { font-size:15px;color:var(--text-2);text-align:center;max-width:320px;line-height:1.45;margin-bottom:28px; }
-    .ios-features { list-style:none;padding:0;margin:0 0 28px;width:100%;max-width:360px; }
-    .ios-features li { display:flex;align-items:center;gap:10px;padding:7px 0;font-size:15px;color:#e8e8e8; }
-    .ios-features li svg { width:18px;height:18px;color:#30d158;flex-shrink:0; }
-    .ios-plans-wrap { display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;margin-bottom:20px; }
-    .ios-plan-card { position:relative;background:rgba(255,255,255,.055);border:1.5px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 18px;cursor:pointer;transition:all .18s ease;display:flex;align-items:center;justify-content:space-between; }
-    .ios-plan-card:hover { background:rgba(255,255,255,.09); }
-    .ios-plan-card.ios-selected { background:rgba(10,132,255,.12);border-color:rgba(10,132,255,.45); }
-    .ios-plan-left { display:flex;flex-direction:column;gap:2px; }
-    .ios-plan-name { font-size:16px;font-weight:600;color:#fff; }
-    .ios-plan-desc { font-size:13px;color:var(--text-2); }
-    .ios-plan-right { display:flex;align-items:flex-end;flex-direction:column;gap:2px; }
-    .ios-plan-price { font-size:18px;font-weight:700;color:#fff; }
-    .ios-plan-unit { font-size:13px;color:var(--text-2); }
-    .ios-plan-badge { position:absolute;top:-1px;right:18px;background:linear-gradient(90deg,#0a84ff,#5e5ce6);color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:0 0 10px 10px;letter-spacing:.3px; }
-    .ios-sub-btn { width:100%;max-width:360px;height:52px;border-radius:14px;background:linear-gradient(180deg,#0a84ff 0%,#0066cc 100%);border:none;color:#fff;font-size:17px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(10,132,255,.25);transition:transform .1s ease, opacity .15s; }
-    .ios-sub-btn:active { transform:scale(.985); }
-    .ios-sub-btn:disabled { opacity:.55;cursor:not-allowed; }
-    .ios-legal { margin-top:18px;font-size:12px;color:rgba(255,255,255,.35);text-align:center;max-width:340px;line-height:1.5; }
-    .ios-legal a { color:rgba(255,255,255,.5);text-decoration:underline; }
-    .ios-loader { display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text-2); }
-    @media (min-width: 768px) {
-      .ios-sub-page { padding-top:48px; }
+    .sub-page { display:flex;flex-direction:column;align-items:center;padding:88px 16px 40px;min-height:calc(100vh - 64px); }
+    .card {
+      --white: hsl(0, 0%, 100%);
+      --black: hsl(240, 15%, 9%);
+      --paragraph: hsl(0, 0%, 83%);
+      --line: hsl(240, 9%, 17%);
+      --primary: hsl(189, 92%, 58%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.25rem;
+      width: 100%;
+      max-width: 360px;
+      background-color: hsla(240, 15%, 9%, 1);
+      background-image: radial-gradient(at 88% 40%, hsla(240, 15%, 9%, 1) 0px, transparent 85%),
+        radial-gradient(at 49% 30%, hsla(240, 15%, 9%, 1) 0px, transparent 85%),
+        radial-gradient(at 14% 26%, hsla(240, 15%, 9%, 1) 0px, transparent 85%),
+        radial-gradient(at 0% 64%, hsl(189, 99%, 26%) 0px, transparent 85%),
+        radial-gradient(at 41% 94%, hsl(189, 97%, 36%) 0px, transparent 85%),
+        radial-gradient(at 100% 99%, hsl(188, 94%, 13%) 0px, transparent 85%);
+      border-radius: 1rem;
+      box-shadow: 0px -16px 24px 0px rgba(255, 255, 255, 0.25) inset;
     }
+    .card .card__border {
+      overflow: hidden;
+      pointer-events: none;
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100% + 2px);
+      height: calc(100% + 2px);
+      background-image: linear-gradient(0deg, hsl(0, 0%, 100%) -50%, hsl(0, 0%, 40%) 100%);
+      border-radius: 1rem;
+    }
+    .card .card__border::before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      z-index: 200;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg);
+      transform-origin: left;
+      width: 200%;
+      height: 10rem;
+      background-image: linear-gradient(0deg, hsla(0, 0%, 100%, 0) 0%, hsl(189, 100%, 50%) 40%, hsl(189, 100%, 50%) 60%, hsla(0, 0%, 40%, 0) 100%);
+      animation: rotate 8s linear infinite;
+    }
+    @keyframes rotate { to { transform: translate(-50%, -50%) rotate(360deg); } }
+    .card .card_title__container .card_title { font-size: 1.1rem; font-weight: 700; color: var(--white); }
+    .card .card_title__container .card_paragraph { margin-top: 0.25rem; font-size: 0.8rem; color: var(--paragraph); }
+    .card .line { width: 100%; height: 1px; background-color: var(--line); border: none; }
+    .card .card__list { display: flex; flex-direction: column; gap: 0.6rem; list-style: none; padding: 0; margin: 0; }
+    .card .card__list .card__list_item { display: flex; align-items: center; gap: 0.6rem; }
+    .card .card__list .card__list_item .check { display: flex; justify-content: center; align-items: center; width: 1.1rem; height: 1.1rem; background-color: var(--primary); border-radius: 50%; flex-shrink: 0; }
+    .card .card__list .card__list_item .check .check_svg { width: 0.7rem; height: 0.7rem; fill: var(--black); }
+    .card .card__list .card__list_item .list_text { font-size: 0.85rem; color: var(--white); }
+    .card .button { cursor: pointer; padding: 0.6rem; width: 100%; background-image: linear-gradient(0deg, hsl(189, 92%, 58%), hsl(189, 99%, 26%) 100%); font-size: 0.9rem; font-weight: 600; color: var(--white); border: 0; border-radius: 9999px; box-shadow: inset 0 -2px 25px -4px var(--white); transition: opacity .15s; }
+    .card .button:active { opacity: .85; }
+    .card .button:disabled { opacity: .5; cursor: not-allowed; }
+    .sub-legal { margin-top: 18px; font-size: 12px; color: rgba(255,255,255,.35); text-align: center; max-width: 340px; line-height: 1.5; }
+    .sub-legal a { color: rgba(255,255,255,.5); text-decoration: underline; }
   </style>
 </head>
 <body class="dark-theme">
@@ -72,29 +109,45 @@
   </nav>
 
   <main class="main-content">
-    <div class="ios-sub-page">
-      <div class="ios-sub-icon-wrap">
-        <img src="/assets/webp/logo2.webp" alt="Система Молодцова" />
+    <div class="sub-page">
+      <div class="card">
+        <div class="card__border"></div>
+        <div class="card_title__container">
+          <span class="card_title">Система Молодцова</span>
+          <p class="card_paragraph">Полный доступ ко всем курсам, марафонам и практикам</p>
+        </div>
+        <hr class="line" />
+        <ul class="card__list">
+          <li class="card__list_item">
+            <span class="check">
+              <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" fill-rule="evenodd"></path></svg>
+            </span>
+            <span class="list_text">Все курсы и марафоны</span>
+          </li>
+          <li class="card__list_item">
+            <span class="check">
+              <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" fill-rule="evenodd"></path></svg>
+            </span>
+            <span class="list_text">Закрытый Telegram-канал</span>
+          </li>
+          <li class="card__list_item">
+            <span class="check">
+              <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" fill-rule="evenodd"></path></svg>
+            </span>
+            <span class="list_text">Практики и медитации</span>
+          </li>
+          <li class="card__list_item">
+            <span class="check">
+              <svg class="check_svg" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z" fill-rule="evenodd"></path></svg>
+            </span>
+            <span class="list_text">Поддержка AI-помощника</span>
+          </li>
+        </ul>
+        <button id="sub-btn" class="button">Оформить подписку — 990 ₽</button>
       </div>
-      <div class="ios-sub-title">Система Молодцова</div>
-      <div class="ios-sub-subtitle">Полный доступ ко&nbsp;всем курсам, марафонам и&nbsp;практикам</div>
-
-      <ul class="ios-features">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Все курсы и марафоны</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Закрытый Telegram-канал</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Практики и медитации</li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Поддержка AI-помощника</li>
-      </ul>
-
-      <div id="plans-container" class="ios-plans-wrap">
-        <div class="ios-loader">Загрузка тарифов...</div>
-      </div>
-
-      <button id="ios-subscribe-btn" class="ios-sub-btn" disabled>Оформить подписку</button>
-
-      <p class="ios-legal">
+      <p class="sub-legal">
         Оплата банковской картой через <strong>ЮKassa</strong>.<br>
-        Подписка продлевается автоматически. Отменить можно в любой момент.<br>
+        После оплаты доступ активируется на 5 минут (тест).<br>
         <a href="/terms/" target="_blank">Условия использования</a> · <a href="/privacy/" target="_blank">Конфиденциальность</a>
       </p>
     </div>
@@ -164,89 +217,49 @@
   <script src="/js/nav.js?v=83"></script>
   <script>
     (function() {
-      var selectedSlug = null;
-      var plansData = [];
-      var container = document.getElementById('plans-container');
-      var btn = document.getElementById('ios-subscribe-btn');
+      var btn = document.getElementById('sub-btn');
+      var planSlug = 'monthly';
 
       function fmtPrice(n) { return Number(n).toLocaleString('ru-RU'); }
 
-      function renderPlans(plans) {
-        plansData = plans;
-        if (!plans || !plans.length) {
-          container.innerHTML = '<div class="ios-loader">Тарифы временно недоступны</div>';
-          return;
-        }
-        container.innerHTML = '';
-        // Prefer yearly > quarterly > monthly for default selection
-        var order = { yearly: 0, quarterly: 1, monthly: 2 };
-        plans.sort(function(a, b) { return (order[a.slug] ?? 99) - (order[b.slug] ?? 99); });
-        selectedSlug = plans[0].slug;
-
-        plans.forEach(function(p) {
-          var isPopular = p.slug === 'yearly';
-          var durationLabel = p.duration_months === 1 ? 'месяц' : p.duration_months === 3 ? '3 месяца' : p.duration_months + ' мес.';
-          var monthlyEquivalent = p.duration_months > 1 ? Math.round(p.price_rub / p.duration_months) + ' ₽/мес' : '';
-
-          var card = document.createElement('div');
-          card.className = 'ios-plan-card' + (p.slug === selectedSlug ? ' ios-selected' : '');
-          card.dataset.slug = p.slug;
-          card.innerHTML =
-            (isPopular ? '<div class="ios-plan-badge">ВЫГОДНО</div>' : '') +
-            '<div class="ios-plan-left">' +
-              '<div class="ios-plan-name">' + escapeHtml(p.title) + '</div>' +
-              '<div class="ios-plan-desc">' + escapeHtml(p.description || durationLabel) + '</div>' +
-            '</div>' +
-            '<div class="ios-plan-right">' +
-              '<div class="ios-plan-price">' + fmtPrice(p.price_rub) + ' ₽</div>' +
-              '<div class="ios-plan-unit">' + escapeHtml(monthlyEquivalent || durationLabel) + '</div>' +
-            '</div>';
-          card.addEventListener('click', function() {
-            selectedSlug = p.slug;
-            container.querySelectorAll('.ios-plan-card').forEach(function(c) { c.classList.remove('ios-selected'); });
-            card.classList.add('ios-selected');
-          });
-          container.appendChild(card);
-        });
-        btn.disabled = false;
-      }
-
-      function escapeHtml(v) {
-        return String(v || '').replace(/[&<>"']/g, function(ch) {
-          return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch];
+      if (window.API && window.API.getPlans) {
+        window.API.getPlans().then(function(data) {
+          var plans = data && data.plans;
+          var p = plans && plans[0];
+          if (p) {
+            planSlug = p.slug;
+            document.querySelector('.card .card_title').textContent = p.title || 'Система Молодцова';
+            document.querySelector('.card .card_paragraph').textContent = p.description || 'Полный доступ ко всем материалам';
+            btn.textContent = 'Оформить подписку — ' + fmtPrice(p.price_rub) + ' ₽';
+          } else {
+            btn.textContent = 'Тарифы недоступны';
+            btn.disabled = true;
+          }
+        }).catch(function() {
+          btn.textContent = 'Тарифы недоступны';
+          btn.disabled = true;
         });
       }
 
       async function doSubscribe() {
-        if (!selectedSlug) return;
         if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) {
           if (window.openAuthModal) window.openAuthModal('login');
           return;
         }
         btn.disabled = true;
+        var original = btn.textContent;
         btn.textContent = 'Переходим к оплате...';
         try {
-          var res = await window.API.createPayment({ plan_slug: selectedSlug, provider: 'yookassa' });
+          var res = await window.API.createPayment({ plan_slug: planSlug, provider: 'yookassa' });
           if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
           throw new Error('bad payment response');
         } catch (err) {
           btn.disabled = false;
-          btn.textContent = 'Оформить подписку';
+          btn.textContent = original;
           alert(err.error || 'Ошибка при создании платежа. Попробуйте позже.');
         }
       }
-
       btn.addEventListener('click', doSubscribe);
-
-      if (window.API && window.API.getPlans) {
-        window.API.getPlans().then(function(data) {
-          renderPlans(data && data.plans);
-        }).catch(function() {
-          renderPlans([]);
-        });
-      } else {
-        renderPlans([]);
-      }
     })();
   </script>
 </body>
