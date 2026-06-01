@@ -59,7 +59,7 @@ function escapeHtml(value) {
         return;
       }
       try {
-        const res = await window.API.createPayment({ plan_slug: planSlug, provider: 'robokassa' });
+        const res = await window.API.createPayment({ plan_slug: planSlug, provider: 'yookassa' });
         if (window.API.redirectToPayment(res)) return;
         else alert('Ошибка создания платежа');
       } catch (err) {

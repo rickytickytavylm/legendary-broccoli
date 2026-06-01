@@ -682,7 +682,7 @@
       }
 
       try {
-        const res = await window.API.createPayment({ plan_slug: targetPlanSlug, provider: 'robokassa' });
+        const res = await window.API.createPayment({ plan_slug: targetPlanSlug, provider: 'yookassa' });
         if (window.API.redirectToPayment(res)) {
           return;
         } else {

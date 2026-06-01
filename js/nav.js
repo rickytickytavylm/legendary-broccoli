@@ -33,6 +33,38 @@
       document.head.appendChild(icon);
     }
   })();
+  
+  // ── Global Auth Enforcement ────────────────────────────
+  (function enforceAuth() {
+    var publicPaths = [
+      '/',
+      '/index.html',
+      '/terms/',
+      '/privacy/',
+      '/subscription/',
+      '/auth-magic/',
+      '/auth-yandex/',
+      '/about/',
+      '/author/'
+    ];
+    var path = window.location.pathname;
+
+    // Normalize: drop trailing index.html and ensure a single trailing slash
+    var normPath = path.replace(/index\.html$/i, '');
+    if (!normPath.endsWith('/')) normPath += '/';
+
+    var isPublic = publicPaths.indexOf(normPath) !== -1;
+
+    if (!isPublic) {
+      var loggedIn = false;
+      if (window.API && typeof window.API.isLoggedIn === 'function') {
+        loggedIn = window.API.isLoggedIn();
+      }
+      if (!loggedIn) {
+        window.location.replace('/');
+      }
+    }
+  })();
 
   function icon(paths) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
