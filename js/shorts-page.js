@@ -89,7 +89,11 @@
   function shortsStreamUrl(slug) {
     var base = (window.API && window.API.base ? String(window.API.base) : '').replace(/\/?$/u, '');
     if (!base) return '';
-    return base + '/video/shorts-mp4?slug=' + encodeURIComponent(slug);
+    var url = base + '/video/shorts-mp4?slug=' + encodeURIComponent(slug);
+    if (window.API && window.API.accessToken) {
+      url += '&auth=' + encodeURIComponent(window.API.accessToken);
+    }
+    return url;
   }
 
   /**

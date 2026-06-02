@@ -530,11 +530,30 @@
     modal.addEventListener('click', function(event) {
       if (event.target === modal) modal.remove();
     });
-    modal.querySelector('[data-buy]').addEventListener('click', function() {
-      window.location.href = '/subscription/';
+    modal.querySelector('[data-buy]').addEventListener('click', async function() {
+      var button = modal.querySelector('[data-buy]');
+      var original = button.textContent;
+      if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) {
+        modal.remove();
+        if (window.openAuthModal) window.openAuthModal('login');
+        return;
+      }
+      button.disabled = true;
+      button.textContent = 'Переходим к оплате...';
+      try {
+        var res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
+        if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
+        throw new Error('bad payment response');
+      } catch (err) {
+        button.disabled = false;
+        button.textContent = original;
+        alert((err && err.error) || 'Ошибка при создании платежа. Попробуйте позже.');
+      }
     });
     document.body.appendChild(modal);
   }
+
+  window.openSubscriptionModalForAccess = openGlobalSubscriptionModal;
 
   document.addEventListener('click', function(event) {
     var lesson = event.target.closest('.lesson-item.locked, .lesson-row.locked');

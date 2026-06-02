@@ -648,7 +648,7 @@
         var p = data && data.plans && data.plans[0];
         if (p) {
           targetPlanSlug = p.slug;
-          modal.querySelector('#ios-sub-price-val').textContent = fmtPrice(p.price_rub) + ' ₽';
+          modal.querySelector('#ios-sub-price-val').textContent = '2990 ₽';
         }
       })
       .catch(() => {

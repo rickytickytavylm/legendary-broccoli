@@ -120,15 +120,26 @@ function escapeHtml(value) {
           badgeEl.style.border = '1px solid rgba(255, 255, 255, 0.05)';
           if (actionEl) {
             actionEl.style.display = 'grid';
-            actionEl.onclick = () => {
-              window.location.href = '/subscription/';
+            actionEl.onclick = async () => {
+              const originalHtml = actionEl.innerHTML;
+              actionEl.disabled = true;
+              actionEl.innerHTML = '<span class="settings-icon">★</span><span><strong>Переходим к оплате...</strong><small>Открываем защищенный шлюз ЮKassa</small></span>';
+              try {
+                const res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
+                if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
+                throw new Error('bad payment response');
+              } catch (err) {
+                actionEl.disabled = false;
+                actionEl.innerHTML = originalHtml;
+                alert(err.error || 'Ошибка при создании платежа. Попробуйте позже.');
+              }
             };
           }
           if (benefitsEl) {
             benefitsEl.style.display = 'grid';
             benefitsEl.innerHTML = '<span>Все видео-разделы и уроки без ограничений</span><span>Доступ в Общий чат участников</span><span>Расширенный доступ к Лизе, AI-помощнице системы</span>';
           }
-          if (testEl) testEl.style.display = 'block';
+          if (testEl) testEl.style.display = 'none';
         }
 
         if (testEl) {
