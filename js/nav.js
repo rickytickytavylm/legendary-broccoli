@@ -449,18 +449,37 @@
 
   function getLessonIndex(lesson) {
     if (lesson.dataset.idx != null) return parseInt(lesson.dataset.idx, 10) || 0;
+    if (lesson.dataset.id != null && lesson.parentNode) {
+      var rows = Array.prototype.filter.call(lesson.parentNode.children, function(node) {
+        return node.classList && (node.classList.contains('lesson-item') || node.classList.contains('lesson-row'));
+      });
+      return Math.max(0, rows.indexOf(lesson));
+    }
     var siblings = Array.prototype.filter.call(lesson.parentNode ? lesson.parentNode.children : [], function(node) {
-      return node.classList && node.classList.contains('lesson-item');
+      return node.classList && (node.classList.contains('lesson-item') || node.classList.contains('lesson-row'));
     });
     return Math.max(0, siblings.indexOf(lesson));
   }
 
   function updateLessonLocks(root) {
-    Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-item.locked'), function(item) {
-      item.classList.remove('locked');
-    });
-    Array.prototype.forEach.call((root || document).querySelectorAll('.lesson-lock-note'), function(note) {
-      note.remove();
+    var scope = root || document;
+    Array.prototype.forEach.call(scope.querySelectorAll('.lesson-item, .lesson-row'), function(item) {
+      var idx = getLessonIndex(item);
+      var locked = accessState !== 'pro' && idx > 0;
+      item.classList.toggle('locked', locked);
+      item.setAttribute('aria-disabled', locked ? 'true' : 'false');
+      if (locked && !item.querySelector('.lesson-lock-note')) {
+        var lock = document.createElement('span');
+        lock.className = 'lesson-lock-note';
+        lock.textContent = '🔒';
+        lock.setAttribute('aria-label', 'Доступно по подписке');
+        item.appendChild(lock);
+      }
+      if (!locked) {
+        Array.prototype.forEach.call(item.querySelectorAll('.lesson-lock-note'), function(note) {
+          note.remove();
+        });
+      }
     });
   }
 
@@ -485,11 +504,44 @@
       else window.location.href = '/account/';
       return;
     }
+    if (typeof window.openSubscriptionModalForAccess === 'function') {
+      window.openSubscriptionModalForAccess();
+    } else {
+      openGlobalSubscriptionModal();
+    }
     return;
   };
 
+  function openGlobalSubscriptionModal() {
+    if (document.getElementById('global-subscription-modal')) return;
+    var modal = document.createElement('div');
+    modal.id = 'global-subscription-modal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)';
+    modal.innerHTML =
+      '<div style="width:min(420px,100%);border-radius:32px;border:1px solid rgba(255,255,255,.14);background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.12),transparent 45%),#0c0d12;box-shadow:0 30px 80px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.16);padding:30px 24px 26px;color:#fff;text-align:center;position:relative">' +
+        '<button type="button" data-close style="position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:20px">×</button>' +
+        '<div style="display:inline-flex;margin-bottom:18px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase">Подписка Pro</div>' +
+        '<h2 style="margin:0 0 12px;font-size:28px;line-height:1.08;letter-spacing:-.04em">Материал доступен<br>по подписке</h2>' +
+        '<p style="margin:0 auto 22px;max-width:320px;color:rgba(255,255,255,.58);font-size:14px;line-height:1.5">Pro открывает все видео-разделы, аудио, практики, Общий чат и расширенный доступ к Лизе.</p>' +
+        '<button type="button" data-buy style="width:100%;min-height:54px;border:0;border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:800">Оформить подписку — 2990 ₽</button>' +
+        '<p style="margin:14px 0 0;color:rgba(255,255,255,.35);font-size:11px;line-height:1.4">Для теста подписка действует 5 минут.</p>' +
+      '</div>';
+    modal.querySelector('[data-close]').addEventListener('click', function() { modal.remove(); });
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) modal.remove();
+    });
+    modal.querySelector('[data-buy]').addEventListener('click', function() {
+      window.location.href = '/subscription/';
+    });
+    document.body.appendChild(modal);
+  }
+
   document.addEventListener('click', function(event) {
-    return;
+    var lesson = event.target.closest('.lesson-item.locked, .lesson-row.locked');
+    if (!lesson) return;
+    event.preventDefault();
+    event.stopPropagation();
+    window.showAccessPrompt('NO_SUBSCRIPTION');
   }, true);
 
   // ── Hide legacy nav elements ────────────────────────────

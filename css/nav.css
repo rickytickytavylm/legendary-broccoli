@@ -346,17 +346,20 @@
   cursor: pointer;
 }
 
-.lesson-item.locked {
+.lesson-item.locked,
+.lesson-row.locked {
   opacity: .58;
   cursor: pointer;
 }
 
-.lesson-item.locked .lesson-number {
+.lesson-item.locked .lesson-number,
+.lesson-row.locked .l-num {
   color: transparent !important;
   position: relative;
 }
 
-.lesson-item.locked .lesson-number::after {
+.lesson-item.locked .lesson-number::after,
+.lesson-row.locked .l-num::after {
   content: '⌁';
   position: absolute;
   inset: 0;
@@ -370,6 +373,7 @@
 .lesson-lock-note {
   display: inline-flex;
   width: fit-content;
+  margin-left: auto;
   margin-top: 5px;
   padding: 3px 8px;
   border-radius: 999px;

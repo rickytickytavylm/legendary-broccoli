@@ -652,7 +652,7 @@
         }
       })
       .catch(() => {
-        modal.querySelector('#ios-sub-price-val').textContent = '2999 ₽';
+        modal.querySelector('#ios-sub-price-val').textContent = '2990 ₽';
       });
 
     buyBtn.addEventListener('click', async () => {
@@ -698,6 +698,8 @@
       }
     });
   }
+
+  window.openSubscriptionModalForAccess = openSubscriptionModal;
 
   async function boot() {
     try {

@@ -107,8 +107,11 @@ function escapeHtml(value) {
           badgeEl.style.color = '#30d158';
           badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
           if (actionEl) actionEl.style.display = 'none';
-          if (benefitsEl) benefitsEl.style.display = 'none';
-          if (testEl) testEl.style.display = 'block';
+          if (benefitsEl) {
+            benefitsEl.style.display = 'grid';
+            benefitsEl.innerHTML = '<span>Открыты все видео-разделы и уроки</span><span>Доступен Общий чат участников</span><span>Доступна Лиза, AI-помощница системы</span>';
+          }
+          if (testEl) testEl.style.display = 'none';
         } else {
           statusEl.textContent = 'Доступны первые видео. Pro открывает весь каталог, чат и AI.';
           badgeEl.textContent = 'неактивна';
@@ -121,7 +124,10 @@ function escapeHtml(value) {
               window.location.href = '/subscription/';
             };
           }
-          if (benefitsEl) benefitsEl.style.display = 'grid';
+          if (benefitsEl) {
+            benefitsEl.style.display = 'grid';
+            benefitsEl.innerHTML = '<span>Все видео-разделы и уроки без ограничений</span><span>Доступ в Общий чат участников</span><span>Расширенный доступ к Лизе, AI-помощнице системы</span>';
+          }
           if (testEl) testEl.style.display = 'block';
         }
 

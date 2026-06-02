@@ -326,6 +326,13 @@ class ApiClient {
         };
       }
     } catch (err) {
+      if (err && (err.code === 'NO_SUBSCRIPTION' || err.status === 403)) {
+        if (typeof window.openSubscriptionModalForAccess === 'function') {
+          window.openSubscriptionModalForAccess();
+        } else {
+          window.location.href = '/subscription/';
+        }
+      }
       if (err.code !== 'HLS_NOT_READY' && err.status !== 404) throw err;
     }
 
