@@ -91,13 +91,15 @@ function escapeHtml(value) {
       const statusEl = document.getElementById('dash-subscription-status');
       const badgeEl = document.getElementById('dash-subscription-badge');
       const actionEl = document.getElementById('dash-subscription-action');
+      const benefitsEl = document.getElementById('dash-subscription-benefits');
+      const testEl = document.getElementById('dash-subscription-test');
 
       if (statusEl && badgeEl) {
         if (user.subscription_active) {
           let dateStr = '';
           if (user.subscription_expires_at) {
             const date = new Date(user.subscription_expires_at);
-            dateStr = ' до ' + date.toLocaleDateString('ru-RU');
+            dateStr = ' до ' + date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
           }
           statusEl.textContent = 'Активирована подписка Pro' + dateStr;
           badgeEl.textContent = 'активна';
@@ -105,8 +107,10 @@ function escapeHtml(value) {
           badgeEl.style.color = '#30d158';
           badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
           if (actionEl) actionEl.style.display = 'none';
+          if (benefitsEl) benefitsEl.style.display = 'none';
+          if (testEl) testEl.style.display = 'block';
         } else {
-          statusEl.textContent = 'Доступ ограничен. Оформите подписку.';
+          statusEl.textContent = 'Доступны первые видео. Pro открывает весь каталог, чат и AI.';
           badgeEl.textContent = 'неактивна';
           badgeEl.style.background = 'rgba(255, 255, 255, 0.08)';
           badgeEl.style.color = 'rgba(255, 255, 255, 0.4)';
@@ -117,6 +121,25 @@ function escapeHtml(value) {
               window.location.href = '/subscription/';
             };
           }
+          if (benefitsEl) benefitsEl.style.display = 'grid';
+          if (testEl) testEl.style.display = 'block';
+        }
+
+        if (testEl) {
+          testEl.onclick = async () => {
+            const originalText = testEl.textContent;
+            testEl.disabled = true;
+            testEl.textContent = 'Активируем...';
+            try {
+              await window.API.request('POST', '/payment/test-activate');
+              await loadDashboard();
+            } catch (err) {
+              alert(err.error || 'Не удалось активировать тестовую подписку.');
+            } finally {
+              testEl.disabled = false;
+              testEl.textContent = originalText;
+            }
+          };
         }
       }
 
