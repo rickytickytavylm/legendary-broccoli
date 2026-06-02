@@ -596,20 +596,20 @@
         <button class="ios-sub-modal-close" type="button" aria-label="Закрыть">×</button>
         <div class="ios-sub-badge">Подписка Pro</div>
         <h2 class="ios-sub-title">Доступ в общий чат<br>Системы Молодцова</h2>
-        <p class="ios-sub-desc">Общение с экспертами, поддержка сообщества единомышленников и неограниченный доступ к AI-ассистенту.</p>
+        <p class="ios-sub-desc">Подписка открывает Общий чат участников, все видео-разделы и расширенный доступ к Лизе — AI-помощнице системы.</p>
         
         <ul class="ios-sub-features">
           <li class="ios-sub-feature-item">
             <span class="ios-sub-feature-icon">✓</span>
-            <span><strong>Общий чат:</strong> Общение в реальном времени, обмен опытом, видеокружочки и голосовые.</span>
+            <span><strong>Общий чат:</strong> Живое общение, обмен опытом и поддержка участников.</span>
           </li>
           <li class="ios-sub-feature-item">
             <span class="ios-sub-feature-icon">✓</span>
-            <span><strong>Безлимитный AI:</strong> Индивидуальный психолог-ассистент, готовый помочь 24/7.</span>
+            <span><strong>Лиза AI:</strong> Бережная помощь по материалам, курсам и практикам системы.</span>
           </li>
           <li class="ios-sub-feature-item">
             <span class="ios-sub-feature-icon">✓</span>
-            <span><strong>Персональный путь:</strong> Умные рекомендации и подборки практик каждый день.</span>
+            <span><strong>Все материалы:</strong> Полный доступ к видео-разделам, аудио и практикам.</span>
           </li>
         </ul>
 
@@ -618,7 +618,7 @@
           <span style="font-weight: 400; opacity: 0.6;">—</span>
           <span id="ios-sub-price-val">Загрузка...</span>
         </button>
-        <p class="ios-sub-footer">Оплата проходит через защищенный шлюз Робокассы. Отмена подписки в любое время в профиле.</p>
+        <p class="ios-sub-footer">Оплата проходит через защищённый шлюз ЮKassa. Для теста подписка действует 5 минут.</p>
       </div>
     `;
 
@@ -652,7 +652,7 @@
         }
       })
       .catch(() => {
-        modal.querySelector('#ios-sub-price-val').textContent = '990 ₽';
+        modal.querySelector('#ios-sub-price-val').textContent = '2999 ₽';
       });
 
     buyBtn.addEventListener('click', async () => {
@@ -781,7 +781,7 @@
           if (message.audio_key) {
             bodyText = '🎵 Голосовое сообщение';
           } else if (message.video_slug) {
-            bodyText = '🎥 Видеосообщение (кружочек)';
+            bodyText = '🎥 Видеосообщение';
           } else if (message.file_key) {
             bodyText = '📎 Прикрепленный файл';
           }
