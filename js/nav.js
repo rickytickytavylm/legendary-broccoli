@@ -3,7 +3,7 @@
  * Injected into every page. Handles scroll-triggered reveal via GPU transform only.
  */
 (function initNav() {
-  var APP_BUILD_VERSION = '2026-06-03-sub-sync-ios-2';
+  var APP_BUILD_VERSION = '2026-06-03-payment-confirm-locks-1';
   try {
     var storedBuild = localStorage.getItem('sistema:app-build-version');
     if (storedBuild !== APP_BUILD_VERSION) {
@@ -503,7 +503,7 @@
       return;
     }
     window.__sistemaSubscriptionCheckInFlight = true;
-    window.API.getSubscription()
+    window.API.getSubscription({ fresh: !!force })
       .then(function(data) {
         var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
         var isActive = !!(data && data.subscription_active && (!expiresAt || expiresAt > Date.now()));
@@ -514,8 +514,9 @@
           accessState = currentAccessState;
           window.__sistemaSubscriptionActive = isActive;
           window.__sistemaSubscriptionExpiresAt = expiresAt || null;
-          if (changed && window.API && window.API.clearContentCache) {
-            window.API.clearContentCache();
+          if (changed && window.API) {
+            if (window.API.clearSubscriptionCache) window.API.clearSubscriptionCache();
+            else if (window.API.clearContentCache) window.API.clearContentCache();
           }
           updateLessonLocks(document);
           
@@ -548,6 +549,7 @@
     checkSubscriptionSync(true);
   });
   window.checkSubscriptionSync = checkSubscriptionSync;
+  window.updateLessonLocks = updateLessonLocks;
 
   window.showAccessPrompt = function(code) {
     if (code === 'LOGIN_REQUIRED') {

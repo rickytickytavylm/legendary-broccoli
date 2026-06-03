@@ -140,6 +140,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       lessonsList.appendChild(el);
     });
+    if (typeof window.updateLessonLocks === 'function') {
+      window.updateLessonLocks(lessonsList);
+    }
+    if (typeof window.checkSubscriptionSync === 'function') {
+      window.checkSubscriptionSync(true);
+    }
   }
 
   // Load program

@@ -245,6 +245,20 @@ class ApiClient {
     } catch (e) {}
   }
 
+  clearSubscriptionCache() {
+    this.subscriptionPromise = null;
+    this.subscriptionCache = null;
+    this.subscriptionCacheAt = 0;
+    this.mePromise = null;
+    this.meCache = null;
+    this.meCacheAt = 0;
+    try {
+      Object.keys(sessionStorage)
+        .filter((key) => key.startsWith('sistema:me-cache:') || key.startsWith('sistema:content-cache:'))
+        .forEach((key) => sessionStorage.removeItem(key));
+    } catch (e) {}
+  }
+
   async restoreSession() {
     if (!localStorage.getItem('refreshToken')) return null;
     if (!this.accessToken) {
@@ -425,8 +439,7 @@ class ApiClient {
   getPlans()       { return this.request('GET', '/payment/plans'); }
   createPayment(data) { return this.request('POST', '/payment/create', data); }
   confirmPayment() {
-    this.subscriptionCache = null;
-    this.subscriptionCacheAt = 0;
+    this.clearSubscriptionCache();
     return this.request('POST', '/payment/confirm');
   }
   redirectToPayment(payment) {
