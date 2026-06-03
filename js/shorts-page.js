@@ -279,7 +279,7 @@
     } catch (e) {}
   }
 
-  async function playShort(cardBtn, itemIndex, slug, caption, item) {
+  function playShort(cardBtn, itemIndex, slug, caption, item) {
     if (document.documentElement.classList.contains('shorts-input-cooldown')) return;
     if (cardBtn.classList.contains('short-card--busy')) return;
 
@@ -297,33 +297,6 @@
     playingIndex = typeof itemIndex === 'number' && itemIndex >= 0 ? itemIndex : 0;
     var poster = item && item.poster ? String(item.poster) : '';
     cardBtn.classList.add('short-card--busy');
-
-    try {
-      await window.API.restoreSession().catch(() => null);
-      var sub = await window.API.getSubscription().catch(() => null);
-      var isPro = sub && sub.subscription_active && (!sub.expires_at || new Date(sub.expires_at).getTime() > Date.now());
-
-      if (!isPro) {
-        if (typeof window.openSubscriptionModalForAccess === 'function') {
-          window.openSubscriptionModalForAccess();
-        } else if (window.showAccessPrompt) {
-          window.showAccessPrompt('NO_SUBSCRIPTION');
-        } else {
-          window.location.href = '/subscription/';
-        }
-        cardBtn.classList.remove('short-card--busy');
-        return;
-      }
-    } catch (e) {
-      if (typeof window.openSubscriptionModalForAccess === 'function') {
-        window.openSubscriptionModalForAccess();
-      } else {
-        window.location.href = '/subscription/';
-      }
-      cardBtn.classList.remove('short-card--busy');
-      return;
-    }
-
     openPlayerWithUrl(url, caption || '', poster, false);
     cardBtn.classList.remove('short-card--busy');
   }

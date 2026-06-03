@@ -375,12 +375,7 @@
 
     /* ── Post Comments Preview ── */
     .post-comments-preview-section {
-      padding: 0 18px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      border-top: 0;
-      margin-top: 6px;
+      display: none !important;
     }
 
     .post-comment-preview-item {
@@ -610,8 +605,9 @@
       outline: none;
       color: #fff;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 16px;
       padding: 8px 0;
+      touch-action: manipulation;
     }
 
     .comment-sheet-input::placeholder {

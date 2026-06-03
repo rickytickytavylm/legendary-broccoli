@@ -114,38 +114,10 @@
   function renderPostCommentsPreview(postId, comments) {
     const post = document.querySelector(`.post-card[data-post-id="${postId}"]`);
     if (!post) return;
-    const previewContainer = post.querySelector('[data-comments-preview-container]');
-    const previewList = post.querySelector('[data-comments-preview-list]');
-    const viewAllBtn = post.querySelector('[data-view-comments-btn]');
-
-    if (!previewContainer || !previewList) return;
-
     post.dataset.commentCount = String(comments.length);
     seenForPost(postId).clear();
     comments.forEach(markCommentSeen);
     updateCommentCount(postId, 0);
-
-    if (comments.length === 0) {
-      previewContainer.classList.add('hidden');
-      return;
-    }
-
-    previewContainer.classList.remove('hidden');
-    previewList.innerHTML = '';
-
-    // Instagram style: show latest 2 comments
-    const latestComments = comments.slice(-2);
-    latestComments.forEach((c) => {
-      const p = document.createElement('div');
-      p.className = 'post-comment-preview-item';
-      p.dataset.commentId = c.id;
-      p.innerHTML = `<strong>${escapeHtml(c.author_name)}</strong><span>${escapeHtml(c.content)}</span>`;
-      previewList.appendChild(p);
-    });
-
-    if (viewAllBtn) {
-      viewAllBtn.classList.toggle('hidden', comments.length <= 2);
-    }
   }
 
   function appendCommentToUI(comment, isRealtime = false) {
@@ -166,32 +138,9 @@
       }
     }
 
-    // Update previews and counts
+    // Update count badge only. Comments themselves live in the modal.
     if (!isNewComment) return;
-    const post = document.querySelector(`.post-card[data-post-id="${comment.post_id}"]`);
-    if (post) {
-      const previewContainer = post.querySelector('[data-comments-preview-container]');
-      const previewList = post.querySelector('[data-comments-preview-list]');
-      if (previewContainer && previewList) {
-        // Check if duplicate in preview
-        const existingPreview = previewList.querySelector(`[data-comment-id="${comment.id}"]`);
-        if (!existingPreview) {
-          previewContainer.classList.remove('hidden');
-          const p = document.createElement('div');
-          p.className = 'post-comment-preview-item';
-          p.dataset.commentId = comment.id;
-          p.innerHTML = `<strong>${escapeHtml(comment.author_name)}</strong><span>${escapeHtml(comment.content)}</span>`;
-          previewList.appendChild(p);
-
-          // Maintain maximum of 2 comments in preview
-          const items = previewList.querySelectorAll('.post-comment-preview-item');
-          if (items.length > 2) {
-            items[0].remove();
-          }
-        }
-      }
-      updateCommentCount(comment.post_id, 1);
-    }
+    updateCommentCount(comment.post_id, 1);
   }
 
   function openCommentSheet(postId) {
@@ -237,8 +186,6 @@
           console.error('[feed] Error loading comments:', err);
         });
     }
-
-    if (input) setTimeout(() => input.focus(), 100);
   }
 
   function closeCommentSheet() {
@@ -353,8 +300,13 @@
         post_id: activePostId,
         content: content,
       });
+      const submittedPostId = activePostId;
       input.value = '';
-      appendCommentToUI(comment);
+      if (comment && comment.post_id) {
+        appendCommentToUI(comment);
+      } else {
+        updateCommentCount(submittedPostId, 1);
+      }
     } catch (err) {
       console.error('[feed] Error submitting comment:', err);
     } finally {
