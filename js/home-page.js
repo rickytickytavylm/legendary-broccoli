@@ -130,12 +130,12 @@ const routes = {
   },
   selfstudy: {
     title: 'Понять себя глубже',
-    desc: 'Два входа: базовая программа для самопонимания и библиотека материалов.',
+    desc: 'Два входа: базовая программа для самопонимания и работа с состояниями внимания.',
     short: 'самопонимание',
     heroImage: '/assets/webp/find_myself.webp',
     programs: [
       { title: 'Гештальт-подход', desc: 'Эмоции, потребности, контакт и границы.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
-      { title: 'Антология', desc: 'Сборник материалов и практик для более широкого входа.', href: '/antologiya/', image: '/assets/webp/antology.webp' },
+      { title: 'Гипноз', desc: 'Внимание, трансовые состояния и безопасная работа с внушением.', href: '/gipnoz/', image: '/assets/webp/hipno.webp' },
     ],
   },
   communication: {

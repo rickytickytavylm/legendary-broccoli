@@ -94,35 +94,32 @@
   }
 
   let activePostId = null;
-  let sheetScrollY = 0;
   let savedBodyStyles = null;
 
   function lockFeedScroll() {
-    sheetScrollY = window.scrollY || document.documentElement.scrollTop || 0;
     savedBodyStyles = {
-      position: document.body.style.position,
-      top: document.body.style.top,
-      left: document.body.style.left,
-      right: document.body.style.right,
-      width: document.body.style.width,
+      htmlOverflow: document.documentElement.style.overflow,
+      htmlOverscrollBehavior: document.documentElement.style.overscrollBehavior,
+      bodyOverflow: document.body.style.overflow,
+      bodyOverscrollBehavior: document.body.style.overscrollBehavior,
+      bodyTouchAction: document.body.style.touchAction,
     };
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${sheetScrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
+    document.documentElement.style.overflow = 'hidden';
+    document.documentElement.style.overscrollBehavior = 'none';
+    document.body.style.overflow = 'hidden';
+    document.body.style.overscrollBehavior = 'none';
+    document.body.style.touchAction = 'none';
   }
 
   function unlockFeedScroll() {
     if (savedBodyStyles) {
-      document.body.style.position = savedBodyStyles.position;
-      document.body.style.top = savedBodyStyles.top;
-      document.body.style.left = savedBodyStyles.left;
-      document.body.style.right = savedBodyStyles.right;
-      document.body.style.width = savedBodyStyles.width;
+      document.documentElement.style.overflow = savedBodyStyles.htmlOverflow;
+      document.documentElement.style.overscrollBehavior = savedBodyStyles.htmlOverscrollBehavior;
+      document.body.style.overflow = savedBodyStyles.bodyOverflow;
+      document.body.style.overscrollBehavior = savedBodyStyles.bodyOverscrollBehavior;
+      document.body.style.touchAction = savedBodyStyles.bodyTouchAction;
       savedBodyStyles = null;
     }
-    window.scrollTo(0, sheetScrollY);
   }
 
   function updateCommentCount(postId, delta) {

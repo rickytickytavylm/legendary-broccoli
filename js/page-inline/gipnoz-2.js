@@ -7,6 +7,7 @@
       const COURSE_OVERVIEW = 'Курс раскрывает гипноз как точную работу с вниманием, внушением и состояниями сознания, а не как сценический эффект. В материалах — принципы транса, терапевтическое применение техник и границы безопасной практики, чтобы инструмент оставался профессиональным и управляемым.';
       const countEl        = document.getElementById('course-lessons-count');
       const totalCountEl   = document.getElementById('total-count');
+      let flatLessons = [];
 
       // ── Loader helpers ──
       function showVideoLoader() {
@@ -46,7 +47,11 @@
       }
 
       // ── Load lesson ──
-      async function loadLesson(lesson) {
+      async function loadLesson(lesson, isFirst) {
+        if (!isFirst && window.__sistemaSubscriptionActive === false) {
+          if (window.showAccessPrompt) window.showAccessPrompt('NO_SUBSCRIPTION');
+          return;
+        }
         showVideoLoader();
         try {
           const video = document.getElementById('course-video');
@@ -60,6 +65,15 @@
           if (window.CourseAI) window.CourseAI.load(lesson);
         } catch(e) {
           hideVideoLoader();
+          if (e && (e.status === 403 || e.code === 'NO_SUBSCRIPTION')) {
+            if (window.showAccessPrompt) window.showAccessPrompt('NO_SUBSCRIPTION');
+          }
+        }
+      }
+
+      function applyGipnozLocks() {
+        if (typeof window.updateLessonLocks === 'function') {
+          window.updateLessonLocks(lessonsList);
         }
       }
 
@@ -75,6 +89,7 @@
         }
 
         lessonsList.innerHTML = '';
+        flatLessons = [];
         weeks.forEach((week, wi) => {
           const group = document.createElement('div');
           group.className = 'week-group' + (wi === 0 ? ' open' : '');
@@ -95,10 +110,13 @@
 
           const weekLessonsEl = group.querySelector('.week-lessons');
           week.lessons.forEach((lesson, li) => {
-            const isFirst = wi === 0 && li === 0;
+            const globalIndex = flatLessons.length;
+            flatLessons.push(lesson);
+            const isFirst = globalIndex === 0;
             const item = document.createElement('div');
             item.className = 'lesson-item' + (isFirst ? ' active' : '');
             item.dataset.id = lesson.id;
+            item.dataset.idx = String(globalIndex);
             item.innerHTML = `
               <div class="lesson-number">${li + 1}</div>
               <div class="lesson-info">
@@ -107,9 +125,13 @@
               </div>
             `;
             item.addEventListener('click', () => {
+              if (!isFirst && item.classList.contains('locked')) {
+                if (window.showAccessPrompt) window.showAccessPrompt('NO_SUBSCRIPTION');
+                return;
+              }
               document.querySelectorAll('.lesson-item').forEach(x => x.classList.remove('active'));
               item.classList.add('active');
-              loadLesson(lesson);
+              loadLesson(lesson, isFirst);
             });
             weekLessonsEl.appendChild(item);
           });
@@ -120,6 +142,10 @@
 
           lessonsList.appendChild(group);
         });
+        applyGipnozLocks();
+        if (typeof window.checkSubscriptionSync === 'function') {
+          window.checkSubscriptionSync(true);
+        }
       }
 
       // ── Boot ──
@@ -147,13 +173,15 @@
           if (window.setupVideoPreview) {
             window.setupVideoPreview(videoContainer, {
               poster: '/assets/webp/hipno.webp',
-              onStart: () => loadLesson(weeks[0].lessons[0]),
+              onStart: () => loadLesson(weeks[0].lessons[0], true),
             });
           } else {
-            loadLesson(weeks[0].lessons[0]);
+            loadLesson(weeks[0].lessons[0], true);
           }
         }
       } catch(e) {
         lessonsList.innerHTML = '<p class="u-error-list">Не удалось загрузить уроки</p>';
       }
+
+      window.addEventListener('sistema:subscription-changed', applyGipnozLocks);
     })();
