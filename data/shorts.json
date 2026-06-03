@@ -22,5 +22,213 @@
     "durationLabel": "0:39",
     "aspectClass": "short-card--9x16",
     "caption": "— А если я новичок?.. Еще одна важная мысль, которую мы вчера затронули на конференции. Запомни: нет ничего плохого в том, что ты учишься чему-то новому. Иди по жизни с установкой «Нет предела совершенству»."
+  },
+  {
+    "id": "reel-001",
+    "slug": "shorts/reel-001.mp4",
+    "poster": "/assets/webp/shorts/reel-001.webp",
+    "durationLabel": "0:05",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 1"
+  },
+  {
+    "id": "reel-002",
+    "slug": "shorts/reel-002.mp4",
+    "poster": "/assets/webp/shorts/reel-002.webp",
+    "durationLabel": "1:15",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 2"
+  },
+  {
+    "id": "reel-003",
+    "slug": "shorts/reel-003.mp4",
+    "poster": "/assets/webp/shorts/reel-003.webp",
+    "durationLabel": "0:35",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 3"
+  },
+  {
+    "id": "reel-004",
+    "slug": "shorts/reel-004.mp4",
+    "poster": "/assets/webp/shorts/reel-004.webp",
+    "durationLabel": "0:08",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 4"
+  },
+  {
+    "id": "reel-005",
+    "slug": "shorts/reel-005.mp4",
+    "poster": "/assets/webp/shorts/reel-005.webp",
+    "durationLabel": "0:33",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 5"
+  },
+  {
+    "id": "reel-006",
+    "slug": "shorts/reel-006.mp4",
+    "poster": "/assets/webp/shorts/reel-006.webp",
+    "durationLabel": "1:36",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 6"
+  },
+  {
+    "id": "reel-007",
+    "slug": "shorts/reel-007.mp4",
+    "poster": "/assets/webp/shorts/reel-007.webp",
+    "durationLabel": "0:23",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 7"
+  },
+  {
+    "id": "reel-008",
+    "slug": "shorts/reel-008.mp4",
+    "poster": "/assets/webp/shorts/reel-008.webp",
+    "durationLabel": "0:11",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 8"
+  },
+  {
+    "id": "reel-009",
+    "slug": "shorts/reel-009.mp4",
+    "poster": "/assets/webp/shorts/reel-009.webp",
+    "durationLabel": "0:13",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 9"
+  },
+  {
+    "id": "reel-010",
+    "slug": "shorts/reel-010.mp4",
+    "poster": "/assets/webp/shorts/reel-010.webp",
+    "durationLabel": "0:27",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 10"
+  },
+  {
+    "id": "reel-011",
+    "slug": "shorts/reel-011.mp4",
+    "poster": "/assets/webp/shorts/reel-011.webp",
+    "durationLabel": "0:29",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 11"
+  },
+  {
+    "id": "reel-012",
+    "slug": "shorts/reel-012.mp4",
+    "poster": "/assets/webp/shorts/reel-012.webp",
+    "durationLabel": "0:13",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 12"
+  },
+  {
+    "id": "reel-013",
+    "slug": "shorts/reel-013.mp4",
+    "poster": "/assets/webp/shorts/reel-013.webp",
+    "durationLabel": "0:28",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 13"
+  },
+  {
+    "id": "reel-014",
+    "slug": "shorts/reel-014.mp4",
+    "poster": "/assets/webp/shorts/reel-014.webp",
+    "durationLabel": "0:09",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 14"
+  },
+  {
+    "id": "reel-015",
+    "slug": "shorts/reel-015.mp4",
+    "poster": "/assets/webp/shorts/reel-015.webp",
+    "durationLabel": "0:44",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 15"
+  },
+  {
+    "id": "reel-016",
+    "slug": "shorts/reel-016.mp4",
+    "poster": "/assets/webp/shorts/reel-016.webp",
+    "durationLabel": "0:38",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 16"
+  },
+  {
+    "id": "reel-017",
+    "slug": "shorts/reel-017.mp4",
+    "poster": "/assets/webp/shorts/reel-017.webp",
+    "durationLabel": "0:20",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 17"
+  },
+  {
+    "id": "reel-018",
+    "slug": "shorts/reel-018.mp4",
+    "poster": "/assets/webp/shorts/reel-018.webp",
+    "durationLabel": "0:42",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 18"
+  },
+  {
+    "id": "reel-019",
+    "slug": "shorts/reel-019.mp4",
+    "poster": "/assets/webp/shorts/reel-019.webp",
+    "durationLabel": "0:26",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 19"
+  },
+  {
+    "id": "reel-020",
+    "slug": "shorts/reel-020.mp4",
+    "poster": "/assets/webp/shorts/reel-020.webp",
+    "durationLabel": "4:15",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 20"
+  },
+  {
+    "id": "reel-021",
+    "slug": "shorts/reel-021.mp4",
+    "poster": "/assets/webp/shorts/reel-021.webp",
+    "durationLabel": "0:10",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 21"
+  },
+  {
+    "id": "reel-022",
+    "slug": "shorts/reel-022.mp4",
+    "poster": "/assets/webp/shorts/reel-022.webp",
+    "durationLabel": "0:48",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 22"
+  },
+  {
+    "id": "reel-023",
+    "slug": "shorts/reel-023.mp4",
+    "poster": "/assets/webp/shorts/reel-023.webp",
+    "durationLabel": "0:21",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 23"
+  },
+  {
+    "id": "reel-024",
+    "slug": "shorts/reel-024.mp4",
+    "poster": "/assets/webp/shorts/reel-024.webp",
+    "durationLabel": "0:09",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 24"
+  },
+  {
+    "id": "reel-025",
+    "slug": "shorts/reel-025.mp4",
+    "poster": "/assets/webp/shorts/reel-025.webp",
+    "durationLabel": "0:32",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 25"
+  },
+  {
+    "id": "reel-026",
+    "slug": "shorts/reel-026.mp4",
+    "poster": "/assets/webp/shorts/reel-026.webp",
+    "durationLabel": "0:37",
+    "aspectClass": "short-card--9x16",
+    "caption": "Рилс 26"
   }
 ]

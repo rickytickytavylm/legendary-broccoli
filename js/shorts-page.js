@@ -354,7 +354,7 @@
     });
   }
 
-  fetch('/data/shorts.json', { credentials: 'same-origin' })
+  fetch('/data/shorts.json?v=2026-06-03-reels-1', { credentials: 'same-origin' })
     .then(function (r) {
       if (!r.ok) throw new Error('shorts json');
       return r.json();
