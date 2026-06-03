@@ -17,9 +17,12 @@
   var posterEl = document.getElementById('shorts-player-poster');
   var toastEl = document.getElementById('shorts-toast');
   var stageEl = document.getElementById('shorts-player-stage');
+  var centerControlEl = document.getElementById('shorts-player-center-control');
+  var progressBarEl = document.getElementById('shorts-player-progress-bar');
   var toastTimer;
-  /** @type {{ settle: Function | null, onErr: Function | null, onEnded: Function | null }} */
-  var vidListeners = { settle: null, onErr: null, onEnded: null };
+  var controlHideTimer = null;
+  /** @type {{ settle: Function | null, onErr: Function | null, onEnded: Function | null, onTime: Function | null, onPlayState: Function | null }} */
+  var vidListeners = { settle: null, onErr: null, onEnded: null, onTime: null, onPlayState: null };
   /** @type {ReturnType<typeof setTimeout> | null} */
   var loadKickTimer = null;
   /** Свайпы: верх конца относительно начала точки (~ «ввод снизу») → следующий */
@@ -27,6 +30,7 @@
   var swipeY0 = 0;
   var swipeT0 = 0;
   var swipeTracked = false;
+  var lastSwipeAt = 0;
   /** Колёсо трекпада: не триггерить пачкой кадров */
   var wheelStepLockUntil = 0;
 
@@ -76,6 +80,16 @@
       videoEl.removeEventListener('ended', vidListeners.onEnded);
       vidListeners.onEnded = null;
     }
+    if (videoEl && vidListeners.onTime) {
+      videoEl.removeEventListener('timeupdate', vidListeners.onTime);
+      videoEl.removeEventListener('durationchange', vidListeners.onTime);
+      vidListeners.onTime = null;
+    }
+    if (videoEl && vidListeners.onPlayState) {
+      videoEl.removeEventListener('play', vidListeners.onPlayState);
+      videoEl.removeEventListener('pause', vidListeners.onPlayState);
+      vidListeners.onPlayState = null;
+    }
   }
 
   function setStageBusy(isBusy, posterHref) {
@@ -83,6 +97,66 @@
     if (posterEl) {
       posterEl.classList.toggle('is-visible', !!(isBusy && posterHref));
       if (posterHref) posterEl.src = posterHref;
+    }
+  }
+
+  function clearControlHideTimer() {
+    if (controlHideTimer) {
+      window.clearTimeout(controlHideTimer);
+      controlHideTimer = null;
+    }
+  }
+
+  function updateCenterControl() {
+    if (!centerControlEl || !videoEl) return;
+    var playing = !videoEl.paused && !videoEl.ended;
+    centerControlEl.classList.toggle('is-playing', playing);
+    centerControlEl.setAttribute('aria-label', playing ? 'Пауза' : 'Воспроизвести');
+  }
+
+  function showCenterControl(sticky) {
+    if (!centerControlEl) return;
+    clearControlHideTimer();
+    updateCenterControl();
+    centerControlEl.classList.add('is-visible');
+    if (!sticky && videoEl && !videoEl.paused) {
+      controlHideTimer = window.setTimeout(function () {
+        centerControlEl.classList.remove('is-visible');
+      }, 760);
+    }
+  }
+
+  function hideCenterControl() {
+    clearControlHideTimer();
+    if (centerControlEl) centerControlEl.classList.remove('is-visible');
+  }
+
+  function updateProgress() {
+    if (!progressBarEl || !videoEl || !Number.isFinite(videoEl.duration) || videoEl.duration <= 0) {
+      if (progressBarEl) progressBarEl.style.width = '0%';
+      return;
+    }
+    progressBarEl.style.width = Math.max(0, Math.min(100, (videoEl.currentTime / videoEl.duration) * 100)) + '%';
+  }
+
+  function playCurrentVideo() {
+    if (!videoEl || !videoEl.play) return;
+    var p = videoEl.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(function () {
+        showCenterControl(true);
+      });
+    }
+  }
+
+  function togglePlayback() {
+    if (!videoEl) return;
+    if (videoEl.paused || videoEl.ended) {
+      playCurrentVideo();
+      showCenterControl(false);
+    } else {
+      videoEl.pause();
+      showCenterControl(true);
     }
   }
 
@@ -144,21 +218,14 @@
     } catch (ignore) {}
     var neu = document.createElement('video');
     neu.id = 'shorts-player-video';
-    neu.controls = true;
+    neu.controls = false;
     neu.setAttribute('playsinline', '');
     neu.setAttribute('webkit-playsinline', '');
+    neu.setAttribute('disablepictureinpicture', '');
+    neu.setAttribute('controlslist', 'nodownload noplaybackrate noremoteplayback');
     neu.preload = 'auto';
     neu.setAttribute('crossorigin', 'anonymous');
-    neu.muted = false; // Start unmuted for premium user-initiated sound experience!
-
-    // Toggle play/pause on direct video click/tap (classic TikTok / Shorts behavior)
-    neu.addEventListener('click', function(ev) {
-      if (neu.paused) {
-        neu.play().catch(function() {});
-      } else {
-        neu.pause();
-      }
-    });
+    neu.muted = false;
 
     var oldEl = stageEl.querySelector('#shorts-player-video');
     if (oldEl && oldEl.parentNode === stageEl) {
@@ -183,6 +250,8 @@
     if (titleEl) titleEl.textContent = '';
     document.body.classList.remove('shorts-player-open');
     setStageBusy(false, '');
+    hideCenterControl();
+    if (progressBarEl) progressBarEl.style.width = '0%';
     if (posterEl) {
       posterEl.removeAttribute('src');
       posterEl.classList.remove('is-visible');
@@ -215,18 +284,6 @@
     /** @type {boolean} */
     var settled = false;
 
-    function tryPlay() {
-      var p = videoEl.play ? videoEl.play() : null;
-      if (p && typeof p.then === 'function') {
-        p.catch(function () {
-          // If unmuted playback is blocked, fallback to muted play and prompt user to unmute!
-          videoEl.muted = true;
-          videoEl.play().catch(function() {});
-          showToast('Нажмите на экран, чтобы включить звук', 2800);
-        });
-      }
-    }
-
     function settle() {
       if (settled) return;
       settled = true;
@@ -234,7 +291,7 @@
       detachLoadListenersOnly();
       setStageBusy(false, '');
       if (posterEl) posterEl.classList.remove('is-visible');
-      tryPlay();
+      playCurrentVideo();
     }
 
     vidListeners.settle = function () {
@@ -257,15 +314,31 @@
       videoEl.addEventListener('ended', vidListeners.onEnded);
     }
 
+    vidListeners.onTime = function () {
+      updateProgress();
+    };
+    vidListeners.onPlayState = function () {
+      updateCenterControl();
+      if (videoEl && videoEl.paused) showCenterControl(true);
+      else showCenterControl(false);
+    };
+
     videoEl.setAttribute('playsinline', '');
     videoEl.setAttribute('webkit-playsinline', '');
     videoEl.preload = 'auto';
     videoEl.setAttribute('crossorigin', 'anonymous');
-    videoEl.muted = false; // Start unmuted!
+    videoEl.controls = false;
+    videoEl.muted = false;
+    videoEl.setAttribute('disablepictureinpicture', '');
+    videoEl.setAttribute('controlslist', 'nodownload noplaybackrate noremoteplayback');
 
     videoEl.addEventListener('loadeddata', vidListeners.settle);
     videoEl.addEventListener('canplay', vidListeners.settle);
     videoEl.addEventListener('error', vidListeners.onErr);
+    videoEl.addEventListener('timeupdate', vidListeners.onTime);
+    videoEl.addEventListener('durationchange', vidListeners.onTime);
+    videoEl.addEventListener('play', vidListeners.onPlayState);
+    videoEl.addEventListener('pause', vidListeners.onPlayState);
 
     loadKickTimer = window.setTimeout(function () {
       if (settled) return;
@@ -275,7 +348,7 @@
     videoEl.src = playUrl;
     try {
       videoEl.load();
-      tryPlay();
+      playCurrentVideo();
     } catch (e) {}
   }
 
@@ -411,6 +484,7 @@
         if (Math.abs(dy) < minPx) return;
         if (Math.abs(dy) < Math.abs(dx) * vertRatio) return;
 
+        lastSwipeAt = Date.now();
         if (dy < 0) jumpShortBy(1);
         else jumpShortBy(-1);
       },
@@ -455,6 +529,21 @@
   if (overlay) {
     overlay.addEventListener('click', function (ev) {
       if (ev.target === overlay) hidePlayer();
+    });
+  }
+  if (stageEl) {
+    stageEl.addEventListener('click', function (ev) {
+      if (!overlay || overlay.classList.contains('u-hidden')) return;
+      if (Date.now() - lastSwipeAt < 360) return;
+      if (ev.target.closest && ev.target.closest('.shorts-player-spinner')) return;
+      togglePlayback();
+    });
+  }
+  if (centerControlEl) {
+    centerControlEl.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      togglePlayback();
     });
   }
 

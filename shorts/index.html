@@ -266,9 +266,7 @@
       position: fixed;
       inset: 0;
       z-index: 2500;
-      background:
-        radial-gradient(ellipse 115% 90% at 50% 40%, rgba(24, 28, 40, 0.35) 0%, transparent 55%),
-        #020203;
+      background: #000;
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -334,6 +332,7 @@
       position: relative;
       width: 100%;
       background: #000;
+      cursor: pointer;
     }
 
     .shorts-player-poster {
@@ -395,6 +394,66 @@
       border-radius: 2px;
     }
 
+    .shorts-player-center-control {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 9;
+      width: 82px;
+      height: 82px;
+      transform: translate(-50%, -50%) scale(.92);
+      border: 0;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: rgba(0, 0, 0, .34);
+      box-shadow: 0 14px 44px rgba(0,0,0,.38);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease, background .18s ease;
+    }
+
+    .shorts-player-center-control.is-visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
+    }
+
+    .shorts-player-center-control svg {
+      width: 38px;
+      height: 38px;
+      display: block;
+    }
+
+    .shorts-player-center-control .icon-play {
+      transform: translateX(2px);
+    }
+
+    .shorts-player-center-control.is-playing .icon-play,
+    .shorts-player-center-control:not(.is-playing) .icon-pause {
+      display: none;
+    }
+
+    .shorts-player-progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 11;
+      height: 3px;
+      background: rgba(255,255,255,.16);
+      pointer-events: none;
+    }
+
+    .shorts-player-progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: rgba(255,255,255,.82);
+      transition: width .08s linear;
+    }
+
     @media (max-width: 768px) {
       .shorts-player-stage video {
         object-fit: cover !important;
@@ -408,15 +467,15 @@
       z-index: 5;
       pointer-events: none;
       background:
-        linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, transparent 22%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, transparent 18%),
         linear-gradient(
           90deg,
-          rgba(0, 0, 0, 0.55) 0%,
-          transparent 14%,
-          transparent 86%,
-          rgba(0, 0, 0, 0.55) 100%
+          rgba(0, 0, 0, 0.20) 0%,
+          transparent 10%,
+          transparent 90%,
+          rgba(0, 0, 0, 0.20) 100%
         ),
-        linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0%, transparent min(120px, 22%));
+        linear-gradient(0deg, rgba(0, 0, 0, 0.12) 0%, transparent min(96px, 18%));
     }
 
     .shorts-player-foot {
@@ -426,7 +485,7 @@
       right: 0;
       z-index: 6;
       padding: 32px 18px max(24px, calc(16px + env(safe-area-inset-bottom)));
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 65%, transparent 100%);
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.16) 64%, transparent 100%);
       pointer-events: none;
     }
 
@@ -599,8 +658,13 @@
         <div id="shorts-player-spinner" class="shorts-player-spinner" aria-hidden="true">
           <span></span>
         </div>
-        <video id="shorts-player-video" controls playsinline webkit-playsinline></video>
+        <video id="shorts-player-video" playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback"></video>
         <div class="shorts-player-vignette" aria-hidden="true"></div>
+        <button type="button" id="shorts-player-center-control" class="shorts-player-center-control" aria-label="Пауза">
+          <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.7-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M7 5h3.4v14H7V5zm6.6 0H17v14h-3.4V5z"/></svg>
+        </button>
+        <div class="shorts-player-progress" aria-hidden="true"><span id="shorts-player-progress-bar"></span></div>
       </div>
       <footer class="shorts-player-foot">
         <p id="shorts-player-title" class="shorts-player-title" title="Нажмите, чтобы раскрыть описание"></p>
@@ -627,6 +691,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/shorts-page.js?v=13"></script>
+  <script src="/js/shorts-page.js?v=14"></script>
 </body>
 </html>
