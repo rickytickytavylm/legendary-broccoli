@@ -424,6 +424,11 @@ class ApiClient {
   // --- Payment ---
   getPlans()       { return this.request('GET', '/payment/plans'); }
   createPayment(data) { return this.request('POST', '/payment/create', data); }
+  confirmPayment() {
+    this.subscriptionCache = null;
+    this.subscriptionCacheAt = 0;
+    return this.request('POST', '/payment/confirm');
+  }
   redirectToPayment(payment) {
     if (!payment || !payment.payment_url) return false;
     if (payment.payment_method === 'post' && payment.payment_fields) {

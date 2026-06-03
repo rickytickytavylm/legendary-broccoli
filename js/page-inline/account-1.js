@@ -88,11 +88,49 @@ function escapeHtml(value) {
     } catch (e) {}
   }
 
+  async function confirmPaymentAndSync() {
+    if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) return;
+    let activated = false;
+    try {
+      const res = await window.API.confirmPayment();
+      const expiresAt = res && res.expires_at ? new Date(res.expires_at).getTime() : null;
+      activated = !!(res && res.subscription_active && (!expiresAt || expiresAt > Date.now()));
+    } catch (e) { /* ignore, fall back to polling */ }
+
+    renderSubscriptionCard(activated ? { subscription_active: true } : null);
+    if (activated) {
+      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: true } }));
+      if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
+      refreshSubscriptionCard();
+      return;
+    }
+
+    // Short post-payment burst: poll a few times so activation appears fast without flooding.
+    let attempts = 0;
+    const burst = setInterval(async () => {
+      attempts += 1;
+      try {
+        const sub = await window.API.getSubscription({ fresh: true });
+        const expiresAt = sub && sub.expires_at ? new Date(sub.expires_at).getTime() : null;
+        const isActive = !!(sub && sub.subscription_active && (!expiresAt || expiresAt > Date.now()));
+        if (isActive) {
+          clearInterval(burst);
+          renderSubscriptionCard(sub);
+          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: true } }));
+          if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
+          return;
+        }
+      } catch (e) { /* ignore transient errors */ }
+      if (attempts >= 6) clearInterval(burst);
+    }, 4000);
+  }
+
   async function initProfile() {
     showDashboardShell();
     refreshProfileHeader();
     refreshSubscriptionCard();
     loadDashboard();
+    confirmPaymentAndSync();
   }
 
   function renderSubscriptionCard(source) {
