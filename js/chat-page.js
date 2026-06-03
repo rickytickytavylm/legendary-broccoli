@@ -704,6 +704,15 @@
   async function boot() {
     try {
       setStatus('Подключаемся…');
+      if (window.API.restoreSession) await window.API.restoreSession();
+      if (window.API.getSubscription) {
+        const sub = await window.API.getSubscription();
+        const expiresAt = sub && sub.expires_at ? new Date(sub.expires_at).getTime() : null;
+        const isActive = !!(sub && sub.subscription_active && (!expiresAt || expiresAt > Date.now()));
+        if (!isActive) {
+          throw { status: 403, code: 'NO_SUBSCRIPTION', error: 'Subscription required' };
+        }
+      }
       const chatData = await window.API.getGeneralChat();
       state.userId = chatData?.user?.id || null;
       await loadMessages(true);

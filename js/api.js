@@ -104,6 +104,18 @@ class ApiClient {
       .catch(() => {});
   }
 
+  needsRestoredAuth(path, opts = {}) {
+    if (opts.requireAuth === true) return true;
+    if (opts.requireAuth === false) return false;
+    return path.startsWith('/chat/')
+      || path === '/payment/subscription'
+      || path.startsWith('/payment/create')
+      || path.startsWith('/profile/')
+      || path.startsWith('/video/hls-token')
+      || path.startsWith('/video/audio-token')
+      || path.startsWith('/video/presign');
+  }
+
   async fetchWithTimeout(url, init = {}, opts = {}) {
     const timeoutMs = opts.timeoutMs ?? REQUEST_TIMEOUT_MS;
     if (!timeoutMs || typeof AbortController === 'undefined') return fetch(url, init);
@@ -136,6 +148,20 @@ class ApiClient {
     const url = trimBase + rel;
     const canUseContentCache = method === 'GET' && path.startsWith('/content/') && opts.cacheContent === true;
     const cachedContent = canUseContentCache ? this.readContentCache(path) : null;
+
+    // On iOS Safari pages can boot before accessToken is restored from refreshToken.
+    // Without this, protected endpoints may treat the request as a device guest.
+    const shouldRestoreAuth = this.needsRestoredAuth(path, opts);
+    if (!this.accessToken && localStorage.getItem('refreshToken') && !opts.skipAuthRefresh) {
+      const refreshed = await this._doRefresh();
+      if (!refreshed && shouldRestoreAuth) {
+        const err = new Error('Login required');
+        err.code = 'LOGIN_REQUIRED';
+        err.status = 401;
+        throw err;
+      }
+    }
+
     const init = {
       method,
       headers: { ...this.getAuthHeaders(), ...opts.headers },

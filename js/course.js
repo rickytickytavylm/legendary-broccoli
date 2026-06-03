@@ -69,40 +69,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (hls) { hls.destroy(); hls = null; }
   }
 
-  function setupHls(video, src) {
-    destroyHls();
-    if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-      hls = new Hls({ xhrSetup: (xhr) => { xhr.withCredentials = false; } });
-      hls.loadSource(src);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, hideVideoLoader);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = src;
-      video.addEventListener('canplay', hideVideoLoader, { once: true });
-    } else {
-      showError('Ваш браузер не поддерживает HLS. Используйте Safari или Chrome.');
-    }
-  }
-
   function showLockedOverlay(lesson, isFirst) {
     destroyHls();
     videoContainer.innerHTML = `
       <div class="video-locked" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;min-height:240px;background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border-radius:16px;padding:32px;text-align:center;border:1px solid rgba(255,255,255,.06)">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <h3 style="margin:0;font-size:18px;color:#fff;font-weight:600">${isFirst ? 'Авторизуйтесь' : 'Материал временно недоступен'}</h3>
+        <h3 style="margin:0;font-size:18px;color:#fff;font-weight:600">${isFirst ? 'Авторизуйтесь' : 'Материал доступен по подписке'}</h3>
         <p style="margin:0;font-size:14px;color:rgba(255,255,255,.5);max-width:280px">
           ${isFirst
             ? 'Первый урок бесплатный. Войдите, чтобы продолжить.'
-            : 'Не удалось открыть видео. Попробуйте обновить страницу или выбрать другой материал.'}
+            : 'Pro открывает все видео-разделы, аудио, практики, Общий чат и доступ к Лизе.'}
         </p>
         <button class="btn btn-primary" id="btn-auth-or-sub" style="padding:12px 24px;border-radius:12px;font-size:14px">
-          ${isFirst ? 'Войти' : 'Обновить'}
+          ${isFirst ? 'Войти' : 'Оформить подписку'}
         </button>
       </div>
     `;
     document.getElementById('btn-auth-or-sub').addEventListener('click', () => {
       if (isFirst) window.openAuthModal('login');
-      else window.location.reload();
+      else if (window.showAccessPrompt) window.showAccessPrompt('NO_SUBSCRIPTION');
+      else window.location.href = '/subscription/';
     });
   }
 
@@ -117,26 +103,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       const video = document.getElementById('course-video');
 
-      const tokenRes = await window.API.getVideoToken(lesson.id);
-      const streamUrl = tokenRes.stream_url || tokenRes.mp4_url;
-      if (!streamUrl) throw new Error('No stream');
-
-      const videoUrl = streamUrl.startsWith('http')
-        ? streamUrl
-        : (window.API_BASE || '').replace('/api', '') + streamUrl;
-
-      if (tokenRes.stream_url) {
-        setupHls(video, videoUrl);
-      } else {
-        destroyHls();
-        video.src = videoUrl;
-        video.addEventListener('canplay', hideVideoLoader, { once: true });
-      }
+      await window.attachVideoSource(video, lesson.video_slug, hls, (next) => { hls = next; });
+      video.addEventListener('loadedmetadata', hideVideoLoader, { once: true });
+      video.addEventListener('canplay', hideVideoLoader, { once: true });
       if (infoBlock) infoBlock.style.display = 'flex';
       if (lessonTitleMain) lessonTitleMain.textContent = lesson.title || '';
       if (lessonDescMain) lessonDescMain.textContent = lesson.description || '';
     } catch (err) {
       hideVideoLoader();
+      if (err && (err.status === 403 || err.code === 'NO_SUBSCRIPTION')) {
+        showLockedOverlay(lesson, false);
+        return;
+      }
       showError('Не удалось загрузить видео');
     }
   }
