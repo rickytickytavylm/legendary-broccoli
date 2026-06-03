@@ -393,3 +393,7 @@ function escapeHtml(value) {
     if ([2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100)) return 'дня';
     return 'дней';
   }
+
+  window.addEventListener('sistema:subscription-changed', function() {
+    loadDashboard().catch(function() {});
+  });

@@ -645,11 +645,11 @@
     let targetPlanSlug = 'monthly';
     window.API.getPlans()
       .then(data => {
-        var p = data && data.plans && data.plans[0];
+        var p = data && data.plans && data.plans.find(x => x.slug === 'monthly');
         if (p) {
           targetPlanSlug = p.slug;
-          modal.querySelector('#ios-sub-price-val').textContent = '2990 ₽';
         }
+        modal.querySelector('#ios-sub-price-val').textContent = '2990 ₽';
       })
       .catch(() => {
         modal.querySelector('#ios-sub-price-val').textContent = '2990 ₽';
@@ -1548,6 +1548,27 @@
   } else {
     setTimeout(injectChatHeaderBack, 0);
   }
+
+  window.addEventListener('sistema:subscription-changed', async function(event) {
+    const isPro = event.detail.active;
+    const modal = document.getElementById('ios-subscription-modal');
+    
+    if (isPro) {
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.remove(), 300);
+      }
+      const statusText = document.getElementById('chat-status')?.textContent || '';
+      if (statusText.includes('подписка') || statusText.includes('Подписка') || statusText.includes('Подключаемся')) {
+        await boot();
+      }
+    } else {
+      state.messages = [];
+      setStatus('Требуется подписка Pro');
+      render();
+      openSubscriptionModal();
+    }
+  });
 
   boot();
 })();

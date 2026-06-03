@@ -352,7 +352,25 @@
     }
 
     .post-comment-count {
-      display: none !important;
+      display: none;
+      position: absolute;
+      top: -3px;
+      right: -5px;
+      background: #ff4f76;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 8px;
+      line-height: 1;
+      min-width: 14px;
+      text-align: center;
+      border: 1px solid #07100e;
+      z-index: 5;
+    }
+
+    .post-comment-count.visible {
+      display: block !important;
     }
 
     /* ── Post Comments Preview ── */
@@ -733,13 +751,6 @@
           <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
         </div>
 
-        <!-- Post Quick Comment Form (Instagram Style) -->
-        <form class="post-quick-comment-form" data-quick-comment-form>
-          <input type="text" class="post-quick-comment-input" placeholder="Добавить комментарий..." required data-quick-comment-input />
-          <button type="submit" class="post-quick-comment-submit-btn" aria-label="Отправить комментарий" disabled data-quick-comment-submit-btn>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-          </button>
-        </form>
       </article>
 
       <!-- Post 2 -->
@@ -782,13 +793,6 @@
           <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
         </div>
 
-        <!-- Post Quick Comment Form (Instagram Style) -->
-        <form class="post-quick-comment-form" data-quick-comment-form>
-          <input type="text" class="post-quick-comment-input" placeholder="Добавить комментарий..." required data-quick-comment-input />
-          <button type="submit" class="post-quick-comment-submit-btn" aria-label="Отправить комментарий" disabled data-quick-comment-submit-btn>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-          </button>
-        </form>
       </article>
 
       <!-- Post 1: oldest -->
@@ -826,13 +830,6 @@
           <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
         </div>
 
-        <!-- Post Quick Comment Form (Instagram Style) -->
-        <form class="post-quick-comment-form" data-quick-comment-form>
-          <input type="text" class="post-quick-comment-input" placeholder="Добавить комментарий..." required data-quick-comment-input />
-          <button type="submit" class="post-quick-comment-submit-btn" aria-label="Отправить комментарий" disabled data-quick-comment-submit-btn>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-          </button>
-        </form>
       </article>
 
     </div>

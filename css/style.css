@@ -9164,7 +9164,7 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(7, 16, 14, 0.95) 0%, rgba(7, 16, 14, 0.25) 60%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 35%);
   z-index: 1;
   pointer-events: none;
 }

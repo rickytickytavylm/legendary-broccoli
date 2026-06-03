@@ -225,7 +225,8 @@
       if (window.API && window.API.getPlans) {
         window.API.getPlans().then(function(data) {
           var plans = data && data.plans;
-          var p = plans && plans[0];
+          var p = plans && plans.find(function(x) { return x.slug === 'monthly'; });
+          if (!p && plans) p = plans[0];
           if (p) {
             planSlug = p.slug;
             document.querySelector('.card .card_title').textContent = p.title || 'Система Молодцова';

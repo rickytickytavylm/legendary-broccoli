@@ -419,17 +419,8 @@
     if (event && event.detail && event.detail.user) window.__sistemaCurrentUser = event.detail.user;
     renderMobileAuthAction(true);
     accessState = 'unknown';
-    if (hasJwtSession() && window.API && window.API.getSubscription) {
-      window.API.getSubscription()
-        .then(function(data) {
-          var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
-          accessState = data && data.subscription_active && (!expiresAt || expiresAt > Date.now()) ? 'pro' : 'free';
-          updateLessonLocks(document);
-        })
-        .catch(function() {
-          accessState = hasProfileIdentity() ? 'free' : 'guest';
-          updateLessonLocks(document);
-        });
+    if (typeof checkSubscriptionSync === 'function') {
+      checkSubscriptionSync(true);
     }
   });
 
@@ -483,20 +474,43 @@
     });
   }
 
-  if (hasJwtSession() && window.API) {
+  function checkSubscriptionSync(force) {
+    if (!hasJwtSession() || !window.API || !window.API.getSubscription) {
+      if (accessState !== 'free' && !hasProfileIdentity()) {
+        accessState = 'free';
+        updateLessonLocks(document);
+      }
+      return;
+    }
     window.API.getSubscription()
       .then(function(data) {
         var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
-        accessState = data && data.subscription_active && (!expiresAt || expiresAt > Date.now()) ? 'pro' : 'free';
-        updateLessonLocks(document);
+        var isActive = !!(data && data.subscription_active && (!expiresAt || expiresAt > Date.now()));
+        var currentAccessState = isActive ? 'pro' : 'free';
+        
+        if (accessState !== currentAccessState || force) {
+          accessState = currentAccessState;
+          updateLessonLocks(document);
+          
+          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+            detail: { active: isActive, expires_at: expiresAt }
+          }));
+        }
       })
       .catch(function() {
-        accessState = 'free';
-        updateLessonLocks(document);
+        if (accessState !== 'free' && !hasProfileIdentity()) {
+          accessState = 'free';
+          updateLessonLocks(document);
+          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+            detail: { active: false }
+          }));
+        }
       });
-  } else {
-    updateLessonLocks(document);
   }
+
+  checkSubscriptionSync(true);
+  setInterval(checkSubscriptionSync, 4000);
+  window.checkSubscriptionSync = checkSubscriptionSync;
 
   window.showAccessPrompt = function(code) {
     if (code === 'LOGIN_REQUIRED') {
