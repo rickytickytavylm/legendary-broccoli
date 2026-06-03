@@ -506,7 +506,9 @@
     window.API.getSubscription({ fresh: !!force })
       .then(function(data) {
         var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
-        var isActive = !!(data && data.subscription_active && (!expiresAt || expiresAt > Date.now()));
+        var isActive = window.API && window.API.isSubscriptionActive
+          ? window.API.isSubscriptionActive(data)
+          : !!(data && data.subscription_active);
         var currentAccessState = isActive ? 'pro' : 'free';
         
         if (accessState !== currentAccessState || force) {

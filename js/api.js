@@ -442,6 +442,9 @@ class ApiClient {
     this.clearSubscriptionCache();
     return this.request('POST', '/payment/confirm');
   }
+  isSubscriptionActive(subscription) {
+    return !!(subscription && subscription.subscription_active === true);
+  }
   redirectToPayment(payment) {
     if (!payment || !payment.payment_url) return false;
     if (payment.payment_method === 'post' && payment.payment_fields) {

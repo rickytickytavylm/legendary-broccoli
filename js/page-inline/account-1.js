@@ -103,7 +103,9 @@ function escapeHtml(value) {
         sub = await window.API.getSubscription({ fresh: true });
       }
       const expiresAt = sub && sub.expires_at ? new Date(sub.expires_at).getTime() : null;
-      const isActive = !!(sub && sub.subscription_active && (!expiresAt || expiresAt > Date.now()));
+      const isActive = window.API.isSubscriptionActive
+        ? window.API.isSubscriptionActive(sub)
+        : !!(sub && sub.subscription_active);
       renderSubscriptionCard(sub);
       if (isActive) {
         window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: true, expires_at: expiresAt } }));
@@ -148,7 +150,9 @@ function escapeHtml(value) {
 
     const expiresRaw = source?.subscription_expires_at || source?.expires_at || null;
     const expiresAt = expiresRaw ? new Date(expiresRaw).getTime() : null;
-    const isActive = !!(source?.subscription_active && (!expiresAt || expiresAt > Date.now()));
+    const isActive = window.API?.isSubscriptionActive
+      ? window.API.isSubscriptionActive(source)
+      : !!source?.subscription_active;
 
     if (isActive) {
       let dateStr = '';
@@ -201,7 +205,7 @@ function escapeHtml(value) {
 
   async function refreshSubscriptionCard() {
     try {
-      const sub = await window.API.getSubscription();
+      const sub = await window.API.getSubscription({ fresh: true });
       renderSubscriptionCard(sub);
     } catch (e) {
       if (e && e.status === 429) return;

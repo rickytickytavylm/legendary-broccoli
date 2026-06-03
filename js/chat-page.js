@@ -705,10 +705,14 @@
     try {
       setStatus('Подключаемся…');
       if (window.API.restoreSession) await window.API.restoreSession();
+      if (window.API.confirmPayment) {
+        try { await window.API.confirmPayment(); } catch (e) { /* continue with fresh subscription check */ }
+      }
       if (window.API.getSubscription) {
-        const sub = await window.API.getSubscription();
-        const expiresAt = sub && sub.expires_at ? new Date(sub.expires_at).getTime() : null;
-        const isActive = !!(sub && sub.subscription_active && (!expiresAt || expiresAt > Date.now()));
+        const sub = await window.API.getSubscription({ fresh: true });
+        const isActive = window.API.isSubscriptionActive
+          ? window.API.isSubscriptionActive(sub)
+          : !!(sub && sub.subscription_active);
         if (!isActive) {
           throw { status: 403, code: 'NO_SUBSCRIPTION', error: 'Subscription required' };
         }
