@@ -22,10 +22,14 @@ function escapeHtml(value) {
 
   window.addEventListener('auth:change', () => {
     showDashboardShell();
+    refreshProfileHeader();
+    refreshSubscriptionCard();
     loadDashboard();
   });
   window.refreshAuthUI = () => {
     showDashboardShell();
+    refreshProfileHeader();
+    refreshSubscriptionCard();
     loadDashboard();
   };
 
@@ -46,9 +50,122 @@ function escapeHtml(value) {
     setPanelVisible(document.getElementById('dashboard'), true, 'block');
   }
 
+  function renderProfileHeader(user) {
+    if (!user) return;
+    const profile = JSON.parse(localStorage.getItem('sistema:onboarding-profile') || '{}');
+    const emailName = user.email ? user.email.split('@')[0] : '';
+    const phoneName = user.phone ? user.phone.replace(/^\+7/, '+7 ') : '';
+    const name = user.display_name || user.first_name || profile.name || emailName || phoneName || 'друг';
+    document.getElementById('dash-greeting')?.replaceChildren(document.createTextNode(name));
+
+    const avatarImg = document.getElementById('dash-avatar-img');
+    if (avatarImg) {
+      if (user.avatar_url) {
+        avatarImg.src = String(user.avatar_url).replace(/"/g, '&quot;');
+      } else {
+        avatarImg.removeAttribute('src');
+      }
+    }
+
+    const usernameEl = document.getElementById('dash-username');
+    if (usernameEl) {
+      const login = user.yandex_login || (user.email ? user.email.split('@')[0] : '') || user.phone || '';
+      usernameEl.textContent = login ? '@' + login : '';
+    }
+
+    const shortIdEl = document.getElementById('dash-short-id');
+    if (shortIdEl) {
+      shortIdEl.textContent = user.short_id ? 'ID: ' + user.short_id : '';
+    }
+
+    document.getElementById('dash-sub')?.replaceChildren(document.createTextNode('Настройки, документы и управление данными.'));
+  }
+
+  async function refreshProfileHeader() {
+    try {
+      const data = await window.API.me({ fresh: true });
+      renderProfileHeader(data && data.user);
+    } catch (e) {}
+  }
+
   async function initProfile() {
     showDashboardShell();
-    await loadDashboard();
+    refreshProfileHeader();
+    refreshSubscriptionCard();
+    loadDashboard();
+  }
+
+  function renderSubscriptionCard(source) {
+    const statusEl = document.getElementById('dash-subscription-status');
+    const badgeEl = document.getElementById('dash-subscription-badge');
+    const actionEl = document.getElementById('dash-subscription-action');
+    const benefitsEl = document.getElementById('dash-subscription-benefits');
+    const testEl = document.getElementById('dash-subscription-test');
+    if (!statusEl || !badgeEl) return;
+
+    const expiresRaw = source?.subscription_expires_at || source?.expires_at || null;
+    const expiresAt = expiresRaw ? new Date(expiresRaw).getTime() : null;
+    const isActive = !!(source?.subscription_active && (!expiresAt || expiresAt > Date.now()));
+
+    if (isActive) {
+      let dateStr = '';
+      if (expiresRaw) {
+        const date = new Date(expiresRaw);
+        dateStr = ' до ' + date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+      statusEl.textContent = 'Активирована подписка Pro' + dateStr;
+      badgeEl.textContent = 'активна';
+      badgeEl.style.background = 'rgba(48, 209, 88, 0.15)';
+      badgeEl.style.color = '#30d158';
+      badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
+      if (actionEl) actionEl.style.display = 'none';
+      if (benefitsEl) {
+        benefitsEl.style.display = 'grid';
+        benefitsEl.innerHTML = '<span>Открыты все видео-разделы и уроки</span><span>Доступен Общий чат участников</span><span>Доступна Лиза, AI-помощница системы</span>';
+      }
+      if (testEl) testEl.style.display = 'none';
+      return;
+    }
+
+    statusEl.textContent = 'Доступны первые видео. Pro открывает весь каталог, чат и AI.';
+    badgeEl.textContent = 'неактивна';
+    badgeEl.style.background = 'rgba(255, 255, 255, 0.08)';
+    badgeEl.style.color = 'rgba(255, 255, 255, 0.4)';
+    badgeEl.style.border = '1px solid rgba(255, 255, 255, 0.05)';
+    if (actionEl) {
+      actionEl.style.display = 'grid';
+      actionEl.onclick = async () => {
+        const originalHtml = actionEl.innerHTML;
+        actionEl.disabled = true;
+        actionEl.innerHTML = '<span class="settings-icon">★</span><span><strong>Переходим к оплате...</strong><small>Открываем защищенный шлюз ЮKassa</small></span>';
+        try {
+          const res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
+          if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
+          throw new Error('bad payment response');
+        } catch (err) {
+          actionEl.disabled = false;
+          actionEl.innerHTML = originalHtml;
+          alert(err.error || 'Ошибка при создании платежа. Попробуйте позже.');
+        }
+      };
+    }
+    if (benefitsEl) {
+      benefitsEl.style.display = 'grid';
+      benefitsEl.innerHTML = '<span>Все видео-разделы и уроки без ограничений</span><span>Доступ в Общий чат участников</span><span>Расширенный доступ к Лизе, AI-помощнице системы</span>';
+    }
+    if (testEl) testEl.style.display = 'none';
+  }
+
+  async function refreshSubscriptionCard() {
+    try {
+      const sub = await window.API.getSubscription();
+      renderSubscriptionCard(sub);
+    } catch (e) {
+      const statusEl = document.getElementById('dash-subscription-status');
+      const badgeEl = document.getElementById('dash-subscription-badge');
+      if (statusEl) statusEl.textContent = 'Не удалось проверить подписку. Обновите вход в профиль.';
+      if (badgeEl) badgeEl.textContent = 'ошибка';
+    }
   }
 
   async function loadDashboard() {
@@ -57,35 +174,7 @@ function escapeHtml(value) {
       const { user, stats, recent_activity, diary, daily_chart, ai_usage, access, courses } = data;
       const profile = JSON.parse(localStorage.getItem('sistema:onboarding-profile') || '{}');
 
-      // Greeting
-      const hour = new Date().getHours();
-      const greet = hour < 12 ? 'Доброе утро' : hour < 18 ? 'Добрый день' : 'Добрый вечер';
-      const emailName = user.email ? user.email.split('@')[0] : '';
-      const phoneName = user.phone ? user.phone.replace(/^\+7/, '+7 ') : '';
-      const name = user.display_name || user.first_name || profile.name || emailName || phoneName || 'друг';
-      document.getElementById('dash-greeting').textContent = name;
-
-      const avatarImg = document.getElementById('dash-avatar-img');
-      if (avatarImg) {
-        if (user.avatar_url) {
-          avatarImg.src = String(user.avatar_url).replace(/"/g, '&quot;');
-        } else {
-          avatarImg.removeAttribute('src');
-        }
-      }
-
-      const usernameEl = document.getElementById('dash-username');
-      if (usernameEl) {
-        const login = user.yandex_login || (user.email ? user.email.split('@')[0] : '') || user.phone || '';
-        usernameEl.textContent = login ? '@' + login : '';
-      }
-
-      const shortIdEl = document.getElementById('dash-short-id');
-      if (shortIdEl) {
-        shortIdEl.textContent = user.short_id ? 'ID: ' + user.short_id : '';
-      }
-
-      document.getElementById('dash-sub').textContent = 'Настройки, документы и управление данными.';
+      renderProfileHeader(user);
 
       // Subscription status UI
       const statusEl = document.getElementById('dash-subscription-status');
@@ -95,52 +184,7 @@ function escapeHtml(value) {
       const testEl = document.getElementById('dash-subscription-test');
 
       if (statusEl && badgeEl) {
-        if (user.subscription_active) {
-          let dateStr = '';
-          if (user.subscription_expires_at) {
-            const date = new Date(user.subscription_expires_at);
-            dateStr = ' до ' + date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-          }
-          statusEl.textContent = 'Активирована подписка Pro' + dateStr;
-          badgeEl.textContent = 'активна';
-          badgeEl.style.background = 'rgba(48, 209, 88, 0.15)';
-          badgeEl.style.color = '#30d158';
-          badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
-          if (actionEl) actionEl.style.display = 'none';
-          if (benefitsEl) {
-            benefitsEl.style.display = 'grid';
-            benefitsEl.innerHTML = '<span>Открыты все видео-разделы и уроки</span><span>Доступен Общий чат участников</span><span>Доступна Лиза, AI-помощница системы</span>';
-          }
-          if (testEl) testEl.style.display = 'none';
-        } else {
-          statusEl.textContent = 'Доступны первые видео. Pro открывает весь каталог, чат и AI.';
-          badgeEl.textContent = 'неактивна';
-          badgeEl.style.background = 'rgba(255, 255, 255, 0.08)';
-          badgeEl.style.color = 'rgba(255, 255, 255, 0.4)';
-          badgeEl.style.border = '1px solid rgba(255, 255, 255, 0.05)';
-          if (actionEl) {
-            actionEl.style.display = 'grid';
-            actionEl.onclick = async () => {
-              const originalHtml = actionEl.innerHTML;
-              actionEl.disabled = true;
-              actionEl.innerHTML = '<span class="settings-icon">★</span><span><strong>Переходим к оплате...</strong><small>Открываем защищенный шлюз ЮKassa</small></span>';
-              try {
-                const res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
-                if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
-                throw new Error('bad payment response');
-              } catch (err) {
-                actionEl.disabled = false;
-                actionEl.innerHTML = originalHtml;
-                alert(err.error || 'Ошибка при создании платежа. Попробуйте позже.');
-              }
-            };
-          }
-          if (benefitsEl) {
-            benefitsEl.style.display = 'grid';
-            benefitsEl.innerHTML = '<span>Все видео-разделы и уроки без ограничений</span><span>Доступ в Общий чат участников</span><span>Расширенный доступ к Лизе, AI-помощнице системы</span>';
-          }
-          if (testEl) testEl.style.display = 'none';
-        }
+        renderSubscriptionCard(user);
 
         if (testEl) {
           testEl.onclick = async () => {

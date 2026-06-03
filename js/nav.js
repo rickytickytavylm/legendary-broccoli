@@ -3,6 +3,19 @@
  * Injected into every page. Handles scroll-triggered reveal via GPU transform only.
  */
 (function initNav() {
+  var APP_BUILD_VERSION = '2026-06-03-sub-sync-ios-2';
+  try {
+    var storedBuild = localStorage.getItem('sistema:app-build-version');
+    if (storedBuild !== APP_BUILD_VERSION) {
+      localStorage.setItem('sistema:app-build-version', APP_BUILD_VERSION);
+      if (storedBuild && window.caches) {
+        caches.keys()
+          .then(function(keys) { return Promise.all(keys.map(function(key) { return caches.delete(key); })); })
+          .finally(function() { window.location.reload(); });
+      }
+    }
+  } catch (e) {}
+
   // ── Inject PWA Meta Headers ────────────────────────────
   (function injectPWAMeta() {
     if (!document.querySelector('link[rel="manifest"]')) {

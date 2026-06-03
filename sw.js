@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v34-killswitch';
+const CACHE_NAME = 'sistema-static-v35-ios-refresh';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -18,13 +18,19 @@ self.addEventListener('fetch', (event) => {
   }
 
   // For HTML document navigations, force the browser to check the server for updates
-  // (cache: 'no-cache' triggers validation) so they always load the latest index.html.
+  // (cache: 'reload' bypasses Safari/PWA HTTP cache more reliably).
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request, { cache: 'no-cache' }).catch(() => {
+      fetch(event.request, { cache: 'reload' }).catch(() => {
         return caches.match(event.request);
       })
     );
+    return;
+  }
+
+  const url = new URL(event.request.url);
+  if (url.origin === self.location.origin && /\.(?:js|css)$/i.test(url.pathname)) {
+    event.respondWith(fetch(event.request, { cache: 'reload' }));
     return;
   }
 

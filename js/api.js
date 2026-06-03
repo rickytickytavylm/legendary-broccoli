@@ -5,6 +5,7 @@
 const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.sistema-molodtsov.ru/api');
 const API_ORIGIN = new URL(API_BASE, location.href).origin;
 const CONTENT_CACHE_TTL = 5 * 60 * 1000;
+const REQUEST_TIMEOUT_MS = 15000;
 const SISTEMA_DEVICE_ID_KEY = 'sistema:device-id';
 
 function getSistemaDeviceId() {
@@ -103,6 +104,29 @@ class ApiClient {
       .catch(() => {});
   }
 
+  async fetchWithTimeout(url, init = {}, opts = {}) {
+    const timeoutMs = opts.timeoutMs ?? REQUEST_TIMEOUT_MS;
+    if (!timeoutMs || typeof AbortController === 'undefined') return fetch(url, init);
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(url, { ...init, signal: init.signal || controller.signal });
+    } catch (err) {
+      if (err && err.name === 'AbortError') {
+        const timeoutErr = new Error('Request timeout');
+        timeoutErr.code = 'REQUEST_TIMEOUT';
+        timeoutErr.status = 0;
+        timeoutErr.timeoutMs = timeoutMs;
+        timeoutErr.url = String(url);
+        throw timeoutErr;
+      }
+      throw err;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async request(method, path, body, opts = {}) {
     const trimBase = String(this.base || '').replace(/\/+$/u, '');
     let rel = path.startsWith('/') ? path : '/' + path;
@@ -129,7 +153,7 @@ class ApiClient {
       return cachedContent;
     }
 
-    let res = await fetch(url, init);
+    let res = await this.fetchWithTimeout(url, init, opts);
 
     // Access token expired — try refresh once
     if (res.status === 401) {
@@ -142,7 +166,7 @@ class ApiClient {
         const refreshed = await this._doRefresh();
         if (refreshed) {
           init.headers['Authorization'] = 'Bearer ' + this.accessToken;
-          res = await fetch(url, init);
+          res = await this.fetchWithTimeout(url, init, opts);
         }
       }
     }
@@ -165,7 +189,7 @@ class ApiClient {
 
     this.refreshPromise = (async () => {
       try {
-        const res = await fetch(this.base + '/auth/refresh', {
+        const res = await this.fetchWithTimeout(this.base + '/auth/refresh', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ refreshToken }),
