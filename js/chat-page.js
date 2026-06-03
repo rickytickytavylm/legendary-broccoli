@@ -9,16 +9,40 @@
   const status = root.querySelector('[data-chat-status]');
   const empty = root.querySelector('[data-chat-empty]');
   const sendButton = root.querySelector('[data-chat-send]');
+  const CHAT_BG_KEY = 'sistema:chat-background';
+  const CHAT_BACKGROUNDS = [
+    { id: 'classic', label: 'Текущий', className: '', preview: 'linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02))' },
+    { id: 'zigzag-blue', label: 'Синий zigzag', className: 'chat-bg-zigzag-blue', preview: 'linear-gradient(135deg, #5394fd 25%, #fefefe 25%, #fefefe 50%, #5394fd 50%, #5394fd 75%, #fefefe 75%)' },
+    { id: 'stripes-green', label: 'Зеленые полосы', className: 'chat-bg-stripes-green', preview: 'linear-gradient(to right, #57c99b, #57c99b 10px, #fefefe 10px, #fefefe 20px)' },
+    { id: 'sublime', label: 'Sublime', className: 'chat-bg-sublime', preview: 'linear-gradient(115deg, #ff5c7d, #6a82fb)' },
+    { id: 'argon', label: 'Argon', className: 'chat-bg-argon', preview: 'linear-gradient(110deg, #03001e, #7303c0, #ec38bc, #fdeff9)' },
+  ];
   const state = {
     messages: new Map(),
     latestId: 0,
     socket: null,
     userId: null,
+    emailNotificationsEnabled: true,
     sending: false,
     editingMessageId: null,
     replyToMessage: null,
     loading: true,
   };
+
+  function currentChatBackgroundId() {
+    return localStorage.getItem(CHAT_BG_KEY) || 'classic';
+  }
+
+  function applyChatBackground(id) {
+    const selected = CHAT_BACKGROUNDS.find((item) => item.id === id) || CHAT_BACKGROUNDS[0];
+    CHAT_BACKGROUNDS.forEach((item) => {
+      if (item.className) document.body.classList.remove(item.className);
+    });
+    if (selected.className) document.body.classList.add(selected.className);
+    localStorage.setItem(CHAT_BG_KEY, selected.id);
+  }
+
+  applyChatBackground(currentChatBackgroundId());
 
   // Create Edit Mode Banner dynamically above the composer
   const editBanner = document.createElement('div');
@@ -213,6 +237,139 @@
       }
     }
     status.textContent = (text || '') + pushStatus;
+  }
+
+  function isStandalonePwa() {
+    return window.matchMedia?.('(display-mode: standalone)')?.matches || window.navigator.standalone === true;
+  }
+
+  async function setEmailNotificationsEnabled(enabled) {
+    state.emailNotificationsEnabled = !!enabled;
+    if (window.API?.request) {
+      await window.API.request('PATCH', '/profile/me', {
+        chat_email_notifications_enabled: state.emailNotificationsEnabled,
+      });
+    }
+  }
+
+  async function setPushNotificationsEnabled(enabled) {
+    if (enabled) {
+      await setupPushNotifications(false);
+      return;
+    }
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager.getSubscription();
+    if (subscription) {
+      await window.API.request('POST', '/chat/unsubscribe', { endpoint: subscription.endpoint }).catch(() => {});
+      await subscription.unsubscribe();
+    } else {
+      await window.API.request('POST', '/chat/unsubscribe', {}).catch(() => {});
+    }
+    localStorage.setItem('notifications-prompt-dismissed', 'true');
+  }
+
+  function installChatSettingsButton() {
+    const actions = document.querySelector('#app-mobile-header .mobile-header-actions');
+    if (!actions || actions.querySelector('[data-chat-settings-open]')) return;
+    actions.innerHTML = `
+      <button type="button" class="chat-settings-header-btn" data-chat-settings-open aria-label="Настройки чата">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.08A1.7 1.7 0 0 0 8.96 19.36a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.08A1.7 1.7 0 0 0 4.64 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06A2 2 0 1 1 7.07 4.14l.06.06A1.7 1.7 0 0 0 9 4.54 1.7 1.7 0 0 0 10 2.98V3a2 2 0 0 1 4 0v-.02a1.7 1.7 0 0 0 1.04 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87 1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.04A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+      </button>
+    `;
+    actions.querySelector('[data-chat-settings-open]')?.addEventListener('click', openChatSettingsSheet);
+  }
+
+  function renderSettingsToggle({ id, label, note, enabled, disabled }) {
+    return `
+      <div class="chat-setting-row${disabled ? ' disabled' : ''}">
+        <div>
+          <strong>${escapeHtml(label)}</strong>
+          <span>${escapeHtml(note || '')}</span>
+        </div>
+        <button type="button" class="chat-liquid-toggle${enabled ? ' active' : ''}" data-setting-toggle="${escapeHtml(id)}" ${disabled ? 'disabled' : ''} aria-pressed="${enabled ? 'true' : 'false'}"><i></i></button>
+      </div>
+    `;
+  }
+
+  function openChatSettingsSheet() {
+    const existing = document.getElementById('chat-settings-sheet');
+    if (existing) existing.remove();
+    const pushAvailable = 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window && isStandalonePwa();
+    const pushEnabled = pushAvailable && Notification.permission === 'granted';
+    const currentBg = currentChatBackgroundId();
+    const sheet = document.createElement('div');
+    sheet.id = 'chat-settings-sheet';
+    sheet.className = 'chat-settings-sheet';
+    sheet.innerHTML = `
+      <div class="chat-settings-backdrop"></div>
+      <section class="chat-settings-panel" role="dialog" aria-modal="true" aria-label="Настройки чата">
+        <div class="chat-settings-grabber"></div>
+        <div class="chat-settings-head">
+          <div>
+            <span>Общий чат</span>
+            <h2>Настройки</h2>
+          </div>
+          <button type="button" data-chat-settings-close aria-label="Закрыть">×</button>
+        </div>
+        <div class="chat-settings-block">
+          <h3>Уведомления</h3>
+          ${renderSettingsToggle({
+            id: 'email',
+            label: 'Email-уведомления',
+            note: 'Письмо о новых сообщениях, не чаще раза в 15 минут.',
+            enabled: state.emailNotificationsEnabled,
+          })}
+          ${renderSettingsToggle({
+            id: 'push',
+            label: 'Push-уведомления',
+            note: pushAvailable ? 'Мгновенные уведомления в веб-приложении.' : 'Доступно в веб-приложении, добавленном на экран Домой.',
+            enabled: pushEnabled,
+            disabled: !pushAvailable,
+          })}
+        </div>
+        <div class="chat-settings-block">
+          <h3>Фон чата</h3>
+          <div class="chat-bg-picker">
+            ${CHAT_BACKGROUNDS.map((bg) => `
+              <button type="button" class="chat-bg-option${bg.id === currentBg ? ' active' : ''}" data-chat-bg="${escapeHtml(bg.id)}">
+                <span style="background:${escapeHtml(bg.preview)}"></span>
+                <strong>${escapeHtml(bg.label)}</strong>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+    `;
+    document.body.appendChild(sheet);
+    requestAnimationFrame(() => sheet.classList.add('active'));
+    const close = () => {
+      sheet.classList.remove('active');
+      setTimeout(() => sheet.remove(), 260);
+    };
+    sheet.querySelector('.chat-settings-backdrop')?.addEventListener('click', close);
+    sheet.querySelector('[data-chat-settings-close]')?.addEventListener('click', close);
+    sheet.addEventListener('click', async (ev) => {
+      const bgBtn = ev.target.closest('[data-chat-bg]');
+      if (bgBtn) {
+        applyChatBackground(bgBtn.dataset.chatBg);
+        sheet.querySelectorAll('.chat-bg-option').forEach((btn) => btn.classList.toggle('active', btn === bgBtn));
+        return;
+      }
+      const toggle = ev.target.closest('[data-setting-toggle]');
+      if (!toggle || toggle.disabled) return;
+      const next = !toggle.classList.contains('active');
+      toggle.classList.toggle('active', next);
+      toggle.setAttribute('aria-pressed', next ? 'true' : 'false');
+      try {
+        if (toggle.dataset.settingToggle === 'email') await setEmailNotificationsEnabled(next);
+        if (toggle.dataset.settingToggle === 'push') await setPushNotificationsEnabled(next);
+      } catch (err) {
+        toggle.classList.toggle('active', !next);
+        toggle.setAttribute('aria-pressed', !next ? 'true' : 'false');
+        setStatus(err?.error || 'Не удалось сохранить настройки');
+      }
+    });
   }
 
   function shouldStickToBottom() {
@@ -884,8 +1041,23 @@
       }
       const chatData = await window.API.getGeneralChat();
       state.userId = chatData?.user?.id || null;
+      try {
+        const dashboard = await window.API.request('GET', '/profile/dashboard', null, { fresh: true });
+        if (typeof dashboard?.user?.chat_email_notifications_enabled === 'boolean') {
+          state.emailNotificationsEnabled = dashboard.user.chat_email_notifications_enabled;
+        }
+      } catch (e) {
+        // Settings sheet will fall back to enabled until profile is available.
+      }
       await loadMessages(true);
       connectSocket();
+      installChatSettingsButton();
+      setTimeout(installChatSettingsButton, 350);
+    const mobileHeader = document.getElementById('app-mobile-header');
+    if (mobileHeader) {
+      const observer = new MutationObserver(() => installChatSettingsButton());
+      observer.observe(mobileHeader, { childList: true, subtree: true });
+    }
 
       // Configure interactive Web Push notification flow
       initNotificationBanner();
