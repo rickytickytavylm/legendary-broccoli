@@ -489,7 +489,11 @@
         var currentAccessState = isActive ? 'pro' : 'free';
         
         if (accessState !== currentAccessState || force) {
+          var changed = accessState !== currentAccessState;
           accessState = currentAccessState;
+          if (changed && window.API && window.API.clearContentCache) {
+            window.API.clearContentCache();
+          }
           updateLessonLocks(document);
           
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {

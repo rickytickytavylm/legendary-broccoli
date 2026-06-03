@@ -110,7 +110,7 @@ class ApiClient {
       rel = rel.replace(/^\/api/u, '') || '/';
     }
     const url = trimBase + rel;
-    const canUseContentCache = method === 'GET' && path.startsWith('/content/');
+    const canUseContentCache = method === 'GET' && path.startsWith('/content/') && opts.cacheContent === true;
     const cachedContent = canUseContentCache ? this.readContentCache(path) : null;
     const init = {
       method,
@@ -182,6 +182,14 @@ class ApiClient {
       }
     })();
     return this.refreshPromise;
+  }
+
+  clearContentCache() {
+    try {
+      Object.keys(sessionStorage)
+        .filter((key) => key.startsWith('sistema:content-cache:'))
+        .forEach((key) => sessionStorage.removeItem(key));
+    } catch (e) {}
   }
 
   async restoreSession() {
@@ -378,7 +386,7 @@ class ApiClient {
     window.location.href = payment.payment_url;
     return true;
   }
-  getSubscription() { return this.request('GET', '/payment/subscription'); }
+  getSubscription() { return this.request('GET', '/payment/subscription', null, { fresh: true }); }
 
   // --- Profile ---
   getProfileSession() { return this.request('GET', '/profile/session', null, { fresh: true }); }

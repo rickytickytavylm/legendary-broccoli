@@ -704,14 +704,6 @@
   async function boot() {
     try {
       setStatus('Подключаемся…');
-      if (window.API && window.API.getSubscription) {
-        const sub = await window.API.getSubscription().catch(() => null);
-        const expiresAt = sub && sub.expires_at ? new Date(sub.expires_at).getTime() : null;
-        const isPro = !!(sub && sub.subscription_active && (!expiresAt || expiresAt > Date.now()));
-        if (!isPro) {
-          throw { status: 403, code: 'NO_SUBSCRIPTION' };
-        }
-      }
       const chatData = await window.API.getGeneralChat();
       state.userId = chatData?.user?.id || null;
       await loadMessages(true);
