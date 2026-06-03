@@ -491,6 +491,8 @@
         if (accessState !== currentAccessState || force) {
           var changed = accessState !== currentAccessState;
           accessState = currentAccessState;
+          window.__sistemaSubscriptionActive = isActive;
+          window.__sistemaSubscriptionExpiresAt = expiresAt || null;
           if (changed && window.API && window.API.clearContentCache) {
             window.API.clearContentCache();
           }
