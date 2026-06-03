@@ -488,6 +488,13 @@
   }
 
   function checkSubscriptionSync(force) {
+    var now = Date.now();
+    if (!force && window.__sistemaLastSubscriptionCheckAt && now - window.__sistemaLastSubscriptionCheckAt < 55000) {
+      return;
+    }
+    if (window.__sistemaSubscriptionCheckInFlight) return;
+    window.__sistemaLastSubscriptionCheckAt = now;
+
     if (!hasJwtSession() || !window.API || !window.API.getSubscription) {
       if (accessState !== 'free' && !hasProfileIdentity()) {
         accessState = 'free';
@@ -495,6 +502,7 @@
       }
       return;
     }
+    window.__sistemaSubscriptionCheckInFlight = true;
     window.API.getSubscription()
       .then(function(data) {
         var expiresAt = data && data.expires_at ? new Date(data.expires_at).getTime() : null;
@@ -516,7 +524,8 @@
           }));
         }
       })
-      .catch(function() {
+      .catch(function(err) {
+        if (err && err.status === 429) return;
         if (accessState !== 'free' && !hasProfileIdentity()) {
           accessState = 'free';
           updateLessonLocks(document);
@@ -524,35 +533,20 @@
             detail: { active: false }
           }));
         }
+      })
+      .finally(function() {
+        window.__sistemaSubscriptionCheckInFlight = false;
       });
   }
 
   checkSubscriptionSync(true);
-  setInterval(checkSubscriptionSync, 4000);
+  setInterval(checkSubscriptionSync, 60000);
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden) checkSubscriptionSync(true);
   });
   window.addEventListener('focus', function() {
     checkSubscriptionSync(true);
   });
-  if (window.MutationObserver) {
-    var lockObserverTimer = null;
-    var lockObserver = new MutationObserver(function(mutations) {
-      var hasLessons = mutations.some(function(mutation) {
-        return Array.prototype.some.call(mutation.addedNodes || [], function(node) {
-          if (!node || node.nodeType !== 1) return false;
-          return (node.matches && node.matches('.lesson-item, .lesson-row')) ||
-            (node.querySelector && node.querySelector('.lesson-item, .lesson-row'));
-        });
-      });
-      if (!hasLessons) return;
-      clearTimeout(lockObserverTimer);
-      lockObserverTimer = setTimeout(function() {
-        checkSubscriptionSync(true);
-      }, 120);
-    });
-    lockObserver.observe(document.body, { childList: true, subtree: true });
-  }
   window.checkSubscriptionSync = checkSubscriptionSync;
 
   window.showAccessPrompt = function(code) {

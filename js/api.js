@@ -30,6 +30,9 @@ class ApiClient {
     this.mePromise = null;
     this.meCache = null;
     this.meCacheAt = 0;
+    this.subscriptionPromise = null;
+    this.subscriptionCache = null;
+    this.subscriptionCacheAt = 0;
   }
 
   getAuthHeaders() {
@@ -261,6 +264,9 @@ class ApiClient {
     this.mePromise = null;
     this.meCache = null;
     this.meCacheAt = 0;
+    this.subscriptionPromise = null;
+    this.subscriptionCache = null;
+    this.subscriptionCacheAt = 0;
     localStorage.setItem('accessToken', tokens.access);
     localStorage.setItem('refreshToken', tokens.refresh);
   }
@@ -270,6 +276,9 @@ class ApiClient {
     this.mePromise = null;
     this.meCache = null;
     this.meCacheAt = 0;
+    this.subscriptionPromise = null;
+    this.subscriptionCache = null;
+    this.subscriptionCacheAt = 0;
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     try {
@@ -314,7 +323,7 @@ class ApiClient {
     const ttl = opts.ttl || 60 * 1000;
     const cached = !opts.fresh ? this.readMeCache(ttl) : null;
     if (cached) return Promise.resolve(cached);
-    if (!opts.fresh && this.mePromise) return this.mePromise;
+    if (this.mePromise) return this.mePromise;
     this.mePromise = this.request('GET', '/auth/me')
       .then((data) => {
         this.writeMeCache(data);
@@ -436,7 +445,28 @@ class ApiClient {
     window.location.href = payment.payment_url;
     return true;
   }
-  getSubscription() { return this.request('GET', '/payment/subscription', null, { fresh: true }); }
+  getSubscription(opts = {}) {
+    const ttl = opts.ttl || 3500;
+    if (!opts.fresh && this.subscriptionCache && Date.now() - this.subscriptionCacheAt < ttl) {
+      return Promise.resolve(this.subscriptionCache);
+    }
+    if (this.subscriptionPromise) return this.subscriptionPromise;
+
+    this.subscriptionPromise = this.request('GET', '/payment/subscription', null, { fresh: true })
+      .then((data) => {
+        this.subscriptionCache = data;
+        this.subscriptionCacheAt = Date.now();
+        return data;
+      })
+      .catch((err) => {
+        if (err && err.status === 429 && this.subscriptionCache) return this.subscriptionCache;
+        throw err;
+      })
+      .finally(() => {
+        this.subscriptionPromise = null;
+      });
+    return this.subscriptionPromise;
+  }
 
   // --- Profile ---
   getProfileSession() { return this.request('GET', '/profile/session', null, { fresh: true }); }

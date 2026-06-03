@@ -20,18 +20,18 @@ function escapeHtml(value) {
     return path;
   }
 
-  window.addEventListener('auth:change', () => {
+  let dashboardPromise = null;
+  let dashboardLoadedOnce = false;
+
+  function refreshAccountOverview() {
     showDashboardShell();
     refreshProfileHeader();
     refreshSubscriptionCard();
-    loadDashboard();
-  });
-  window.refreshAuthUI = () => {
-    showDashboardShell();
-    refreshProfileHeader();
-    refreshSubscriptionCard();
-    loadDashboard();
-  };
+    if (!dashboardLoadedOnce) loadDashboard();
+  }
+
+  window.addEventListener('auth:change', refreshAccountOverview);
+  window.refreshAuthUI = refreshAccountOverview;
 
   function setPanelVisible(element, visible, display = 'block') {
     if (!element) return;
@@ -161,6 +161,7 @@ function escapeHtml(value) {
       const sub = await window.API.getSubscription();
       renderSubscriptionCard(sub);
     } catch (e) {
+      if (e && e.status === 429) return;
       const statusEl = document.getElementById('dash-subscription-status');
       const badgeEl = document.getElementById('dash-subscription-badge');
       if (statusEl) statusEl.textContent = 'Не удалось проверить подписку. Обновите вход в профиль.';
@@ -169,8 +170,11 @@ function escapeHtml(value) {
   }
 
   async function loadDashboard() {
+    if (dashboardPromise) return dashboardPromise;
+    dashboardPromise = (async () => {
     try {
       const data = await window.API.request('GET', '/profile/dashboard');
+      dashboardLoadedOnce = true;
       const { user, stats, recent_activity, diary, daily_chart, ai_usage, access, courses } = data;
       const profile = JSON.parse(localStorage.getItem('sistema:onboarding-profile') || '{}');
 
@@ -350,6 +354,10 @@ function escapeHtml(value) {
 
     // Log page view
     try { await window.API.request('POST', '/profile/activity', { event_type: 'page_view', entity_type: 'page', entity_id: 'profile' }); } catch {}
+    })().finally(() => {
+      dashboardPromise = null;
+    });
+    return dashboardPromise;
   }
 
   initProfile();
@@ -439,5 +447,5 @@ function escapeHtml(value) {
   }
 
   window.addEventListener('sistema:subscription-changed', function() {
-    loadDashboard().catch(function() {});
+    refreshSubscriptionCard();
   });
