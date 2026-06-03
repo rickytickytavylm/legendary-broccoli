@@ -54,13 +54,16 @@
     return true;
   }
 
-  function authorInitial(comment) {
+  function renderCommentAvatar(comment) {
+    if (comment?.avatar_url) {
+      return `<img src="${escapeHtml(comment.avatar_url)}" alt="" loading="lazy" decoding="async" />`;
+    }
     return escapeHtml((comment?.author_name || 'У').trim().slice(0, 1).toUpperCase() || 'У');
   }
 
   function renderCommentItem(comment) {
     return `
-      <div class="comment-avatar" aria-hidden="true">${authorInitial(comment)}</div>
+      <div class="comment-avatar" aria-hidden="true">${renderCommentAvatar(comment)}</div>
       <div class="comment-body">
         <div class="comment-line">
           <strong>${escapeHtml(comment.author_name)}</strong>
@@ -91,6 +94,36 @@
   }
 
   let activePostId = null;
+  let sheetScrollY = 0;
+  let savedBodyStyles = null;
+
+  function lockFeedScroll() {
+    sheetScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    savedBodyStyles = {
+      position: document.body.style.position,
+      top: document.body.style.top,
+      left: document.body.style.left,
+      right: document.body.style.right,
+      width: document.body.style.width,
+    };
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${sheetScrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  }
+
+  function unlockFeedScroll() {
+    if (savedBodyStyles) {
+      document.body.style.position = savedBodyStyles.position;
+      document.body.style.top = savedBodyStyles.top;
+      document.body.style.left = savedBodyStyles.left;
+      document.body.style.right = savedBodyStyles.right;
+      document.body.style.width = savedBodyStyles.width;
+      savedBodyStyles = null;
+    }
+    window.scrollTo(0, sheetScrollY);
+  }
 
   function updateCommentCount(postId, delta) {
     const post = document.querySelector(`.post-card[data-post-id="${postId}"]`);
@@ -145,6 +178,7 @@
 
   function openCommentSheet(postId) {
     activePostId = postId;
+    lockFeedScroll();
     const overlay = document.getElementById('comment-sheet-overlay');
     const sheet = document.getElementById('comment-sheet');
     const list = document.getElementById('comment-sheet-list');
@@ -166,7 +200,7 @@
     }
 
     if (window.API && list) {
-      window.API.request('GET', `/content/feed/comments?post_id=${postId}`)
+      window.API.request('GET', `/content/feed/comments?post_id=${postId}`, null, { fresh: true })
         .then((comments) => {
           if (!Array.isArray(comments)) return;
           list.innerHTML = '';
@@ -197,6 +231,7 @@
       overlay?.classList.add('hidden');
       sheet?.classList.add('hidden');
       activePostId = null;
+      unlockFeedScroll();
     }, 300);
   }
 
@@ -230,47 +265,9 @@
     const viewCommentsBtn = post.querySelector('[data-view-comments-btn]');
     viewCommentsBtn?.addEventListener('click', () => openCommentSheet(postId));
 
-    // Inline quick comment form (Instagram style)
-    const quickForm = post.querySelector('[data-quick-comment-form]');
-    const quickInput = post.querySelector('[data-quick-comment-input]');
-    const quickSubmit = post.querySelector('[data-quick-comment-submit-btn]');
-
-    if (quickForm && quickInput && quickSubmit) {
-      quickInput.addEventListener('input', () => {
-        const val = quickInput.value.trim();
-        const hasText = val.length > 0;
-        quickSubmit.classList.toggle('visible', hasText);
-        quickSubmit.disabled = !hasText;
-      });
-
-      quickForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!window.API) return;
-        const content = quickInput.value.trim();
-        if (!content) return;
-
-        quickInput.disabled = true;
-        quickSubmit.disabled = true;
-
-        try {
-          const comment = await window.API.request('POST', '/content/feed/comments', {
-            post_id: postId,
-            content: content,
-          });
-          quickInput.value = '';
-          quickSubmit.classList.remove('visible');
-          appendCommentToUI(comment);
-        } catch (err) {
-          console.error('[feed] Error submitting quick comment:', err);
-        } finally {
-          quickInput.disabled = false;
-        }
-      });
-    }
-
-    // Initial load of comments for previews and count badges
+    // Initial load of comment count badges
     if (window.API) {
-      window.API.request('GET', `/content/feed/comments?post_id=${postId}`)
+      window.API.request('GET', `/content/feed/comments?post_id=${postId}`, null, { fresh: true })
         .then((comments) => {
           if (Array.isArray(comments)) {
             renderPostCommentsPreview(postId, comments);

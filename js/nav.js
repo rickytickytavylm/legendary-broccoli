@@ -510,6 +510,30 @@
 
   checkSubscriptionSync(true);
   setInterval(checkSubscriptionSync, 4000);
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) checkSubscriptionSync(true);
+  });
+  window.addEventListener('focus', function() {
+    checkSubscriptionSync(true);
+  });
+  if (window.MutationObserver) {
+    var lockObserverTimer = null;
+    var lockObserver = new MutationObserver(function(mutations) {
+      var hasLessons = mutations.some(function(mutation) {
+        return Array.prototype.some.call(mutation.addedNodes || [], function(node) {
+          if (!node || node.nodeType !== 1) return false;
+          return (node.matches && node.matches('.lesson-item, .lesson-row')) ||
+            (node.querySelector && node.querySelector('.lesson-item, .lesson-row'));
+        });
+      });
+      if (!hasLessons) return;
+      clearTimeout(lockObserverTimer);
+      lockObserverTimer = setTimeout(function() {
+        checkSubscriptionSync(true);
+      }, 120);
+    });
+    lockObserver.observe(document.body, { childList: true, subtree: true });
+  }
   window.checkSubscriptionSync = checkSubscriptionSync;
 
   window.showAccessPrompt = function(code) {
