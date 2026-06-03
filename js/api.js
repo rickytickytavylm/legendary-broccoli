@@ -501,14 +501,21 @@ class ApiClient {
     if (afterId) qs.set('after_id', String(afterId));
     return this.request('GET', '/chat/general/messages?' + qs.toString(), null, { fresh: true });
   }
-  sendGeneralChatMessage(text) {
-    return this.request('POST', '/chat/general/messages', { type: 'text', text });
+  sendGeneralChatMessage(text, opts = {}) {
+    return this.request('POST', '/chat/general/messages', {
+      type: 'text',
+      text,
+      reply_to_message_id: opts.reply_to_message_id || null,
+    });
   }
   updateGeneralChatMessage(id, text) {
     return this.request('PUT', `/chat/general/messages/${id}`, { type: 'text', text });
   }
   deleteGeneralChatMessage(id) {
     return this.request('DELETE', `/chat/general/messages/${id}`);
+  }
+  reactGeneralChatMessage(id, emoji) {
+    return this.request('POST', `/chat/general/messages/${id}/reactions`, { emoji });
   }
 
   // --- AI ---

@@ -16,6 +16,7 @@
     userId: null,
     sending: false,
     editingMessageId: null,
+    replyToMessage: null,
     loading: true,
   };
 
@@ -32,8 +33,46 @@
   `;
   form?.parentNode?.insertBefore(editBanner, form);
 
+  const replyBanner = document.createElement('div');
+  replyBanner.id = 'chat-reply-banner';
+  replyBanner.className = 'chat-reply-banner hidden';
+  replyBanner.innerHTML = `
+    <div class="reply-banner-content">
+      <span class="reply-banner-label">Ответ</span>
+      <strong data-reply-name></strong>
+      <small data-reply-text></small>
+    </div>
+    <button type="button" class="reply-banner-close" aria-label="Отменить ответ">×</button>
+  `;
+  form?.parentNode?.insertBefore(replyBanner, form);
+
+  function clearReply() {
+    state.replyToMessage = null;
+    replyBanner.classList.add('hidden');
+  }
+
+  function replyPreviewText(message) {
+    if (!message) return '';
+    if (message.text_content) return message.text_content;
+    if (message.type === 'audio_circle') return 'Голосовое сообщение';
+    if (message.type === 'video_circle') return 'Видеосообщение';
+    return 'Сообщение';
+  }
+
+  function setReply(message) {
+    if (!message || !message.id) return;
+    state.replyToMessage = message;
+    replyBanner.querySelector('[data-reply-name]').textContent = message.sender_name || 'Участник';
+    replyBanner.querySelector('[data-reply-text]').textContent = replyPreviewText(message).slice(0, 120);
+    replyBanner.classList.remove('hidden');
+    input?.focus();
+  }
+
+  replyBanner.querySelector('.reply-banner-close')?.addEventListener('click', clearReply);
+
   editBanner.querySelector('#chat-cancel-edit-btn')?.addEventListener('click', () => {
     state.editingMessageId = null;
+    clearReply();
     input.value = '';
     editBanner.classList.add('hidden');
     if (input && input.tagName === 'TEXTAREA') {
@@ -126,6 +165,30 @@
       ? `<div class="chat-message-text">${escapeHtml(zoom.textWithoutUrl).replace(/\n/g, '<br>')}</div>`
       : '';
     return `${remainingText}${renderZoomCard(zoom)}`;
+  }
+
+  function renderReplyPreview(reply) {
+    if (!reply || !reply.id) return '';
+    const text = reply.text_content || (reply.type === 'audio_circle' ? 'Голосовое сообщение' : reply.type === 'video_circle' ? 'Видеосообщение' : 'Сообщение');
+    return `
+      <button class="chat-reply-preview" type="button" data-scroll-reply="${escapeHtml(reply.id)}">
+        <strong>${escapeHtml(reply.sender_name || 'Участник')}</strong>
+        <span>${escapeHtml(text).replace(/\n/g, ' ').slice(0, 120)}</span>
+      </button>
+    `;
+  }
+
+  function renderReactions(reactions) {
+    if (!Array.isArray(reactions) || reactions.length === 0) return '';
+    return `
+      <div class="chat-reactions">
+        ${reactions.map((reaction) => `
+          <button class="chat-reaction-chip${reaction.reacted_by_me ? ' active' : ''}" type="button" data-reaction-emoji="${escapeHtml(reaction.emoji)}">
+            <span>${escapeHtml(reaction.emoji)}</span><strong>${Number(reaction.count) || 0}</strong>
+          </button>
+        `).join('')}
+      </div>
+    `;
   }
 
   function triggerHapticFeedback() {
@@ -235,7 +298,9 @@
               <span>${escapeHtml(message.sender_name || 'Участник')}</span>
               <time>${escapeHtml(timeLabel(message.created_at))}${statusIcon}</time>
             </div>
+            ${renderReplyPreview(message.reply_to)}
             ${contentHtml}
+            ${renderReactions(message.reactions)}
           </div>
         </article>
       `;
@@ -258,6 +323,39 @@
 
     if (keepBottom) scrollToBottom();
   }
+
+  list?.addEventListener('click', async (event) => {
+    const reactionBtn = event.target.closest('.chat-reaction-chip');
+    if (reactionBtn) {
+      const article = reactionBtn.closest('.chat-message');
+      const messageId = article?.dataset.messageId;
+      const emoji = reactionBtn.dataset.reactionEmoji;
+      if (messageId && emoji) {
+        try {
+          const data = await window.API.reactGeneralChatMessage(messageId, emoji);
+          const message = state.messages.get(String(messageId));
+          if (message) {
+            message.reactions = data.reactions || [];
+            state.messages.set(String(messageId), message);
+            render();
+          }
+        } catch (err) {
+          setStatus(err?.error || 'Не удалось поставить реакцию');
+        }
+      }
+      return;
+    }
+
+    const replyBtn = event.target.closest('[data-scroll-reply]');
+    if (replyBtn) {
+      const target = list.querySelector(`[data-message-id="${CSS.escape(String(replyBtn.dataset.scrollReply))}"]`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.add('chat-message-highlight');
+        window.setTimeout(() => target.classList.remove('chat-message-highlight'), 1200);
+      }
+    }
+  });
 
   function mergeMessages(messages) {
     let changed = false;
@@ -811,7 +909,9 @@
       }
     });
     state.socket.on('chat.message.updated', (message) => {
+      const existing = state.messages.get(String(message.id)) || {};
       state.messages.set(String(message.id), {
+        ...existing,
         ...message,
         is_own: Number(message.sender_id) === Number(state.userId)
       });
@@ -819,6 +919,14 @@
     });
     state.socket.on('chat.message.deleted', (data) => {
       state.messages.delete(String(data.id));
+      render();
+    });
+    state.socket.on('chat.message.reactions', (payload) => {
+      if (!payload || !payload.message_id) return;
+      const message = state.messages.get(String(payload.message_id));
+      if (!message) return;
+      message.reactions = payload.reactions || [];
+      state.messages.set(String(payload.message_id), message);
       render();
     });
     state.socket.on('connect_error', () => {
@@ -846,6 +954,10 @@
     sheet.className = 'ios-action-sheet';
 
     const ownButtons = `
+      <button class="action-sheet-btn action-reply" data-action="reply">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v1"/></svg>
+        <span>Ответить</span>
+      </button>
       <button class="action-sheet-btn action-edit" data-action="edit">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         <span>Редактировать</span>
@@ -857,6 +969,10 @@
     `;
 
     const otherButtons = `
+      <button class="action-sheet-btn action-reply" data-action="reply">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v1"/></svg>
+        <span>Ответить</span>
+      </button>
       <button class="action-sheet-btn action-delete-self text-danger" data-action="delete-self">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         <span>Удалить у себя</span>
@@ -867,6 +983,9 @@
       <div class="action-sheet-overlay"></div>
       <div class="action-sheet-body">
         <div class="action-sheet-header">Сообщение от ${escapeHtml(msg.sender_name || 'участника')}</div>
+        <div class="action-sheet-reactions">
+          ${['❤️', '👍', '🔥', '🙏', '😂', '😮'].map((emoji) => `<button type="button" data-reaction="${emoji}">${emoji}</button>`).join('')}
+        </div>
         <div class="action-sheet-group">
           ${isOwn ? ownButtons : otherButtons}
         </div>
@@ -888,6 +1007,23 @@
 
     sheet.querySelector('.action-sheet-overlay').addEventListener('click', closeSheet);
     sheet.querySelector('.action-cancel').addEventListener('click', closeSheet);
+    sheet.querySelectorAll('[data-reaction]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const emoji = button.dataset.reaction;
+        closeSheet();
+        try {
+          const data = await window.API.reactGeneralChatMessage(messageId, emoji);
+          const message = state.messages.get(String(messageId));
+          if (message) {
+            message.reactions = data.reactions || [];
+            state.messages.set(String(messageId), message);
+            render();
+          }
+        } catch (err) {
+          setStatus(err?.error || 'Не удалось поставить реакцию');
+        }
+      });
+    });
 
     sheet.addEventListener('click', async (e) => {
       const btn = e.target.closest('.action-sheet-btn');
@@ -897,8 +1033,11 @@
 
       closeSheet();
 
-      if (action === 'edit') {
+      if (action === 'reply') {
+        setReply(msg);
+      } else if (action === 'edit') {
         state.editingMessageId = String(messageId);
+        clearReply();
         input.value = msg.text_content || '';
         editBanner.classList.remove('hidden');
         input.focus();
@@ -1247,7 +1386,9 @@
     try {
       if (state.editingMessageId) {
         const data = await window.API.updateGeneralChatMessage(state.editingMessageId, text);
+        const existing = state.messages.get(String(state.editingMessageId)) || {};
         state.messages.set(String(state.editingMessageId), {
+          ...existing,
           ...data.message,
           is_own: true
         });
@@ -1261,6 +1402,14 @@
           id: tempId,
           sender_id: state.userId,
           sender_name: window.__sistemaCurrentUser?.display_name || 'Я',
+          reply_to_message_id: state.replyToMessage?.id || null,
+          reply_to: state.replyToMessage ? {
+            id: state.replyToMessage.id,
+            sender_name: state.replyToMessage.sender_name || 'Участник',
+            text_content: state.replyToMessage.text_content || null,
+            type: state.replyToMessage.type || 'text',
+          } : null,
+          reactions: [],
           type: 'text',
           text_content: text,
           created_at: new Date().toISOString(),
@@ -1274,10 +1423,13 @@
         scrollToBottom();
 
         try {
-          const data = await window.API.sendGeneralChatMessage(text);
+          const data = await window.API.sendGeneralChatMessage(text, {
+            reply_to_message_id: state.replyToMessage?.id || null,
+          });
           // Clean up temp and merge actual published message
           state.messages.delete(tempId);
           mergeMessages(data.message ? [data.message] : []);
+          clearReply();
           setStatus('Сообщение отправлено');
         } catch (err) {
           // Mark error state so user can retry or see failure
@@ -1289,6 +1441,7 @@
         }
       }
       input.value = '';
+      clearReply();
       if (input.tagName === 'TEXTAREA') {
         input.style.height = 'auto';
       }

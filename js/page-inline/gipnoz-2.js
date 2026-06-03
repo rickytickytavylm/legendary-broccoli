@@ -85,7 +85,7 @@
           countEl.textContent = totalLessons + ' ' + (totalLessons === 1 ? 'урок' : totalLessons < 5 ? 'урока' : 'уроков');
         }
         if (totalCountEl) {
-          totalCountEl.textContent = totalLessons + ' уроков';
+          totalCountEl.textContent = `5 модулей · ${totalLessons} уроков`;
         }
 
         lessonsList.innerHTML = '';
