@@ -21,6 +21,8 @@
   var progressBarEl = document.getElementById('shorts-player-progress-bar');
   var toastTimer;
   var controlHideTimer = null;
+  var preloadVideoEl = null;
+  var preloadUrl = '';
   /** @type {{ settle: Function | null, onErr: Function | null, onEnded: Function | null, onTime: Function | null, onPlayState: Function | null }} */
   var vidListeners = { settle: null, onErr: null, onEnded: null, onTime: null, onPlayState: null };
   /** @type {ReturnType<typeof setTimeout> | null} */
@@ -98,6 +100,50 @@
       posterEl.classList.toggle('is-visible', !!(isBusy && posterHref));
       if (posterHref) posterEl.src = posterHref;
     }
+  }
+
+  function clearNextPreload() {
+    if (!preloadVideoEl) return;
+    try {
+      preloadVideoEl.removeAttribute('src');
+      preloadVideoEl.load();
+    } catch (ignore) {}
+    preloadVideoEl = null;
+    preloadUrl = '';
+  }
+
+  function buildPlaybackUrlForIndex(index) {
+    if (!shortsItems.length) return '';
+    var n = shortsItems.length;
+    var item = shortsItems[((index % n) + n) % n];
+    if (!item) return '';
+    var url = playbackUrlFor(item, item.slug);
+    if (!url) return '';
+    var sep = url.indexOf('?') >= 0 ? '&' : '?';
+    return url + sep + '__preload=1';
+  }
+
+  function preloadNextShort() {
+    if (!shortsItems || shortsItems.length < 2 || !overlay || overlay.classList.contains('u-hidden')) {
+      clearNextPreload();
+      return;
+    }
+    var nextUrl = buildPlaybackUrlForIndex(playingIndex + 1);
+    if (!nextUrl || nextUrl === preloadUrl) return;
+
+    clearNextPreload();
+    preloadVideoEl = document.createElement('video');
+    preloadVideoEl.preload = 'auto';
+    preloadVideoEl.muted = true;
+    preloadVideoEl.playsInline = true;
+    preloadVideoEl.setAttribute('playsinline', '');
+    preloadVideoEl.setAttribute('webkit-playsinline', '');
+    preloadVideoEl.setAttribute('crossorigin', 'anonymous');
+    preloadVideoEl.src = nextUrl;
+    preloadUrl = nextUrl;
+    try {
+      preloadVideoEl.load();
+    } catch (ignore) {}
   }
 
   function clearControlHideTimer() {
@@ -251,6 +297,7 @@
     document.body.classList.remove('shorts-player-open');
     setStageBusy(false, '');
     hideCenterControl();
+    clearNextPreload();
     if (progressBarEl) progressBarEl.style.width = '0%';
     if (posterEl) {
       posterEl.removeAttribute('src');
@@ -319,8 +366,12 @@
     };
     vidListeners.onPlayState = function () {
       updateCenterControl();
-      if (videoEl && videoEl.paused) showCenterControl(true);
-      else showCenterControl(false);
+      if (videoEl && videoEl.paused) {
+        showCenterControl(true);
+      } else {
+        showCenterControl(false);
+        window.setTimeout(preloadNextShort, 450);
+      }
     };
 
     videoEl.setAttribute('playsinline', '');

@@ -7659,6 +7659,35 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   gap: 10px;
   align-items: flex-end;
   margin-bottom: 12px;
+  position: relative;
+}
+
+.chat-message::before {
+  content: "↩";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.12);
+  opacity: 0;
+  transform: translateY(-50%) scale(.82);
+  transition: opacity .14s ease, transform .14s ease;
+  pointer-events: none;
+}
+
+.chat-message-swiping .chat-message-bubble {
+  transform: translateX(var(--chat-swipe-x, 0));
+  transition: none;
+}
+
+.chat-message-reply-armed::before {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
 }
 
 .chat-message.pending {

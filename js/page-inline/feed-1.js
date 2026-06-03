@@ -39,6 +39,7 @@
 
   const likedPosts = readLikedPosts();
   const seenCommentIds = new Map();
+  let activeReplyComment = null;
 
   function seenForPost(postId) {
     if (!seenCommentIds.has(postId)) seenCommentIds.set(postId, new Set());
@@ -62,16 +63,66 @@
   }
 
   function renderCommentItem(comment) {
+    const replyHtml = comment.reply_to ? `
+      <button type="button" class="comment-reply-preview" data-scroll-comment="${escapeHtml(comment.reply_to.id)}">
+        <strong>${escapeHtml(comment.reply_to.author_name || 'Гость')}</strong>
+        <span>${escapeHtml(comment.reply_to.content || '').slice(0, 110)}</span>
+      </button>
+    ` : '';
+    const reactions = Array.isArray(comment.reactions) ? comment.reactions : [];
+    const reactionsHtml = reactions.length ? `
+      <div class="comment-reactions">
+        ${reactions.map((reaction) => `
+          <button type="button" class="comment-reaction-chip${reaction.reacted_by_me ? ' active' : ''}" data-comment-reaction="${escapeHtml(reaction.emoji)}">
+            <span>${escapeHtml(reaction.emoji)}</span><strong>${Number(reaction.count) || 0}</strong>
+          </button>
+        `).join('')}
+      </div>
+    ` : '';
     return `
       <div class="comment-avatar" aria-hidden="true">${renderCommentAvatar(comment)}</div>
       <div class="comment-body">
+        ${replyHtml}
         <div class="comment-line">
           <strong>${escapeHtml(comment.author_name)}</strong>
           <span>${escapeHtml(comment.content)}</span>
         </div>
-        <span class="comment-time">${formatTime(comment.created_at)}</span>
+        <div class="comment-actions">
+          <span class="comment-time">${formatTime(comment.created_at)}</span>
+          <button type="button" data-comment-reply>Ответить</button>
+          ${['❤️', '👍', '🔥'].map((emoji) => `<button type="button" data-comment-reaction="${emoji}">${emoji}</button>`).join('')}
+        </div>
+        ${reactionsHtml}
       </div>
     `;
+  }
+
+  function renderCommentNode(comment) {
+    const div = document.createElement('div');
+    div.className = 'comment-item';
+    div.dataset.commentId = comment.id;
+    div.innerHTML = renderCommentItem(comment);
+    return div;
+  }
+
+  function updateCommentReplyBanner() {
+    const wrap = document.getElementById('comment-reply-banner');
+    const name = document.getElementById('comment-reply-name');
+    const text = document.getElementById('comment-reply-text');
+    if (!wrap) return;
+    if (!activeReplyComment) {
+      wrap.classList.add('hidden');
+      return;
+    }
+    if (name) name.textContent = activeReplyComment.author_name || 'Гость';
+    if (text) text.textContent = String(activeReplyComment.content || '').slice(0, 120);
+    wrap.classList.remove('hidden');
+  }
+
+  function setCommentReply(comment) {
+    activeReplyComment = comment || null;
+    updateCommentReplyBanner();
+    document.getElementById('comment-sheet-input')?.focus();
   }
 
   // ── Sockets Real-Time Setup ──
@@ -87,6 +138,15 @@
 
       socket.on('feed:comment:created', (comment) => {
         appendCommentToUI(comment, true);
+      });
+      socket.on('feed:comment:reactions', (payload) => {
+        if (!payload || !payload.comment_id) return;
+        document.querySelectorAll(`[data-comment-id="${payload.comment_id}"]`).forEach((node) => {
+          const comment = node.__feedComment || {};
+          comment.reactions = payload.reactions || [];
+          node.__feedComment = comment;
+          node.innerHTML = renderCommentItem(comment);
+        });
       });
     } catch (e) {
       console.warn('[feed] Real-time connection error:', e);
@@ -159,10 +219,8 @@
     if (activePostId === comment.post_id && sheetList) {
       const existing = sheetList.querySelector(`[data-comment-id="${comment.id}"]`);
       if (!existing) {
-        const div = document.createElement('div');
-        div.className = 'comment-item';
-        div.dataset.commentId = comment.id;
-        div.innerHTML = renderCommentItem(comment);
+        const div = renderCommentNode(comment);
+        div.__feedComment = comment;
         sheetList.appendChild(div);
         sheetList.scrollTop = sheetList.scrollHeight;
       }
@@ -203,10 +261,8 @@
           list.innerHTML = '';
           comments.forEach((c) => {
             // Append to sheet list
-            const div = document.createElement('div');
-            div.className = 'comment-item';
-            div.dataset.commentId = c.id;
-            div.innerHTML = renderCommentItem(c);
+            const div = renderCommentNode(c);
+            div.__feedComment = c;
             list.appendChild(div);
           });
           list.scrollTop = list.scrollHeight;
@@ -222,6 +278,7 @@
   function closeCommentSheet() {
     const overlay = document.getElementById('comment-sheet-overlay');
     const sheet = document.getElementById('comment-sheet');
+    setCommentReply(null);
     overlay?.classList.remove('visible');
     sheet?.classList.remove('visible');
     setTimeout(() => {
@@ -279,6 +336,43 @@
   // Sheet close handlers
   document.getElementById('comment-sheet-overlay')?.addEventListener('click', closeCommentSheet);
   document.getElementById('comment-sheet-close')?.addEventListener('click', closeCommentSheet);
+  document.getElementById('comment-reply-cancel')?.addEventListener('click', () => setCommentReply(null));
+
+  document.getElementById('comment-sheet-list')?.addEventListener('click', async (e) => {
+    const item = e.target.closest('.comment-item');
+    if (!item) return;
+    const comment = item.__feedComment;
+
+    const replyPreview = e.target.closest('[data-scroll-comment]');
+    if (replyPreview) {
+      const target = document.querySelector(`#comment-sheet-list [data-comment-id="${CSS.escape(String(replyPreview.dataset.scrollComment))}"]`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.add('comment-item-highlight');
+        setTimeout(() => target.classList.remove('comment-item-highlight'), 1100);
+      }
+      return;
+    }
+
+    if (e.target.closest('[data-comment-reply]')) {
+      setCommentReply(comment);
+      return;
+    }
+
+    const reactionBtn = e.target.closest('[data-comment-reaction]');
+    if (reactionBtn && window.API) {
+      try {
+        const data = await window.API.request('POST', `/content/feed/comments/${item.dataset.commentId}/reactions`, {
+          emoji: reactionBtn.dataset.commentReaction,
+        });
+        comment.reactions = data.reactions || [];
+        item.__feedComment = comment;
+        item.innerHTML = renderCommentItem(comment);
+      } catch (err) {
+        console.error('[feed] Error reacting to comment:', err);
+      }
+    }
+  });
 
   // Sheet form submit
   document.getElementById('comment-sheet-form')?.addEventListener('submit', async (e) => {
@@ -293,9 +387,11 @@
       const comment = await window.API.request('POST', '/content/feed/comments', {
         post_id: activePostId,
         content: content,
+        reply_to_comment_id: activeReplyComment?.id || null,
       });
       const submittedPostId = activePostId;
       input.value = '';
+      setCommentReply(null);
       if (comment && comment.post_id) {
         appendCommentToUI(comment);
       } else {

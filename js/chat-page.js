@@ -682,6 +682,73 @@
         margin-top: 14px;
         line-height: 1.4;
       }
+      @media (max-width: 520px) {
+        .ios-sub-modal {
+          align-items: flex-end;
+          padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+        }
+        .ios-sub-modal-backdrop {
+          background: rgba(0, 0, 0, 0.62);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+        .ios-sub-modal-card {
+          max-width: none;
+          border-radius: 26px;
+          padding: 20px 16px 16px;
+          box-shadow: 0 18px 52px rgba(0, 0, 0, 0.54), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        }
+        .ios-sub-modal-close {
+          top: 14px;
+          right: 14px;
+          width: 28px;
+          height: 28px;
+          font-size: 18px;
+        }
+        .ios-sub-badge {
+          padding: 5px 11px;
+          font-size: 10px;
+          margin-bottom: 12px;
+        }
+        .ios-sub-title {
+          font-size: 22px;
+          line-height: 1.08;
+          letter-spacing: -0.035em;
+          margin-bottom: 8px;
+          max-width: 280px;
+        }
+        .ios-sub-desc {
+          font-size: 12.5px;
+          line-height: 1.38;
+          margin-bottom: 14px;
+          max-width: 310px;
+        }
+        .ios-sub-features {
+          gap: 9px;
+          margin-bottom: 16px;
+        }
+        .ios-sub-feature-item {
+          gap: 9px;
+          font-size: 12.5px;
+          line-height: 1.32;
+        }
+        .ios-sub-feature-icon {
+          width: 18px;
+          height: 18px;
+          font-size: 10px;
+        }
+        .ios-sub-btn-buy {
+          min-height: 46px;
+          border-radius: 18px;
+          font-size: 14px;
+          gap: 6px;
+        }
+        .ios-sub-footer {
+          margin-top: 10px;
+          font-size: 10px;
+          line-height: 1.3;
+        }
+      }
     `;
     document.head.appendChild(style);
 
@@ -1072,9 +1139,15 @@
   let hasMoved = false;
   let startX = 0;
   let startY = 0;
+  let swipeTargetMsg = null;
+  let swipeMessageId = null;
+  let swipeReplyArmed = false;
 
   const handleStart = (ev, targetMsg) => {
     hasMoved = false;
+    swipeTargetMsg = targetMsg;
+    swipeMessageId = targetMsg.getAttribute('data-message-id');
+    swipeReplyArmed = false;
     const touch = ev.touches ? ev.touches[0] : ev;
     startX = touch.clientX;
     startY = touch.clientY;
@@ -1092,14 +1165,36 @@
 
   const handleMove = (ev) => {
     const touch = ev.touches ? ev.touches[0] : ev;
-    if (Math.abs(touch.clientX - startX) > 8 || Math.abs(touch.clientY - startY) > 8) {
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
       hasMoved = true;
       if (touchTimer) clearTimeout(touchTimer);
     }
+
+    if (!swipeTargetMsg || Math.abs(dy) > Math.abs(dx) * 0.7 || dx <= 0) return;
+    const offset = Math.min(58, Math.max(0, dx));
+    swipeTargetMsg.classList.add('chat-message-swiping');
+    swipeTargetMsg.style.setProperty('--chat-swipe-x', `${offset}px`);
+    const armed = offset >= 42;
+    if (armed && !swipeReplyArmed) triggerHapticFeedback();
+    swipeReplyArmed = armed;
+    swipeTargetMsg.classList.toggle('chat-message-reply-armed', armed);
   };
 
   const handleEnd = () => {
     if (touchTimer) clearTimeout(touchTimer);
+    if (swipeTargetMsg) {
+      const msg = state.messages.get(String(swipeMessageId));
+      if (swipeReplyArmed && msg) {
+        setReply(msg);
+      }
+      swipeTargetMsg.classList.remove('chat-message-swiping', 'chat-message-reply-armed');
+      swipeTargetMsg.style.removeProperty('--chat-swipe-x');
+    }
+    swipeTargetMsg = null;
+    swipeMessageId = null;
+    swipeReplyArmed = false;
   };
 
   list?.addEventListener('touchstart', (ev) => {

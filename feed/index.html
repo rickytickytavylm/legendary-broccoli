@@ -300,6 +300,81 @@
       color: rgba(255, 255, 255, 0.82);
     }
 
+    .comment-reply-preview {
+      width: 100%;
+      margin: 0 0 6px;
+      padding: 6px 8px;
+      border: 0;
+      border-left: 2px solid rgba(255,255,255,.42);
+      border-radius: 10px;
+      text-align: left;
+      color: rgba(255,255,255,.75);
+      background: rgba(255,255,255,.055);
+    }
+
+    .comment-reply-preview strong,
+    .comment-reply-preview span {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .comment-reply-preview strong {
+      font-size: 11.5px;
+      color: rgba(255,255,255,.92);
+    }
+
+    .comment-reply-preview span {
+      margin-top: 1px;
+      font-size: 11.5px;
+      color: rgba(255,255,255,.5);
+    }
+
+    .comment-actions,
+    .comment-reactions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 5px;
+    }
+
+    .comment-actions button,
+    .comment-reaction-chip {
+      border: 0;
+      padding: 0;
+      color: rgba(255,255,255,.48);
+      background: transparent;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .comment-reaction-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+    }
+
+    .comment-reaction-chip.active {
+      color: #fff;
+      background: rgba(255,255,255,.13);
+    }
+
+    .comment-item-highlight {
+      animation: commentHighlight 1.05s ease;
+    }
+
+    @keyframes commentHighlight {
+      35% { background: rgba(255,255,255,.08); border-radius: 14px; }
+    }
+
     .comment-time {
       font-size: 11px;
       color: rgba(255, 255, 255, 0.3);
@@ -592,6 +667,49 @@
       flex-shrink: 0;
     }
 
+    .comment-reply-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.07);
+    }
+
+    .comment-reply-banner.hidden {
+      display: none;
+    }
+
+    .comment-reply-banner strong,
+    .comment-reply-banner span {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .comment-reply-banner strong {
+      color: #fff;
+      font-size: 12.5px;
+    }
+
+    .comment-reply-banner span {
+      color: rgba(255,255,255,.52);
+      font-size: 12px;
+    }
+
+    .comment-reply-banner button {
+      border: 0;
+      color: rgba(255,255,255,.62);
+      background: transparent;
+      font-size: 20px;
+      line-height: 1;
+    }
+
     .comment-sheet-form {
       display: flex;
       align-items: center;
@@ -849,6 +967,13 @@
     </div>
     <div class="comment-sheet-list" id="comment-sheet-list"></div>
     <div class="comment-sheet-input-wrap">
+      <div class="comment-reply-banner hidden" id="comment-reply-banner">
+        <div>
+          <strong>Ответ <span id="comment-reply-name"></span></strong>
+          <span id="comment-reply-text"></span>
+        </div>
+        <button type="button" id="comment-reply-cancel" aria-label="Отменить ответ">&times;</button>
+      </div>
       <form class="comment-sheet-form" id="comment-sheet-form">
         <input type="text" class="comment-sheet-input" id="comment-sheet-input" placeholder="Добавить комментарий..." required />
         <button type="submit" class="comment-sheet-submit" id="comment-sheet-submit" aria-label="Отправить комментарий">
@@ -863,6 +988,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/page-inline/feed-1.js?v=8"></script>
+  <script src="/js/page-inline/feed-1.js?v=9"></script>
 </body>
 </html>
