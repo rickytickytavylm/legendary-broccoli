@@ -456,7 +456,7 @@
     var scope = root || document;
     Array.prototype.forEach.call(scope.querySelectorAll('.lesson-item, .lesson-row'), function(item) {
       var idx = getLessonIndex(item);
-      var locked = accessState !== 'pro' && idx > 0;
+      var locked = accessState === 'free' && idx > 0;
       item.classList.toggle('locked', locked);
       item.setAttribute('aria-disabled', locked ? 'true' : 'false');
       if (locked && !item.querySelector('.lesson-lock-note')) {
@@ -602,6 +602,7 @@
   document.addEventListener('click', function(event) {
     var lesson = event.target.closest('.lesson-item.locked, .lesson-row.locked');
     if (!lesson) return;
+    if (accessState === 'unknown') return;
     event.preventDefault();
     event.stopPropagation();
     window.showAccessPrompt('NO_SUBSCRIPTION');
