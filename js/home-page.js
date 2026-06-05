@@ -1081,9 +1081,9 @@ function initMarathonCarousel() {
   function updateCarousel(dragOffset = 0) {
     const total = cards.length;
     const mobile = window.matchMedia('(max-width: 520px)').matches;
-    const sideOffset = mobile ? 214 : 300;
-    const rotate = mobile ? 24 : 28;
-    const dragProgress = Math.max(-1, Math.min(1, dragOffset / (mobile ? 140 : 180)));
+    const sideOffset = mobile ? 158 : 220;
+    const rotate = mobile ? 8 : 10;
+    const dragProgress = Math.max(-1, Math.min(1, dragOffset / (mobile ? 120 : 150)));
     cards.forEach((card, index) => {
       let diff = index - activeIndex;
       if (diff > total / 2) diff -= total;
@@ -1092,13 +1092,14 @@ function initMarathonCarousel() {
       const absVisual = Math.abs(visual);
       card.classList.toggle('is-active', diff === 0);
       card.style.zIndex = String(30 - Math.round(absVisual * 10));
-      card.style.opacity = absVisual < 0.2 ? '1' : absVisual < 1.45 ? '0.72' : '0';
+      card.style.opacity = absVisual < 1.45 ? '1' : '0';
       card.style.pointerEvents = Math.abs(diff) <= 1 ? 'auto' : 'none';
       const x = visual * sideOffset;
-      const z = -Math.min(160, absVisual * 118);
-      const scale = Math.max(0.72, 1 - absVisual * 0.16);
+      const y = absVisual > 0.2 ? 8 : 0;
+      const scale = Math.max(0.82, 1 - absVisual * 0.12);
       const rot = -visual * rotate;
-      card.style.transform = `translate3d(calc(-50% + ${x}px), -50%, ${z}px) rotateY(${rot}deg) scale(${scale})`;
+      card.style.filter = absVisual < 0.2 ? 'none' : 'brightness(.78)';
+      card.style.transform = `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), 0) rotate(${rot}deg) scale(${scale})`;
     });
   }
 
