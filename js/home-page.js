@@ -1078,6 +1078,14 @@ function initMarathonCarousel() {
   let dragged = false;
   let pointerDown = false;
 
+  cards.forEach((card) => {
+    const bg = card.style.getPropertyValue('--card-bg') || '';
+    const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
+    if (!match) return;
+    const img = new Image();
+    img.src = match[1];
+  });
+
   function updateCarousel(dragOffset = 0) {
     const total = cards.length;
     const mobile = window.matchMedia('(max-width: 520px)').matches;
@@ -1098,7 +1106,6 @@ function initMarathonCarousel() {
       const y = absVisual > 0.2 ? 8 : 0;
       const scale = Math.max(0.82, 1 - absVisual * 0.12);
       const rot = -visual * rotate;
-      card.style.filter = absVisual < 0.2 ? 'none' : 'brightness(.78)';
       card.style.transform = `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), 0) rotate(${rot}deg) scale(${scale})`;
     });
   }

@@ -1898,27 +1898,60 @@
     if (videoPreview) videoPreview.srcObject = null;
   };
 
+  function uploadChatMediaXhr(blob, mime, onProgress) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `${window.API.base}/chat/general/upload`, true);
+      xhr.timeout = 0;
+
+      const headers = window.API.getAuthHeaders ? window.API.getAuthHeaders() : {};
+      Object.entries(headers).forEach(([key, value]) => {
+        if (value != null) xhr.setRequestHeader(key, value);
+      });
+      xhr.setRequestHeader('Content-Type', mime || 'application/octet-stream');
+
+      xhr.upload.onprogress = (event) => {
+        if (!event.lengthComputable || typeof onProgress !== 'function') return;
+        onProgress(Math.round((event.loaded / event.total) * 100));
+      };
+      xhr.onload = () => {
+        let data = null;
+        try {
+          data = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+        } catch (err) {
+          reject(new Error('Некорректный ответ сервера'));
+          return;
+        }
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(data || {});
+          return;
+        }
+        reject(new Error(data?.error || `HTTP ${xhr.status}`));
+      };
+      xhr.onerror = () => reject(new Error('Соединение оборвалось при загрузке файла'));
+      xhr.onabort = () => reject(new Error('Загрузка файла была прервана'));
+      xhr.send(blob);
+    });
+  }
+
   const uploadAndSendMedia = async (blob, type, mime) => {
     const msgType = type === 'video' ? 'video_attachment' : type === 'image' ? 'image_attachment' : 'audio_circle';
+    const maxSize = type === 'video' ? 50 * 1024 * 1024 : 15 * 1024 * 1024;
+    if (blob.size > maxSize) {
+      alert(type === 'video'
+        ? 'Видео слишком большое. Максимум 50 МБ.'
+        : 'Файл слишком большой. Максимум 15 МБ.');
+      return;
+    }
 
     try {
       setStatus('Отправляем файл…');
       
-      // 1. Upload raw blob buffer to our S3 endpoint
-      const response = await fetch(`${window.API.base}/chat/general/upload`, {
-        method: 'POST',
-        headers: {
-          ...window.API.getAuthHeaders(),
-          'Content-Type': mime,
-        },
-        body: blob,
+      // 1. Upload raw blob buffer to our S3 endpoint.
+      // XHR is more stable than fetch(blob) for large uploads in iOS Safari/PWA.
+      const uploadData = await uploadChatMediaXhr(blob, mime, (progress) => {
+        setStatus(`Загружаем файл… ${progress}%`);
       });
-      
-      if (!response.ok) {
-        throw new Error('HTTP ' + response.status);
-      }
-      
-      const uploadData = await response.json();
       if (!uploadData.file_url) {
         throw new Error('S3 upload returned empty URL');
       }

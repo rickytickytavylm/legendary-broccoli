@@ -9792,7 +9792,7 @@ body.chat-page .notification-prompt-banner {
   -webkit-backface-visibility: hidden;
   box-shadow: 0 20px 48px rgba(0,0,0,.42);
   transform-origin: center center;
-  transition: transform .38s cubic-bezier(.2,.86,.2,1), filter .24s ease;
+  transition: transform .38s cubic-bezier(.2,.86,.2,1);
   will-change: transform;
   contain: paint;
   isolation: isolate;
