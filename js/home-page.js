@@ -1108,6 +1108,7 @@ function initMarathonCarousel() {
       const rot = -visual * rotate;
       card.style.transform = `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), 0) rotate(${rot}deg) scale(${scale})`;
     });
+    root.classList.add('is-ready');
   }
 
   function focus(index, manual = true) {
@@ -1182,6 +1183,8 @@ function initMarathonCarousel() {
 
   window.addEventListener('resize', updateCarousel);
   updateCarousel();
+  requestAnimationFrame(() => requestAnimationFrame(() => updateCarousel()));
+  window.addEventListener('pageshow', updateCarousel);
 }
 
 document.addEventListener('DOMContentLoaded', initMarathonCarousel);
