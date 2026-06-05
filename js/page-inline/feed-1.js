@@ -1,5 +1,9 @@
 (function initFeedInteractions() {
   const likedKey = 'sistema:feed-liked-posts';
+  const root = document.getElementById('feed-posts-root');
+  const fallbackTemplate = document.getElementById('feed-static-fallback');
+  const defaultAvatar = '/assets/webp/ruslan_promo.webp';
+  let feedPostsInitialized = false;
 
   function escapeHtml(value) {
     return String(value || '')
@@ -35,6 +39,86 @@
 
   function formatLikes(count) {
     return `Нравится: ${count}`;
+  }
+
+  function formatPostTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const dayMs = 24 * 60 * 60 * 1000;
+    if (date.toDateString() === now.toDateString()) return 'Сегодня';
+    if (diffMs > 0 && diffMs < dayMs * 2) return 'Вчера';
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+  }
+
+  function postSlug(post) {
+    return String(post.id || '').trim() || `post-${Date.now()}`;
+  }
+
+  function renderCaptionHtml(post) {
+    const author = escapeHtml(post.author_name || 'Руслан Молодцов');
+    const lines = String(post.body || '')
+      .split(/\n{2,}/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (!lines.length) return `<p><strong>${author}</strong></p>`;
+    return lines.map((line, index) => {
+      const safeLine = escapeHtml(line).replace(/\n/g, '<br>');
+      return `<p>${index === 0 ? `<strong>${author}</strong>` : ''}${safeLine}</p>`;
+    }).join('');
+  }
+
+  function renderPostMedia(post) {
+    const mediaType = post.media_type || (post.video_url ? 'video' : 'image');
+    if (mediaType === 'video' || mediaType === 'circle_video') {
+      const poster = post.cover_url || post.image_url || '';
+      return `
+        <div class="post-video-wrap${mediaType === 'circle_video' ? ' is-circle' : ''}">
+          <video class="post-video" src="${escapeHtml(post.video_url)}"${poster ? ` poster="${escapeHtml(poster)}"` : ''} controls playsinline webkit-playsinline preload="metadata"></video>
+        </div>
+      `;
+    }
+    if (!post.image_url) return '';
+    return `<img class="post-image" src="${escapeHtml(post.image_url)}" alt="${escapeHtml(post.title || 'Пост')}" loading="lazy" decoding="async" />`;
+  }
+
+  function renderPost(post) {
+    const id = postSlug(post);
+    const title = post.title || 'Пост Руслана Молодцова';
+    const shareText = String(post.body || '').replace(/\s+/g, ' ').trim().slice(0, 140) || title;
+    const likes = Number(post.likes_count) || 0;
+    return `
+      <article class="post-card" id="post-${escapeHtml(id)}" data-post-id="${escapeHtml(id)}" data-share-title="${escapeHtml(title)}" data-share-text="${escapeHtml(shareText)}">
+        <div class="post-author">
+          <img class="post-avatar" src="${escapeHtml(post.author_avatar_url || defaultAvatar)}" alt="${escapeHtml(post.author_name || 'Руслан Молодцов')}" loading="lazy" decoding="async" />
+          <div class="post-author-info">
+            <span class="post-author-name">${escapeHtml(post.author_name || 'Руслан Молодцов')}</span>
+            <span class="post-time">${escapeHtml(formatPostTime(post.published_at || post.created_at))}</span>
+          </div>
+        </div>
+        ${renderPostMedia(post)}
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span class="post-comment-count" data-comment-count></span>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes" data-base-likes="${likes}" data-likes>${formatLikes(likes)}</div>
+        <div class="post-caption">${renderCaptionHtml(post)}</div>
+        <button class="post-expand-link" type="button">Развернуть весь текст</button>
+        <div class="post-comments-preview-section hidden" data-comments-preview-container>
+          <div class="post-comments-preview-list" data-comments-preview-list></div>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+        </div>
+      </article>
+    `;
   }
 
   const likedPosts = readLikedPosts();
@@ -341,8 +425,10 @@
     }, 300);
   }
 
-  // ── Post Card Setup ──
+  function setupPostCards() {
   document.querySelectorAll('.post-card[data-post-id]').forEach((post) => {
+    if (post.dataset.feedReady === 'true') return;
+    post.dataset.feedReady = 'true';
     const postId = post.dataset.postId;
     const likeButton = post.querySelector('[data-like-button]');
     const likes = post.querySelector('[data-likes]');
@@ -384,6 +470,7 @@
         });
     }
   });
+  }
 
   // Sheet close handlers
   document.getElementById('comment-sheet-overlay')?.addEventListener('click', closeCommentSheet);
@@ -456,7 +543,10 @@
     }
   });
 
+  function setupShareButtons() {
   document.querySelectorAll('[data-share-button]').forEach((button) => {
+    if (button.dataset.shareReady === 'true') return;
+    button.dataset.shareReady = 'true';
     button.addEventListener('click', async () => {
       const post = button.closest('.post-card');
       if (!post) return;
@@ -484,8 +574,12 @@
       } catch (e) {}
     });
   });
+  }
 
+  function setupExpandButtons() {
   document.querySelectorAll('.post-expand-link').forEach((button) => {
+    if (button.dataset.expandReady === 'true') return;
+    button.dataset.expandReady = 'true';
     const caption = button.previousElementSibling;
     if (!caption || !caption.classList.contains('post-caption')) return;
     if (caption.textContent.trim().length < 180) {
@@ -500,4 +594,177 @@
       button.textContent = expanded ? 'Развернуть весь текст' : 'Свернуть текст';
     });
   });
+  }
+
+  function setupRenderedPosts() {
+    setupPostCards();
+    setupShareButtons();
+    setupExpandButtons();
+  }
+
+  async function loadFeedPosts() {
+    if (!root || !window.API) {
+      setupRenderedPosts();
+      return;
+    }
+    try {
+      const data = await window.API.request('GET', '/content/feed/posts', null, { fresh: true });
+      const posts = Array.isArray(data?.posts) ? data.posts : [];
+      if (!posts.length) {
+        root.innerHTML = '<div class="feed-empty">Пока нет постов.</div>';
+      } else {
+        root.innerHTML = posts.map(renderPost).join('');
+      }
+      root.setAttribute('aria-busy', 'false');
+      setupRenderedPosts();
+    } catch (err) {
+      console.error('[feed] Error loading posts:', err);
+      if (fallbackTemplate?.content?.children?.length) {
+        root.innerHTML = '';
+        root.appendChild(fallbackTemplate.content.cloneNode(true));
+      }
+      root?.setAttribute('aria-busy', 'false');
+      setupRenderedPosts();
+    }
+  }
+
+  function setupAdminComposer() {
+    const modal = document.getElementById('feed-post-modal');
+    const openBtn = document.getElementById('feed-admin-open');
+    const form = document.getElementById('feed-post-form');
+    const fileInput = document.getElementById('feed-post-file');
+    const bodyInput = document.getElementById('feed-post-body');
+    const preview = document.getElementById('feed-post-preview');
+    const statusEl = document.getElementById('feed-post-status');
+    const typeButtons = Array.from(document.querySelectorAll('[data-feed-media-type]'));
+    let mediaType = 'image';
+    let previewUrl = '';
+
+    if (!modal || !openBtn || !form || !fileInput || !bodyInput || !window.API) return;
+
+    function setStatus(text) {
+      if (statusEl) statusEl.textContent = text || '';
+    }
+
+    function setModalVisible(visible) {
+      modal.classList.toggle('hidden', !visible);
+      modal.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      if (visible) {
+        setStatus('');
+      } else {
+        form.reset();
+        clearPreview();
+      }
+    }
+
+    function clearPreview() {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      previewUrl = '';
+      if (preview) {
+        preview.innerHTML = '';
+        preview.style.display = 'none';
+      }
+    }
+
+    function updateFileAccept() {
+      fileInput.accept = mediaType === 'image' ? 'image/*' : 'video/*';
+      typeButtons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.feedMediaType === mediaType);
+      });
+      clearPreview();
+      fileInput.value = '';
+    }
+
+    function renderPreview(file) {
+      clearPreview();
+      if (!file || !preview) return;
+      previewUrl = URL.createObjectURL(file);
+      if (mediaType === 'image') {
+        preview.innerHTML = `<img src="${previewUrl}" alt="">`;
+      } else {
+        preview.innerHTML = `<video src="${previewUrl}" controls playsinline webkit-playsinline muted></video>`;
+      }
+      preview.style.display = 'block';
+    }
+
+    async function uploadFeedFile(file) {
+      const user = await window.API.me({ fresh: true }).then((data) => data.user);
+      if (!user || user.role !== 'admin') {
+        throw new Error('Доступ только для администратора');
+      }
+      const base = String(window.API.base || '').replace(/\/+$/u, '');
+      const response = await window.API.fetchWithTimeout(
+        `${base}/content/feed/posts/upload?type=${encodeURIComponent(mediaType)}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': file.type || 'application/octet-stream',
+            'Authorization': `Bearer ${window.API.accessToken}`,
+          },
+          credentials: 'include',
+          cache: 'no-store',
+          body: file,
+        },
+        { timeoutMs: 180000 }
+      );
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || 'Не удалось загрузить медиа');
+      }
+      return data;
+    }
+
+    openBtn.addEventListener('click', () => setModalVisible(true));
+    modal.querySelectorAll('[data-feed-post-close]').forEach((button) => {
+      button.addEventListener('click', () => setModalVisible(false));
+    });
+    typeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        mediaType = button.dataset.feedMediaType || 'image';
+        updateFileAccept();
+      });
+    });
+    fileInput.addEventListener('change', () => renderPreview(fileInput.files && fileInput.files[0]));
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const file = fileInput.files && fileInput.files[0];
+      const body = bodyInput.value.trim();
+      if (!file || !body) return;
+      const submit = form.querySelector('.feed-post-submit');
+      if (submit) submit.disabled = true;
+      try {
+        setStatus('Загружаем медиа...');
+        const uploaded = await uploadFeedFile(file);
+        setStatus('Публикуем пост...');
+        await window.API.request('POST', '/content/feed/posts', {
+          body,
+          title: body.split(/\n/u).find(Boolean)?.slice(0, 160) || 'Новый пост',
+          media_type: uploaded.media_type || mediaType,
+          image_url: uploaded.image_url,
+          video_url: uploaded.video_url,
+          cover_url: uploaded.cover_url,
+          status: 'published',
+        }, { requireAuth: true, timeoutMs: 30000 });
+        setStatus('Пост опубликован');
+        setModalVisible(false);
+        await loadFeedPosts();
+      } catch (err) {
+        console.error('[feed] Error publishing post:', err);
+        setStatus(err.message || 'Не удалось опубликовать пост');
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+
+    updateFileAccept();
+    window.API.me({ fresh: true })
+      .then((data) => {
+        if (data?.user?.role === 'admin') document.body.classList.add('feed-admin-ready');
+      })
+      .catch(() => {});
+  }
+
+  setupAdminComposer();
+  loadFeedPosts();
 }());
