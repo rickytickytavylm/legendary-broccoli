@@ -1076,25 +1076,29 @@ function initMarathonCarousel() {
   let startX = 0;
   let startY = 0;
   let dragged = false;
+  let pointerDown = false;
 
-  function updateCarousel() {
+  function updateCarousel(dragOffset = 0) {
     const total = cards.length;
-    const sideOffset = window.matchMedia('(max-width: 520px)').matches ? 118 : 188;
+    const mobile = window.matchMedia('(max-width: 520px)').matches;
+    const sideOffset = mobile ? 214 : 300;
+    const rotate = mobile ? 24 : 28;
+    const dragProgress = Math.max(-1, Math.min(1, dragOffset / (mobile ? 140 : 180)));
     cards.forEach((card, index) => {
       let diff = index - activeIndex;
       if (diff > total / 2) diff -= total;
       if (diff < -total / 2) diff += total;
+      const visual = diff + dragProgress;
+      const absVisual = Math.abs(visual);
       card.classList.toggle('is-active', diff === 0);
-      card.style.zIndex = String(20 - Math.abs(diff));
-      card.style.opacity = diff === 0 ? '1' : '0.76';
+      card.style.zIndex = String(30 - Math.round(absVisual * 10));
+      card.style.opacity = absVisual < 0.2 ? '1' : absVisual < 1.45 ? '0.72' : '0';
       card.style.pointerEvents = Math.abs(diff) <= 1 ? 'auto' : 'none';
-      if (diff === 0) {
-        card.style.transform = 'translate3d(-50%, -50%, 0) rotateY(0deg) scale(1)';
-      } else if (diff > 0) {
-        card.style.transform = `translate3d(calc(-50% + ${sideOffset}px), -50%, -150px) rotateY(-36deg) scale(.86)`;
-      } else {
-        card.style.transform = `translate3d(calc(-50% - ${sideOffset}px), -50%, -150px) rotateY(36deg) scale(.86)`;
-      }
+      const x = visual * sideOffset;
+      const z = -Math.min(160, absVisual * 118);
+      const scale = Math.max(0.72, 1 - absVisual * 0.16);
+      const rot = -visual * rotate;
+      card.style.transform = `translate3d(calc(-50% + ${x}px), -50%, ${z}px) rotateY(${rot}deg) scale(${scale})`;
     });
   }
 
@@ -1118,43 +1122,55 @@ function initMarathonCarousel() {
     });
   });
 
-  root.addEventListener('touchstart', (event) => {
-    const touch = event.touches && event.touches[0];
-    if (!touch) return;
-    startX = touch.clientX;
-    startY = touch.clientY;
-    dragged = false;
-  }, { passive: true });
-
-  root.addEventListener('touchend', (event) => {
-    const touch = event.changedTouches && event.changedTouches[0];
-    if (!touch) return;
-    const dx = touch.clientX - startX;
-    const dy = touch.clientY - startY;
-    if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-    dragged = true;
-    focus(activeIndex + (dx < 0 ? 1 : -1));
-  }, { passive: true });
-
-  root.addEventListener('pointerdown', (event) => {
-    if (event.pointerType === 'touch') return;
+  function beginDrag(event) {
+    pointerDown = true;
     startX = event.clientX;
     startY = event.clientY;
     dragged = false;
-  });
+    stage.classList.add('is-dragging');
+  }
 
-  root.addEventListener('pointerup', (event) => {
-    if (event.pointerType === 'touch') return;
+  function moveDrag(event) {
+    if (!pointerDown) return;
     const dx = event.clientX - startX;
     const dy = event.clientY - startY;
-    if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
+    dragged = true;
+    userInteracted = true;
+    updateCarousel(dx);
+  }
+
+  function endDrag(event) {
+    if (!pointerDown) return;
+    pointerDown = false;
+    stage.classList.remove('is-dragging');
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    if (Math.abs(dx) < 38 || Math.abs(dx) < Math.abs(dy) * 1.15) {
+      updateCarousel();
+      return;
+    }
     dragged = true;
     focus(activeIndex + (dx < 0 ? 1 : -1));
+  }
+
+  root.addEventListener('pointerdown', beginDrag);
+  root.addEventListener('pointermove', moveDrag);
+  root.addEventListener('pointerup', endDrag);
+  root.addEventListener('pointercancel', () => {
+    pointerDown = false;
+    stage.classList.remove('is-dragging');
+    updateCarousel();
+  });
+  root.addEventListener('lostpointercapture', () => {
+    pointerDown = false;
+    stage.classList.remove('is-dragging');
+    updateCarousel();
   });
 
   window.setInterval(() => {
     if (!userInteracted) focus(activeIndex + 1, false);
-  }, 3800);
+  }, 3000);
 
   window.addEventListener('resize', updateCarousel);
   updateCarousel();
