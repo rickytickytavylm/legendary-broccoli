@@ -1089,6 +1089,17 @@ function initMarathonCarousel() {
   function updateCarousel(dragOffset = 0) {
     const total = cards.length;
     const mobile = window.matchMedia('(max-width: 520px)').matches;
+    if (mobile) {
+      cards.forEach((card) => {
+        card.classList.add('is-active');
+        card.style.zIndex = '';
+        card.style.opacity = '';
+        card.style.pointerEvents = '';
+        card.style.transform = '';
+      });
+      root.classList.add('is-ready');
+      return;
+    }
     const sideOffset = mobile ? 158 : 220;
     const rotate = mobile ? 8 : 10;
     const dragProgress = Math.max(-1, Math.min(1, dragOffset / (mobile ? 120 : 150)));

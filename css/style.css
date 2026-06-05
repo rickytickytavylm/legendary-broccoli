@@ -9837,19 +9837,43 @@ body.chat-page .notification-prompt-banner {
 
 @media (max-width: 520px) {
   .home-marathon-orbit {
-    min-height: 350px;
+    min-height: 300px;
     margin-top: 8px;
     margin-bottom: 34px;
+    display: block;
+    overflow: visible;
   }
   .home-marathon-orbit-stage {
-    width: 100vw;
-    height: 285px;
+    display: flex;
+    gap: 14px;
+    width: calc(100vw - 24px);
+    height: auto;
+    min-height: 286px;
+    margin: 0 auto;
+    padding: 8px 12px 10px;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    cursor: default;
+  }
+  .home-marathon-orbit-stage::-webkit-scrollbar {
+    display: none;
   }
   .home-marathon-card {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    flex: 0 0 min(58vw, 210px);
     width: min(58vw, 210px);
     height: 270px;
     border-radius: 22px;
     padding: 16px;
+    opacity: 1 !important;
+    transform: none !important;
+    scroll-snap-align: center;
+    pointer-events: auto !important;
+    will-change: auto;
   }
   .home-marathon-card strong {
     font-size: 20px;

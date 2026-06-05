@@ -184,6 +184,7 @@
   }
 
   function unlockFeedScroll() {
+    const restoreY = savedScrollY;
     if (savedBodyStyles) {
       document.documentElement.style.overflow = savedBodyStyles.htmlOverflow;
       document.documentElement.style.overscrollBehavior = savedBodyStyles.htmlOverscrollBehavior;
@@ -196,8 +197,17 @@
       document.body.style.overscrollBehavior = savedBodyStyles.bodyOverscrollBehavior;
       document.body.style.touchAction = savedBodyStyles.bodyTouchAction;
       savedBodyStyles = null;
-      window.scrollTo(0, savedScrollY);
+      restoreFeedScroll(restoreY);
     }
+  }
+
+  function restoreFeedScroll(y) {
+    const targetY = Math.max(0, Number(y) || 0);
+    window.scrollTo(0, targetY);
+    requestAnimationFrame(() => {
+      window.scrollTo(0, targetY);
+      setTimeout(() => window.scrollTo(0, targetY), 80);
+    });
   }
 
   function updateCommentCount(postId, delta) {
