@@ -10,8 +10,7 @@
   const empty = root.querySelector('[data-chat-empty]');
   const sendButton = root.querySelector('[data-chat-send]');
   const voiceRecBtn = document.getElementById('chat-voice-rec-btn');
-  const attachBtn = document.getElementById('chat-attach-btn');
-  const attachInput = document.getElementById('chat-attach-input');
+  const videoRecBtn = document.getElementById('chat-video-rec-btn');
   const CHAT_BG_KEY = 'sistema:chat-background';
   const CHAT_BACKGROUNDS = [
     { id: 'classic', label: 'Текущий', className: '', preview: 'linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02))' },
@@ -249,8 +248,7 @@
   function updateComposerMediaAccess() {
     const allowed = state.userRole === 'admin' && !!state.canSendMedia;
     voiceRecBtn?.classList.toggle('hidden', !allowed);
-    attachBtn?.classList.toggle('hidden', !allowed);
-    if (!allowed && attachInput) attachInput.value = '';
+    videoRecBtn?.classList.toggle('hidden', !allowed);
   }
   updateComposerMediaAccess();
 
@@ -1898,44 +1896,8 @@
     if (videoPreview) videoPreview.srcObject = null;
   };
 
-  function uploadChatMediaXhr(blob, mime, onProgress) {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', `${window.API.base}/chat/general/upload`, true);
-      xhr.timeout = 0;
-
-      const headers = window.API.getAuthHeaders ? window.API.getAuthHeaders() : {};
-      Object.entries(headers).forEach(([key, value]) => {
-        if (value != null) xhr.setRequestHeader(key, value);
-      });
-      xhr.setRequestHeader('Content-Type', mime || 'application/octet-stream');
-
-      xhr.upload.onprogress = (event) => {
-        if (!event.lengthComputable || typeof onProgress !== 'function') return;
-        onProgress(Math.round((event.loaded / event.total) * 100));
-      };
-      xhr.onload = () => {
-        let data = null;
-        try {
-          data = xhr.responseText ? JSON.parse(xhr.responseText) : null;
-        } catch (err) {
-          reject(new Error('Некорректный ответ сервера'));
-          return;
-        }
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(data || {});
-          return;
-        }
-        reject(new Error(data?.error || `HTTP ${xhr.status}`));
-      };
-      xhr.onerror = () => reject(new Error('Соединение оборвалось при загрузке файла'));
-      xhr.onabort = () => reject(new Error('Загрузка файла была прервана'));
-      xhr.send(blob);
-    });
-  }
-
   const uploadAndSendMedia = async (blob, type, mime) => {
-    const msgType = type === 'video' ? 'video_attachment' : type === 'image' ? 'image_attachment' : 'audio_circle';
+    const msgType = type === 'video' ? 'video_circle' : 'audio_circle';
     const maxSize = type === 'video' ? 50 * 1024 * 1024 : 15 * 1024 * 1024;
     if (blob.size > maxSize) {
       alert(type === 'video'
@@ -1947,11 +1909,21 @@
     try {
       setStatus('Отправляем файл…');
       
-      // 1. Upload raw blob buffer to our S3 endpoint.
-      // XHR is more stable than fetch(blob) for large uploads in iOS Safari/PWA.
-      const uploadData = await uploadChatMediaXhr(blob, mime, (progress) => {
-        setStatus(`Загружаем файл… ${progress}%`);
+      // 1. Upload raw blob buffer to our S3 endpoint
+      const response = await fetch(`${window.API.base}/chat/general/upload`, {
+        method: 'POST',
+        headers: {
+          ...window.API.getAuthHeaders(),
+          'Content-Type': mime,
+        },
+        body: blob,
       });
+      
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+      
+      const uploadData = await response.json();
       if (!uploadData.file_url) {
         throw new Error('S3 upload returned empty URL');
       }
@@ -1976,23 +1948,7 @@
 
   // Bind recording events
   voiceRecBtn?.addEventListener('click', () => startRecording('audio'));
-  attachBtn?.addEventListener('click', () => {
-    if (!state.canSendMedia) return;
-    attachInput?.click();
-  });
-  attachInput?.addEventListener('change', async () => {
-    const file = attachInput.files?.[0];
-    if (!file) return;
-    const isImage = file.type.startsWith('image/');
-    const isVideo = file.type.startsWith('video/');
-    if (!isImage && !isVideo) {
-      alert('Можно прикрепить только изображение или видео.');
-      attachInput.value = '';
-      return;
-    }
-    await uploadAndSendMedia(file, isImage ? 'image' : 'video', file.type || (isImage ? 'image/jpeg' : 'video/mp4'));
-    attachInput.value = '';
-  });
+  videoRecBtn?.addEventListener('click', () => startRecording('video'));
   cancelBtn?.addEventListener('click', cancelRecording);
   stopBtn?.addEventListener('click', stopRecording);
 

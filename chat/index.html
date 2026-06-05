@@ -53,10 +53,9 @@
         <button class="chat-media-trigger hidden" type="button" id="chat-voice-rec-btn" aria-label="Записать голосовое">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v4M8 23h8"/></svg>
         </button>
-        <button class="chat-media-trigger hidden" type="button" id="chat-attach-btn" aria-label="Прикрепить фото или видео">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05 12.25 20.24a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 1 1-2.82-2.83l8.49-8.48"/></svg>
+        <button class="chat-media-trigger hidden" type="button" id="chat-video-rec-btn" aria-label="Записать кружочек">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="3"/></svg>
         </button>
-        <input type="file" id="chat-attach-input" accept="image/*,video/*" hidden />
         
         <textarea data-chat-input rows="1" maxlength="3000" placeholder="Написать..." spellcheck="false" autocomplete="off" autocapitalize="sentences"></textarea>
         
@@ -88,6 +87,6 @@
   <script src="/js/api.js?v=71"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/chat-page.js?v=24"></script>
+  <script src="/js/chat-page.js?v=25"></script>
 </body>
 </html>
