@@ -119,10 +119,16 @@
     wrap.classList.remove('hidden');
   }
 
-  function setCommentReply(comment) {
+  function setCommentReply(comment, options = {}) {
     activeReplyComment = comment || null;
     updateCommentReplyBanner();
-    document.getElementById('comment-sheet-input')?.focus();
+    if (comment && options.focus !== false) {
+      try {
+        document.getElementById('comment-sheet-input')?.focus({ preventScroll: true });
+      } catch (e) {
+        document.getElementById('comment-sheet-input')?.focus();
+      }
+    }
   }
 
   // ── Sockets Real-Time Setup ──
@@ -156,6 +162,7 @@
   let activePostId = null;
   let savedBodyStyles = null;
   let savedScrollY = 0;
+  let closeSheetTimer = null;
 
   function lockFeedScroll() {
     savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
@@ -207,7 +214,17 @@
     requestAnimationFrame(() => {
       window.scrollTo(0, targetY);
       setTimeout(() => window.scrollTo(0, targetY), 80);
+      setTimeout(() => window.scrollTo(0, targetY), 220);
+      setTimeout(() => window.scrollTo(0, targetY), 420);
     });
+  }
+
+  function blurCommentSheetFocus() {
+    const sheet = document.getElementById('comment-sheet');
+    const active = document.activeElement;
+    if (sheet && active && sheet.contains(active) && typeof active.blur === 'function') {
+      active.blur();
+    }
   }
 
   function updateCommentCount(postId, delta) {
@@ -262,6 +279,10 @@
   function openCommentSheet(postId) {
     activePostId = postId;
     lockFeedScroll();
+    if (closeSheetTimer) {
+      clearTimeout(closeSheetTimer);
+      closeSheetTimer = null;
+    }
     const overlay = document.getElementById('comment-sheet-overlay');
     const sheet = document.getElementById('comment-sheet');
     const list = document.getElementById('comment-sheet-list');
@@ -306,13 +327,16 @@
   function closeCommentSheet() {
     const overlay = document.getElementById('comment-sheet-overlay');
     const sheet = document.getElementById('comment-sheet');
-    setCommentReply(null);
+    blurCommentSheetFocus();
+    setCommentReply(null, { focus: false });
     overlay?.classList.remove('visible');
     sheet?.classList.remove('visible');
-    setTimeout(() => {
+    if (closeSheetTimer) clearTimeout(closeSheetTimer);
+    closeSheetTimer = setTimeout(() => {
       overlay?.classList.add('hidden');
       sheet?.classList.add('hidden');
       activePostId = null;
+      closeSheetTimer = null;
       unlockFeedScroll();
     }, 300);
   }
@@ -364,7 +388,7 @@
   // Sheet close handlers
   document.getElementById('comment-sheet-overlay')?.addEventListener('click', closeCommentSheet);
   document.getElementById('comment-sheet-close')?.addEventListener('click', closeCommentSheet);
-  document.getElementById('comment-reply-cancel')?.addEventListener('click', () => setCommentReply(null));
+  document.getElementById('comment-reply-cancel')?.addEventListener('click', () => setCommentReply(null, { focus: false }));
 
   document.getElementById('comment-sheet-list')?.addEventListener('click', async (e) => {
     const item = e.target.closest('.comment-item');
@@ -419,7 +443,7 @@
       });
       const submittedPostId = activePostId;
       input.value = '';
-      setCommentReply(null);
+      setCommentReply(null, { focus: false });
       if (comment && comment.post_id) {
         appendCommentToUI(comment);
       } else {
