@@ -13,7 +13,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Shorts — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=124" />
+  <link rel="stylesheet" href="/css/style.css?v=129" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -167,7 +167,8 @@
       width: 20px;
       height: 20px;
       color: #fff;
-      transform: translateX(1.5px);
+      transform: translateX(0.5px);
+      display: block;
     }
 
     .short-card__caption {
@@ -185,6 +186,22 @@
       -webkit-line-clamp: 5;
       line-clamp: 5;
       overflow: hidden;
+    }
+
+    .short-card__caption .short-card__more {
+      display: inline-flex;
+      margin-top: 6px;
+      padding: 4px 9px;
+      width: fit-content;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      background: rgba(0,0,0,.36);
+      border: 1px solid rgba(255,255,255,.16);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
     }
 
     .short-card__duration {
@@ -691,6 +708,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/shorts-page.js?v=15"></script>
+  <script src="/js/shorts-page.js?v=16"></script>
 </body>
 </html>

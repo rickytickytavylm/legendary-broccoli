@@ -155,30 +155,48 @@
 
   let activePostId = null;
   let savedBodyStyles = null;
+  let savedScrollY = 0;
 
   function lockFeedScroll() {
+    savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
     savedBodyStyles = {
       htmlOverflow: document.documentElement.style.overflow,
       htmlOverscrollBehavior: document.documentElement.style.overscrollBehavior,
+      bodyPosition: document.body.style.position,
+      bodyTop: document.body.style.top,
+      bodyLeft: document.body.style.left,
+      bodyRight: document.body.style.right,
+      bodyWidth: document.body.style.width,
       bodyOverflow: document.body.style.overflow,
       bodyOverscrollBehavior: document.body.style.overscrollBehavior,
       bodyTouchAction: document.body.style.touchAction,
     };
     document.documentElement.style.overflow = 'hidden';
     document.documentElement.style.overscrollBehavior = 'none';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${savedScrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
     document.body.style.overscrollBehavior = 'none';
-    document.body.style.touchAction = 'none';
+    document.body.style.touchAction = 'pan-y';
   }
 
   function unlockFeedScroll() {
     if (savedBodyStyles) {
       document.documentElement.style.overflow = savedBodyStyles.htmlOverflow;
       document.documentElement.style.overscrollBehavior = savedBodyStyles.htmlOverscrollBehavior;
+      document.body.style.position = savedBodyStyles.bodyPosition;
+      document.body.style.top = savedBodyStyles.bodyTop;
+      document.body.style.left = savedBodyStyles.bodyLeft;
+      document.body.style.right = savedBodyStyles.bodyRight;
+      document.body.style.width = savedBodyStyles.bodyWidth;
       document.body.style.overflow = savedBodyStyles.bodyOverflow;
       document.body.style.overscrollBehavior = savedBodyStyles.bodyOverscrollBehavior;
       document.body.style.touchAction = savedBodyStyles.bodyTouchAction;
       savedBodyStyles = null;
+      window.scrollTo(0, savedScrollY);
     }
   }
 
@@ -265,7 +283,7 @@
             div.__feedComment = c;
             list.appendChild(div);
           });
-          list.scrollTop = list.scrollHeight;
+          list.scrollTop = 0;
           
           renderPostCommentsPreview(postId, comments);
         })

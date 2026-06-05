@@ -16,7 +16,7 @@
   <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
   <meta property="og:title" content="Лента — Система Молодцова" />
   <meta property="og:image" content="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=124" />
+  <link rel="stylesheet" href="/css/style.css?v=129" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -573,6 +573,8 @@
       opacity: 0;
       visibility: hidden;
       transition: opacity .25s ease, visibility .25s ease;
+      overscroll-behavior: none;
+      touch-action: none;
     }
 
     .comment-sheet-overlay.visible {
@@ -595,6 +597,8 @@
       transform: translateY(100%);
       transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       box-shadow: 0 -10px 40px rgba(0,0,0,0.35);
+      overscroll-behavior: contain;
+      touch-action: pan-y;
     }
 
     .comment-sheet.visible {
@@ -647,6 +651,8 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
     }
 
     .comment-sheet-list::-webkit-scrollbar {
@@ -988,6 +994,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/page-inline/feed-1.js?v=9"></script>
+  <script src="/js/page-inline/feed-1.js?v=10"></script>
 </body>
 </html>

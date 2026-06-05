@@ -35,6 +35,7 @@
   var lastSwipeAt = 0;
   /** Колёсо трекпада: не триггерить пачкой кадров */
   var wheelStepLockUntil = 0;
+  var playbackAttemptTimer = null;
 
   if (!root) return;
 
@@ -67,6 +68,7 @@
     clearLoadKickTimer();
     if (vidListeners.settle) {
       videoEl.removeEventListener('loadeddata', vidListeners.settle);
+      videoEl.removeEventListener('loadedmetadata', vidListeners.settle);
       videoEl.removeEventListener('canplay', vidListeners.settle);
       vidListeners.settle = null;
     }
@@ -77,6 +79,10 @@
   }
 
   function detachVideoListeners() {
+    if (playbackAttemptTimer) {
+      window.clearTimeout(playbackAttemptTimer);
+      playbackAttemptTimer = null;
+    }
     detachLoadListenersOnly();
     if (videoEl && vidListeners.onEnded) {
       videoEl.removeEventListener('ended', vidListeners.onEnded);
@@ -185,14 +191,22 @@
     progressBarEl.style.width = Math.max(0, Math.min(100, (videoEl.currentTime / videoEl.duration) * 100)) + '%';
   }
 
-  function playCurrentVideo() {
+  function playCurrentVideo(showFallback) {
     if (!videoEl || !videoEl.play) return;
     var p = videoEl.play();
     if (p && typeof p.catch === 'function') {
       p.catch(function () {
-        showCenterControl(true);
+        if (showFallback !== false) showCenterControl(true);
       });
     }
+  }
+
+  function requestAutoplay() {
+    playCurrentVideo(false);
+    if (playbackAttemptTimer) window.clearTimeout(playbackAttemptTimer);
+    playbackAttemptTimer = window.setTimeout(function () {
+      playCurrentVideo(true);
+    }, 180);
   }
 
   function togglePlayback() {
@@ -282,6 +296,24 @@
     videoEl = neu;
   }
 
+  function prepareVideoForSource(reuseOverlay) {
+    if (!stageEl) return;
+    if (!reuseOverlay) {
+      remountFreshVideo();
+      return;
+    }
+    detachVideoListeners();
+    if (!videoEl) {
+      remountFreshVideo();
+      return;
+    }
+    try {
+      videoEl.pause();
+      videoEl.removeAttribute('src');
+      videoEl.load();
+    } catch (ignore) {}
+  }
+
   function hidePlayer() {
     if (!overlay || !stageEl) return;
     var ae = document.activeElement;
@@ -322,7 +354,7 @@
     }
 
     setStageBusy(true, posterHref || '');
-    remountFreshVideo();
+    prepareVideoForSource(!!reuseOverlay);
     if (!videoEl) return;
 
     var sep = url.indexOf('?') >= 0 ? '&' : '?';
@@ -338,7 +370,7 @@
       detachLoadListenersOnly();
       setStageBusy(false, '');
       if (posterEl) posterEl.classList.remove('is-visible');
-      playCurrentVideo();
+      requestAutoplay();
     }
 
     vidListeners.settle = function () {
@@ -384,6 +416,7 @@
     videoEl.setAttribute('controlslist', 'nodownload noplaybackrate noremoteplayback');
 
     videoEl.addEventListener('loadeddata', vidListeners.settle);
+    videoEl.addEventListener('loadedmetadata', vidListeners.settle);
     videoEl.addEventListener('canplay', vidListeners.settle);
     videoEl.addEventListener('error', vidListeners.onErr);
     videoEl.addEventListener('timeupdate', vidListeners.onTime);
@@ -399,7 +432,7 @@
     videoEl.src = playUrl;
     try {
       videoEl.load();
-      playCurrentVideo();
+      requestAutoplay();
     } catch (e) {}
   }
 
@@ -465,7 +498,11 @@
       capWrap.className = 'short-card__caption';
       var span = document.createElement('span');
       span.textContent = cap;
+      var more = document.createElement('span');
+      more.className = 'short-card__more';
+      more.textContent = 'Ещё';
       capWrap.appendChild(span);
+      capWrap.appendChild(more);
 
       btn.appendChild(posterWrap);
       btn.appendChild(capWrap);

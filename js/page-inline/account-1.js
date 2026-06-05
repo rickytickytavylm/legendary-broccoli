@@ -342,41 +342,31 @@ function escapeHtml(value) {
       }
 
       if (ringEl) {
-        // Step 1: Start at 0% (dashoffset = 251.3)
+        // Smooth one-way iOS-like progress: no full spin and rollback.
         ringEl.setAttribute('stroke-dashoffset', '251.3');
         if (countEl) countEl.textContent = '0%';
 
-        // Helper for animating numbers in the center
         const animateCounter = (start, end, duration) => {
           if (!countEl) return;
           const startTime = performance.now();
           const update = (currentTime) => {
             const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+            const linear = Math.min(elapsed / duration, 1);
+            const progress = 1 - Math.pow(1 - linear, 3);
             const currentVal = Math.round(start + (end - start) * progress);
             countEl.textContent = `${currentVal}%`;
-            if (progress < 1) {
+            if (linear < 1) {
               requestAnimationFrame(update);
             }
           };
           requestAnimationFrame(update);
         };
 
-        // Step 2: Animate to 100% (dashoffset = 0) with ease-out
-        setTimeout(() => {
-          ringEl.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-          ringEl.setAttribute('stroke-dashoffset', '0');
-          animateCounter(0, 100, 800);
-
-          // Step 3: Settle at the final target with an elastic spring bounce
-          setTimeout(() => {
-            ringEl.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            const finalOffset = 251.3 - (251.3 * targetPct);
-            ringEl.setAttribute('stroke-dashoffset', String(finalOffset));
-            animateCounter(100, targetPercentVal, 1200);
-          }, 950);
-
-        }, 200);
+        requestAnimationFrame(() => {
+          const finalOffset = 251.3 - (251.3 * targetPct);
+          ringEl.setAttribute('stroke-dashoffset', String(finalOffset));
+          animateCounter(0, targetPercentVal, 1350);
+        });
       }
 
       // Continue learning — show static course cards (extend later from API)

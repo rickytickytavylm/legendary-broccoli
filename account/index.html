@@ -12,7 +12,7 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=124" />
+  <link rel="stylesheet" href="/css/style.css?v=129" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -1089,13 +1089,46 @@
       margin: 0 auto 24px;
       padding: 24px 28px !important;
       border-radius: 28px;
+      isolation: isolate;
       border: 1px solid rgba(255, 255, 255, 0.14) !important;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%) !important;
+      background:
+        radial-gradient(ellipse at bottom, rgba(27,39,53,.88) 0%, rgba(9,10,15,.98) 72%),
+        #090a0f !important;
       backdrop-filter: blur(32px) saturate(180%) !important;
       -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
       box-shadow: 
         inset 0 1px 0 rgba(255, 255, 255, 0.16),
         0 18px 46px rgba(0, 0, 0, 0.3) !important;
+    }
+    .activity-rings-card::before,
+    .activity-rings-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-repeat: repeat;
+      opacity: .58;
+    }
+    .activity-rings-card::before {
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.9) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(180,210,255,.62) 0 1px, transparent 1.7px);
+      background-size: 54px 54px, 82px 82px;
+      background-position: 8px 12px, 32px 44px;
+      animation: profileStarsDrift 58s linear infinite;
+    }
+    .activity-rings-card::after {
+      background:
+        radial-gradient(circle at 18% 16%, rgba(100,170,255,.18), transparent 28%),
+        radial-gradient(circle at 86% 82%, rgba(255,255,255,.1), transparent 30%);
+    }
+    .activity-rings-card > * {
+      position: relative;
+      z-index: 1;
+    }
+    @keyframes profileStarsDrift {
+      to { background-position: 8px -42px, 32px -38px; }
     }
     
     .rings-flex-layout {
@@ -1117,11 +1150,13 @@
     .watch-activity-rings {
       width: 100%;
       height: 100%;
+      filter: drop-shadow(0 14px 22px rgba(0,0,0,.32));
     }
     
     .ring-fill {
       transform: rotate(-90deg);
       transform-origin: center;
+      transition: stroke-dashoffset 1.35s cubic-bezier(.2,.85,.2,1);
     }
     
     .watch-ring-percent {
@@ -1267,14 +1302,15 @@
             <svg class="watch-activity-rings" viewBox="0 0 100 100">
               <defs>
                 <linearGradient id="singleRingGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#30d158" />
-                  <stop offset="100%" stop-color="#34c759" />
+                  <stop offset="0%" stop-color="#f8fbff" />
+                  <stop offset="52%" stop-color="#9fd7ff" />
+                  <stop offset="100%" stop-color="#ffffff" />
                 </linearGradient>
               </defs>
               
               <!-- Outer base track. R=40, circum=251.3 -->
-              <circle cx="50" cy="50" r="40" stroke="rgba(48, 209, 88, 0.08)" stroke-width="9" fill="none" />
-              <circle id="watch-single-ring" class="ring-fill" cx="50" cy="50" r="40" stroke="url(#singleRingGrad)" stroke-width="9" stroke-linecap="round" fill="none"
+              <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.12)" stroke-width="5.6" fill="none" />
+              <circle id="watch-single-ring" class="ring-fill" cx="50" cy="50" r="40" stroke="url(#singleRingGrad)" stroke-width="5.6" stroke-linecap="round" fill="none"
                       stroke-dasharray="251.3" stroke-dashoffset="251.3" />
             </svg>
             <div class="watch-ring-percent">
@@ -1285,7 +1321,7 @@
           
           <div class="rings-legend">
             <div class="legend-item">
-              <div class="legend-header" style="color: #30d158">
+              <div class="legend-header" style="color: #b9e3ff">
                 <span class="legend-bullet"></span>
                 <span class="legend-label">Дни в системе</span>
               </div>
@@ -1408,6 +1444,6 @@
   <script src="/js/api.js?v=70"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
-  <script src="/js/page-inline/account-1.js?v=11"></script>
+  <script src="/js/page-inline/account-1.js?v=12"></script>
 </body>
 </html>

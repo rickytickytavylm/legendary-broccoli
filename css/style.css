@@ -2288,8 +2288,8 @@ body.community-page .ux-community-grid {
   }
 
   body.community-page .ux-community-grid {
-    width: calc(100vw - 32px);
-    max-width: none;
+    width: min(calc(100vw - 32px), 520px);
+    max-width: calc(100vw - 32px);
     margin-left: auto;
     margin-right: auto;
   }
@@ -7539,10 +7539,20 @@ body.chat-page *,
   --chat-pattern-repeat: no-repeat;
 }
 
+.chat-bg-radial-dots {
+  --chat-pattern: repeating-radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,.16) 1px, transparent 2px, transparent 6px);
+  --chat-pattern-size: 20px 20px;
+  --chat-pattern-repeat: repeat;
+}
+
 .chat-page .app-tabbar,
 .chat-page .app-sidebar,
 .chat-page .footer,
 .chat-page .navbar {
+  display: none !important;
+}
+
+.chat-page #app-mobile-header .mobile-header-actions > :not([data-chat-settings-open]) {
   display: none !important;
 }
 
@@ -8321,10 +8331,16 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   gap: 10px;
   align-items: flex-end;
   padding: 12px 16px calc(max(14px, env(safe-area-inset-bottom)) + var(--chat-system-bottom, 0px));
-  border-top: 1px solid rgba(255,255,255,.08);
-  background: rgba(7, 16, 14, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.22), transparent 42%),
+    linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.055)),
+    rgba(7, 16, 14, 0.52);
+  backdrop-filter: blur(24px) saturate(160%) brightness(1.05);
+  -webkit-backdrop-filter: blur(24px) saturate(160%) brightness(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 -18px 44px rgba(0,0,0,.22);
   position: sticky;
   bottom: 0;
   z-index: 10;
@@ -8346,11 +8362,15 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   border-radius: 20px !important;
   padding: 10px 16px;
   color: #fff;
-  background-color: #060c0a !important;
-  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  background-color: rgba(255,255,255,.075) !important;
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(255,255,255,.18), transparent 45%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.035) 100%) !important;
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 8px rgba(255, 255, 255, 0.08);
   outline: none;
   font-family: inherit;
   font-size: 16px !important;
@@ -8368,7 +8388,7 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
 
 .chat-composer textarea:focus {
   border-color: rgba(255,255,255,.28) !important;
-  background-color: #0b1411 !important;
+  background-color: rgba(255,255,255,.11) !important;
   background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
 }
 
@@ -8382,10 +8402,17 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   flex: 0 0 42px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
-  color: rgba(255, 255, 255, 0.72);
-  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.86);
+  background:
+    radial-gradient(circle at 35% 18%, rgba(255,255,255,.32), transparent 45%),
+    rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,.22),
+    0 8px 20px rgba(0,0,0,.24);
   cursor: pointer;
   transition: transform 0.2s, background 0.2s, color 0.2s;
   margin-bottom: 1px;
@@ -8393,7 +8420,7 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
 }
 
 .chat-media-trigger:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
   transform: scale(1.05);
 }
@@ -8545,6 +8572,29 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
 .chat-video-circle {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.chat-attachment {
+  display: block;
+  overflow: hidden;
+  max-width: min(68vw, 360px);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px;
+  background: rgba(255,255,255,.06);
+  box-shadow: 0 14px 34px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.chat-attachment img,
+.chat-attachment video {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  background: #050506;
+}
+
+.chat-image-attachment img {
   object-fit: cover;
 }
 
@@ -9684,4 +9734,123 @@ body.chat-page .notification-prompt-banner {
 
 .feed-view-all-link:active {
   transform: scale(0.96);
+}
+
+/* ─── Home Marathons Slow 3D Orbit ────────── */
+.home-marathon-header {
+  margin-top: 10px;
+}
+
+.home-marathon-orbit {
+  width: 100%;
+  min-height: 300px;
+  display: grid;
+  place-items: center;
+  margin: 4px auto 42px;
+  overflow: hidden;
+  perspective: 900px;
+}
+
+.home-marathon-orbit-stage {
+  position: relative;
+  width: min(86vw, 430px);
+  height: 230px;
+  transform-style: preserve-3d;
+  animation: homeMarathonOrbit 46s linear infinite;
+  will-change: transform;
+}
+
+.home-marathon-orbit-stage:hover {
+  animation-play-state: paused;
+}
+
+.home-marathon-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 116px;
+  height: 154px;
+  padding: 12px;
+  border-radius: 18px;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 1px solid rgba(255,255,255,.18);
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.72)),
+    var(--card-bg) center/cover no-repeat;
+  box-shadow: 0 18px 44px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.12);
+  transform-origin: center center;
+  animation: homeMarathonCardLight 46s linear infinite;
+  will-change: filter;
+}
+
+.home-marathon-card span {
+  margin-bottom: 7px;
+  color: rgba(255,255,255,.62);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.home-marathon-card strong {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.05;
+  letter-spacing: -.04em;
+}
+
+.home-marathon-card small {
+  margin-top: 6px;
+  color: rgba(255,255,255,.66);
+  font-size: 10.5px;
+  line-height: 1.25;
+}
+
+.home-marathon-card:nth-child(1) { transform: translate(-50%, -50%) rotateY(0deg) translateZ(168px); animation-delay: 0s; }
+.home-marathon-card:nth-child(2) { transform: translate(-50%, -50%) rotateY(45deg) translateZ(168px); animation-delay: -5.75s; }
+.home-marathon-card:nth-child(3) { transform: translate(-50%, -50%) rotateY(90deg) translateZ(168px); animation-delay: -11.5s; }
+.home-marathon-card:nth-child(4) { transform: translate(-50%, -50%) rotateY(135deg) translateZ(168px); animation-delay: -17.25s; }
+.home-marathon-card:nth-child(5) { transform: translate(-50%, -50%) rotateY(180deg) translateZ(168px); animation-delay: -23s; }
+.home-marathon-card:nth-child(6) { transform: translate(-50%, -50%) rotateY(225deg) translateZ(168px); animation-delay: -28.75s; }
+.home-marathon-card:nth-child(7) { transform: translate(-50%, -50%) rotateY(270deg) translateZ(168px); animation-delay: -34.5s; }
+.home-marathon-card:nth-child(8) { transform: translate(-50%, -50%) rotateY(315deg) translateZ(168px); animation-delay: -40.25s; }
+
+@keyframes homeMarathonOrbit {
+  from { transform: perspective(900px) rotateY(-360deg); }
+  to { transform: perspective(900px) rotateY(0deg); }
+}
+
+@keyframes homeMarathonCardLight {
+  0%, 100% { filter: brightness(1.05) saturate(1.05); }
+  50% { filter: brightness(.58) saturate(.85); }
+}
+
+@media (max-width: 520px) {
+  .home-marathon-orbit {
+    min-height: 270px;
+    margin-bottom: 30px;
+  }
+  .home-marathon-orbit-stage {
+    width: 330px;
+    height: 210px;
+  }
+  .home-marathon-card {
+    width: 98px;
+    height: 136px;
+    border-radius: 16px;
+    padding: 10px;
+  }
+  .home-marathon-card:nth-child(1) { transform: translate(-50%, -50%) rotateY(0deg) translateZ(132px); }
+  .home-marathon-card:nth-child(2) { transform: translate(-50%, -50%) rotateY(45deg) translateZ(132px); }
+  .home-marathon-card:nth-child(3) { transform: translate(-50%, -50%) rotateY(90deg) translateZ(132px); }
+  .home-marathon-card:nth-child(4) { transform: translate(-50%, -50%) rotateY(135deg) translateZ(132px); }
+  .home-marathon-card:nth-child(5) { transform: translate(-50%, -50%) rotateY(180deg) translateZ(132px); }
+  .home-marathon-card:nth-child(6) { transform: translate(-50%, -50%) rotateY(225deg) translateZ(132px); }
+  .home-marathon-card:nth-child(7) { transform: translate(-50%, -50%) rotateY(270deg) translateZ(132px); }
+  .home-marathon-card:nth-child(8) { transform: translate(-50%, -50%) rotateY(315deg) translateZ(132px); }
 }

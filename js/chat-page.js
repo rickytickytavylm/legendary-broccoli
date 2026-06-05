@@ -9,6 +9,9 @@
   const status = root.querySelector('[data-chat-status]');
   const empty = root.querySelector('[data-chat-empty]');
   const sendButton = root.querySelector('[data-chat-send]');
+  const voiceRecBtn = document.getElementById('chat-voice-rec-btn');
+  const attachBtn = document.getElementById('chat-attach-btn');
+  const attachInput = document.getElementById('chat-attach-input');
   const CHAT_BG_KEY = 'sistema:chat-background';
   const CHAT_BACKGROUNDS = [
     { id: 'classic', label: 'Текущий', className: '', preview: 'linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02))' },
@@ -16,12 +19,14 @@
     { id: 'stripes-green', label: 'Зеленые полосы', className: 'chat-bg-stripes-green', preview: 'linear-gradient(to right, #57c99b, #57c99b 10px, #fefefe 10px, #fefefe 20px)' },
     { id: 'sublime', label: 'Sublime', className: 'chat-bg-sublime', preview: 'linear-gradient(115deg, #ff5c7d, #6a82fb)' },
     { id: 'argon', label: 'Argon', className: 'chat-bg-argon', preview: 'linear-gradient(110deg, #03001e, #7303c0, #ec38bc, #fdeff9)' },
+    { id: 'radial-dots', label: 'Радиальные точки', className: 'chat-bg-radial-dots', preview: 'repeating-radial-gradient(circle, #fff, #fff 1px, transparent 2px, transparent 6px)' },
   ];
   const state = {
     messages: new Map(),
     latestId: 0,
     socket: null,
     userId: null,
+    canSendMedia: false,
     emailNotificationsEnabled: true,
     sending: false,
     editingMessageId: null,
@@ -79,7 +84,8 @@
     if (!message) return '';
     if (message.text_content) return message.text_content;
     if (message.type === 'audio_circle') return 'Голосовое сообщение';
-    if (message.type === 'video_circle') return 'Видеосообщение';
+    if (message.type === 'video_circle' || message.type === 'video_attachment') return 'Видеосообщение';
+    if (message.type === 'image_attachment') return 'Изображение';
     return 'Сообщение';
   }
 
@@ -193,7 +199,7 @@
 
   function renderReplyPreview(reply) {
     if (!reply || !reply.id) return '';
-    const text = reply.text_content || (reply.type === 'audio_circle' ? 'Голосовое сообщение' : reply.type === 'video_circle' ? 'Видеосообщение' : 'Сообщение');
+    const text = reply.text_content || (reply.type === 'audio_circle' ? 'Голосовое сообщение' : (reply.type === 'video_circle' || reply.type === 'video_attachment') ? 'Видеосообщение' : reply.type === 'image_attachment' ? 'Изображение' : 'Сообщение');
     return `
       <button class="chat-reply-preview" type="button" data-scroll-reply="${escapeHtml(reply.id)}">
         <strong>${escapeHtml(reply.sender_name || 'Участник')}</strong>
@@ -237,6 +243,13 @@
       }
     }
     status.textContent = (text || '') + pushStatus;
+  }
+
+  function updateComposerMediaAccess() {
+    const allowed = !!state.canSendMedia;
+    voiceRecBtn?.classList.toggle('hidden', !allowed);
+    attachBtn?.classList.toggle('hidden', !allowed);
+    if (!allowed && attachInput) attachInput.value = '';
   }
 
   function isStandalonePwa() {
@@ -444,6 +457,20 @@
               <circle class="chat-video-progress-circle-bar" cx="90" cy="90" r="88" fill="transparent" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553" style="transition: stroke-dashoffset 0.1s linear;"></circle>
             </svg>
           </div>
+        `;
+      } else if (message.type === 'image_attachment' && message.file_url) {
+        contentHtml = `
+          <a class="chat-attachment chat-image-attachment" href="${escapeHtml(message.file_url)}" target="_blank" rel="noopener">
+            <img src="${escapeHtml(message.file_url)}" alt="Прикрепленное изображение" loading="lazy" decoding="async" />
+          </a>
+          ${message.text_content ? renderTextContent(message.text_content) : ''}
+        `;
+      } else if (message.type === 'video_attachment' && message.file_url) {
+        contentHtml = `
+          <div class="chat-attachment chat-video-attachment">
+            <video src="${escapeHtml(message.file_url)}" controls playsinline preload="metadata"></video>
+          </div>
+          ${message.text_content ? renderTextContent(message.text_content) : ''}
         `;
       }
 
@@ -841,8 +868,8 @@
       }
       @media (max-width: 520px) {
         .ios-sub-modal {
-          align-items: flex-end;
-          padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+          align-items: center;
+          padding: max(14px, env(safe-area-inset-top, 0px)) 10px max(14px, env(safe-area-inset-bottom, 0px));
         }
         .ios-sub-modal-backdrop {
           background: rgba(0, 0, 0, 0.62);
@@ -1023,24 +1050,20 @@
 
   window.openSubscriptionModalForAccess = openSubscriptionModal;
 
+  installChatSettingsButton();
+
   async function boot() {
     try {
       setStatus('Подключаемся…');
+      installChatSettingsButton();
       if (window.API.restoreSession) await window.API.restoreSession();
       if (window.API.confirmPayment) {
         try { await window.API.confirmPayment(); } catch (e) { /* continue with fresh subscription check */ }
       }
-      if (window.API.getSubscription) {
-        const sub = await window.API.getSubscription({ fresh: true });
-        const isActive = window.API.isSubscriptionActive
-          ? window.API.isSubscriptionActive(sub)
-          : !!(sub && sub.subscription_active);
-        if (!isActive) {
-          throw { status: 403, code: 'NO_SUBSCRIPTION', error: 'Subscription required' };
-        }
-      }
       const chatData = await window.API.getGeneralChat();
       state.userId = chatData?.user?.id || null;
+      state.canSendMedia = !!chatData?.permissions?.can_send_media;
+      updateComposerMediaAccess();
       try {
         const dashboard = await window.API.request('GET', '/profile/dashboard', null, { fresh: true });
         if (typeof dashboard?.user?.chat_email_notifications_enabled === 'boolean') {
@@ -1732,9 +1755,7 @@
     }
   });
 
-  // ─── Media Recording Logic (Voice & Circular Videos) ───
-  const voiceRecBtn = document.getElementById('chat-voice-rec-btn');
-  const videoRecBtn = document.getElementById('chat-video-rec-btn');
+  // ─── Admin Media Logic (voice recording + gallery attachments) ───
   const recOverlay = document.getElementById('chat-rec-overlay');
   const previewWrap = document.getElementById('rec-video-preview-wrap');
   const videoPreview = document.getElementById('rec-video-preview');
@@ -1751,15 +1772,14 @@
   let recordStream = null;
   let timerInterval = null;
   let recordingStartTime = 0;
-  let recordingType = null; // 'audio' or 'video'
 
   const startRecording = async (type) => {
+    if (!state.canSendMedia) return;
     if (!hasMediaSupport) {
-      alert('Запись аудио и кружочков не поддерживается вашим браузером, или соединение не защищено (требуется HTTPS).');
+      alert('Запись аудио не поддерживается вашим браузером, или соединение не защищено (требуется HTTPS).');
       return;
     }
     try {
-      recordingType = type;
       recordedChunks = [];
       
       const constraints = {
@@ -1886,7 +1906,7 @@
     // Generate local Object URL for instant playback/rendering
     const localUrl = URL.createObjectURL(blob);
     const tempId = `optimistic-media-${Date.now()}`;
-    const msgType = type === 'video' ? 'video_circle' : 'audio_circle';
+    const msgType = type === 'video' ? 'video_attachment' : type === 'image' ? 'image_attachment' : 'audio_circle';
     
     const mockMsg = {
       id: tempId,
@@ -1894,6 +1914,7 @@
       sender_name: window.__sistemaCurrentUser?.display_name || 'Я',
       type: msgType,
       file_url: localUrl,
+      text_content: null,
       created_at: new Date().toISOString(),
       is_own: true,
       pending: true
@@ -1930,7 +1951,7 @@
       const sendResponse = await window.API.request('POST', '/chat/general/messages', {
         type: msgType,
         file_url: uploadData.file_url,
-        text: msgType === 'video' ? 'Кружочек' : 'Голосовое сообщение'
+        text: msgType === 'audio_circle' ? 'Голосовое сообщение' : ''
       });
       
       // Remove optimistic mock and merge published message
@@ -1957,7 +1978,23 @@
 
   // Bind recording events
   voiceRecBtn?.addEventListener('click', () => startRecording('audio'));
-  videoRecBtn?.addEventListener('click', () => startRecording('video'));
+  attachBtn?.addEventListener('click', () => {
+    if (!state.canSendMedia) return;
+    attachInput?.click();
+  });
+  attachInput?.addEventListener('change', async () => {
+    const file = attachInput.files?.[0];
+    if (!file) return;
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+    if (!isImage && !isVideo) {
+      alert('Можно прикрепить только изображение или видео.');
+      attachInput.value = '';
+      return;
+    }
+    await uploadAndSendMedia(file, isImage ? 'image' : 'video', file.type || (isImage ? 'image/jpeg' : 'video/mp4'));
+    attachInput.value = '';
+  });
   cancelBtn?.addEventListener('click', cancelRecording);
   stopBtn?.addEventListener('click', stopRecording);
 
