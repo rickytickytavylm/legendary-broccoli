@@ -449,7 +449,7 @@
             </div>
           </div>
         `;
-      } else if (message.type === 'video_circle' && message.file_url) {
+      } else if ((message.type === 'video_circle' || message.type === 'video_attachment') && message.file_url) {
         contentHtml = `
           <div class="chat-video-circle-wrap" style="position: relative; overflow: visible; cursor: pointer;">
             <video class="chat-video-circle" src="${escapeHtml(message.file_url)}" playsinline webkit-playsinline muted autoplay preload="metadata" style="display: block; border-radius: 50%;"></video>
@@ -465,13 +465,6 @@
           <a class="chat-attachment chat-image-attachment" href="${escapeHtml(message.file_url)}" target="_blank" rel="noopener">
             <img src="${escapeHtml(message.file_url)}" alt="Прикрепленное изображение" loading="lazy" decoding="async" />
           </a>
-          ${message.text_content ? renderTextContent(message.text_content) : ''}
-        `;
-      } else if (message.type === 'video_attachment' && message.file_url) {
-        contentHtml = `
-          <div class="chat-attachment chat-video-attachment">
-            <video src="${escapeHtml(message.file_url)}" controls playsinline preload="metadata"></video>
-          </div>
           ${message.text_content ? renderTextContent(message.text_content) : ''}
         `;
       }
@@ -1906,27 +1899,7 @@
   };
 
   const uploadAndSendMedia = async (blob, type, mime) => {
-    // Generate local Object URL for instant playback/rendering
-    const localUrl = URL.createObjectURL(blob);
-    const tempId = `optimistic-media-${Date.now()}`;
     const msgType = type === 'video' ? 'video_attachment' : type === 'image' ? 'image_attachment' : 'audio_circle';
-    
-    const mockMsg = {
-      id: tempId,
-      sender_id: state.userId,
-      sender_name: window.__sistemaCurrentUser?.display_name || 'Я',
-      type: msgType,
-      file_url: localUrl,
-      text_content: null,
-      created_at: new Date().toISOString(),
-      is_own: true,
-      pending: true
-    };
-
-    // Render instantly in the view
-    state.messages.set(tempId, mockMsg);
-    render();
-    scrollToBottom();
 
     try {
       setStatus('Отправляем файл…');
@@ -1956,11 +1929,7 @@
         file_url: uploadData.file_url,
         text: msgType === 'audio_circle' ? 'Голосовое сообщение' : ''
       });
-      
-      // Remove optimistic mock and merge published message
-      state.messages.delete(tempId);
-      URL.revokeObjectURL(localUrl); // Free memory
-      
+
       mergeMessages(sendResponse.message ? [sendResponse.message] : []);
       setStatus('Общий чат открыт');
       scrollToBottom();
@@ -1968,13 +1937,6 @@
     } catch (err) {
       console.error(err);
       setStatus('Не удалось отправить медиа');
-      
-      // Update optimistic message with error status
-      mockMsg.pending = false;
-      mockMsg.error = true;
-      state.messages.set(tempId, mockMsg);
-      render();
-      
       alert('Ошибка при загрузке или отправке: ' + err.message);
     }
   };
