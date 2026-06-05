@@ -633,6 +633,9 @@
     const openBtn = document.getElementById('feed-admin-open');
     const form = document.getElementById('feed-post-form');
     const fileInput = document.getElementById('feed-post-file');
+    const fileTrigger = document.getElementById('feed-post-file-trigger');
+    const fileTitle = document.getElementById('feed-post-file-title');
+    const fileName = document.getElementById('feed-post-file-name');
     const bodyInput = document.getElementById('feed-post-body');
     const preview = document.getElementById('feed-post-preview');
     const statusEl = document.getElementById('feed-post-status');
@@ -671,6 +674,14 @@
       typeButtons.forEach((button) => {
         button.classList.toggle('active', button.dataset.feedMediaType === mediaType);
       });
+      if (fileTitle) {
+        fileTitle.textContent = mediaType === 'image'
+          ? 'Выбрать фото'
+          : mediaType === 'circle_video'
+            ? 'Выбрать кружочек'
+            : 'Выбрать видео';
+      }
+      if (fileName) fileName.textContent = 'Из галереи телефона';
       clearPreview();
       fileInput.value = '';
     }
@@ -678,6 +689,7 @@
     function renderPreview(file) {
       clearPreview();
       if (!file || !preview) return;
+      if (fileName) fileName.textContent = file.name || 'Файл выбран';
       previewUrl = URL.createObjectURL(file);
       if (mediaType === 'image') {
         preview.innerHTML = `<img src="${previewUrl}" alt="">`;
@@ -715,6 +727,7 @@
     }
 
     openBtn.addEventListener('click', () => setModalVisible(true));
+    fileTrigger?.addEventListener('click', () => fileInput.click());
     modal.querySelectorAll('[data-feed-post-close]').forEach((button) => {
       button.addEventListener('click', () => setModalVisible(false));
     });
