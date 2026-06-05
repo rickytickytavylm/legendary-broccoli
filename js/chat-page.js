@@ -26,6 +26,7 @@
     latestId: 0,
     socket: null,
     userId: null,
+    userRole: 'user',
     canSendMedia: false,
     emailNotificationsEnabled: true,
     sending: false,
@@ -246,11 +247,12 @@
   }
 
   function updateComposerMediaAccess() {
-    const allowed = !!state.canSendMedia;
+    const allowed = state.userRole === 'admin' && !!state.canSendMedia;
     voiceRecBtn?.classList.toggle('hidden', !allowed);
     attachBtn?.classList.toggle('hidden', !allowed);
     if (!allowed && attachInput) attachInput.value = '';
   }
+  updateComposerMediaAccess();
 
   function isStandalonePwa() {
     return window.matchMedia?.('(display-mode: standalone)')?.matches || window.navigator.standalone === true;
@@ -1062,6 +1064,7 @@
       }
       const chatData = await window.API.getGeneralChat();
       state.userId = chatData?.user?.id || null;
+      state.userRole = chatData?.user?.role || 'user';
       state.canSendMedia = !!chatData?.permissions?.can_send_media;
       updateComposerMediaAccess();
       try {

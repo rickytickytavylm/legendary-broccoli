@@ -8419,6 +8419,10 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   outline: none;
 }
 
+.chat-media-trigger.hidden {
+  display: none !important;
+}
+
 .chat-media-trigger:hover {
   background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
@@ -9738,40 +9742,37 @@ body.chat-page .notification-prompt-banner {
 
 /* ─── Home Marathons Slow 3D Orbit ────────── */
 .home-marathon-header {
-  margin-top: 10px;
+  margin-top: 34px;
+  margin-bottom: 8px;
 }
 
 .home-marathon-orbit {
   width: 100%;
-  min-height: 300px;
+  min-height: 340px;
   display: grid;
   place-items: center;
-  margin: 4px auto 42px;
+  margin: 8px auto 38px;
   overflow: hidden;
-  perspective: 900px;
+  perspective: 1100px;
+  touch-action: pan-y;
 }
 
 .home-marathon-orbit-stage {
   position: relative;
-  width: min(86vw, 430px);
-  height: 230px;
+  width: min(92vw, 640px);
+  height: 260px;
   transform-style: preserve-3d;
-  animation: homeMarathonOrbit 46s linear infinite;
-  will-change: transform;
-}
-
-.home-marathon-orbit-stage:hover {
-  animation-play-state: paused;
+  cursor: grab;
 }
 
 .home-marathon-card {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 116px;
-  height: 154px;
-  padding: 12px;
-  border-radius: 18px;
+  width: min(58vw, 230px);
+  height: min(78vw, 300px);
+  padding: 18px;
+  border-radius: 24px;
   overflow: hidden;
   color: #fff;
   text-decoration: none;
@@ -9780,18 +9781,19 @@ body.chat-page .notification-prompt-banner {
   justify-content: flex-end;
   border: 1px solid rgba(255,255,255,.18);
   background:
-    linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.72)),
+    linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.78)),
     var(--card-bg) center/cover no-repeat;
-  box-shadow: 0 18px 44px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.12);
+  box-shadow: 0 24px 60px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.14);
   transform-origin: center center;
-  animation: homeMarathonCardLight 46s linear infinite;
-  will-change: filter;
+  transition: transform .55s cubic-bezier(.2,.86,.2,1), opacity .45s ease, filter .45s ease;
+  will-change: transform, opacity, filter;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .home-marathon-card span {
-  margin-bottom: 7px;
+  margin-bottom: 9px;
   color: rgba(255,255,255,.62);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -9799,58 +9801,46 @@ body.chat-page .notification-prompt-banner {
 
 .home-marathon-card strong {
   color: #fff;
-  font-size: 14px;
+  font-size: 22px;
   line-height: 1.05;
   letter-spacing: -.04em;
 }
 
 .home-marathon-card small {
-  margin-top: 6px;
+  margin-top: 10px;
   color: rgba(255,255,255,.66);
-  font-size: 10.5px;
-  line-height: 1.25;
+  font-size: 12.5px;
+  line-height: 1.35;
 }
 
-.home-marathon-card:nth-child(1) { transform: translate(-50%, -50%) rotateY(0deg) translateZ(168px); animation-delay: 0s; }
-.home-marathon-card:nth-child(2) { transform: translate(-50%, -50%) rotateY(45deg) translateZ(168px); animation-delay: -5.75s; }
-.home-marathon-card:nth-child(3) { transform: translate(-50%, -50%) rotateY(90deg) translateZ(168px); animation-delay: -11.5s; }
-.home-marathon-card:nth-child(4) { transform: translate(-50%, -50%) rotateY(135deg) translateZ(168px); animation-delay: -17.25s; }
-.home-marathon-card:nth-child(5) { transform: translate(-50%, -50%) rotateY(180deg) translateZ(168px); animation-delay: -23s; }
-.home-marathon-card:nth-child(6) { transform: translate(-50%, -50%) rotateY(225deg) translateZ(168px); animation-delay: -28.75s; }
-.home-marathon-card:nth-child(7) { transform: translate(-50%, -50%) rotateY(270deg) translateZ(168px); animation-delay: -34.5s; }
-.home-marathon-card:nth-child(8) { transform: translate(-50%, -50%) rotateY(315deg) translateZ(168px); animation-delay: -40.25s; }
-
-@keyframes homeMarathonOrbit {
-  from { transform: perspective(900px) rotateY(-360deg); }
-  to { transform: perspective(900px) rotateY(0deg); }
+.home-marathon-card.is-active {
+  pointer-events: auto;
 }
 
-@keyframes homeMarathonCardLight {
-  0%, 100% { filter: brightness(1.05) saturate(1.05); }
-  50% { filter: brightness(.58) saturate(.85); }
+.home-marathon-card:not(.is-active) {
+  filter: brightness(.76) saturate(.92);
 }
 
 @media (max-width: 520px) {
   .home-marathon-orbit {
-    min-height: 270px;
-    margin-bottom: 30px;
+    min-height: 328px;
+    margin-top: 12px;
+    margin-bottom: 38px;
   }
   .home-marathon-orbit-stage {
-    width: 330px;
-    height: 210px;
+    width: 100vw;
+    height: 246px;
   }
   .home-marathon-card {
-    width: 98px;
-    height: 136px;
-    border-radius: 16px;
-    padding: 10px;
+    width: 170px;
+    height: 224px;
+    border-radius: 22px;
+    padding: 14px;
   }
-  .home-marathon-card:nth-child(1) { transform: translate(-50%, -50%) rotateY(0deg) translateZ(132px); }
-  .home-marathon-card:nth-child(2) { transform: translate(-50%, -50%) rotateY(45deg) translateZ(132px); }
-  .home-marathon-card:nth-child(3) { transform: translate(-50%, -50%) rotateY(90deg) translateZ(132px); }
-  .home-marathon-card:nth-child(4) { transform: translate(-50%, -50%) rotateY(135deg) translateZ(132px); }
-  .home-marathon-card:nth-child(5) { transform: translate(-50%, -50%) rotateY(180deg) translateZ(132px); }
-  .home-marathon-card:nth-child(6) { transform: translate(-50%, -50%) rotateY(225deg) translateZ(132px); }
-  .home-marathon-card:nth-child(7) { transform: translate(-50%, -50%) rotateY(270deg) translateZ(132px); }
-  .home-marathon-card:nth-child(8) { transform: translate(-50%, -50%) rotateY(315deg) translateZ(132px); }
+  .home-marathon-card strong {
+    font-size: 18px;
+  }
+  .home-marathon-card small {
+    font-size: 11px;
+  }
 }

@@ -1063,3 +1063,101 @@ function initFeedCarousel() {
 
   updateCarousel();
 }
+
+function initMarathonCarousel() {
+  const root = document.querySelector('[data-marathon-carousel]');
+  if (!root) return;
+  const stage = root.querySelector('.home-marathon-orbit-stage');
+  const cards = Array.from(root.querySelectorAll('.home-marathon-card'));
+  if (!stage || !cards.length) return;
+
+  let activeIndex = 0;
+  let userInteracted = false;
+  let startX = 0;
+  let startY = 0;
+  let dragged = false;
+
+  function updateCarousel() {
+    const total = cards.length;
+    const sideOffset = window.matchMedia('(max-width: 520px)').matches ? 118 : 188;
+    cards.forEach((card, index) => {
+      let diff = index - activeIndex;
+      if (diff > total / 2) diff -= total;
+      if (diff < -total / 2) diff += total;
+      card.classList.toggle('is-active', diff === 0);
+      card.style.zIndex = String(20 - Math.abs(diff));
+      card.style.opacity = diff === 0 ? '1' : '0.76';
+      card.style.pointerEvents = Math.abs(diff) <= 1 ? 'auto' : 'none';
+      if (diff === 0) {
+        card.style.transform = 'translate3d(-50%, -50%, 0) rotateY(0deg) scale(1)';
+      } else if (diff > 0) {
+        card.style.transform = `translate3d(calc(-50% + ${sideOffset}px), -50%, -150px) rotateY(-36deg) scale(.86)`;
+      } else {
+        card.style.transform = `translate3d(calc(-50% - ${sideOffset}px), -50%, -150px) rotateY(36deg) scale(.86)`;
+      }
+    });
+  }
+
+  function focus(index, manual = true) {
+    if (manual) userInteracted = true;
+    activeIndex = (index + cards.length) % cards.length;
+    updateCarousel();
+  }
+
+  cards.forEach((card, index) => {
+    card.addEventListener('click', (event) => {
+      if (dragged) {
+        event.preventDefault();
+        dragged = false;
+        return;
+      }
+      if (index !== activeIndex) {
+        event.preventDefault();
+        focus(index);
+      }
+    });
+  });
+
+  root.addEventListener('touchstart', (event) => {
+    const touch = event.touches && event.touches[0];
+    if (!touch) return;
+    startX = touch.clientX;
+    startY = touch.clientY;
+    dragged = false;
+  }, { passive: true });
+
+  root.addEventListener('touchend', (event) => {
+    const touch = event.changedTouches && event.changedTouches[0];
+    if (!touch) return;
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+    if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    dragged = true;
+    focus(activeIndex + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  root.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'touch') return;
+    startX = event.clientX;
+    startY = event.clientY;
+    dragged = false;
+  });
+
+  root.addEventListener('pointerup', (event) => {
+    if (event.pointerType === 'touch') return;
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    dragged = true;
+    focus(activeIndex + (dx < 0 ? 1 : -1));
+  });
+
+  window.setInterval(() => {
+    if (!userInteracted) focus(activeIndex + 1, false);
+  }, 3800);
+
+  window.addEventListener('resize', updateCarousel);
+  updateCarousel();
+}
+
+document.addEventListener('DOMContentLoaded', initMarathonCarousel);
