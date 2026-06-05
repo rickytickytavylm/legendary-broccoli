@@ -575,7 +575,7 @@
       }
 
       const registration = await navigator.serviceWorker.ready;
-      const VAPID_PUBLIC_KEY = 'BJ2mtnvvuig_I_ZBVMQy4HaLMAeymgwY3fiSzLO81Vi7JQKpuknLALehKkQyEx7Y8RIqrzd0WTcP6xxxX7kTopI';
+      const VAPID_PUBLIC_KEY = window.VAPID_PUBLIC_KEY || 'BJ2mtnvvuig_I_ZBVMQy4HaLMAeymgwY3fiSzLO81Vi7JQKpuknLALehKkQyEx7Y8RIqrzd0WTcP6xxxX7kTopI';
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
@@ -1084,11 +1084,19 @@
       path: '/socket.io',
       transports: ['websocket', 'polling'],
       withCredentials: true,
+      auth: { token: window.API.accessToken || '' },
     });
     
     state.socket.on('connect', () => {
-      state.socket.emit('chat:join', { room: 'general' }, (ack) => {
-        setStatus(ack && ack.ok ? 'Общий чат онлайн' : 'Чат открыт');
+      state.socket.emit('chat:join', { room: 'general', token: window.API.accessToken || '' }, (ack) => {
+        if (ack && ack.ok) {
+          setStatus('Общий чат онлайн');
+        } else if (ack && ack.code === 'NO_SUBSCRIPTION') {
+          setStatus('Требуется подписка Pro');
+          openSubscriptionModal();
+        } else {
+          setStatus('Realtime недоступен');
+        }
       });
       
       // Auto Catch-up Sync after connection (if we missed messages while offline)
