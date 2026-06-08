@@ -45,9 +45,9 @@
         }, { once: true });
       }
 
-      async function loadLesson(lesson) {
+      async function loadLesson(lesson, options = {}) {
         const overlay = videoContainer?.querySelector('.video-preview-overlay');
-        if (overlay && !overlay.classList.contains('hidden')) {
+        if (!options.fromPreview && overlay && !overlay.classList.contains('hidden')) {
           overlay.click();
           return;
         }
@@ -154,7 +154,7 @@
           if (window.setupVideoPreview) {
             window.setupVideoPreview(videoContainer, {
               poster: '/assets/webp/masterofcommication.webp',
-              onStart: () => loadLesson(groups[0].lessons[0]),
+              onStart: () => loadLesson(groups[0].lessons[0], { fromPreview: true }),
             });
           } else {
             loadLesson(groups[0].lessons[0]);
