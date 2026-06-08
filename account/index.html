@@ -1312,6 +1312,185 @@
         font-size: 12px;
       }
     }
+
+    /* ─── Desktop profile composition ─────────────────── */
+    @media (min-width: 1024px) {
+      body.account-page {
+        background:
+          radial-gradient(circle at 42% 0%, rgba(112, 75, 180, .12), transparent 34%),
+          radial-gradient(circle at 86% 8%, rgba(216, 191, 155, .08), transparent 32%),
+          #07070b;
+      }
+
+      body.account-page .profile-wrap {
+        width: min(1040px, calc(100vw - 240px)) !important;
+        max-width: 1040px !important;
+        margin-left: 176px !important;
+        margin-right: auto !important;
+        padding: 30px 28px 90px !important;
+        display: grid;
+        grid-template-columns: minmax(0, 1.38fr) minmax(330px, .72fr);
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      body.account-page .profile-card {
+        border-radius: 26px;
+        border-color: rgba(255,255,255,.10);
+        box-shadow: 0 18px 56px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.13);
+      }
+
+      body.account-page .profile-user-card {
+        width: 100%;
+        max-width: none !important;
+        min-height: 310px;
+        margin: 0 !important;
+        padding: 30px 34px !important;
+        display: grid !important;
+        grid-template-columns: 92px minmax(0, 1fr);
+        align-items: end;
+        align-content: end;
+        gap: 24px;
+        text-align: left;
+        border-radius: 30px !important;
+        background:
+          linear-gradient(90deg, rgba(6,7,12,.78) 0%, rgba(6,7,12,.42) 52%, rgba(6,7,12,.70) 100%),
+          var(--profile-user-bg, none) center / cover no-repeat !important;
+      }
+
+      body.account-page .profile-user-card::before {
+        display: none;
+      }
+
+      body.account-page .profile-user-avatar {
+        width: 92px;
+        height: 92px;
+        align-self: end;
+        border-width: 2px;
+      }
+
+      body.account-page .profile-eyebrow {
+        margin-bottom: 8px;
+        font-size: 11px;
+        color: rgba(255,255,255,.46);
+      }
+
+      body.account-page .profile-title {
+        font-size: clamp(40px, 4vw, 56px);
+        letter-spacing: -.06em;
+      }
+
+      body.account-page .profile-username {
+        margin-top: 10px;
+        color: rgba(255,255,255,.66);
+        font-size: 14px;
+      }
+
+      body.account-page .profile-short-id {
+        justify-content: flex-start;
+        margin-top: 8px;
+        padding: 4px 8px 4px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.075);
+        border: 1px solid rgba(255,255,255,.08);
+        color: rgba(255,255,255,.52);
+        width: fit-content;
+      }
+
+      body.account-page .profile-subtitle {
+        margin-top: 16px;
+        max-width: 520px;
+        color: rgba(255,255,255,.58);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      body.account-page .activity-rings-card {
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 310px;
+        margin: 0 !important;
+        padding: 28px !important;
+        display: flex;
+        align-items: center;
+        border-radius: 30px !important;
+      }
+
+      body.account-page .rings-flex-layout {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      body.account-page .watch-rings-container {
+        width: 138px;
+        height: 138px;
+      }
+
+      body.account-page .rings-legend {
+        width: 100%;
+      }
+
+      body.account-page .legend-value {
+        padding-left: 0;
+        font-size: 26px;
+      }
+
+      body.account-page .legend-sub-value {
+        padding-left: 0;
+      }
+
+      body.account-page .profile-settings-shell {
+        grid-column: 1 / -1;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      body.account-page .profile-settings-group {
+        min-width: 0;
+      }
+
+      body.account-page .profile-settings-group h2 {
+        margin: 0 0 9px 2px;
+        font-size: 11px;
+        color: rgba(255,255,255,.42);
+      }
+
+      body.account-page .profile-settings-group .settings-list {
+        min-height: 126px;
+        padding: 8px 14px;
+        border-radius: 24px;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(255,255,255,.07), transparent 34%),
+          linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018)) !important;
+      }
+
+      body.account-page .settings-row {
+        min-height: 58px;
+        padding-inline: 0;
+      }
+
+      body.account-page .subscription-benefits {
+        padding-left: 46px;
+      }
+
+      body.account-page .profile-danger-group {
+        grid-column: auto;
+      }
+    }
+
+    @media (min-width: 1440px) {
+      body.account-page .profile-wrap {
+        margin-left: 192px !important;
+      }
+    }
   </style>
 </head>
 <body class="dark-theme account-page">
