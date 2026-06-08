@@ -9950,6 +9950,220 @@ body.chat-page .notification-prompt-banner {
   transform: scale(0.96);
 }
 
+/* ─────────────────────────────────────────────
+   Desktop Layout Polish
+   Clean desktop grids without affecting mobile.
+───────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  :root {
+    --desktop-sidebar: 232px;
+    --desktop-gutter: clamp(28px, 4vw, 72px);
+    --desktop-content: min(1240px, calc(100vw - var(--desktop-sidebar) - var(--desktop-gutter) * 2));
+    --desktop-left: calc(var(--desktop-sidebar) + var(--desktop-gutter));
+  }
+
+  body.home-today-active .main-content {
+    display: block;
+  }
+
+  body.home-today-active .today-screen {
+    width: var(--desktop-content);
+    max-width: none;
+    margin-left: var(--desktop-left);
+    margin-right: var(--desktop-gutter);
+    padding: 34px 0 92px;
+  }
+
+  body.home-today-active .today-hero-card {
+    min-height: 360px;
+    border-radius: 34px;
+    display: flex;
+    align-items: flex-end;
+    padding: clamp(32px, 4vw, 54px);
+    box-shadow: 0 28px 90px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.18);
+  }
+
+  body.home-today-active .today-hero-card h1 {
+    max-width: 760px;
+    font-size: clamp(48px, 4.2vw, 72px);
+  }
+
+  body.home-today-active .ios-section-header {
+    width: 100%;
+    margin: 36px 0 14px;
+  }
+
+  body.home-today-active .today-grid {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(18px, 2vw, 28px);
+  }
+
+  body.home-today-active .today-main-card {
+    grid-column: 1 / -1;
+    min-height: 320px;
+    border-radius: 30px;
+  }
+
+  body.home-today-active .today-support-card {
+    grid-column: span 6;
+    min-height: 250px;
+    border-radius: 30px;
+  }
+
+  body.home-today-active .today-main-card h2,
+  body.home-today-active .today-support-card h3 {
+    font-size: clamp(30px, 2.8vw, 42px);
+  }
+
+  body.home-today-active .today-main-card p,
+  body.home-today-active .today-support-card p {
+    max-width: 48ch;
+    font-size: 16px;
+  }
+
+  .feed-carousel-section {
+    width: 100%;
+    margin: 0;
+  }
+
+  .feed-carousel {
+    width: 100%;
+  }
+
+  body.home-today-active .carousel-3d-container {
+    width: 100%;
+    min-height: 330px;
+    margin: 4px 0 10px;
+    display: grid;
+    place-items: center;
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(216,191,155,.10), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014));
+    border: 1px solid rgba(255,255,255,.07);
+  }
+
+  body.home-today-active .carousel-3d-stage {
+    width: min(760px, 100%);
+    height: 300px;
+  }
+
+  body.home-today-active .carousel-3d-card {
+    box-shadow: 0 24px 70px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.16);
+  }
+
+  body.feed-page .feed-container {
+    width: min(760px, calc(100vw - var(--desktop-sidebar) - var(--desktop-gutter) * 2));
+    max-width: 760px;
+    margin-left: calc(var(--desktop-sidebar) + max(56px, (100vw - var(--desktop-sidebar) - 760px) / 2));
+    margin-right: auto;
+    padding-top: 36px;
+  }
+
+  body.account-page .profile-wrap {
+    width: min(1120px, calc(100vw - var(--desktop-sidebar) - var(--desktop-gutter) * 2)) !important;
+    max-width: 1120px !important;
+    margin-left: var(--desktop-left) !important;
+    margin-right: var(--desktop-gutter) !important;
+    padding: 42px 0 96px !important;
+  }
+
+  body.account-page .profile-user-card {
+    max-width: none !important;
+    min-height: 330px;
+    border-radius: 34px !important;
+  }
+
+  body.account-page .profile-settings-shell {
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  body.account-page .activity-rings-card {
+    width: min(760px, 100%);
+    margin-inline: auto;
+  }
+
+  body.chat-page {
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+
+  body.chat-page .chat-page-shell {
+    min-height: 100dvh;
+    justify-content: flex-start;
+    padding: 18px var(--desktop-gutter) 18px var(--desktop-left);
+  }
+
+  body.chat-page .chat-panel {
+    width: min(1040px, calc(100vw - var(--desktop-sidebar) - var(--desktop-gutter) * 2));
+    height: calc(100dvh - 36px);
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255,255,255,.10), transparent 28%),
+      linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.028)),
+      var(--chat-pattern),
+      rgba(5, 10, 9, .88);
+    background-size: auto, auto, var(--chat-pattern-size), auto;
+    box-shadow: 0 34px 110px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.14);
+  }
+
+  body.chat-page .notification-prompt-banner {
+    margin: 14px 16px 0;
+    border-radius: 24px;
+  }
+
+  body.chat-page .chat-messages {
+    padding: 34px clamp(32px, 5vw, 84px) 26px;
+    gap: 14px;
+  }
+
+  body.chat-page .chat-message-bubble {
+    max-width: min(62%, 620px);
+    padding: 13px 17px 14px;
+  }
+
+  body.chat-page .chat-message-text {
+    font-size: 15px;
+    line-height: 1.52;
+  }
+
+  body.chat-page .chat-composer {
+    margin: 0 clamp(26px, 5vw, 76px) 18px;
+    border-radius: 28px;
+    padding: 12px;
+    background: rgba(255,255,255,.075);
+    border: 1px solid rgba(255,255,255,.13);
+    box-shadow: 0 18px 48px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.14);
+  }
+
+  body.chat-page .chat-composer textarea {
+    min-height: 48px;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1440px) {
+  body.home-today-active .today-screen,
+  body.account-page .profile-wrap,
+  body.chat-page .chat-page-shell {
+    --desktop-gutter: clamp(56px, 5vw, 96px);
+  }
+
+  body.home-today-active .today-screen {
+    width: min(1320px, calc(100vw - var(--desktop-sidebar) - var(--desktop-gutter) * 2));
+  }
+
+  body.chat-page .chat-panel {
+    width: min(1120px, calc(100vw - var(--desktop-sidebar) - var(--desktop-gutter) * 2));
+  }
+}
+
 /* ─── Home Marathons Slow 3D Orbit ────────── */
 .home-marathon-header {
   margin-top: 34px;
