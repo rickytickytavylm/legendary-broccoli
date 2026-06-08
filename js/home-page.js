@@ -5,6 +5,7 @@ const ONBOARDING_SCHEMA_VERSION = 'device-v1';
 const SPLASH_SEEN_KEY = 'sistema:intro-splash-seen';
 const ONBOARDING_AFTER_AUTH_KEY = 'sistema:onboarding-after-auth';
 const TODAY_OPENED_PROGRAMS_KEY = 'sistema:today-opened-programs';
+const LIZA_TOUR_SEEN_KEY = 'sistema:liza-main-tour-seen';
 const TODAY_LESSON_COUNT_ENDPOINTS = {
   geshtalt: '/content/geshtalt-lessons',
   sozavisimost: '/content/sozavisimost-lessons',
@@ -154,6 +155,7 @@ const todayRouteKeys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy
 let currentTodayRouteKey = null;
 let todayTouchStartX = 0;
 let todayTouchStartY = 0;
+let pendingLizaTour = false;
 
 function displayUserName(user) {
   if (!user) return '';
@@ -334,6 +336,78 @@ function shiftTodayRoute(delta) {
   renderToday(todayRouteKeys[nextIndex]);
 }
 
+const lizaTourSteps = [
+  {
+    kicker: 'Добро пожаловать',
+    title: 'Я Лиза, ваш AI-проводник',
+    text: 'Покажу, как устроена главная: где ваш маршрут, программы, лента и помощь. Это займет меньше минуты.',
+  },
+  {
+    kicker: 'Ваш маршрут',
+    title: 'Главная собирается под ваш запрос',
+    text: 'В верхнем блоке вы видите направление, которое выбрали в онбординге. Его можно листать стрелками или свайпом.',
+  },
+  {
+    kicker: 'Практика',
+    title: 'Две программы без долгого поиска',
+    text: 'Основная и дополнительная карточки ведут к подходящим материалам. После открытия кнопка меняется на “Продолжить”.',
+  },
+  {
+    kicker: 'Поддержка',
+    title: 'AI, чат, лента и марафоны рядом',
+    text: 'Если появится вопрос, откройте AI. Для живого контекста есть лента, общий чат и блок видео-практик ниже.',
+  },
+];
+
+function showLizaTourIfNeeded(force = false) {
+  const tour = document.getElementById('liza-tour');
+  if (!tour) return;
+  if (!force && localStorage.getItem(LIZA_TOUR_SEEN_KEY) === 'true') return;
+  let index = 0;
+  const kicker = document.getElementById('liza-tour-kicker');
+  const title = document.getElementById('liza-tour-title');
+  const text = document.getElementById('liza-tour-text');
+  const dots = document.getElementById('liza-tour-dots');
+  const next = document.getElementById('liza-tour-next');
+  const closeButtons = tour.querySelectorAll('[data-liza-tour-skip]');
+
+  function renderStep() {
+    const step = lizaTourSteps[index] || lizaTourSteps[0];
+    if (kicker) kicker.textContent = step.kicker;
+    if (title) title.textContent = step.title;
+    if (text) text.textContent = step.text;
+    if (dots) {
+      dots.innerHTML = lizaTourSteps.map((_, i) => `<span class="${i === index ? 'active' : ''}"></span>`).join('');
+    }
+    if (next) next.textContent = index === lizaTourSteps.length - 1 ? 'В систему' : 'Далее';
+  }
+
+  function closeTour() {
+    localStorage.setItem(LIZA_TOUR_SEEN_KEY, 'true');
+    tour.classList.add('hidden');
+    tour.setAttribute('aria-hidden', 'true');
+  }
+
+  next?.addEventListener('click', () => {
+    if (index >= lizaTourSteps.length - 1) {
+      closeTour();
+      return;
+    }
+    index += 1;
+    renderStep();
+  }, { once: false });
+
+  closeButtons.forEach((button) => {
+    if (button.dataset.lizaTourBound === 'true') return;
+    button.dataset.lizaTourBound = 'true';
+    button.addEventListener('click', closeTour);
+  });
+
+  renderStep();
+  tour.classList.remove('hidden');
+  tour.setAttribute('aria-hidden', 'false');
+}
+
 function finishOnboarding() {
   const route = routeConfig();
   onboardingState.name = cleanName(onboardingState.name) || displayUserName(window.__sistemaCurrentUser) || 'Пользователь';
@@ -367,6 +441,8 @@ function finishOnboarding() {
   }
   renderToday();
   showNewHomeState('today');
+  pendingLizaTour = true;
+  window.setTimeout(() => showLizaTourIfNeeded(true), 450);
 }
 
 function renderOnboarding() {
@@ -758,6 +834,10 @@ function initOnboarding() {
       if (completed) {
         renderToday();
         showNewHomeState('today');
+        if (pendingLizaTour) {
+          pendingLizaTour = false;
+          window.setTimeout(() => showLizaTourIfNeeded(), 450);
+        }
         return;
       }
       onboardingIndex = 0;

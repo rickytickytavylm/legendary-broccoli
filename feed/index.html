@@ -105,13 +105,17 @@
     .post-video-wrap {
       position: relative;
       background: #030605;
+      display: grid;
+      place-items: center;
     }
 
     .post-video {
       width: 100%;
-      max-height: 76vh;
+      aspect-ratio: 4 / 5;
+      max-height: min(72vh, 620px);
       display: block;
       background: #030605;
+      object-fit: contain;
     }
 
     .post-video-wrap.is-circle {
@@ -334,14 +338,54 @@
       border-radius: 22px;
       background: rgba(0,0,0,.24);
       border: 1px solid rgba(255,255,255,.08);
+      max-width: min(100%, 420px);
+      margin-inline: auto;
     }
 
     .feed-post-preview img,
     .feed-post-preview video {
       width: 100%;
       display: block;
-      max-height: 48vh;
+      aspect-ratio: 4 / 5;
+      max-height: min(48vh, 520px);
       object-fit: contain;
+      background: #030605;
+    }
+
+    .feed-post-preview video {
+      object-fit: cover;
+    }
+
+    .feed-post-upload-progress {
+      display: none;
+      gap: 8px;
+      padding: 2px 2px 0;
+    }
+
+    .feed-post-upload-progress.visible {
+      display: grid;
+    }
+
+    .feed-post-upload-track {
+      height: 6px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .feed-post-upload-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #57b59a, #ffffff);
+      transition: width .18s ease;
+    }
+
+    .feed-post-upload-label {
+      color: rgba(255,255,255,.58);
+      font-size: 12px;
+      text-align: center;
     }
 
     .feed-post-actions {
@@ -1275,6 +1319,10 @@
           </span>
         </button>
         <div class="feed-post-preview" id="feed-post-preview"></div>
+        <div class="feed-post-upload-progress" id="feed-post-upload-progress" aria-hidden="true">
+          <div class="feed-post-upload-track"><div class="feed-post-upload-fill" id="feed-post-upload-fill"></div></div>
+          <div class="feed-post-upload-label" id="feed-post-upload-label">Готово к загрузке</div>
+        </div>
         <textarea class="feed-post-text" id="feed-post-body" placeholder="Текст поста..." required></textarea>
         <div class="feed-post-status" id="feed-post-status" aria-live="polite"></div>
         <div class="feed-post-actions">

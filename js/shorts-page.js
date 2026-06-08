@@ -18,6 +18,7 @@
   var toastEl = document.getElementById('shorts-toast');
   var stageEl = document.getElementById('shorts-player-stage');
   var centerControlEl = document.getElementById('shorts-player-center-control');
+  var progressEl = document.getElementById('shorts-player-progress');
   var progressBarEl = document.getElementById('shorts-player-progress-bar');
   var toastTimer;
   var controlHideTimer = null;
@@ -36,6 +37,7 @@
   /** Колёсо трекпада: не триггерить пачкой кадров */
   var wheelStepLockUntil = 0;
   var playbackAttemptTimer = null;
+  var progressSeeking = false;
 
   if (!root) return;
 
@@ -186,9 +188,23 @@
   function updateProgress() {
     if (!progressBarEl || !videoEl || !Number.isFinite(videoEl.duration) || videoEl.duration <= 0) {
       if (progressBarEl) progressBarEl.style.width = '0%';
+      if (progressEl) progressEl.setAttribute('aria-valuenow', '0');
       return;
     }
-    progressBarEl.style.width = Math.max(0, Math.min(100, (videoEl.currentTime / videoEl.duration) * 100)) + '%';
+    var value = Math.max(0, Math.min(100, (videoEl.currentTime / videoEl.duration) * 100));
+    progressBarEl.style.width = value + '%';
+    if (progressEl) progressEl.setAttribute('aria-valuenow', String(Math.round(value)));
+  }
+
+  function seekFromProgressEvent(ev) {
+    if (!progressEl || !videoEl || !Number.isFinite(videoEl.duration) || videoEl.duration <= 0) return;
+    var rect = progressEl.getBoundingClientRect();
+    var clientX = ev.clientX;
+    if (ev.touches && ev.touches[0]) clientX = ev.touches[0].clientX;
+    if (ev.changedTouches && ev.changedTouches[0]) clientX = ev.changedTouches[0].clientX;
+    var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / Math.max(1, rect.width)));
+    videoEl.currentTime = ratio * videoEl.duration;
+    updateProgress();
   }
 
   function playCurrentVideo(showFallback) {
@@ -541,7 +557,7 @@
         if (ev.touches.length !== 1) return;
         /* Не захватывать жест, начатый у крестика закрытия */
         var t = ev.target;
-        if (t.closest && (t.closest('[data-shorts-player-close]') || t.closest('.shorts-player-dismiss')))
+        if (t.closest && (t.closest('[data-shorts-player-close]') || t.closest('.shorts-player-dismiss') || t.closest('#shorts-player-progress')))
           return;
         swipeTracked = true;
         swipeX0 = ev.touches[0].clientX;
@@ -624,7 +640,39 @@
       if (!overlay || overlay.classList.contains('u-hidden')) return;
       if (Date.now() - lastSwipeAt < 360) return;
       if (ev.target.closest && ev.target.closest('.shorts-player-spinner')) return;
+      if (ev.target.closest && ev.target.closest('#shorts-player-progress')) return;
       togglePlayback();
+    });
+  }
+  if (progressEl) {
+    progressEl.addEventListener('pointerdown', function (ev) {
+      if (!videoEl || !Number.isFinite(videoEl.duration) || videoEl.duration <= 0) return;
+      progressSeeking = true;
+      ev.preventDefault();
+      ev.stopPropagation();
+      progressEl.setPointerCapture?.(ev.pointerId);
+      seekFromProgressEvent(ev);
+    });
+    progressEl.addEventListener('pointermove', function (ev) {
+      if (!progressSeeking) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      seekFromProgressEvent(ev);
+    });
+    progressEl.addEventListener('pointerup', function (ev) {
+      if (!progressSeeking) return;
+      progressSeeking = false;
+      ev.preventDefault();
+      ev.stopPropagation();
+      progressEl.releasePointerCapture?.(ev.pointerId);
+      seekFromProgressEvent(ev);
+    });
+    progressEl.addEventListener('pointercancel', function () {
+      progressSeeking = false;
+    });
+    progressEl.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
     });
   }
   if (centerControlEl) {

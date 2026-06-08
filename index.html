@@ -313,6 +313,38 @@
 
   </main>
 
+  <div class="liza-tour hidden" id="liza-tour" aria-hidden="true">
+    <div class="liza-tour-backdrop" data-liza-tour-skip></div>
+    <section class="liza-tour-card" role="dialog" aria-modal="true" aria-labelledby="liza-tour-title">
+      <button class="liza-tour-close" type="button" data-liza-tour-skip aria-label="Закрыть">&times;</button>
+      <div class="liza-device-card" aria-hidden="true">
+        <div class="liza-device-btn1"></div>
+        <div class="liza-device-btn2"></div>
+        <div class="liza-device-btn3"></div>
+        <div class="liza-device-screen">
+          <div class="liza-device-hello">
+            Лиза
+            <span>рядом</span>
+          </div>
+        </div>
+        <div class="liza-device-top">
+          <div class="liza-device-camera"><div></div></div>
+          <div class="liza-device-speaker"></div>
+        </div>
+      </div>
+      <div class="liza-tour-copy">
+        <p class="liza-tour-kicker" id="liza-tour-kicker">Добро пожаловать</p>
+        <h2 id="liza-tour-title">Я Лиза, ваш AI-проводник</h2>
+        <p id="liza-tour-text">Покажу, как устроена главная: где ваш маршрут, программы, лента и помощь. Это займет меньше минуты.</p>
+      </div>
+      <div class="liza-tour-dots" id="liza-tour-dots" aria-hidden="true"></div>
+      <div class="liza-tour-actions">
+        <button class="liza-tour-secondary" type="button" data-liza-tour-skip>Пропустить</button>
+        <button class="liza-tour-primary" type="button" id="liza-tour-next">Далее</button>
+      </div>
+    </section>
+  </div>
+
   <!-- iOS PWA Installation Guide Modal -->
   <div class="pwa-guide-modal hidden" id="pwa-ios-modal">
     <div class="pwa-guide-overlay" id="pwa-ios-overlay"></div>

@@ -253,22 +253,12 @@
     savedBodyStyles = {
       htmlOverflow: document.documentElement.style.overflow,
       htmlOverscrollBehavior: document.documentElement.style.overscrollBehavior,
-      bodyPosition: document.body.style.position,
-      bodyTop: document.body.style.top,
-      bodyLeft: document.body.style.left,
-      bodyRight: document.body.style.right,
-      bodyWidth: document.body.style.width,
       bodyOverflow: document.body.style.overflow,
       bodyOverscrollBehavior: document.body.style.overscrollBehavior,
       bodyTouchAction: document.body.style.touchAction,
     };
     document.documentElement.style.overflow = 'hidden';
     document.documentElement.style.overscrollBehavior = 'none';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${savedScrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
     document.body.style.overscrollBehavior = 'none';
     document.body.style.touchAction = 'pan-y';
@@ -279,11 +269,6 @@
     if (savedBodyStyles) {
       document.documentElement.style.overflow = savedBodyStyles.htmlOverflow;
       document.documentElement.style.overscrollBehavior = savedBodyStyles.htmlOverscrollBehavior;
-      document.body.style.position = savedBodyStyles.bodyPosition;
-      document.body.style.top = savedBodyStyles.bodyTop;
-      document.body.style.left = savedBodyStyles.bodyLeft;
-      document.body.style.right = savedBodyStyles.bodyRight;
-      document.body.style.width = savedBodyStyles.bodyWidth;
       document.body.style.overflow = savedBodyStyles.bodyOverflow;
       document.body.style.overscrollBehavior = savedBodyStyles.bodyOverscrollBehavior;
       document.body.style.touchAction = savedBodyStyles.bodyTouchAction;
@@ -294,13 +279,7 @@
 
   function restoreFeedScroll(y) {
     const targetY = Math.max(0, Number(y) || 0);
-    window.scrollTo(0, targetY);
-    requestAnimationFrame(() => {
-      window.scrollTo(0, targetY);
-      setTimeout(() => window.scrollTo(0, targetY), 80);
-      setTimeout(() => window.scrollTo(0, targetY), 220);
-      setTimeout(() => window.scrollTo(0, targetY), 420);
-    });
+    requestAnimationFrame(() => window.scrollTo({ top: targetY, left: 0, behavior: 'instant' }));
   }
 
   function blurCommentSheetFocus() {
@@ -639,6 +618,9 @@
     const bodyInput = document.getElementById('feed-post-body');
     const preview = document.getElementById('feed-post-preview');
     const statusEl = document.getElementById('feed-post-status');
+    const progress = document.getElementById('feed-post-upload-progress');
+    const progressFill = document.getElementById('feed-post-upload-fill');
+    const progressLabel = document.getElementById('feed-post-upload-label');
     const typeButtons = Array.from(document.querySelectorAll('[data-feed-media-type]'));
     let mediaType = 'image';
     let previewUrl = '';
@@ -649,6 +631,16 @@
       if (statusEl) statusEl.textContent = text || '';
     }
 
+    function setUploadProgress(value, label) {
+      const safe = Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
+      if (progress) {
+        progress.classList.toggle('visible', safe > 0 || Boolean(label));
+        progress.setAttribute('aria-hidden', safe > 0 || label ? 'false' : 'true');
+      }
+      if (progressFill) progressFill.style.width = `${safe}%`;
+      if (progressLabel) progressLabel.textContent = label || (safe ? `Загрузка ${safe}%` : 'Готово к загрузке');
+    }
+
     function setModalVisible(visible) {
       modal.classList.toggle('hidden', !visible);
       modal.setAttribute('aria-hidden', visible ? 'false' : 'true');
@@ -656,6 +648,7 @@
         setStatus('');
       } else {
         form.reset();
+        setUploadProgress(0, '');
         clearPreview();
       }
     }
@@ -682,6 +675,7 @@
             : 'Выбрать видео';
       }
       if (fileName) fileName.textContent = 'Из галереи телефона';
+      setUploadProgress(0, '');
       clearPreview();
       fileInput.value = '';
     }
@@ -694,36 +688,49 @@
       if (mediaType === 'image') {
         preview.innerHTML = `<img src="${previewUrl}" alt="">`;
       } else {
-        preview.innerHTML = `<video src="${previewUrl}" controls playsinline webkit-playsinline muted></video>`;
+        preview.innerHTML = `<video src="${previewUrl}" controls playsinline webkit-playsinline muted preload="metadata"></video>`;
       }
       preview.style.display = 'block';
+      setUploadProgress(0, 'Файл выбран, можно публиковать');
     }
 
-    async function uploadFeedFile(file) {
+    async function uploadFeedFile(file, onProgress) {
       const user = await window.API.me({ fresh: true }).then((data) => data.user);
       if (!user || user.role !== 'admin') {
         throw new Error('Доступ только для администратора');
       }
       const base = String(window.API.base || '').replace(/\/+$/u, '');
-      const response = await window.API.fetchWithTimeout(
-        `${base}/content/feed/posts/upload?type=${encodeURIComponent(mediaType)}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': file.type || 'application/octet-stream',
-            'Authorization': `Bearer ${window.API.accessToken}`,
-          },
-          credentials: 'include',
-          cache: 'no-store',
-          body: file,
-        },
-        { timeoutMs: 180000 }
-      );
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(data.error || 'Не удалось загрузить медиа');
-      }
-      return data;
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${base}/content/feed/posts/upload?type=${encodeURIComponent(mediaType)}`, true);
+        xhr.withCredentials = true;
+        xhr.timeout = 180000;
+        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+        if (window.API.accessToken) xhr.setRequestHeader('Authorization', `Bearer ${window.API.accessToken}`);
+        xhr.upload.onprogress = (event) => {
+          if (!event.lengthComputable) {
+            onProgress?.(8, 'Загружаем медиа...');
+            return;
+          }
+          onProgress?.((event.loaded / event.total) * 100, `Загрузка ${Math.round((event.loaded / event.total) * 100)}%`);
+        };
+        xhr.onload = () => {
+          let data = {};
+          try {
+            data = JSON.parse(xhr.responseText || '{}');
+          } catch (e) {
+            data = {};
+          }
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(data);
+          } else {
+            reject(new Error(data.error || 'Не удалось загрузить медиа'));
+          }
+        };
+        xhr.onerror = () => reject(new Error('Сеть прервала загрузку'));
+        xhr.ontimeout = () => reject(new Error('Загрузка заняла слишком много времени'));
+        xhr.send(file);
+      });
     }
 
     openBtn.addEventListener('click', () => setModalVisible(true));
@@ -748,7 +755,9 @@
       if (submit) submit.disabled = true;
       try {
         setStatus('Загружаем медиа...');
-        const uploaded = await uploadFeedFile(file);
+        setUploadProgress(1, 'Подготовка загрузки...');
+        const uploaded = await uploadFeedFile(file, setUploadProgress);
+        setUploadProgress(100, 'Медиа загружено');
         setStatus('Публикуем пост...');
         await window.API.request('POST', '/content/feed/posts', {
           body,

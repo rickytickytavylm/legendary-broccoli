@@ -169,6 +169,232 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   animation: splashLogoIn 1.8s ease both;
 }
 
+.liza-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 5600;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+}
+
+.liza-tour.hidden {
+  display: none !important;
+}
+
+.liza-tour-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(87,181,154,.18), transparent 34%),
+    rgba(0,0,0,.72);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.liza-tour-card {
+  position: relative;
+  width: min(100%, 520px);
+  overflow: hidden;
+  border-radius: 34px;
+  border: 1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 44%),
+    linear-gradient(180deg, rgba(18,25,31,.96), rgba(5,7,10,.98));
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.62),
+    inset 0 1px 0 rgba(255,255,255,.14);
+  padding: 26px;
+  color: #fff;
+  text-align: center;
+}
+
+.liza-tour-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 50%;
+  color: rgba(255,255,255,.68);
+  background: rgba(255,255,255,.07);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.liza-device-card {
+  width: 150px;
+  height: 286px;
+  margin: 0 auto 22px;
+  padding: 6px;
+  position: relative;
+  border-radius: 30px;
+  border: 2px solid rgb(40, 40, 40);
+  background: #000;
+  box-shadow: 2px 16px 50px rgba(0,0,0,.52);
+}
+
+.liza-device-screen {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 23px;
+  background-image: linear-gradient(to right bottom, #8e8989, #ff004431, #5a3e4b, #262225, #2c0334, #ffffff, #6a6878, #c1d9ff, #003d94, #002e66, #001d3a, #020812);
+  background-size: 220% 220%;
+  animation: lizaDeviceGradient 5.5s ease-in-out infinite alternate;
+}
+
+.liza-device-hello {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.45rem;
+  font-weight: 850;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.liza-device-hello span {
+  margin-top: 3px;
+  opacity: .72;
+  font-size: .85rem;
+}
+
+.liza-device-top {
+  position: absolute;
+  top: 0;
+  right: 50%;
+  width: 35%;
+  height: 18px;
+  transform: translateX(50%);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background: #010101;
+}
+
+.liza-device-speaker {
+  position: absolute;
+  top: 3px;
+  right: 50%;
+  width: 40%;
+  height: 2px;
+  transform: translateX(50%);
+  border-radius: 2px;
+  background: rgb(20,20,20);
+}
+
+.liza-device-camera {
+  position: absolute;
+  top: 6px;
+  right: 84%;
+  width: 6px;
+  height: 6px;
+  transform: translateX(50%);
+  border-radius: 50%;
+  background: rgba(255,255,255,.048);
+}
+
+.liza-device-camera div {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+  background: rgba(0,0,255,.212);
+}
+
+.liza-device-btn1,
+.liza-device-btn2,
+.liza-device-btn3 {
+  position: absolute;
+  width: 2px;
+  right: -4px;
+  background-image: linear-gradient(to right, #111, #222, #333, #464646, #595959);
+}
+
+.liza-device-btn1 { top: 30%; height: 45px; }
+.liza-device-btn2,
+.liza-device-btn3 { left: -4px; right: auto; height: 30px; transform: scale(-1); }
+.liza-device-btn2 { top: 26%; }
+.liza-device-btn3 { top: 36%; }
+
+.liza-tour-kicker {
+  margin: 0 0 10px;
+  color: rgba(87,181,154,.9);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.liza-tour-copy h2 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 5vw, 36px);
+  line-height: .98;
+  letter-spacing: -.05em;
+}
+
+.liza-tour-copy p:last-child {
+  margin: 0 auto;
+  max-width: 390px;
+  color: rgba(255,255,255,.62);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.liza-tour-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin: 22px 0;
+}
+
+.liza-tour-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+}
+
+.liza-tour-dots span.active {
+  width: 22px;
+  background: #fff;
+}
+
+.liza-tour-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.liza-tour-actions button {
+  flex: 1;
+  min-height: 48px;
+  border: 0;
+  border-radius: 999px;
+  font: 850 14px/1 Inter, sans-serif;
+}
+
+.liza-tour-primary {
+  color: #050506;
+  background: #fff;
+}
+
+.liza-tour-secondary {
+  color: rgba(255,255,255,.72);
+  background: rgba(255,255,255,.08);
+}
+
+@keyframes lizaDeviceGradient {
+  from { background-position: 0% 0%; }
+  to { background-position: 100% 100%; }
+}
+
 @keyframes splashLogoIn {
   0% { opacity: 0; transform: translateY(12px) scale(.96); filter: blur(8px); }
   45% { opacity: .96; filter: blur(0); }

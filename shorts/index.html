@@ -458,17 +458,21 @@
       right: 0;
       bottom: 0;
       z-index: 11;
-      height: 3px;
+      height: 16px;
       background: rgba(255,255,255,.16);
-      pointer-events: none;
+      cursor: pointer;
+      pointer-events: auto;
+      touch-action: none;
     }
 
     .shorts-player-progress span {
       display: block;
       width: 0%;
-      height: 100%;
+      height: 3px;
+      margin-top: 13px;
       background: rgba(255,255,255,.82);
       transition: width .08s linear;
+      pointer-events: none;
     }
 
     @media (max-width: 768px) {
@@ -681,7 +685,7 @@
           <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.7-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>
           <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M7 5h3.4v14H7V5zm6.6 0H17v14h-3.4V5z"/></svg>
         </button>
-        <div class="shorts-player-progress" aria-hidden="true"><span id="shorts-player-progress-bar"></span></div>
+        <div class="shorts-player-progress" id="shorts-player-progress" role="slider" aria-label="Позиция видео" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="shorts-player-progress-bar"></span></div>
       </div>
       <footer class="shorts-player-foot">
         <p id="shorts-player-title" class="shorts-player-title" title="Нажмите, чтобы раскрыть описание"></p>
