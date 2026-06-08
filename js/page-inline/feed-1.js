@@ -4,6 +4,8 @@
   const fallbackTemplate = document.getElementById('feed-static-fallback');
   const defaultAvatar = '/assets/webp/ruslan_promo.webp';
   let feedPostsInitialized = false;
+  let isFeedAdmin = false;
+  let currentFeedPosts = [];
 
   function escapeHtml(value) {
     return String(value || '')
@@ -90,6 +92,12 @@
     const likes = Number(post.likes_count) || 0;
     return `
       <article class="post-card" id="post-${escapeHtml(id)}" data-post-id="${escapeHtml(id)}" data-share-title="${escapeHtml(title)}" data-share-text="${escapeHtml(shareText)}">
+        ${isFeedAdmin ? `
+          <div class="feed-admin-post-actions">
+            <button type="button" data-feed-edit-post="${escapeHtml(id)}">Редактировать</button>
+            <button type="button" data-feed-delete-post="${escapeHtml(id)}">Удалить</button>
+          </div>
+        ` : ''}
         <div class="post-author">
           <img class="post-avatar" src="${escapeHtml(post.author_avatar_url || defaultAvatar)}" alt="${escapeHtml(post.author_name || 'Руслан Молодцов')}" loading="lazy" decoding="async" />
           <div class="post-author-info">
@@ -589,6 +597,7 @@
     try {
       const data = await window.API.request('GET', '/content/feed/posts', null, { fresh: true });
       const posts = Array.isArray(data?.posts) ? data.posts : [];
+      currentFeedPosts = posts;
       if (!posts.length) {
         root.innerHTML = '<div class="feed-empty">Пока нет постов.</div>';
       } else {
@@ -624,6 +633,7 @@
     const typeButtons = Array.from(document.querySelectorAll('[data-feed-media-type]'));
     let mediaType = 'image';
     let previewUrl = '';
+    let editingPost = null;
 
     if (!modal || !openBtn || !form || !fileInput || !bodyInput || !window.API) return;
 
@@ -647,9 +657,16 @@
       if (visible) {
         setStatus('');
       } else {
+        editingPost = null;
+        mediaType = 'image';
+        document.getElementById('feed-post-title').textContent = 'Новый пост';
+        document.querySelector('.feed-post-dialog-subtitle').textContent = 'Как в Telegram: выберите медиа, добавьте текст и сразу публикуйте в ленту.';
+        form.querySelector('.feed-post-submit').textContent = 'Опубликовать';
+        fileInput.required = true;
         form.reset();
         setUploadProgress(0, '');
         clearPreview();
+        updateFileAccept();
       }
     }
 
@@ -694,6 +711,65 @@
       setUploadProgress(0, 'Файл выбран, можно публиковать');
     }
 
+    function renderExistingPreview(post) {
+      clearPreview();
+      if (!preview || !post) return;
+      const type = post.media_type || (post.video_url ? 'video' : 'image');
+      if (type === 'image' && post.image_url) {
+        preview.innerHTML = `<img src="${escapeHtml(post.image_url)}" alt="">`;
+      } else if (post.video_url) {
+        preview.innerHTML = `<video src="${escapeHtml(post.video_url)}" controls playsinline webkit-playsinline muted preload="metadata"></video>`;
+      } else {
+        return;
+      }
+      preview.style.display = 'block';
+      if (fileName) fileName.textContent = 'Текущее медиа сохранится, если не выбрать новое';
+      setUploadProgress(0, 'Можно заменить медиа или сохранить текущее');
+    }
+
+    function openEditPost(post) {
+      editingPost = post;
+      mediaType = post.media_type || (post.video_url ? 'video' : 'image');
+      updateFileAccept();
+      editingPost = post;
+      bodyInput.value = post.body || '';
+      fileInput.required = false;
+      document.getElementById('feed-post-title').textContent = 'Редактировать пост';
+      document.querySelector('.feed-post-dialog-subtitle').textContent = 'Измените текст или замените медиа. Если файл не выбрать, останется текущее медиа.';
+      form.querySelector('.feed-post-submit').textContent = 'Сохранить';
+      renderExistingPreview(post);
+      setModalVisible(true);
+    }
+
+    root?.addEventListener('click', async (event) => {
+      const editBtn = event.target.closest('[data-feed-edit-post]');
+      const deleteBtn = event.target.closest('[data-feed-delete-post]');
+      if (!editBtn && !deleteBtn) return;
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (editBtn) {
+        const post = currentFeedPosts.find((item) => String(item.id) === String(editBtn.dataset.feedEditPost));
+        if (post) openEditPost(post);
+        return;
+      }
+
+      const postId = deleteBtn.dataset.feedDeletePost;
+      const post = currentFeedPosts.find((item) => String(item.id) === String(postId));
+      const title = post?.title || String(post?.body || '').slice(0, 60) || `#${postId}`;
+      if (!confirm(`Удалить пост "${title}"?`)) return;
+      deleteBtn.disabled = true;
+      try {
+        await window.API.request('DELETE', `/content/feed/posts/${encodeURIComponent(postId)}`, null, { requireAuth: true });
+        await loadFeedPosts();
+      } catch (err) {
+        console.error('[feed] Error deleting post:', err);
+        alert(err.message || 'Не удалось удалить пост');
+      } finally {
+        deleteBtn.disabled = false;
+      }
+    });
+
     async function uploadFeedFile(file, onProgress) {
       const user = await window.API.me({ fresh: true }).then((data) => data.user);
       if (!user || user.role !== 'admin') {
@@ -733,7 +809,13 @@
       });
     }
 
-    openBtn.addEventListener('click', () => setModalVisible(true));
+    openBtn.addEventListener('click', () => {
+      editingPost = null;
+      mediaType = 'image';
+      form.reset();
+      updateFileAccept();
+      setModalVisible(true);
+    });
     fileTrigger?.addEventListener('click', () => fileInput.click());
     modal.querySelectorAll('[data-feed-post-close]').forEach((button) => {
       button.addEventListener('click', () => setModalVisible(false));
@@ -750,30 +832,36 @@
       event.preventDefault();
       const file = fileInput.files && fileInput.files[0];
       const body = bodyInput.value.trim();
-      if (!file || !body) return;
+      if (!body || (!editingPost && !file)) return;
       const submit = form.querySelector('.feed-post-submit');
       if (submit) submit.disabled = true;
       try {
-        setStatus('Загружаем медиа...');
-        setUploadProgress(1, 'Подготовка загрузки...');
-        const uploaded = await uploadFeedFile(file, setUploadProgress);
-        setUploadProgress(100, 'Медиа загружено');
-        setStatus('Публикуем пост...');
-        await window.API.request('POST', '/content/feed/posts', {
+        let uploaded = null;
+        if (file) {
+          setStatus('Загружаем медиа...');
+          setUploadProgress(1, 'Подготовка загрузки...');
+          uploaded = await uploadFeedFile(file, setUploadProgress);
+          setUploadProgress(100, 'Медиа загружено');
+        }
+        setStatus(editingPost ? 'Сохраняем пост...' : 'Публикуем пост...');
+        const payload = {
           body,
           title: body.split(/\n/u).find(Boolean)?.slice(0, 160) || 'Новый пост',
-          media_type: uploaded.media_type || mediaType,
-          image_url: uploaded.image_url,
-          video_url: uploaded.video_url,
-          cover_url: uploaded.cover_url,
+          media_type: uploaded?.media_type || mediaType,
+          image_url: uploaded?.image_url || null,
+          video_url: uploaded?.video_url || null,
+          cover_url: uploaded?.cover_url || null,
           status: 'published',
-        }, { requireAuth: true, timeoutMs: 30000 });
-        setStatus('Пост опубликован');
+          keep_existing_media: Boolean(editingPost && !uploaded),
+        };
+        const endpoint = editingPost ? `/content/feed/posts/${encodeURIComponent(editingPost.id)}` : '/content/feed/posts';
+        await window.API.request(editingPost ? 'PATCH' : 'POST', endpoint, payload, { requireAuth: true, timeoutMs: 30000 });
+        setStatus(editingPost ? 'Пост сохранён' : 'Пост опубликован');
         setModalVisible(false);
         await loadFeedPosts();
       } catch (err) {
-        console.error('[feed] Error publishing post:', err);
-        setStatus(err.message || 'Не удалось опубликовать пост');
+        console.error('[feed] Error saving post:', err);
+        setStatus(err.message || 'Не удалось сохранить пост');
       } finally {
         if (submit) submit.disabled = false;
       }
@@ -782,7 +870,11 @@
     updateFileAccept();
     window.API.me({ fresh: true })
       .then((data) => {
-        if (data?.user?.role === 'admin') document.body.classList.add('feed-admin-ready');
+        if (data?.user?.role === 'admin') {
+          isFeedAdmin = true;
+          document.body.classList.add('feed-admin-ready');
+          loadFeedPosts().catch((err) => console.error('[feed] Error reloading admin posts:', err));
+        }
       })
       .catch(() => {});
   }
