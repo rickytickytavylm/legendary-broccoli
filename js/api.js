@@ -6,6 +6,50 @@ const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http:/
 const API_ORIGIN = new URL(API_BASE, location.href).origin;
 const CONTENT_CACHE_TTL = 5 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 15000;
+const ACTIVITY_CLICK_MIN_INTERVAL_MS = 650;
+
+function clampActivityText(value, max = 180) {
+  return String(value || '').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+function getPageLabel() {
+  const title = document.querySelector('h1')?.textContent || document.title || location.pathname;
+  return clampActivityText(title, 140);
+}
+
+function getElementLabel(element) {
+  if (!element) return '';
+  return clampActivityText(
+    element.getAttribute('data-track-label') ||
+    element.getAttribute('aria-label') ||
+    element.getAttribute('title') ||
+    element.innerText ||
+    element.textContent ||
+    element.value ||
+    element.id ||
+    element.className,
+    160
+  );
+}
+
+function getElementDescriptor(element) {
+  if (!element) return {};
+  return {
+    tag: String(element.tagName || '').toLowerCase(),
+    id: element.id || null,
+    class_name: clampActivityText(element.className || '', 160) || null,
+    text: getElementLabel(element) || null,
+    href: element.getAttribute('href') || null,
+    type: element.getAttribute('type') || null,
+    name: element.getAttribute('name') || null,
+    dataset: {
+      track: element.getAttribute('data-track') || null,
+      section: element.getAttribute('data-section') || null,
+      slug: element.getAttribute('data-slug') || null,
+      lesson: element.getAttribute('data-lesson-id') || element.getAttribute('data-lesson') || null,
+    },
+  };
+}
 
 class ApiClient {
   constructor() {
@@ -356,6 +400,23 @@ class ApiClient {
     });
   }
   logActivity(data) { return this.request('POST', '/profile/activity', data); }
+  trackActivity(eventType, data = {}) {
+    if (!this.isLoggedIn()) return Promise.resolve({ skipped: true });
+    return this.logActivity({
+      event_type: eventType,
+      entity_type: data.entity_type || null,
+      entity_id: data.entity_id || null,
+      metadata: {
+        path: location.pathname,
+        search: location.search || '',
+        hash: location.hash || '',
+        title: getPageLabel(),
+        referrer: document.referrer || '',
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        ...(data.metadata || {}),
+      },
+    }).catch(() => ({ skipped: true }));
+  }
   getMeditations() { return this.request('GET', '/content/meditations-lessons'); }
   getMeditationAudioUrl(key) { return this.request('GET', '/content/meditations-audio-url?key=' + encodeURIComponent(key)); }
 
@@ -1044,6 +1105,20 @@ window.prepareAudioMode = function prepareAudioMode(container, slug) {
   return audioMode;
 };
 
+function trackVideoOpen(video, slug, streamType, delivery = null) {
+  if (!video || video.dataset.activityOpenTracked) return;
+  video.dataset.activityOpenTracked = '1';
+  window.SistemaTracker?.track?.('video_open', {
+    entity_type: 'video',
+    entity_id: slug,
+    metadata: {
+      slug,
+      stream_type: streamType,
+      delivery,
+    },
+  });
+}
+
 window.attachVideoSource = async function attachVideoSource(video, slug, currentHls, setHls) {
   video.setAttribute('controls', '');
   video.setAttribute('playsinline', '');
@@ -1066,6 +1141,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
     video.dataset.streamType = 'mp4';
     video.src = new URL(mp4.url, API_ORIGIN).href;
     video.load();
+    trackVideoOpen(video, slug, 'mp4', video.dataset.streamFallback || null);
     return { type: 'mp4', url: video.src, expires_in: mp4.expires_in };
   }
 
@@ -1202,5 +1278,105 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
   }
 
   video.dataset.streamType = stream.type;
+  trackVideoOpen(video, slug, stream.type, null);
   return stream;
 };
+
+(function initSistemaTracker() {
+  if (window.SistemaTracker) return;
+
+  const state = {
+    pageStartedAt: Date.now(),
+    pageTracked: false,
+    lastClickAt: 0,
+    lastClickKey: '',
+  };
+
+  function canTrack() {
+    return !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
+  }
+
+  function track(eventType, payload = {}) {
+    if (!canTrack() || !window.API.trackActivity) return;
+    window.API.trackActivity(eventType, payload);
+  }
+
+  function trackPageView(reason = 'load') {
+    if (state.pageTracked || !canTrack()) return;
+    state.pageTracked = true;
+    track('page_view', {
+      entity_type: 'page',
+      entity_id: location.pathname || '/',
+      metadata: {
+        reason,
+        page_label: getPageLabel(),
+      },
+    });
+  }
+
+  function findTrackableElement(target) {
+    return target?.closest?.('[data-track], button, a, [role="button"], input[type="submit"], input[type="button"], .lesson-item, .course-card, .program-card, .tabbar-item, .sidebar-item');
+  }
+
+  function trackClick(event) {
+    const element = findTrackableElement(event.target);
+    if (!element) return;
+
+    const now = Date.now();
+    const descriptor = getElementDescriptor(element);
+    const key = `${descriptor.tag}:${descriptor.id || ''}:${descriptor.text || ''}:${descriptor.href || ''}`;
+    if (key === state.lastClickKey && now - state.lastClickAt < ACTIVITY_CLICK_MIN_INTERVAL_MS) return;
+    state.lastClickAt = now;
+    state.lastClickKey = key;
+
+    track('ui_click', {
+      entity_type: descriptor.tag || 'element',
+      entity_id: descriptor.id || descriptor.dataset.slug || descriptor.dataset.lesson || descriptor.href || descriptor.text || null,
+      metadata: {
+        element: descriptor,
+        page_label: getPageLabel(),
+        time_on_page_seconds: Math.round((now - state.pageStartedAt) / 1000),
+      },
+    });
+  }
+
+  function trackFormSubmit(event) {
+    const form = event.target;
+    if (!form || form.tagName !== 'FORM') return;
+    track('form_submit', {
+      entity_type: 'form',
+      entity_id: form.id || form.getAttribute('name') || null,
+      metadata: {
+        form: getElementDescriptor(form),
+        page_label: getPageLabel(),
+        time_on_page_seconds: Math.round((Date.now() - state.pageStartedAt) / 1000),
+      },
+    });
+  }
+
+  function trackPageLeave() {
+    if (!canTrack()) return;
+    const seconds = Math.round((Date.now() - state.pageStartedAt) / 1000);
+    if (seconds < 4) return;
+    track('page_leave', {
+      entity_type: 'page',
+      entity_id: location.pathname || '/',
+      metadata: {
+        page_label: getPageLabel(),
+        time_on_page_seconds: seconds,
+      },
+    });
+  }
+
+  window.SistemaTracker = {
+    track,
+    trackPageView,
+    trackClick,
+  };
+
+  document.addEventListener('click', trackClick, true);
+  document.addEventListener('submit', trackFormSubmit, true);
+  window.addEventListener('beforeunload', trackPageLeave);
+  window.addEventListener('auth:change', () => window.setTimeout(() => trackPageView('auth_change'), 250));
+  window.setTimeout(() => trackPageView('boot'), 650);
+})();

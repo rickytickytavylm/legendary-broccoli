@@ -160,6 +160,15 @@
     audio.removeAttribute('src');
     audio.load();
     const data = await window.API.getMeditationAudioUrl(track.audio_key);
+    window.SistemaTracker?.track?.('audio_open', {
+      entity_type: 'meditation',
+      entity_id: track.audio_key || track.title || String(index),
+      metadata: {
+        title: track.title || null,
+        duration: track.duration || null,
+        index,
+      },
+    });
     audio.src = data.url;
     audio.load();
     audio.play().catch(() => {});
