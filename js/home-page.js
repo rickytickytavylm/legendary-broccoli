@@ -340,22 +340,7 @@ const lizaTourSteps = [
   {
     kicker: 'Добро пожаловать',
     title: 'Я Лиза, ваш AI-проводник',
-    text: 'Покажу, как устроена главная: где ваш маршрут, программы, лента и помощь. Это займет меньше минуты.',
-  },
-  {
-    kicker: 'Ваш маршрут',
-    title: 'Главная собирается под ваш запрос',
-    text: 'В верхнем блоке вы видите направление, которое выбрали в онбординге. Его можно листать стрелками или свайпом.',
-  },
-  {
-    kicker: 'Практика',
-    title: 'Две программы без долгого поиска',
-    text: 'Основная и дополнительная карточки ведут к подходящим материалам. После открытия кнопка меняется на “Продолжить”.',
-  },
-  {
-    kicker: 'Поддержка',
-    title: 'AI, чат, лента и марафоны рядом',
-    text: 'Если появится вопрос, откройте AI. Для живого контекста есть лента, общий чат и блок видео-практик ниже.',
+    text: 'Система подбирает для вас маршрут, программы и практики на вкладке «Сегодня». Если понадобится помощь, Лиза находится ниже в разделе «Помощь и поддержка».',
   },
 ];
 
@@ -363,23 +348,18 @@ function showLizaTourIfNeeded(force = false) {
   const tour = document.getElementById('liza-tour');
   if (!tour) return;
   if (!force && localStorage.getItem(LIZA_TOUR_SEEN_KEY) === 'true') return;
-  let index = 0;
   const kicker = document.getElementById('liza-tour-kicker');
   const title = document.getElementById('liza-tour-title');
   const text = document.getElementById('liza-tour-text');
-  const dots = document.getElementById('liza-tour-dots');
   const next = document.getElementById('liza-tour-next');
   const closeButtons = tour.querySelectorAll('[data-liza-tour-skip]');
 
   function renderStep() {
-    const step = lizaTourSteps[index] || lizaTourSteps[0];
+    const step = lizaTourSteps[0];
     if (kicker) kicker.textContent = step.kicker;
     if (title) title.textContent = step.title;
     if (text) text.textContent = step.text;
-    if (dots) {
-      dots.innerHTML = lizaTourSteps.map((_, i) => `<span class="${i === index ? 'active' : ''}"></span>`).join('');
-    }
-    if (next) next.textContent = index === lizaTourSteps.length - 1 ? 'В систему' : 'Далее';
+    if (next) next.textContent = 'Понятно';
   }
 
   function closeTour() {
@@ -388,14 +368,10 @@ function showLizaTourIfNeeded(force = false) {
     tour.setAttribute('aria-hidden', 'true');
   }
 
-  next?.addEventListener('click', () => {
-    if (index >= lizaTourSteps.length - 1) {
-      closeTour();
-      return;
-    }
-    index += 1;
-    renderStep();
-  }, { once: false });
+  if (next && next.dataset.lizaTourBound !== 'true') {
+    next.dataset.lizaTourBound = 'true';
+    next.addEventListener('click', closeTour);
+  }
 
   closeButtons.forEach((button) => {
     if (button.dataset.lizaTourBound === 'true') return;

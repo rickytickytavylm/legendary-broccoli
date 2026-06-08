@@ -175,7 +175,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   z-index: 5600;
   display: grid;
   place-items: center;
-  padding: 22px;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
 }
 
 .liza-tour.hidden {
@@ -194,9 +194,10 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 
 .liza-tour-card {
   position: relative;
-  width: min(100%, 520px);
+  width: min(100%, 430px);
+  max-height: calc(100svh - 28px);
   overflow: hidden;
-  border-radius: 34px;
+  border-radius: 28px;
   border: 1px solid rgba(255,255,255,.14);
   background:
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 44%),
@@ -204,15 +205,15 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   box-shadow:
     0 34px 110px rgba(0,0,0,.62),
     inset 0 1px 0 rgba(255,255,255,.14);
-  padding: 26px;
+  padding: clamp(18px, 4svh, 24px);
   color: #fff;
   text-align: center;
 }
 
 .liza-tour-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 10px;
+  right: 10px;
   z-index: 2;
   width: 36px;
   height: 36px;
@@ -225,9 +226,10 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .liza-device-card {
-  width: 150px;
-  height: 286px;
-  margin: 0 auto 22px;
+  width: min(128px, 34vw);
+  height: min(244px, 34svh);
+  min-height: 190px;
+  margin: 0 auto clamp(14px, 3svh, 20px);
   padding: 6px;
   position: relative;
   border-radius: 30px;
@@ -252,7 +254,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.45rem;
+  font-size: clamp(1.05rem, 5vw, 1.3rem);
   font-weight: 850;
   line-height: 1.15;
   text-align: center;
@@ -261,7 +263,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .liza-device-hello span {
   margin-top: 3px;
   opacity: .72;
-  font-size: .85rem;
+  font-size: .74rem;
 }
 
 .liza-device-top {
@@ -325,7 +327,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .liza-device-btn3 { top: 36%; }
 
 .liza-tour-kicker {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: rgba(87,181,154,.9);
   font-size: 11px;
   font-weight: 850;
@@ -334,42 +336,24 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 }
 
 .liza-tour-copy h2 {
-  margin: 0 0 10px;
-  font-size: clamp(26px, 5vw, 36px);
-  line-height: .98;
+  margin: 0 0 9px;
+  font-size: clamp(24px, 7vw, 31px);
+  line-height: 1.02;
   letter-spacing: -.05em;
 }
 
 .liza-tour-copy p:last-child {
   margin: 0 auto;
-  max-width: 390px;
+  max-width: 350px;
   color: rgba(255,255,255,.62);
-  font-size: 14px;
-  line-height: 1.55;
-}
-
-.liza-tour-dots {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-  margin: 22px 0;
-}
-
-.liza-tour-dots span {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.18);
-}
-
-.liza-tour-dots span.active {
-  width: 22px;
-  background: #fff;
+  font-size: clamp(13px, 3.6vw, 14px);
+  line-height: 1.45;
 }
 
 .liza-tour-actions {
   display: flex;
   gap: 10px;
+  margin-top: clamp(16px, 3.2svh, 22px);
 }
 
 .liza-tour-actions button {
