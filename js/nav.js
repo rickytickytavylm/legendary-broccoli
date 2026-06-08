@@ -353,10 +353,7 @@
   mobileHeader.id = 'app-mobile-header';
   mobileHeader.className = 'app-mobile-header';
   function hasProfileIdentity() {
-    return !!(window.API && (
-      (window.API.isLoggedIn && window.API.isLoggedIn()) ||
-      (window.API.hasDeviceIdentity && window.API.hasDeviceIdentity())
-    ));
+    return !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
   }
 
   mobileHeader.innerHTML =

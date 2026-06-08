@@ -6,21 +6,6 @@ const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http:/
 const API_ORIGIN = new URL(API_BASE, location.href).origin;
 const CONTENT_CACHE_TTL = 5 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 15000;
-const SISTEMA_DEVICE_ID_KEY = 'sistema:device-id';
-
-function getSistemaDeviceId() {
-  let id = localStorage.getItem(SISTEMA_DEVICE_ID_KEY);
-  if (!id) {
-    const random = window.crypto?.randomUUID ? window.crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    id = `web:${random}`;
-    localStorage.setItem(SISTEMA_DEVICE_ID_KEY, id);
-  }
-  return id;
-}
-
-function hasSistemaDeviceId() {
-  return !!localStorage.getItem(SISTEMA_DEVICE_ID_KEY);
-}
 
 class ApiClient {
   constructor() {
@@ -36,7 +21,7 @@ class ApiClient {
   }
 
   getAuthHeaders() {
-    const h = { 'Content-Type': 'application/json', 'X-Sistema-Device-Id': getSistemaDeviceId() };
+    const h = { 'Content-Type': 'application/json' };
     if (this.accessToken) h['Authorization'] = 'Bearer ' + this.accessToken;
     return h;
   }
@@ -153,7 +138,7 @@ class ApiClient {
     const cachedContent = canUseContentCache ? this.readContentCache(path) : null;
 
     // On iOS Safari pages can boot before accessToken is restored from refreshToken.
-    // Without this, protected endpoints may treat the request as a device guest.
+    // Restore it before calling protected endpoints.
     const shouldRestoreAuth = this.needsRestoredAuth(path, opts);
     if (!this.accessToken && localStorage.getItem('refreshToken') && !opts.skipAuthRefresh) {
       const refreshed = await this._doRefresh();
@@ -321,10 +306,6 @@ class ApiClient {
     return !!this.accessToken;
   }
 
-  hasDeviceIdentity() {
-    return hasSistemaDeviceId();
-  }
-
   // --- Auth ---
   register(data) { return this.request('POST', '/auth/register', data); }
   login(data)    { return this.request('POST', '/auth/login', data); }
@@ -490,7 +471,6 @@ class ApiClient {
   }
 
   // --- Profile ---
-  getProfileSession() { return this.request('GET', '/profile/session', null, { fresh: true }); }
   deleteAccount() { return this.request('DELETE', '/profile/account'); }
 
   // --- Chat ---

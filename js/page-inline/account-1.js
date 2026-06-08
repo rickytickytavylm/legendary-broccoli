@@ -22,6 +22,82 @@ function escapeHtml(value) {
 
   let dashboardPromise = null;
   let dashboardLoadedOnce = false;
+  let shortIdCopyTimer = null;
+
+  async function copyTextToClipboard(text) {
+    const value = String(text || '').trim();
+    if (!value) return false;
+
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(value);
+        return true;
+      } catch (e) {}
+    }
+
+    const textarea = document.createElement('textarea');
+    textarea.value = value;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.top = '-9999px';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    let copied = false;
+    try {
+      copied = document.execCommand('copy');
+    } catch (e) {
+      copied = false;
+    }
+    textarea.remove();
+    return copied;
+  }
+
+  function showShortIdCopyFeedback(container) {
+    if (!container) return;
+    const status = container.querySelector('.profile-copy-status');
+    if (status) status.textContent = 'Скопировано';
+    container.classList.add('is-copied');
+    clearTimeout(shortIdCopyTimer);
+    shortIdCopyTimer = setTimeout(() => {
+      container.classList.remove('is-copied');
+    }, 1600);
+  }
+
+  function renderShortId(user) {
+    const shortIdEl = document.getElementById('dash-short-id');
+    if (!shortIdEl) return;
+
+    shortIdEl.replaceChildren();
+    shortIdEl.classList.toggle('is-empty', !user?.short_id);
+    if (!user?.short_id) return;
+
+    const shortId = String(user.short_id);
+    const valueButton = document.createElement('button');
+    valueButton.type = 'button';
+    valueButton.className = 'profile-short-id-value';
+    valueButton.textContent = 'ID: ' + shortId;
+    valueButton.setAttribute('aria-label', 'Скопировать ID пользователя');
+
+    const iconButton = document.createElement('button');
+    iconButton.type = 'button';
+    iconButton.className = 'profile-short-id-copy';
+    iconButton.setAttribute('aria-label', 'Скопировать ID пользователя');
+    iconButton.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M5 15.5H4.5A2.5 2.5 0 0 1 2 13V4.5A2.5 2.5 0 0 1 4.5 2H13a2.5 2.5 0 0 1 2.5 2.5V5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+    const status = document.createElement('span');
+    status.className = 'profile-copy-status';
+    status.setAttribute('aria-live', 'polite');
+
+    const copyShortId = async () => {
+      if (await copyTextToClipboard(shortId)) showShortIdCopyFeedback(shortIdEl);
+    };
+
+    valueButton.addEventListener('click', copyShortId);
+    iconButton.addEventListener('click', copyShortId);
+    shortIdEl.append(valueButton, iconButton, status);
+  }
 
   function refreshAccountOverview() {
     showDashboardShell();
@@ -73,10 +149,7 @@ function escapeHtml(value) {
       usernameEl.textContent = login ? '@' + login : '';
     }
 
-    const shortIdEl = document.getElementById('dash-short-id');
-    if (shortIdEl) {
-      shortIdEl.textContent = user.short_id ? 'ID: ' + user.short_id : '';
-    }
+    renderShortId(user);
 
     document.getElementById('dash-sub')?.replaceChildren(document.createTextNode('Настройки, документы и управление данными.'));
   }
