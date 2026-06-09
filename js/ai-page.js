@@ -3,6 +3,67 @@ const aiSend = document.getElementById('ai-send');
 const aiConversation = document.getElementById('ai-conversation');
 const aiInputBar = document.querySelector('.ai-input-bar');
 
+const AI_COURSE_LINKS = [
+  { title: 'Гештальт-подход', href: '/geshtalt/', aliases: ['Гештальт-подход', 'Гештальт'] },
+  { title: 'Психосоматика', href: '/psihosomatika/', aliases: ['Психосоматика'] },
+  { title: 'Мини-йога', href: '/yoga/', aliases: ['Мини-йога', 'Мини йога', 'Йога'] },
+  { title: 'Работа с травмами', href: '/dermer/', aliases: ['Работа с травмами', 'Травмы'] },
+  { title: 'Гипноз', href: '/gipnoz/', aliases: ['Гипноз'] },
+  { title: 'Супервизия', href: '/superviziya/', aliases: ['Супервизия'] },
+  { title: 'Мастер Коммуникаций', href: '/master/', aliases: ['Мастер Коммуникаций', 'Мастер коммуникаций'] },
+  { title: 'Телесная терапия', href: '/terapiya/', aliases: ['Телесная терапия', 'Телесная практика'] },
+  { title: 'Антология', href: '/antologiya/', aliases: ['Антология'] },
+  { title: 'Созависимость', href: '/sozavisimost/', aliases: ['Созависимость'] },
+  { title: 'Мужское и Женское', href: '/mj/', aliases: ['Мужское и Женское', 'Мужское и женское'] },
+  { title: 'Самооценка', href: '/marathons/#section-samoocenka', aliases: ['Самооценка'] },
+  { title: 'Конфликты', href: '/marathons/#section-konflikty', aliases: ['Конфликты'] },
+  { title: 'Материнство и опора', href: '/marathons/#section-rezakina', aliases: ['Материнство и опора', 'Материнство'] },
+];
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function renderAiAssistantHtml(text) {
+  const sorted = AI_COURSE_LINKS
+    .flatMap((course) => course.aliases.map((alias) => ({ ...course, alias })))
+    .sort((a, b) => b.alias.length - a.alias.length);
+  const source = String(text || '');
+  const matches = [];
+
+  sorted.forEach((course) => {
+    const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])(${escapeRegExp(course.alias)})(?=$|[^\\p{L}\\p{N}])`, 'giu');
+    let match;
+    while ((match = pattern.exec(source)) !== null) {
+      const prefixLength = match[1].length;
+      const start = match.index + prefixLength;
+      const end = start + match[2].length;
+      if (matches.some((item) => start < item.end && end > item.start)) continue;
+      matches.push({ start, end, href: course.href, label: source.slice(start, end) });
+    }
+  });
+
+  matches.sort((a, b) => a.start - b.start);
+  let cursor = 0;
+  let html = '';
+  matches.forEach((match) => {
+    html += escapeHtml(source.slice(cursor, match.start)).replace(/\n/g, '<br>');
+    html += `<a class="ai-course-link" href="${match.href}">${escapeHtml(match.label)}</a>`;
+    cursor = match.end;
+  });
+  html += escapeHtml(source.slice(cursor)).replace(/\n/g, '<br>');
+  return html;
+}
+
 function syncAiIntroState() {
   const hasMessages = !!aiConversation.querySelector('.ai-message');
   document.body.classList.toggle('ai-has-messages', hasMessages);
@@ -28,7 +89,11 @@ function addMessage(text, role = 'user', options = {}) {
   name.textContent = role === 'user' ? 'Вы' : 'AI-помощник';
   const content = document.createElement('span');
   content.className = 'ai-content';
-  content.textContent = text;
+  if (role === 'assistant') {
+    content.innerHTML = renderAiAssistantHtml(text);
+  } else {
+    content.textContent = text;
+  }
   bubble.append(name, content);
   if (options.limitCta) {
     const actions = document.createElement('div');
@@ -91,7 +156,8 @@ async function submitQuestion() {
   try {
     await window.API.streamAiMessage(value, {
       onDelta(text) {
-        assistant.content.textContent += text;
+        assistant.content.dataset.rawText = (assistant.content.dataset.rawText || '') + text;
+        assistant.content.innerHTML = renderAiAssistantHtml(assistant.content.dataset.rawText);
         scrollAiToBottom();
       },
       onUsage(usage) {
@@ -101,8 +167,9 @@ async function submitQuestion() {
         updateUsage(data.usage);
       },
     });
-    if (!assistant.content.textContent.trim()) {
-      assistant.content.textContent = 'Ответ не пришел. Попробуйте еще раз.';
+    const finalText = assistant.content.dataset.rawText || assistant.content.textContent || '';
+    if (!finalText.trim()) {
+      assistant.content.innerHTML = renderAiAssistantHtml('Ответ не пришел. Попробуйте еще раз.');
     }
   } catch (err) {
     assistant.msg.remove();

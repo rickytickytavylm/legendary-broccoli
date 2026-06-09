@@ -508,6 +508,8 @@
     if (keepBottom) scrollToBottom();
   }
 
+  render();
+
   list?.addEventListener('click', async (event) => {
     const reactionBtn = event.target.closest('.chat-reaction-chip');
     if (reactionBtn) {
