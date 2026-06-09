@@ -395,6 +395,19 @@
     list.scrollTop = list.scrollHeight;
   }
 
+  function renderLoader(label = 'Загружаем сообщения…') {
+    return `
+      <div class="sistema-loader-state">
+        <div class="sistema-loader" aria-hidden="true">
+          <span class="sistema-loader-bar"></span>
+          <span class="sistema-loader-bar"></span>
+          <span class="sistema-loader-bar"></span>
+        </div>
+        <span>${escapeHtml(label)}</span>
+      </div>
+    `;
+  }
+
   function render() {
     if (!list) return;
     const keepBottom = shouldStickToBottom();
@@ -402,13 +415,7 @@
 
     if (state.loading) {
       if (empty) empty.classList.add('hidden');
-      list.innerHTML = `
-        <div class="chat-loading-shimmer">
-          <div class="shimmer-bubble"></div>
-          <div class="shimmer-bubble own"></div>
-          <div class="shimmer-bubble"></div>
-        </div>
-      `;
+      list.innerHTML = renderLoader('Загружаем чат…');
       return;
     }
 

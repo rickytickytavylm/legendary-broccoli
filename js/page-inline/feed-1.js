@@ -39,6 +39,19 @@
     localStorage.setItem(likedKey, JSON.stringify(Array.from(set)));
   }
 
+  function renderLoader(label = 'Загружаем…') {
+    return `
+      <div class="sistema-loader-state">
+        <div class="sistema-loader" aria-hidden="true">
+          <span class="sistema-loader-bar"></span>
+          <span class="sistema-loader-bar"></span>
+          <span class="sistema-loader-bar"></span>
+        </div>
+        <span>${escapeHtml(label)}</span>
+      </div>
+    `;
+  }
+
   function formatLikes(count) {
     return `Нравится: ${count}`;
   }
@@ -370,7 +383,7 @@
     });
 
     if (list) {
-      list.innerHTML = '';
+      list.innerHTML = renderLoader('Загружаем комментарии…');
       list.scrollTop = 0;
     }
 
@@ -391,6 +404,7 @@
         })
         .catch((err) => {
           console.error('[feed] Error loading comments:', err);
+          list.innerHTML = '<div class="feed-empty">Не удалось загрузить комментарии.</div>';
         });
     }
   }
@@ -595,6 +609,8 @@
       return;
     }
     try {
+      root.innerHTML = renderLoader('Загружаем ленту…');
+      root.setAttribute('aria-busy', 'true');
       const data = await window.API.request('GET', '/content/feed/posts', null, { fresh: true });
       const posts = Array.isArray(data?.posts) ? data.posts : [];
       currentFeedPosts = posts;

@@ -1205,7 +1205,14 @@
         <button class="feed-admin-open" type="button" id="feed-admin-open">+ Новый пост</button>
       </div>
       <div id="feed-posts-root" aria-busy="true">
-        <div class="feed-loading">Загружаем ленту...</div>
+        <div class="sistema-loader-state">
+          <div class="sistema-loader" aria-hidden="true">
+            <span class="sistema-loader-bar"></span>
+            <span class="sistema-loader-bar"></span>
+            <span class="sistema-loader-bar"></span>
+          </div>
+          <span>Загружаем ленту…</span>
+        </div>
       </div>
       <template id="feed-static-fallback">
       <!-- Post 3: newest -->

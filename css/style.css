@@ -8816,34 +8816,65 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   object-fit: cover;
 }
 
-/* ─── Chat Loading Shimmer ──────────────────────── */
-.chat-loading-shimmer {
+/* ─── Sistema Bars Loader ───────────────────────── */
+.sistema-loader-state {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 180px;
+  padding: 30px 18px;
+  color: rgba(255,255,255,.54);
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .01em;
 }
 
-.shimmer-bubble {
-  width: 60%;
-  height: 48px;
-  border-radius: 18px 18px 18px 4px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.02) 75%);
-  background-size: 200% 100%;
-  animation: chatShimmer 1.4s infinite linear;
+.sistema-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  min-height: 44px;
+  padding: 10px 13px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.12), transparent 60%),
+    rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 18px 42px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.10);
 }
 
-.shimmer-bubble.own {
-  align-self: flex-end;
-  border-radius: 18px 18px 4px 18px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.10) 50%, rgba(255, 255, 255, 0.04) 75%);
-  background-size: 200% 100%;
-  width: 50%;
+.sistema-loader-bar {
+  display: inline-block;
+  width: 3px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, .5);
+  border-radius: 10px;
+  animation: sistema-loader-scale 1s linear infinite;
 }
 
-@keyframes chatShimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+.sistema-loader-bar:nth-child(2) {
+  height: 35px;
+  margin: 0 5px;
+  animation-delay: .25s;
+}
+
+.sistema-loader-bar:nth-child(3) {
+  animation-delay: .5s;
+}
+
+@keyframes sistema-loader-scale {
+  20% {
+    background-color: #fff;
+    transform: scaleY(1.5);
+  }
+
+  40% {
+    transform: scaleY(1);
+  }
 }
 
 .chat-composer button {
