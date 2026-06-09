@@ -378,6 +378,10 @@
       box-sizing: border-box;
       padding: 76px clamp(14px, 2.8vw, 34px) 110px;
     }
+    .profile-dashboard-actions,
+    .profile-mini-dashboard {
+      display: none;
+    }
     .profile-hero {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -1317,44 +1321,47 @@
     @media (min-width: 1024px) {
       body.account-page {
         background:
-          radial-gradient(circle at 42% 0%, rgba(112, 75, 180, .12), transparent 34%),
-          radial-gradient(circle at 86% 8%, rgba(216, 191, 155, .08), transparent 32%),
-          #07070b;
+          radial-gradient(circle at 28% 0%, rgba(45, 98, 170, .14), transparent 36%),
+          radial-gradient(circle at 86% 12%, rgba(112, 75, 180, .12), transparent 34%),
+          #05070d;
       }
 
       body.account-page .profile-wrap {
-        width: min(1040px, calc(100vw - 240px)) !important;
-        max-width: 1040px !important;
-        margin-left: 176px !important;
+        width: min(1120px, calc(100vw - 252px)) !important;
+        max-width: 1120px !important;
+        margin-left: 188px !important;
         margin-right: auto !important;
-        padding: 30px 28px 90px !important;
+        padding: 28px 28px 86px !important;
         display: grid;
-        grid-template-columns: minmax(0, 1.38fr) minmax(330px, .72fr);
-        gap: 18px;
+        grid-template-columns: minmax(0, 1.45fr) minmax(320px, .72fr);
+        gap: 14px;
         align-items: stretch;
       }
 
       body.account-page .profile-card {
-        border-radius: 26px;
+        border-radius: 24px;
         border-color: rgba(255,255,255,.10);
-        box-shadow: 0 18px 56px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.13);
+        background:
+          radial-gradient(circle at 10% 0%, rgba(120,170,255,.10), transparent 34%),
+          linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.017)),
+          rgba(8, 12, 22, .76) !important;
+        box-shadow: 0 16px 46px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
       }
 
       body.account-page .profile-user-card {
         width: 100%;
         max-width: none !important;
-        min-height: 310px;
+        min-height: 250px;
         margin: 0 !important;
-        padding: 30px 34px !important;
+        padding: 28px 32px !important;
         display: grid !important;
-        grid-template-columns: 92px minmax(0, 1fr);
-        align-items: end;
-        align-content: end;
+        grid-template-columns: 132px minmax(0, 1fr);
+        align-items: center;
         gap: 24px;
         text-align: left;
-        border-radius: 30px !important;
+        border-radius: 24px !important;
         background:
-          linear-gradient(90deg, rgba(6,7,12,.78) 0%, rgba(6,7,12,.42) 52%, rgba(6,7,12,.70) 100%),
+          linear-gradient(90deg, rgba(7,10,20,.88) 0%, rgba(7,10,20,.48) 58%, rgba(7,10,20,.76) 100%),
           var(--profile-user-bg, none) center / cover no-repeat !important;
       }
 
@@ -1363,10 +1370,13 @@
       }
 
       body.account-page .profile-user-avatar {
-        width: 92px;
-        height: 92px;
-        align-self: end;
+        width: 126px;
+        height: 126px;
+        align-self: center;
         border-width: 2px;
+        background:
+          radial-gradient(circle at 50% 35%, rgba(216,191,155,.20), transparent 44%),
+          rgba(255,255,255,.045);
       }
 
       body.account-page .profile-eyebrow {
@@ -1376,7 +1386,7 @@
       }
 
       body.account-page .profile-title {
-        font-size: clamp(40px, 4vw, 56px);
+        font-size: clamp(36px, 3.4vw, 50px);
         letter-spacing: -.06em;
       }
 
@@ -1398,22 +1408,52 @@
       }
 
       body.account-page .profile-subtitle {
-        margin-top: 16px;
+        margin-top: 14px;
         max-width: 520px;
         color: rgba(255,255,255,.58);
         font-size: 14px;
         line-height: 1.5;
       }
 
+      body.account-page .profile-dashboard-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      body.account-page .profile-dashboard-action {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 0 16px;
+        border: 1px solid rgba(255,255,255,.10);
+        color: rgba(255,255,255,.78);
+        background: rgba(255,255,255,.055);
+        text-decoration: none;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      body.account-page .profile-dashboard-action-primary {
+        color: #17100a;
+        background: linear-gradient(135deg, rgba(216,191,155,.98), rgba(176,130,78,.92));
+        border-color: rgba(255,255,255,.16);
+      }
+
       body.account-page .activity-rings-card {
         width: 100% !important;
         max-width: none !important;
-        min-height: 310px;
+        min-height: 250px;
         margin: 0 !important;
-        padding: 28px !important;
+        padding: 22px !important;
         display: flex;
         align-items: center;
-        border-radius: 30px !important;
+        border-radius: 24px !important;
       }
 
       body.account-page .rings-flex-layout {
@@ -1425,8 +1465,9 @@
       }
 
       body.account-page .watch-rings-container {
-        width: 138px;
-        height: 138px;
+        width: 132px;
+        height: 132px;
+        margin-inline: auto;
       }
 
       body.account-page .rings-legend {
@@ -1435,7 +1476,7 @@
 
       body.account-page .legend-value {
         padding-left: 0;
-        font-size: 26px;
+        font-size: 18px;
       }
 
       body.account-page .legend-sub-value {
@@ -1448,8 +1489,8 @@
         max-width: none !important;
         margin: 0 !important;
         display: grid;
-        grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
-        gap: 18px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
         align-items: start;
       }
 
@@ -1464,16 +1505,16 @@
       }
 
       body.account-page .profile-settings-group .settings-list {
-        min-height: 126px;
+        min-height: 96px;
         padding: 8px 14px;
-        border-radius: 24px;
+        border-radius: 22px;
         background:
           radial-gradient(circle at 0% 0%, rgba(255,255,255,.07), transparent 34%),
           linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018)) !important;
       }
 
       body.account-page .settings-row {
-        min-height: 58px;
+        min-height: 54px;
         padding-inline: 0;
       }
 
@@ -1484,11 +1525,59 @@
       body.account-page .profile-danger-group {
         grid-column: auto;
       }
+
+      body.account-page .profile-mini-dashboard {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      body.account-page .profile-mini-card {
+        min-height: 76px;
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 20px;
+        grid-template-rows: auto auto;
+        align-items: center;
+        gap: 3px 12px;
+        padding: 14px;
+        border-radius: 22px;
+        color: #fff;
+        text-decoration: none;
+        border: 1px solid rgba(255,255,255,.09);
+        background:
+          radial-gradient(circle at 12% 0%, rgba(216,191,155,.12), transparent 34%),
+          linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018));
+        box-shadow: 0 14px 40px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.09);
+      }
+
+      body.account-page .profile-mini-card .settings-icon {
+        grid-row: 1 / 3;
+      }
+
+      body.account-page .profile-mini-card small {
+        color: rgba(255,255,255,.42);
+        font-size: 11px;
+      }
+
+      body.account-page .profile-mini-card strong {
+        color: rgba(255,255,255,.88);
+        font-size: 17px;
+        line-height: 1.1;
+      }
+
+      body.account-page .profile-mini-card em {
+        grid-row: 1 / 3;
+        justify-self: end;
+        color: rgba(255,255,255,.38);
+        font-style: normal;
+        font-size: 22px;
+      }
     }
 
     @media (min-width: 1440px) {
       body.account-page .profile-wrap {
-        margin-left: 192px !important;
+        margin-left: 196px !important;
       }
     }
   </style>
@@ -1528,6 +1617,10 @@
           <p class="profile-username" id="dash-username"></p>
           <p class="profile-short-id" id="dash-short-id"></p>
           <p class="profile-subtitle" id="dash-sub">Настройки приложения, документы и управление данными.</p>
+          <div class="profile-dashboard-actions">
+            <button class="profile-dashboard-action profile-dashboard-action-primary" type="button" id="profile-edit-btn" onclick="document.getElementById('avatar-btn')?.click()">Редактировать профиль</button>
+            <a class="profile-dashboard-action" href="/privacy/">Настройки</a>
+          </div>
         </div>
       </section>
 
@@ -1598,7 +1691,7 @@
           <div class="settings-list">
             <a class="settings-row" href="/privacy/">
               <span class="settings-icon">P</span>
-              <span><strong>Политика конфиденциальности</strong><small>Как используются данные и device id</small></span>
+              <span><strong>Политика конфиденциальности</strong><small>Как используются данные аккаунта</small></span>
               <span class="settings-chevron">›</span>
             </a>
             <a class="settings-row" href="/terms/">
@@ -1630,6 +1723,27 @@
             </button>
           </div>
         </section>
+      </div>
+
+      <div class="profile-mini-dashboard">
+        <a class="profile-mini-card" href="/subscription/">
+          <span class="settings-icon">★</span>
+          <small>Уровень доступа</small>
+          <strong>Pro</strong>
+          <em>›</em>
+        </a>
+        <a class="profile-mini-card" href="/ai/">
+          <span class="settings-icon">✦</span>
+          <small>AI-помощник</small>
+          <strong>Доступен</strong>
+          <em>›</em>
+        </a>
+        <a class="profile-mini-card" href="/">
+          <span class="settings-icon">◎</span>
+          <small>Следующая цель</small>
+          <strong>7 дней подряд</strong>
+          <em>›</em>
+        </a>
       </div>
 
       <div class="u-hidden" aria-hidden="true">
