@@ -1321,48 +1321,55 @@
     @media (min-width: 1024px) {
       body.account-page {
         background:
-          radial-gradient(circle at 28% 0%, rgba(45, 98, 170, .14), transparent 36%),
-          radial-gradient(circle at 86% 12%, rgba(112, 75, 180, .12), transparent 34%),
+          radial-gradient(circle at 24% -4%, rgba(45, 98, 170, .15), transparent 38%),
+          radial-gradient(circle at 88% 8%, rgba(112, 75, 180, .12), transparent 34%),
+          radial-gradient(circle at 60% 110%, rgba(216, 191, 155, .06), transparent 40%),
           #05070d;
       }
 
+      /* Центрируем контент (1080px) в пространстве справа от сайдбара */
       body.account-page .profile-wrap {
-        width: min(1120px, calc(100vw - 252px)) !important;
-        max-width: 1120px !important;
-        margin-left: 188px !important;
-        margin-right: auto !important;
-        padding: 28px 28px 86px !important;
+        width: calc(100vw - 232px) !important;
+        max-width: none !important;
+        margin-left: 232px !important;
+        margin-right: 0 !important;
+        padding: 44px clamp(28px, calc((100vw - 232px - 1080px) / 2), 50vw) 96px !important;
         display: grid;
-        grid-template-columns: minmax(0, 1.45fr) minmax(320px, .72fr);
-        gap: 14px;
+        grid-template-columns: minmax(0, 1.5fr) minmax(320px, .72fr);
+        gap: 18px;
         align-items: stretch;
+        align-content: start;
+        box-sizing: border-box;
       }
 
       body.account-page .profile-card {
-        border-radius: 24px;
-        border-color: rgba(255,255,255,.10);
+        border-radius: 26px;
+        border-color: rgba(255,255,255,.1);
         background:
-          radial-gradient(circle at 10% 0%, rgba(120,170,255,.10), transparent 34%),
+          radial-gradient(circle at 10% 0%, rgba(120,170,255,.1), transparent 34%),
           linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.017)),
           rgba(8, 12, 22, .76) !important;
-        box-shadow: 0 16px 46px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+        box-shadow: 0 20px 56px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12);
       }
 
       body.account-page .profile-user-card {
         width: 100%;
         max-width: none !important;
-        min-height: 250px;
+        min-height: 264px;
         margin: 0 !important;
-        padding: 28px 32px !important;
+        padding: 32px 38px !important;
         display: grid !important;
-        grid-template-columns: 132px minmax(0, 1fr);
+        grid-template-columns: 136px minmax(0, 1fr);
         align-items: center;
-        gap: 24px;
+        gap: 30px;
         text-align: left;
-        border-radius: 24px !important;
+        border-radius: 26px !important;
         background:
-          linear-gradient(90deg, rgba(7,10,20,.88) 0%, rgba(7,10,20,.48) 58%, rgba(7,10,20,.76) 100%),
+          linear-gradient(90deg, rgba(6,9,18,.92) 0%, rgba(6,9,18,.55) 55%, rgba(6,9,18,.8) 100%),
           var(--profile-user-bg, none) center / cover no-repeat !important;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 24px 64px rgba(0, 0, 0, 0.38) !important;
       }
 
       body.account-page .profile-user-card::before {
@@ -1370,138 +1377,223 @@
       }
 
       body.account-page .profile-user-avatar {
-        width: 126px;
-        height: 126px;
+        width: 130px;
+        height: 130px;
         align-self: center;
         border-width: 2px;
+        border-color: rgba(255,255,255,.2);
         background:
-          radial-gradient(circle at 50% 35%, rgba(216,191,155,.20), transparent 44%),
+          radial-gradient(circle at 50% 35%, rgba(216,191,155,.2), transparent 44%),
           rgba(255,255,255,.045);
+        box-shadow: 0 18px 48px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.16);
       }
 
       body.account-page .profile-eyebrow {
-        margin-bottom: 8px;
-        font-size: 11px;
-        color: rgba(255,255,255,.46);
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 12px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        font-size: 10.5px;
+        letter-spacing: .14em;
+        color: rgba(255,255,255,.6);
       }
 
       body.account-page .profile-title {
-        font-size: clamp(36px, 3.4vw, 50px);
-        letter-spacing: -.06em;
+        font-size: clamp(38px, 3.4vw, 52px);
+        font-weight: 800;
+        letter-spacing: -.05em;
       }
 
       body.account-page .profile-username {
         margin-top: 10px;
-        color: rgba(255,255,255,.66);
-        font-size: 14px;
+        color: rgba(255,255,255,.68);
+        font-size: 14.5px;
       }
 
       body.account-page .profile-short-id {
         justify-content: flex-start;
-        margin-top: 8px;
-        padding: 4px 8px 4px 12px;
+        margin-top: 10px;
+        padding: 5px 9px 5px 13px;
         border-radius: 999px;
         background: rgba(255,255,255,.075);
-        border: 1px solid rgba(255,255,255,.08);
-        color: rgba(255,255,255,.52);
+        border: 1px solid rgba(255,255,255,.09);
+        color: rgba(255,255,255,.54);
         width: fit-content;
       }
 
       body.account-page .profile-subtitle {
         margin-top: 14px;
         max-width: 520px;
-        color: rgba(255,255,255,.58);
+        color: rgba(255,255,255,.6);
         font-size: 14px;
-        line-height: 1.5;
+        line-height: 1.55;
       }
-
 
       body.account-page .activity-rings-card {
         width: 100% !important;
         max-width: none !important;
-        min-height: 250px;
+        min-height: 264px;
         margin: 0 !important;
-        padding: 22px !important;
+        padding: 26px !important;
         display: flex;
         align-items: center;
-        border-radius: 24px !important;
+        border-radius: 26px !important;
       }
 
       body.account-page .rings-flex-layout {
         width: 100%;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         justify-content: center;
-        gap: 20px;
+        gap: 18px;
+        text-align: center;
       }
 
       body.account-page .watch-rings-container {
-        width: 132px;
-        height: 132px;
+        width: 136px;
+        height: 136px;
         margin-inline: auto;
       }
 
       body.account-page .rings-legend {
         width: 100%;
+        align-items: center;
+      }
+
+      body.account-page .legend-header {
+        justify-content: center;
       }
 
       body.account-page .legend-value {
         padding-left: 0;
-        font-size: 18px;
+        font-size: 19px;
       }
 
       body.account-page .legend-sub-value {
         padding-left: 0;
+        font-size: 12.5px;
       }
 
+      /* Сетка настроек: подписка слева высокой колонкой,
+         остальные группы справа, опасная зона внизу */
       body.account-page .profile-settings-shell {
         grid-column: 1 / -1;
         width: 100% !important;
         max-width: none !important;
-        margin: 0 !important;
+        margin: 6px 0 0 !important;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-        align-items: start;
+        gap: 18px;
+        align-items: stretch;
       }
 
       body.account-page .profile-settings-group {
         min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      body.account-page .profile-settings-group:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1 / 3;
+      }
+
+      body.account-page .profile-settings-group:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      body.account-page .profile-settings-group:nth-child(3) {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      body.account-page .profile-danger-group {
+        grid-column: 1 / -1;
+        grid-row: 3;
       }
 
       body.account-page .profile-settings-group h2 {
-        margin: 0 0 9px 2px;
+        margin: 0 0 10px 4px;
         font-size: 11px;
+        letter-spacing: .15em;
         color: rgba(255,255,255,.42);
       }
 
       body.account-page .profile-settings-group .settings-list {
+        flex: 1;
         min-height: 96px;
-        padding: 8px 14px;
-        border-radius: 22px;
+        padding: 10px 18px;
+        border-radius: 24px;
+        border-color: rgba(255,255,255,.1) !important;
         background:
           radial-gradient(circle at 0% 0%, rgba(255,255,255,.07), transparent 34%),
-          linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018)) !important;
+          linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.018)) !important;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.14),
+          0 16px 44px rgba(0, 0, 0, 0.26) !important;
       }
 
       body.account-page .settings-row {
-        min-height: 54px;
-        padding-inline: 0;
+        min-height: 58px;
+        padding: 12px;
+        margin-inline: -12px;
+        width: calc(100% + 24px);
+        border-radius: 16px;
+        grid-template-columns: 38px minmax(0, 1fr) auto;
+        transition: background .18s ease;
+      }
+
+      body.account-page a.settings-row:hover,
+      body.account-page .settings-row-button:hover {
+        background: rgba(255,255,255,.055);
+      }
+
+      body.account-page .settings-row .settings-chevron {
+        transition: transform .18s ease, color .18s ease;
+      }
+
+      body.account-page a.settings-row:hover .settings-chevron,
+      body.account-page .settings-row-button:hover .settings-chevron {
+        transform: translateX(3px);
+        color: rgba(255,255,255,.6);
+      }
+
+      body.account-page .settings-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 13px;
+        font-size: 16px;
+      }
+
+      body.account-page .settings-row strong {
+        font-size: 15px;
+      }
+
+      body.account-page .settings-row small {
+        margin-top: 4px;
+        font-size: 12.5px;
       }
 
       body.account-page .subscription-benefits {
-        padding-left: 46px;
+        padding: 6px 0 14px 51px;
+        font-size: 12.5px;
+        gap: 10px;
       }
 
-      body.account-page .profile-danger-group {
-        grid-column: auto;
+      body.account-page .subscription-test-btn {
+        min-height: 44px;
+        margin: 6px 0 12px;
+        border-radius: 16px;
+        transition: background .18s ease, border-color .18s ease;
       }
 
-    }
-
-    @media (min-width: 1440px) {
-      body.account-page .profile-wrap {
-        margin-left: 196px !important;
+      body.account-page .subscription-test-btn:hover {
+        background: rgba(48,209,88,.16);
+        border-color: rgba(48,209,88,.48);
       }
     }
   </style>
