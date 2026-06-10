@@ -10066,7 +10066,9 @@ body.chat-page .notification-prompt-banner {
     content: "" !important;
     position: absolute !important;
     inset: 0 !important;
-    background: linear-gradient(90deg, rgba(5,7,12,0.92) 0%, rgba(5,7,12,0.6) 50%, rgba(5,7,12,0.15) 100%) !important;
+    background:
+      linear-gradient(0deg, rgba(4,6,10,.55) 0%, rgba(4,6,10,0) 42%),
+      linear-gradient(90deg, rgba(4,6,10,.96) 0%, rgba(4,6,10,.78) 34%, rgba(4,6,10,.38) 64%, rgba(4,6,10,.12) 100%) !important;
     z-index: 1 !important;
   }
 
@@ -10080,20 +10082,18 @@ body.chat-page .notification-prompt-banner {
   }
 
   body.home-today-active .today-hero-card .hub-kicker {
-    display: inline-flex !important;
-    align-items: center !important;
-    margin-bottom: 14px !important;
-    padding: 5px 12px !important;
-    border-radius: 999px !important;
-    border: 1px solid rgba(255,255,255,.18) !important;
-    background: rgba(255,255,255,.08) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
-    backdrop-filter: blur(14px) !important;
-    color: rgba(255,255,255,.82) !important;
-    font-size: 10.5px !important;
+    display: block !important;
+    width: fit-content !important;
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    color: rgba(255,255,255,.62) !important;
+    font-size: 11px !important;
     font-weight: 800 !important;
-    letter-spacing: .14em !important;
+    letter-spacing: .2em !important;
     text-transform: uppercase !important;
+    text-shadow: 0 1px 10px rgba(0,0,0,.55);
   }
 
   body.home-today-active .today-hero-card h1 {
@@ -10104,13 +10104,15 @@ body.chat-page .notification-prompt-banner {
     font-weight: 800 !important;
     letter-spacing: -0.04em !important;
     color: #fff !important;
+    text-shadow: 0 2px 18px rgba(0,0,0,.45);
   }
 
   body.home-today-active .today-hero-card p {
-    max-width: 560px !important;
+    max-width: 540px !important;
     font-size: 15.5px !important;
-    color: rgba(255,255,255,0.72) !important;
+    color: rgba(255,255,255,0.78) !important;
     line-height: 1.5 !important;
+    text-shadow: 0 1px 12px rgba(0,0,0,.55);
   }
 
   body.home-today-active .today-carousel-controls {
