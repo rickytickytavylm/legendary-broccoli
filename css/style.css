@@ -1472,7 +1472,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
     linear-gradient(to bottom, rgba(0,0,0,.04), rgba(0,0,0,.32) 46%, rgba(0,0,0,.82) 100%),
     var(--ux-bg),
     rgba(6, 8, 13, .62);
-  background-position: center;
+  background-position: var(--ux-bg-pos, center 35%);
   background-size: cover;
 }
 
@@ -10082,7 +10082,7 @@ body.chat-page .notification-prompt-banner {
     padding: clamp(140px, 18vh, 190px) var(--today-pad, 48px) clamp(48px, 7vh, 84px) !important;
     background-image: var(--ux-bg, url('/assets/webp/new_main.webp')) !important;
     background-size: cover !important;
-    background-position: center !important;
+    background-position: var(--ux-bg-pos, center 35%) !important;
     overflow: hidden !important;
     transform: none !important;
     box-sizing: border-box !important;

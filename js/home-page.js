@@ -94,6 +94,7 @@ const routes = {
     desc: 'Два мягких входа: через движение и через внимание к телу.',
     short: 'спокойствие',
     heroImage: '/assets/webp/king_calm.webp',
+    heroPos: 'center 38%',
     programs: [
       { title: 'Мини-йога', desc: 'Мягкое начало через дыхание и движение.', href: '/yoga/', image: '/assets/webp/mini-yoga.webp' },
       { title: 'Телесная терапия', desc: 'Вернуть внимание в тело и снизить внутреннее напряжение.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
@@ -104,6 +105,7 @@ const routes = {
     desc: 'Два входа: понять психосоматику и мягко вернуться в телесное ощущение.',
     short: 'тело и симптомы',
     heroImage: '/assets/webp/body.webp',
+    heroPos: 'center 40%',
     programs: [
       { title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов.', href: '/psihosomatika/', image: '/assets/webp/psysomatic.webp' },
       { title: 'Телесная терапия', desc: 'Практики, которые возвращают внимание в тело.', href: '/terapiya/', image: '/assets/webp/theraphy.webp' },
@@ -114,6 +116,7 @@ const routes = {
     desc: 'Два входа: зависимые сценарии и мужско-женская динамика.',
     short: 'отношения',
     heroImage: '/assets/webp/new_soc.webp',
+    heroPos: 'center 35%',
     programs: [
       { title: 'Созависимость', desc: 'Границы, привязанность и повторяющиеся сценарии.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
       { title: 'Мужское и Женское', desc: 'Психология отношений и природа полов.', href: '/mj/', image: '/assets/webp/man_woman.webp' },
@@ -124,9 +127,10 @@ const routes = {
     desc: 'Два входа: восстановление опоры и контакт с собой.',
     short: 'самооценка и опора',
     heroImage: '/assets/webp/opora.webp',
+    heroPos: 'center 28%',
     programs: [
       { title: 'Работа с травмами', desc: 'Кризисы, травматичный опыт и восстановление опоры.', href: '/dermer/', image: '/assets/webp/geshtalt.webp' },
-      { title: 'Гештальт-подход', desc: 'Контакт, эмоции, границы и возвращение к себе.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
+      { title: 'Гештальт-подход', desc: 'Контакт, эмоции, границы and возвращение к себе.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
     ],
   },
   selfstudy: {
@@ -134,6 +138,7 @@ const routes = {
     desc: 'Два входа: базовая программа для самопонимания и работа с состояниями внимания.',
     short: 'самопонимание',
     heroImage: '/assets/webp/find_myself.webp',
+    heroPos: 'center 35%',
     programs: [
       { title: 'Гештальт-подход', desc: 'Эмоции, потребности, контакт и границы.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
       { title: 'Гипноз', desc: 'Внимание, трансовые состояния и безопасная работа с внушением.', href: '/gipnoz/', image: '/assets/webp/hipno.webp' },
@@ -144,6 +149,7 @@ const routes = {
     desc: 'Два входа: навыки общения и сценарии в отношениях.',
     short: 'коммуникация и конфликты',
     heroImage: '/assets/webp/conflicts_programs.webp',
+    heroPos: 'center 42%',
     programs: [
       { title: 'Мастер Коммуникаций', desc: 'Навыки общения, диалог и управление конфликтом.', href: '/master/', image: '/assets/webp/masterofcommication.webp' },
       { title: 'Созависимость', desc: 'Границы и повторяющиеся сценарии в контакте.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
@@ -318,7 +324,14 @@ function renderToday(routeKey) {
   if (todaySubtitle) todaySubtitle.textContent = route.desc;
   if (stepTitle) stepTitle.textContent = route.firstStep;
   if (stepDesc) stepDesc.textContent = route.firstStepDesc;
-  if (hero) hero.style.setProperty('--ux-bg', `url('${route.hero}')`);
+  if (hero) {
+    hero.style.setProperty('--ux-bg', `url('${route.hero}')`);
+    if (route.heroPos) {
+      hero.style.setProperty('--ux-bg-pos', route.heroPos);
+    } else {
+      hero.style.removeProperty('--ux-bg-pos');
+    }
+  }
   if (main) main.style.setProperty('--ux-bg', `url('${route.image}')`);
   if (secondaryCard && route.secondary) secondaryCard.style.setProperty('--ux-bg', `url('${route.secondary.image}')`);
   if (secondaryTitle && route.secondary) secondaryTitle.textContent = route.secondary.title;
