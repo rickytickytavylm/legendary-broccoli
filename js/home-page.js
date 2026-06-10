@@ -1127,131 +1127,58 @@ function initMarathonCarousel() {
   const cards = Array.from(root.querySelectorAll('.home-marathon-card'));
   if (!stage || !cards.length) return;
 
-  let activeIndex = 0;
-  let userInteracted = false;
-  let startX = 0;
-  let startY = 0;
-  let dragged = false;
-  let pointerDown = false;
-
   cards.forEach((card) => {
+    card.classList.add('is-active');
     const bg = card.style.getPropertyValue('--card-bg') || '';
     const match = bg.match(/url\(["']?([^"')]+)["']?\)/);
     if (!match) return;
     const img = new Image();
     img.src = match[1];
   });
+  root.classList.add('is-ready');
 
-  function updateCarousel(dragOffset = 0) {
-    const total = cards.length;
-    const mobile = window.matchMedia('(max-width: 520px)').matches;
-    if (mobile) {
-      cards.forEach((card) => {
-        card.classList.add('is-active');
-        card.style.zIndex = '';
-        card.style.opacity = '';
-        card.style.pointerEvents = '';
-        card.style.transform = '';
-      });
-      root.classList.add('is-ready');
-      return;
-    }
-    const sideOffset = mobile ? 158 : 220;
-    const rotate = mobile ? 8 : 10;
-    const dragProgress = Math.max(-1, Math.min(1, dragOffset / (mobile ? 120 : 150)));
-    cards.forEach((card, index) => {
-      let diff = index - activeIndex;
-      if (diff > total / 2) diff -= total;
-      if (diff < -total / 2) diff += total;
-      const visual = diff + dragProgress;
-      const absVisual = Math.abs(visual);
-      card.classList.toggle('is-active', diff === 0);
-      card.style.zIndex = String(30 - Math.round(absVisual * 10));
-      card.style.opacity = absVisual < 1.45 ? '1' : '0';
-      card.style.pointerEvents = Math.abs(diff) <= 1 ? 'auto' : 'none';
-      const x = visual * sideOffset;
-      const y = absVisual > 0.2 ? 8 : 0;
-      const scale = Math.max(0.82, 1 - absVisual * 0.12);
-      const rot = -visual * rotate;
-      card.style.transform = `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), 0) rotate(${rot}deg) scale(${scale})`;
-    });
-    root.classList.add('is-ready');
-  }
+  // Drag-to-scroll мышью; на тач-устройствах работает нативный скролл
+  let pointerId = null;
+  let startX = 0;
+  let startScroll = 0;
+  let dragged = false;
 
-  function focus(index, manual = true) {
-    if (manual) userInteracted = true;
-    activeIndex = (index + cards.length) % cards.length;
-    updateCarousel();
-  }
-
-  cards.forEach((card, index) => {
-    card.addEventListener('click', (event) => {
-      if (dragged) {
-        event.preventDefault();
-        dragged = false;
-        return;
-      }
-      if (index !== activeIndex) {
-        event.preventDefault();
-        focus(index);
-      }
-    });
+  stage.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startScroll = stage.scrollLeft;
+    dragged = false;
   });
 
-  function beginDrag(event) {
-    pointerDown = true;
-    startX = event.clientX;
-    startY = event.clientY;
-    dragged = false;
-    stage.classList.add('is-dragging');
-  }
-
-  function moveDrag(event) {
-    if (!pointerDown) return;
+  stage.addEventListener('pointermove', (event) => {
+    if (pointerId === null || event.pointerId !== pointerId) return;
     const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
-    dragged = true;
-    userInteracted = true;
-    updateCarousel(dx);
-  }
+    if (!dragged && Math.abs(dx) < 6) return;
+    if (!dragged) {
+      dragged = true;
+      stage.classList.add('is-dragging');
+      try { stage.setPointerCapture(pointerId); } catch (e) {}
+    }
+    stage.scrollLeft = startScroll - dx;
+  });
 
   function endDrag(event) {
-    if (!pointerDown) return;
-    pointerDown = false;
+    if (pointerId === null || (event && event.pointerId !== pointerId)) return;
+    pointerId = null;
     stage.classList.remove('is-dragging');
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-    if (Math.abs(dx) < 38 || Math.abs(dx) < Math.abs(dy) * 1.15) {
-      updateCarousel();
-      return;
-    }
-    dragged = true;
-    focus(activeIndex + (dx < 0 ? 1 : -1));
   }
 
-  root.addEventListener('pointerdown', beginDrag);
-  root.addEventListener('pointermove', moveDrag);
-  root.addEventListener('pointerup', endDrag);
-  root.addEventListener('pointercancel', () => {
-    pointerDown = false;
-    stage.classList.remove('is-dragging');
-    updateCarousel();
-  });
-  root.addEventListener('lostpointercapture', () => {
-    pointerDown = false;
-    stage.classList.remove('is-dragging');
-    updateCarousel();
-  });
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
 
-  window.setInterval(() => {
-    if (!userInteracted) focus(activeIndex + 1, false);
-  }, 3000);
-
-  window.addEventListener('resize', updateCarousel);
-  updateCarousel();
-  requestAnimationFrame(() => requestAnimationFrame(() => updateCarousel()));
-  window.addEventListener('pageshow', updateCarousel);
+  // Глушим клик по карточке, если это был drag, а не клик
+  stage.addEventListener('click', (event) => {
+    if (!dragged) return;
+    event.preventDefault();
+    event.stopPropagation();
+    dragged = false;
+  }, true);
 }
 
 document.addEventListener('DOMContentLoaded', initMarathonCarousel);
