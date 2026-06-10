@@ -14,7 +14,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Медитации — Система Молодцова</title>
   <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=124" />
+  <link rel="stylesheet" href="/css/style.css?v=141" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,6 +43,16 @@
     .meditation-index-space { background: radial-gradient(circle at 45% 28%, rgba(255,255,255,.72), rgba(122,144,255,.28) 36%, rgba(255,255,255,.08)); color: #fff; }
     @media (max-width: 1024px) { .meditations-grid { grid-template-columns: 1fr; } .meditation-player-preview { min-height: 420px; } }
     @media (max-width: 640px) { .meditations-page { padding: 24px 14px 92px; } .meditation-player-preview { min-height: 430px; border-radius: 28px; } .meditation-sidebar { border-radius: 24px; } }
+    .meditations-semantogram { margin-top: 32px; padding: 28px; border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.08); background: radial-gradient(circle at 10% 0%, rgba(216, 191, 155, 0.03), transparent 44%), rgba(255, 255, 255, 0.015); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); }
+    .meditations-semantogram h3 { margin: 0 0 12px; color: #fff; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+    .meditations-semantogram p.sem-lead { color: rgba(244, 245, 247, 0.72); font-size: 14.5px; line-height: 1.6; margin: 0 0 24px; max-width: 580px; }
+    .sem-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 28px; }
+    @media (min-width: 640px) { .sem-grid { grid-template-columns: repeat(3, 1fr); } }
+    .sem-col strong { display: block; color: #d8bf9b; font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+    .sem-col p { margin: 0; color: rgba(244, 245, 247, 0.52); font-size: 13px; line-height: 1.55; }
+    .sem-footer { border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 20px; }
+    .sem-footer strong { display: block; color: rgba(255, 255, 255, 0.85); font-size: 13.5px; font-weight: 750; margin-bottom: 8px; }
+    .sem-footer p { margin: 0; color: rgba(244, 245, 247, 0.45); font-size: 12.5px; line-height: 1.5; }
   </style>
 </head>
 <body class="dark-theme">
@@ -62,13 +72,39 @@
       </a>
 
       <div class="meditations-grid">
-        <section class="meditation-player-preview" aria-label="Медитации">
-          <div class="meditation-preview-copy">
-            <span>Практики</span>
-            <h2>Выберите практику</h2>
-            <p>Каждый трек открывается в полноэкранном аудиоплеере. Слушайте в любое время — без регистрации.</p>
-          </div>
-        </section>
+        <div class="meditations-left-col">
+          <section class="meditation-player-preview" aria-label="Медитации">
+            <div class="meditation-preview-copy">
+              <span>Практики</span>
+              <h2>Выберите практику</h2>
+              <p>Каждый трек открывается в полноэкранном аудиоплеере. Слушайте в любое время — без регистрации.</p>
+            </div>
+          </section>
+
+          <!-- Смыслограмма медитаций -->
+          <article class="meditations-semantogram">
+            <h3>Смыслограмма медитаций: Навигация состояний</h3>
+            <p class="sem-lead">Медитативные треки в Системе — это не абстрактная фоновая музыка для расслабления, а пошаговый навигатор по вашему психоэмоциональному и соматическому состоянию. Каждая сессия решает конкретную задачу сонастройки ума и тела через три терапевтических регистра:</p>
+            <div class="sem-grid">
+              <div class="sem-col">
+                <strong>1. Соматический (Заземление)</strong>
+                <p>Перевод вегетативной нервной системы из режима напряжения и стресса (симпатика) в режим безопасности и самовосстановления (парасимпатика) за счет управляемого дыхания.</p>
+              </div>
+              <div class="sem-col">
+                <strong>2. Смысловой (Интеграция)</strong>
+                <p>Связывание мышечных блоков и телесных сигналов с подавленными эмоциями. Практика помогает не просто убрать симптом, а бережно прожить вызвавшее его чувство.</p>
+              </div>
+              <div class="sem-col">
+                <strong>3. Акустический (Якорение)</strong>
+                <p>Выверенный автором темп ведения, смысловые паузы и соматоакустический фон. Помогает мозгу генерировать альфа- и тета-волны, стабилизируя фокус внимания.</p>
+              </div>
+            </div>
+            <div class="sem-footer">
+              <strong>Как интегрировать в ежедневный ритм:</strong>
+              <p>Для утреннего фокуса выбирайте телесно-опосредованные треки (например, «Комната эмоций» или «Чердак»). При приступах острой тревоги используйте заземляющие практики («Озеро покоя», «Океан»). Вечером отдавайте предпочтение глубокой соматосенсорной релаксации («Поход вдоль ручья» или «Стихии»).</p>
+            </div>
+          </article>
+        </div>
 
         <aside class="meditation-sidebar">
           <div class="meditation-sidebar-head">

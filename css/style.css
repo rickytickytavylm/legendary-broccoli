@@ -10050,7 +10050,6 @@ body.chat-page .notification-prompt-banner {
     min-height: clamp(380px, 54vh, 580px) !important;
     border-radius: 0 !important;
     border: 0 !important;
-    border-bottom: 1px solid rgba(255,255,255,.05) !important;
     box-shadow: none !important;
     display: flex !important;
     align-items: flex-end !important;
@@ -10076,8 +10075,8 @@ body.chat-page .notification-prompt-banner {
     display: block !important;
     content: "" !important;
     position: absolute !important;
-    inset: 0 !important;
-    height: 100% !important;
+    inset: 0 0 -4px 0 !important;
+    height: calc(100% + 4px) !important;
     width: 100% !important;
     background:
       linear-gradient(to bottom,
@@ -10514,24 +10513,30 @@ body.chat-page .notification-prompt-banner {
   }
 
   body.home-today-active .home-marathon-header {
-    margin-top: 44px;
+    margin-top: 48px;
+    padding-left: var(--today-pad, 48px) !important;
+    padding-right: var(--today-pad, 48px) !important;
+    box-sizing: border-box !important;
   }
 
   body.home-today-active .home-marathon-orbit {
     margin: 0 auto 40px !important;
+    padding-left: var(--today-pad, 48px) !important;
+    padding-right: var(--today-pad, 48px) !important;
+    box-sizing: border-box !important;
   }
 
   body.home-today-active .home-marathon-orbit-stage {
     gap: 24px;
-    padding: 10px 2px 22px;
+    padding: 8px 2px 22px;
   }
 
-  /* Три карточки ровно во всю ширину контента, скролл — если их станет больше */
+  /* Компактные, благородные карточки марафонов ровно в 3 колонки сетки */
   body.home-today-active .home-marathon-card {
     flex: 0 0 calc((100% - 48px) / 3);
-    height: 400px;
-    padding: 28px !important;
-    border-radius: 28px !important;
+    height: 250px;
+    padding: 22px !important;
+    border-radius: 24px !important;
     scroll-snap-align: start;
     background: #101010;
   }
@@ -10551,14 +10556,14 @@ body.chat-page .notification-prompt-banner {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.78));
+    background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.84));
     z-index: -1;
   }
 
   body.home-today-active .home-marathon-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255,255,255,.34);
-    box-shadow: 0 32px 72px rgba(0,0,0,.52);
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,.3);
+    box-shadow: 0 24px 56px rgba(0,0,0,.45);
   }
 
   body.home-today-active .home-marathon-card:hover::after {
@@ -10566,19 +10571,23 @@ body.chat-page .notification-prompt-banner {
   }
 
   body.home-today-active .home-marathon-card span {
-    font-size: 10px !important;
-    letter-spacing: .14em;
+    font-size: 9px !important;
+    letter-spacing: .12em;
+    margin-bottom: 5px;
   }
 
   body.home-today-active .home-marathon-card strong {
-    font-size: 27px !important;
+    font-size: 22px !important;
     letter-spacing: -.03em;
+    line-height: 1.1;
   }
 
   body.home-today-active .home-marathon-card small {
-    font-size: 13px !important;
-    margin-top: 10px !important;
-    max-width: 30ch;
+    font-size: 12px !important;
+    margin-top: 6px !important;
+    max-width: 28ch;
+    color: rgba(255,255,255,.68);
+    line-height: 1.35;
   }
 
   body.feed-page .feed-container {
@@ -10592,6 +10601,10 @@ body.chat-page .notification-prompt-banner {
   body.chat-page {
     min-height: 100dvh;
     overflow: hidden;
+  }
+
+  body.chat-page .app-sidebar {
+    display: flex !important;
   }
 
   body.chat-page .chat-page-shell {
