@@ -10071,9 +10071,60 @@ body.chat-page .notification-prompt-banner {
     line-height: 1.45 !important;
   }
 
-  body.home-today-active .today-carousel-controls,
+  body.home-today-active .today-carousel-controls {
+    display: flex !important;
+    position: absolute !important;
+    right: 48px !important;
+    bottom: 40px !important;
+    gap: 10px !important;
+    z-index: 10 !important;
+  }
+
+  body.home-today-active .today-carousel-controls button {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: background 0.2s, transform 0.2s !important;
+  }
+
+  body.home-today-active .today-carousel-controls button:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  body.home-today-active .today-carousel-controls button:active {
+    transform: scale(0.95) !important;
+  }
+
   body.home-today-active .today-hero-dots {
-    display: none;
+    display: flex !important;
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 24px !important;
+    transform: translateX(-50%) !important;
+    gap: 8px !important;
+    z-index: 10 !important;
+  }
+
+  body.home-today-active .today-hero-dots span {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    transition: width 0.2s, background 0.2s !important;
+  }
+
+  body.home-today-active .today-hero-dots span.active {
+    width: 20px !important;
+    border-radius: 99px !important;
+    background: #fff !important;
   }
 
   body.home-today-active .ios-section-header {
