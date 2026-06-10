@@ -39,9 +39,9 @@
     localStorage.setItem(likedKey, JSON.stringify(Array.from(set)));
   }
 
-  function renderLoader(label = 'Загружаем…') {
+  function renderLoader(label = 'Загружаем…', isSmall = false) {
     return `
-      <div class="sistema-loader-state">
+      <div class="sistema-loader-state${isSmall ? ' is-small' : ''}">
         <div class="sistema-loader" aria-hidden="true">
           <span class="sistema-loader-bar"></span>
           <span class="sistema-loader-bar"></span>
@@ -383,7 +383,7 @@
     });
 
     if (list) {
-      list.innerHTML = renderLoader('Загружаем комментарии…');
+      list.innerHTML = renderLoader('Загружаем комментарии…', true);
       list.scrollTop = 0;
     }
 
@@ -609,7 +609,6 @@
       return;
     }
     try {
-      root.innerHTML = renderLoader('Загружаем ленту…');
       root.setAttribute('aria-busy', 'true');
       const data = await window.API.request('GET', '/content/feed/posts', null, { fresh: true });
       const posts = Array.isArray(data?.posts) ? data.posts : [];

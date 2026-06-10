@@ -8832,6 +8832,29 @@ body.chat-page .app-mobile-header.mobile-header-hidden {
   letter-spacing: .01em;
 }
 
+.sistema-loader-state.is-small {
+  min-height: 100px;
+  padding: 15px 10px;
+  gap: 10px;
+}
+
+.sistema-loader-state.is-small .sistema-loader {
+  min-width: 44px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 12px;
+}
+
+.sistema-loader-state.is-small .sistema-loader-bar {
+  width: 2px;
+  height: 12px;
+}
+
+.sistema-loader-state.is-small .sistema-loader-bar:nth-child(2) {
+  height: 22px;
+  margin: 0 4px;
+}
+
 .sistema-loader {
   display: flex;
   align-items: center;
@@ -10609,15 +10632,18 @@ body.chat-page .notification-prompt-banner {
 
   body.chat-page .chat-page-shell {
     min-height: 100dvh;
-    justify-content: flex-start;
-    padding: 20px var(--desktop-gutter) 20px var(--desktop-left);
+    margin-left: 232px !important;
+    width: calc(100vw - 232px) !important;
+    justify-content: center;
+    padding: 20px var(--desktop-gutter);
+    box-sizing: border-box;
     background:
       radial-gradient(circle at 50% -10%, rgba(216,191,155,.08), transparent 38%),
       linear-gradient(90deg, rgba(3,6,5,.96), rgba(7,12,10,.98));
   }
 
   body.chat-page .chat-panel {
-    width: min(920px, var(--desktop-rail-width));
+    width: min(920px, calc(100vw - 232px - var(--desktop-gutter) * 2)) !important;
     height: calc(100dvh - 40px);
     border-radius: 30px;
     background:

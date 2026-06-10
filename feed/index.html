@@ -16,7 +16,7 @@
   <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
   <meta property="og:title" content="Лента — Система Молодцова" />
   <meta property="og:image" content="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=129" />
+  <link rel="stylesheet" href="/css/style.css?v=143" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -513,7 +513,7 @@
     }
 
     .post-caption {
-      padding: 0 18px;
+      padding: 0 18px 20px;
       font-size: 14px;
       line-height: 1.6;
       color: rgba(255, 255, 255, 0.75);
@@ -1205,14 +1205,125 @@
         <button class="feed-admin-open" type="button" id="feed-admin-open">+ Новый пост</button>
       </div>
       <div id="feed-posts-root" aria-busy="true">
-        <div class="sistema-loader-state">
-          <div class="sistema-loader" aria-hidden="true">
-            <span class="sistema-loader-bar"></span>
-            <span class="sistema-loader-bar"></span>
-            <span class="sistema-loader-bar"></span>
+      <!-- Post 3: newest -->
+      <article class="post-card" id="post-interview" data-post-id="interview" data-share-title="Интервью с дочерью" data-share-text="Руслан Молодцов — новый разговор с дочерью о подростках, отношениях и ролях.">
+        <div class="post-author">
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <div class="post-author-info">
+            <span class="post-author-name">Руслан Молодцов</span>
+            <span class="post-time">Сегодня</span>
           </div>
-          <span>Загружаем ленту…</span>
         </div>
+        <img class="post-image" src="/assets/webp/new_post.webp?v=4" alt="Интервью с дочерью" loading="lazy" decoding="async" />
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span class="post-comment-count" data-comment-count></span>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes" data-base-likes="214" data-likes>Нравится: 214</div>
+        <div class="post-caption">
+          <p><strong>Руслан Молодцов</strong>Наконец-то, друзья!</p>
+          <p>Случилось то, что вы давно просили. Четыре года назад я записывал интервью со старшей дочерью — ей тогда было 12, и это был такой разговор отца с ребенком.</p>
+          <p>Сейчас ей 16. И это уже совсем другой разговор. Мы задавали друг другу непростые вопросы. Говорили о разном — от детско-родительских отношений до мужских и женских ролей. Затронули тему зависимостей и то, как подростки в них попадают. И главное — как на самом деле выстраивать отношения с подростками.</p>
+          <p>Спойлер: все проще, чем нам кажется.</p>
+          <p><a href="https://youtu.be/UkOKGeByz2U?si=Y6GsWqjsO6wm8ttx" target="_blank" rel="noopener noreferrer">Ссылка на видео</a></p>
+          <p>Смотрите, комментируйте, делитесь впечатлениями. Нам с дочкой очень важно.</p>
+        </div>
+        <button class="post-expand-link" type="button">Развернуть весь текст</button>
+
+        <!-- Comments Preview Section -->
+        <div class="post-comments-preview-section hidden" data-comments-preview-container>
+          <div class="post-comments-preview-list" data-comments-preview-list></div>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+        </div>
+
+      </article>
+
+      <!-- Post 2 -->
+      <article class="post-card" id="post-meditation-day" data-post-id="meditation-day" data-share-title="День медитации" data-share-text="Руслан Молодцов выступает 24 мая на фестивале «День медитации».">
+        <div class="post-author">
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <div class="post-author-info">
+            <span class="post-author-name">Руслан Молодцов</span>
+            <span class="post-time">Вчера</span>
+          </div>
+        </div>
+        <img class="post-image" src="/assets/webp/post2.webp" alt="День медитации" loading="lazy" decoding="async" />
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span class="post-comment-count" data-comment-count></span>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes" data-base-likes="176" data-likes>Нравится: 176</div>
+        <div class="post-caption">
+          <p><strong>Руслан Молодцов</strong>Ты с нами?</p>
+          <p>24 мая выступаю на фестивале «ДЕНЬ МЕДИТАЦИИ» — большая лекция-практика про то, как тело на самом деле хранит стресс, эмоции и внутренние конфликты.</p>
+          <p>Разберем подробно:</p>
+          <p>почему хроническое напряжение влияет не только на тело, но и на мышление;<br>как через телесные практики быстрее проходить внутренние изменения;<br>и почему связка психотерапии + йоги работает глубже, чем по отдельности.</p>
+          <p>Плюс дам конкретные техники и инструменты, которые можно будет применять сразу.</p>
+          <p>Кто давно хотел попасть ко мне вживую — жду 24 мая!</p>
+          <p>Информация и билеты — <a href="https://organic-people.com/events/meditationdayrussia" target="_blank" rel="noopener noreferrer">organic-people.com/events/meditationdayrussia</a></p>
+        </div>
+        <button class="post-expand-link" type="button">Развернуть весь текст</button>
+
+        <!-- Comments Preview Section -->
+        <div class="post-comments-preview-section hidden" data-comments-preview-container>
+          <div class="post-comments-preview-list" data-comments-preview-list></div>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+        </div>
+
+      </article>
+
+      <!-- Post 1: oldest -->
+      <article class="post-card" id="post-note" data-post-id="note" data-share-title="Кто помнит это чувство?" data-share-text="Пост Руслана Молодцова о записке от родителей и чувстве детства.">
+        <div class="post-author">
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <div class="post-author-info">
+            <span class="post-author-name">Руслан Молодцов</span>
+            <span class="post-time">2 дня назад</span>
+          </div>
+        </div>
+        <img class="post-image" src="/assets/webp/post1.webp" alt="Записка от родителей" loading="lazy" decoding="async" />
+        <div class="post-actions">
+          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span class="post-comment-count" data-comment-count></span>
+          </button>
+          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+            <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="post-likes" data-base-likes="243" data-likes>Нравится: 243</div>
+        <div class="post-caption">
+          <p><strong>Руслан Молодцов</strong>Кто помнит это чувство?</p>
+          <p>Просыпаешься с утра, родители уже ушли по делам, а на столе лежит записка ❤️‍🩹</p>
+          <p>а впереди целая жизнь…</p>
+        </div>
+
+        <!-- Comments Preview Section -->
+        <div class="post-comments-preview-section hidden" data-comments-preview-container>
+          <div class="post-comments-preview-list" data-comments-preview-list></div>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+        </div>
+
+      </article>
       </div>
       <template id="feed-static-fallback">
       <!-- Post 3: newest -->
