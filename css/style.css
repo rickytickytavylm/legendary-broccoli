@@ -10028,14 +10028,14 @@ body.chat-page .notification-prompt-banner {
   }
 
   body.home-today-active .today-screen {
+    --today-pad: clamp(28px, calc((100vw - 232px - 1180px) / 2), 50vw);
     width: 100%;
     max-width: none;
     margin-left: 0;
     margin-right: auto;
-    /* Центрируем контент (1180px) в пространстве справа от сайдбара */
-    padding: max(112px, calc(102px + env(safe-area-inset-top)))
-      clamp(28px, calc((100vw - 232px - 1180px) / 2), 50vw)
-      96px;
+    /* Центрируем контент (1180px) в пространстве справа от сайдбара.
+       Верхний отступ убран: hero уходит под навбар, как в «Сообществе». */
+    padding: 0 var(--today-pad) 96px;
     box-sizing: border-box;
   }
 
@@ -10043,22 +10043,30 @@ body.chat-page .notification-prompt-banner {
     max-width: 1180px;
   }
 
+  /* Hero как на вкладке «Сообщество»: полноэкранная шапка
+     на всю ширину вьюпорта, растворяющаяся градиентом в фон */
   body.home-today-active .today-hero-card {
-    width: 100% !important;
-    max-width: 1180px !important;
-    min-height: 280px !important;
-    border-radius: 28px !important;
+    width: 100vw !important;
+    max-width: none !important;
+    min-height: clamp(380px, 54vh, 580px) !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
     display: flex !important;
-    align-items: center !important;
-    padding: 44px 52px !important;
+    align-items: flex-end !important;
+    position: relative !important;
+    left: 50%;
+    margin: 0 0 44px -50vw !important;
+    padding: clamp(140px, 18vh, 190px) var(--today-pad, 48px) clamp(48px, 7vh, 84px) !important;
     background-image: var(--ux-bg, url('/assets/webp/new_main.webp')) !important;
     background-size: cover !important;
     background-position: center !important;
-    position: relative !important;
     overflow: hidden !important;
-    border: 1px solid rgba(255,255,255,.1) !important;
-    box-shadow: 0 24px 64px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.14) !important;
-    margin-bottom: 32px !important;
+    transform: none !important;
+  }
+
+  body.home-today-active .today-hero-card::before {
+    display: none !important;
   }
 
   body.home-today-active .today-hero-card::after {
@@ -10067,8 +10075,11 @@ body.chat-page .notification-prompt-banner {
     position: absolute !important;
     inset: 0 !important;
     background:
-      linear-gradient(0deg, rgba(4,6,10,.55) 0%, rgba(4,6,10,0) 42%),
-      linear-gradient(90deg, rgba(4,6,10,.96) 0%, rgba(4,6,10,.78) 34%, rgba(4,6,10,.38) 64%, rgba(4,6,10,.12) 100%) !important;
+      linear-gradient(to bottom,
+        rgba(0,0,0,.26) 0%,
+        rgba(0,0,0,.40) 44%,
+        rgba(4,6,10,.78) 78%,
+        var(--bg-main) 100%) !important;
     z-index: 1 !important;
   }
 
@@ -10097,10 +10108,10 @@ body.chat-page .notification-prompt-banner {
   }
 
   body.home-today-active .today-hero-card h1 {
-    max-width: 720px !important;
-    font-size: clamp(34px, 3.6vw, 50px) !important;
-    line-height: 1.04 !important;
-    margin-bottom: 12px !important;
+    max-width: 760px !important;
+    font-size: clamp(2.05rem, 4.4vw, 3.35rem) !important;
+    line-height: .98 !important;
+    margin-bottom: 16px !important;
     font-weight: 800 !important;
     letter-spacing: -0.04em !important;
     color: #fff !important;
@@ -10108,18 +10119,18 @@ body.chat-page .notification-prompt-banner {
   }
 
   body.home-today-active .today-hero-card p {
-    max-width: 540px !important;
-    font-size: 15.5px !important;
+    max-width: 560px !important;
+    font-size: clamp(1rem, 1.55vw, 1.18rem) !important;
     color: rgba(255,255,255,0.78) !important;
-    line-height: 1.5 !important;
+    line-height: 1.55 !important;
     text-shadow: 0 1px 12px rgba(0,0,0,.55);
   }
 
   body.home-today-active .today-carousel-controls {
     display: flex !important;
     position: absolute !important;
-    right: 48px !important;
-    bottom: 40px !important;
+    right: var(--today-pad, 48px) !important;
+    bottom: clamp(44px, 7vh, 80px) !important;
     gap: 10px !important;
     z-index: 10 !important;
   }
