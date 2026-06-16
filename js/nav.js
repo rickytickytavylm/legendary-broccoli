@@ -268,6 +268,7 @@
     '/psihosomatika/': { api: '/content/psihosomatika-lessons', image: '/assets/webp/psysomatic.webp' },
     '/mj/': { api: '/content/mj-lessons', image: '/assets/webp/man_woman.webp' },
     '/yoga/': { api: '/content/yoga-lessons', image: '/assets/webp/mini-yoga.webp' },
+    '/event-yoga/': { api: '/content/event-yoga-lessons', image: '/assets/webp/event-yoga-logo.webp' },
     '/marathons/': { api: '/content/marathons-lessons', image: '/assets/webp/maraphones.webp' },
     '/superviziya/': { api: '/content/superviziya-lessons', image: '/assets/webp/supervision.webp' },
     '/antologiya/': { api: '/content/antologiya-lessons', image: '/assets/webp/antology.webp' },
