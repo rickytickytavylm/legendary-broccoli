@@ -27,6 +27,12 @@ function eventYogaPoster(section) {
   return '/assets/webp/event-yoga-logo.webp';
 }
 
+function eventYogaIsAppleTouchDevice() {
+  const ua = navigator.userAgent || '';
+  const platform = navigator.platform || '';
+  return /iPad|iPhone|iPod/i.test(ua) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
 function initEventYogaSection(section) {
   const lessons = section.lessons || [];
   const sectionId = section.id || 'event-yoga';
@@ -45,24 +51,75 @@ function initEventYogaSection(section) {
     if (typeof window.showAccessPrompt === 'function') window.showAccessPrompt('NO_SUBSCRIPTION');
   }
 
-  async function loadLesson(lesson) {
+  function setVideoMessage(message) {
+    if (now) now.textContent = message || '';
+  }
+
+  function waitForEvent(target, eventName, timeoutMs = 9000) {
+    return new Promise((resolve, reject) => {
+      let done = false;
+      const timer = setTimeout(() => {
+        if (done) return;
+        done = true;
+        cleanup();
+        resolve({ type: 'timeout' });
+      }, timeoutMs);
+      const cleanup = () => {
+        clearTimeout(timer);
+        target.removeEventListener(eventName, onEvent);
+        target.removeEventListener('error', onError);
+      };
+      const onEvent = () => {
+        if (done) return;
+        done = true;
+        cleanup();
+        resolve({ type: eventName });
+      };
+      const onError = () => {
+        if (done) return;
+        done = true;
+        cleanup();
+        reject(new Error('Video element failed to load'));
+      };
+      target.addEventListener(eventName, onEvent, { once: true });
+      target.addEventListener('error', onError, { once: true });
+    });
+  }
+
+  async function loadLesson(lesson, options = {}) {
     if (!video || !lesson || !lesson.video_slug) return;
     try {
       setLoading(true);
       const preview = container?.querySelector('.video-preview-overlay');
-      if (preview) preview.classList.add('hidden');
+      if (preview && options.hidePreview !== false) preview.classList.add('hidden');
       if (video.getAttribute('src')) video.removeAttribute('src');
+      video.removeAttribute('poster');
+      video.pause();
+      video.load();
+
       const mp4 = await window.API.getVideoPresign(lesson.video_slug);
       video.setAttribute('controls', '');
       video.setAttribute('playsinline', '');
       video.setAttribute('webkit-playsinline', '');
+      video.setAttribute('preload', 'metadata');
       video.dataset.streamType = 'mp4-presign';
+      video.onerror = () => {
+        setLoading(false);
+        setVideoMessage('Не удалось открыть видео. Попробуйте обновить страницу или выбрать урок ещё раз.');
+      };
       video.src = mp4.url;
       video.load();
-      video.addEventListener('loadedmetadata', () => setLoading(false), { once: true });
-      video.addEventListener('canplay', () => setLoading(false), { once: true });
-      if (now) now.textContent = lesson.title || '';
+      setVideoMessage(lesson.title || '');
+
+      await waitForEvent(video, 'loadedmetadata').catch(() => null);
       setLoading(false);
+      if (preview && options.hidePreview !== false) preview.classList.add('hidden');
+
+      if (options.autoplay && typeof video.play === 'function') {
+        await video.play().catch(() => {
+          if (!eventYogaIsAppleTouchDevice() && preview) preview.classList.remove('hidden');
+        });
+      }
     } catch (err) {
       setLoading(false);
       if (err && (err.status === 403 || err.code === 'NO_SUBSCRIPTION')) {
@@ -71,6 +128,51 @@ function initEventYogaSection(section) {
       }
       if (now) now.textContent = 'Видео станет доступно после загрузки в бакет.';
     }
+  }
+
+  function setupEventYogaPreview() {
+    if (!container || !video || container.dataset.eventYogaPreviewReady === 'true') return;
+    container.dataset.eventYogaPreviewReady = 'true';
+
+    video.removeAttribute('controls');
+    video.setAttribute('preload', 'none');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    const preview = document.createElement('button');
+    preview.type = 'button';
+    preview.className = 'video-preview-overlay';
+    preview.setAttribute('aria-label', 'Смотреть видео');
+    preview.style.backgroundImage = `url('${eventYogaPoster(section)}')`;
+    preview.innerHTML = `
+      <span class="video-preview-action" aria-hidden="true">
+        <span class="video-preview-icon"></span>
+        <span class="video-preview-status">
+          <span class="video-preview-ring"></span>
+          <span>Загрузка</span>
+        </span>
+      </span>
+    `;
+    container.appendChild(preview);
+
+    let loadStarted = false;
+    preview.addEventListener('click', async () => {
+      if (loadStarted) return;
+      loadStarted = true;
+      preview.classList.add('loading');
+      try {
+        await loadLesson(lessons[0], {
+          autoplay: !eventYogaIsAppleTouchDevice(),
+          hidePreview: true,
+        });
+        preview.classList.remove('loading');
+        preview.classList.add('hidden');
+      } catch (err) {
+        loadStarted = false;
+        preview.classList.remove('loading');
+        preview.classList.remove('hidden');
+      }
+    });
   }
 
   list.innerHTML = lessons.map((lesson, index) => `
@@ -87,21 +189,16 @@ function initEventYogaSection(section) {
     item.addEventListener('click', () => {
       list.querySelectorAll('.lesson-item').forEach((node) => node.classList.remove('active'));
       item.classList.add('active');
-      loadLesson(lessons[Number(item.dataset.idx) || 0]);
+      loadLesson(lessons[Number(item.dataset.idx) || 0], {
+        autoplay: !eventYogaIsAppleTouchDevice(),
+        hidePreview: true,
+      });
     });
   });
 
   if (video) video.addEventListener('contextmenu', (event) => event.preventDefault());
 
-  if (window.setupVideoPreview) {
-    window.setupVideoPreview(container, {
-      poster: eventYogaPoster(section),
-      audioSlug: lessons[0]?.video_slug,
-      onStart: () => loadLesson(lessons[0]),
-    });
-  } else {
-    loadLesson(lessons[0]);
-  }
+  setupEventYogaPreview();
 }
 
 async function initEventYoga() {
