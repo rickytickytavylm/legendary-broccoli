@@ -41,6 +41,7 @@ function initEventYogaSection(section) {
   const list = document.getElementById(`list-${sectionId}`);
   const now = document.getElementById(`now-${sectionId}`);
   const container = document.getElementById(`container-${sectionId}`);
+  let hlsInstance = null;
 
   function setLoading(loading) {
     if (loader) loader.classList.toggle('hidden', !loading);
@@ -97,18 +98,12 @@ function initEventYogaSection(section) {
       video.pause();
       video.load();
 
-      const mp4 = await window.API.getVideoPresign(lesson.video_slug);
-      video.setAttribute('controls', '');
-      video.setAttribute('playsinline', '');
-      video.setAttribute('webkit-playsinline', '');
+      await window.attachVideoSource(video, lesson.video_slug, hlsInstance, (next) => { hlsInstance = next; });
       video.setAttribute('preload', 'metadata');
-      video.dataset.streamType = 'mp4-presign';
       video.onerror = () => {
         setLoading(false);
         setVideoMessage('Не удалось открыть видео. Попробуйте обновить страницу или выбрать урок ещё раз.');
       };
-      video.src = mp4.url;
-      video.load();
       setVideoMessage(lesson.title || '');
 
       await waitForEvent(video, 'loadedmetadata').catch(() => null);
@@ -126,7 +121,7 @@ function initEventYogaSection(section) {
         showAccessError();
         return;
       }
-      if (now) now.textContent = 'Видео станет доступно после загрузки в бакет.';
+      if (now) now.textContent = 'Видео временно недоступно. Попробуйте обновить страницу или выбрать урок ещё раз.';
     }
   }
 
