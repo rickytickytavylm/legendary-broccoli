@@ -7,6 +7,25 @@ const API_ORIGIN = new URL(API_BASE, location.href).origin;
 const CONTENT_CACHE_TTL = 5 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 15000;
 const ACTIVITY_CLICK_MIN_INTERVAL_MS = 650;
+const ACCESS_TOKEN_SKEW_SECONDS = 30;
+
+function decodeJwtPayload(token) {
+  try {
+    const part = String(token || '').split('.')[1];
+    if (!part) return null;
+    const json = atob(part.replace(/-/g, '+').replace(/_/g, '/'));
+    return JSON.parse(json);
+  } catch (e) {
+    return null;
+  }
+}
+
+function isAccessTokenExpired(token, skewSeconds = ACCESS_TOKEN_SKEW_SECONDS) {
+  if (!token) return true;
+  const payload = decodeJwtPayload(token);
+  if (!payload || !payload.exp) return false;
+  return payload.exp <= Math.floor(Date.now() / 1000) + skewSeconds;
+}
 
 function clampActivityText(value, max = 180) {
   return String(value || '').replace(/\s+/g, ' ').trim().slice(0, max);
@@ -136,6 +155,16 @@ class ApiClient {
       .catch(() => {});
   }
 
+  needsAuthRefresh() {
+    if (!localStorage.getItem('refreshToken')) return false;
+    return !this.accessToken || isAccessTokenExpired(this.accessToken);
+  }
+
+  async ensureFreshAccessToken(opts = {}) {
+    if (opts.skipAuthRefresh || !this.needsAuthRefresh()) return !!this.accessToken;
+    return this._doRefresh();
+  }
+
   needsRestoredAuth(path, opts = {}) {
     if (opts.requireAuth === true) return true;
     if (opts.requireAuth === false) return false;
@@ -184,8 +213,8 @@ class ApiClient {
     // On iOS Safari pages can boot before accessToken is restored from refreshToken.
     // Restore it before calling protected endpoints.
     const shouldRestoreAuth = this.needsRestoredAuth(path, opts);
-    if (!this.accessToken && localStorage.getItem('refreshToken') && !opts.skipAuthRefresh) {
-      const refreshed = await this._doRefresh();
+    if (this.needsAuthRefresh() && !opts.skipAuthRefresh) {
+      const refreshed = await this.ensureFreshAccessToken(opts);
       if (!refreshed && shouldRestoreAuth) {
         const err = new Error('Login required');
         err.code = 'LOGIN_REQUIRED';
@@ -216,11 +245,11 @@ class ApiClient {
     // Access token expired — try refresh once
     if (res.status === 401) {
       const data = await res.json().catch(() => ({}));
-      if (data.code === 'USER_INVALID' || data.code === 'TOKEN_INVALID') {
+      if (data.code === 'USER_INVALID' || data.code === 'TOKEN_INVALID' || data.code === 'TOKEN_REVOKED') {
         this.clearLocalState();
         throw Object.assign(data, { status: res.status });
       }
-      if (data.code === 'TOKEN_EXPIRED') {
+      if ((data.code === 'TOKEN_EXPIRED' || data.code === 'NO_TOKEN') && localStorage.getItem('refreshToken')) {
         const refreshed = await this._doRefresh();
         if (refreshed) {
           init.headers['Authorization'] = 'Bearer ' + this.accessToken;
@@ -251,13 +280,17 @@ class ApiClient {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ refreshToken }),
-        });
-        if (!res.ok) throw new Error('Refresh failed');
-        const data = await res.json();
+        }, { skipAuthRefresh: true });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const err = Object.assign(new Error(data.error || 'Refresh failed'), data);
+          err.status = res.status;
+          throw err;
+        }
         this.setTokens(data.tokens);
         return true;
       } catch (e) {
-        this.logout();
+        if (e && e.status === 401) this.logout();
         return false;
       } finally {
         this.refreshPromise = null;
@@ -290,14 +323,15 @@ class ApiClient {
 
   async restoreSession() {
     if (!localStorage.getItem('refreshToken')) return null;
-    if (!this.accessToken) {
-      const refreshed = await this._doRefresh();
-      if (!refreshed) return null;
-    }
+    const refreshed = await this.ensureFreshAccessToken();
+    if (!refreshed) return null;
     try {
       const data = await this.me({ fresh: true });
       return data.user || null;
     } catch (err) {
+      if (err && (err.code === 'USER_INVALID' || err.code === 'TOKEN_INVALID' || err.code === 'TOKEN_REVOKED')) {
+        this.clearLocalState();
+      }
       return null;
     }
   }
