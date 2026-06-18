@@ -13,7 +13,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Йога и терапия — Система Молодцова</title>
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=148" />
+  <link rel="stylesheet" href="/css/style.css?v=151" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -40,6 +40,8 @@
     .watermark img { height: 26px; width: auto; filter: brightness(1.2); }
     .now-playing { color: rgba(255,255,255,.75); font-size: 14px; font-weight: 500; margin: 14px 0 0; min-height: 20px; }
     .event-yoga-sidebar { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 18px; height: fit-content; max-height: 520px; overflow-y: auto; }
+    .event-yoga-page .media-mode-switch,
+    .event-yoga-page .media-mode-switch-preview { display: none !important; }
     .sidebar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .sidebar-header h3 { color: #fff; font-size: 15px; font-weight: 650; margin: 0; }
     .lessons-count { color: rgba(255,255,255,.5); font-size: 12px; }
@@ -80,7 +82,7 @@
   </nav>
 
   <main class="main-content">
-    <section class="hero hero-courses event-yoga-hero" style="background:linear-gradient(to bottom, rgba(0,0,0,.18) 0%, rgba(0,0,0,.62) 64%, var(--bg-main) 100%), url('/assets/webp/event-yoga-logo.webp') center/cover no-repeat;">
+    <section class="hero hero-courses event-yoga-hero" style="background:linear-gradient(to bottom, rgba(0,0,0,.18) 0%, rgba(0,0,0,.62) 64%, var(--bg-main) 100%), url('/assets/webp/mmeditation.webp') center/cover no-repeat;">
       <div class="hero-content text-left">
         <div class="hero-top-text fade-up">Ивент</div>
         <h1 class="hero-title fade-up">Йога и терапия</h1>
@@ -98,10 +100,10 @@
   </main>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=71"></script>
+  <script src="/js/api.js?v=73"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=90"></script>
+  <script src="/js/nav.js?v=91"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/event-yoga-page.js?v=3"></script>
+  <script src="/js/event-yoga-page.js?v=4"></script>
 </body>
 </html>

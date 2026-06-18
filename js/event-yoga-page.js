@@ -181,12 +181,18 @@ function initEventYogaSection(section) {
   `).join('');
 
   list.querySelectorAll('.lesson-item').forEach((item) => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (event) => {
+      event.preventDefault();
+      const scrollBefore = window.scrollY;
       list.querySelectorAll('.lesson-item').forEach((node) => node.classList.remove('active'));
       item.classList.add('active');
+      item.blur();
       loadLesson(lessons[Number(item.dataset.idx) || 0], {
         autoplay: !eventYogaIsAppleTouchDevice(),
         hidePreview: true,
+      });
+      window.requestAnimationFrame(() => {
+        if (Math.abs(window.scrollY - scrollBefore) > 24) window.scrollTo({ top: scrollBefore, behavior: 'auto' });
       });
     });
   });

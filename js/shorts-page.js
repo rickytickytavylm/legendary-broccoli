@@ -13,6 +13,7 @@
   var videoEl = document.getElementById('shorts-player-video');
   var closeBtn = overlay && overlay.querySelector('[data-shorts-player-close]');
   var titleEl = document.getElementById('shorts-player-title');
+  var playerLikeBtn = document.getElementById('shorts-player-like');
   var spinnerEl = document.getElementById('shorts-player-spinner');
   var posterEl = document.getElementById('shorts-player-poster');
   var toastEl = document.getElementById('shorts-toast');
@@ -38,6 +39,7 @@
   var wheelStepLockUntil = 0;
   var playbackAttemptTimer = null;
   var progressSeeking = false;
+  var currentLikeSlug = '';
 
   if (!root) return;
 
@@ -56,6 +58,71 @@
     toastTimer = window.setTimeout(function () {
       toastEl.classList.remove('shorts-toast--visible');
     }, ms || 4800);
+  }
+
+  function shortLikeBase(slug) {
+    var value = String(slug || 'short');
+    var hash = 0;
+    for (var i = 0; i < value.length; i += 1) {
+      hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
+    }
+    return 203 + (hash % 270);
+  }
+
+  function shortLikeKey(slug) {
+    return 'sistema:short-liked:' + String(slug || '');
+  }
+
+  function isShortLiked(slug) {
+    try {
+      return localStorage.getItem(shortLikeKey(slug)) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function setShortLiked(slug, liked) {
+    try {
+      if (liked) localStorage.setItem(shortLikeKey(slug), '1');
+      else localStorage.removeItem(shortLikeKey(slug));
+    } catch (e) {}
+  }
+
+  function shortLikeCount(slug) {
+    return shortLikeBase(slug) + (isShortLiked(slug) ? 1 : 0);
+  }
+
+  function updateLikeViews(slug) {
+    if (!slug) return;
+    var liked = isShortLiked(slug);
+    document.querySelectorAll('[data-short-like]').forEach(function (node) {
+      if (node.dataset.shortLike !== String(slug)) return;
+      node.classList.toggle('is-liked', liked);
+      node.setAttribute('aria-pressed', liked ? 'true' : 'false');
+      var count = node.querySelector('[data-short-like-count]');
+      if (count) count.textContent = String(shortLikeCount(slug));
+    });
+    if (playerLikeBtn && currentLikeSlug === slug) {
+      playerLikeBtn.classList.toggle('is-liked', liked);
+      playerLikeBtn.setAttribute('aria-pressed', liked ? 'true' : 'false');
+      var playerCount = playerLikeBtn.querySelector('[data-shorts-player-like-count]');
+      if (playerCount) playerCount.textContent = String(shortLikeCount(slug));
+    }
+  }
+
+  function toggleShortLike(slug) {
+    if (!slug) return;
+    setShortLiked(slug, !isShortLiked(slug));
+    updateLikeViews(slug);
+  }
+
+  function setPlayerLikeSlug(slug) {
+    currentLikeSlug = String(slug || '');
+    if (playerLikeBtn) {
+      playerLikeBtn.hidden = !currentLikeSlug;
+      playerLikeBtn.dataset.shortLike = currentLikeSlug;
+    }
+    updateLikeViews(currentLikeSlug);
   }
 
   function clearLoadKickTimer() {
@@ -266,6 +333,7 @@
     }
     var poster = item.poster ? String(item.poster) : '';
     openPlayerWithUrl(url, item.caption || '', poster, true);
+    setPlayerLikeSlug(item.slug || '');
   }
 
   function playbackUrlFor(item, slug) {
@@ -471,6 +539,7 @@
     var poster = item && item.poster ? String(item.poster) : '';
     cardBtn.classList.add('short-card--busy');
     openPlayerWithUrl(url, caption || '', poster, false);
+    setPlayerLikeSlug(slug);
     cardBtn.classList.remove('short-card--busy');
   }
 
@@ -510,6 +579,26 @@
       posterWrap.appendChild(ov);
       posterWrap.appendChild(dur);
 
+      var like = document.createElement('span');
+      like.className = 'short-card__likes';
+      like.setAttribute('role', 'button');
+      like.setAttribute('tabindex', '0');
+      like.setAttribute('aria-label', 'Нравится');
+      like.dataset.shortLike = slug;
+      like.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08A6.01 6.01 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span data-short-like-count></span>';
+      like.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleShortLike(slug);
+      });
+      like.addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        event.stopPropagation();
+        toggleShortLike(slug);
+      });
+      posterWrap.appendChild(like);
+
       var capWrap = document.createElement('span');
       capWrap.className = 'short-card__caption';
       var span = document.createElement('span');
@@ -528,8 +617,13 @@
       });
 
       root.appendChild(btn);
+      updateLikeViews(slug);
     });
   }
+
+  playerLikeBtn?.addEventListener('click', function () {
+    toggleShortLike(currentLikeSlug);
+  });
 
   fetch('/data/shorts.json?v=2026-06-03-reels-1', { credentials: 'same-origin' })
     .then(function (r) {

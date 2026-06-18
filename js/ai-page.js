@@ -20,6 +20,23 @@ const AI_COURSE_LINKS = [
   { title: 'Материнство и опора', href: '/marathons/#section-rezakina', aliases: ['Материнство и опора', 'Материнство'] },
 ];
 
+const AI_PSYCHOLOGIST_LINKS = [
+  { title: 'Светлана Плешакова', href: '/psychologists/pleshakova-svetlana/', aliases: ['Светлана Плешакова', 'Плешакова', 'Светлана'] },
+  { title: 'Анастасия Резакина', href: '/psychologists/rezakina-anastasia/', aliases: ['Анастасия Резакина', 'Резакина', 'Анастасия'] },
+  { title: 'Владимир Земелькин', href: '/psychologists/zemelkin-vladimir/', aliases: ['Владимир Земелькин', 'Земелькин', 'Владимир'] },
+  { title: 'Станислав Борисов', href: '/psychologists/borisov-stanislav/', aliases: ['Станислав Борисов', 'Борисов', 'Станислав'] },
+  { title: 'Мария Падурец', href: '/psychologists/padurec-maria/', aliases: ['Мария Падурец', 'Падурец', 'Мария'] },
+  { title: 'Дмитрий Лубкин', href: '/psychologists/lubkin-dmitry/', aliases: ['Дмитрий Лубкин', 'Лубкин', 'Дмитрий'] },
+  { title: 'Психологи Системы', href: '/psychologists/', aliases: ['психологи Системы', 'список психологов', 'все психологи'] },
+];
+
+const AI_TOPIC = new URLSearchParams(window.location.search).get('topic') || '';
+const PSYCHOLOGIST_SELECTION_MESSAGE = [
+  'Хочу подобрать психолога внутри Системы под свой запрос.',
+  'Пожалуйста, начни с короткой бережной беседы: задай мне несколько уточняющих вопросов о главном запросе, состоянии, формате работы и предпочтительном подходе.',
+  'После моих ответов предложи 1-2 психологов из базы Системы и объясни, почему они подходят.'
+].join(' ');
+
 function escapeHtml(value) {
   return String(value || '')
     .replace(/&/g, '&amp;')
@@ -34,7 +51,7 @@ function escapeRegExp(value) {
 }
 
 function renderAiAssistantHtml(text) {
-  const sorted = AI_COURSE_LINKS
+  const sorted = AI_COURSE_LINKS.concat(AI_PSYCHOLOGIST_LINKS)
     .flatMap((course) => course.aliases.map((alias) => ({ ...course, alias })))
     .sort((a, b) => b.alias.length - a.alias.length);
   const source = String(text || '');
@@ -133,6 +150,7 @@ async function loadAiHistory() {
     });
     syncAiIntroState();
     scrollAiToBottom(40);
+    maybeStartPsychologistSelection(data.messages || []);
   } catch {}
 }
 
@@ -142,8 +160,8 @@ function updateUsage(usage) {
     `AI сообщения: ${usage.used || 0} · без лимита`;
 }
 
-async function submitQuestion() {
-  const value = aiInput.value.trim();
+async function submitQuestion(forcedValue = '') {
+  const value = String(forcedValue || aiInput.value || '').trim();
   if (!value) return;
   if (!window.API) return;
 
@@ -180,6 +198,31 @@ async function submitQuestion() {
     aiInput.disabled = false;
     aiInput.focus();
   }
+}
+
+function applyAiTopic() {
+  if (AI_TOPIC !== 'psychologist-selection') return;
+  const title = document.querySelector('.ai-title');
+  const desc = document.querySelector('.ai-desc');
+  if (title) title.innerHTML = 'Подбор психолога<br>с AI';
+  if (desc) desc.textContent = 'Лиза поможет аккуратно описать запрос и сузить выбор специалиста Системы.';
+  if (aiInput) {
+    aiInput.placeholder = 'Например: тревога, отношения, психосоматика...';
+    aiInput.value = 'Хочу подобрать психолога под свой запрос';
+  }
+}
+
+function maybeStartPsychologistSelection(historyMessages) {
+  if (AI_TOPIC !== 'psychologist-selection') return;
+  if (!window.API || !window.API.accessToken) return;
+  const key = 'sistema:ai-topic-started:psychologist-selection';
+  if (sessionStorage.getItem(key) === '1') return;
+  const hasRecentSelection = (historyMessages || []).some((message) =>
+    String(message.content || '').toLowerCase().includes('подобрать психолога')
+  );
+  if (hasRecentSelection) return;
+  sessionStorage.setItem(key, '1');
+  window.setTimeout(() => submitQuestion(PSYCHOLOGIST_SELECTION_MESSAGE), 220);
 }
 
 function updateAiLayoutMetrics() {
@@ -223,6 +266,7 @@ if (document.readyState === 'loading') {
   setTimeout(injectAiHeaderBack, 0);
 }
 
+applyAiTopic();
 loadAiUsage();
 loadAiHistory();
 aiSend.addEventListener('click', submitQuestion);

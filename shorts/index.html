@@ -220,6 +220,71 @@
       z-index: 2;
     }
 
+    .short-card__likes {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.42);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      color: rgba(255,255,255,.86);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      pointer-events: auto;
+    }
+
+    .short-card__likes.is-liked {
+      color: #fff;
+      border-color: rgba(255,90,121,.48);
+      background: rgba(255,90,121,.24);
+    }
+
+    .short-card__likes svg {
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    .shorts-player-like {
+      margin-top: 10px;
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      color: rgba(255,255,255,.82);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 850;
+      cursor: pointer;
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+    }
+
+    .shorts-player-like.is-liked {
+      color: #fff;
+      border-color: rgba(255,90,121,.48);
+      background: rgba(255,90,121,.24);
+    }
+
+    .shorts-player-like svg {
+      width: 16px;
+      height: 16px;
+    }
+
     button.short-card.short-card--busy {
       opacity: 0.76;
       pointer-events: none;
@@ -689,6 +754,10 @@
       </div>
       <footer class="shorts-player-foot">
         <p id="shorts-player-title" class="shorts-player-title" title="Нажмите, чтобы раскрыть описание"></p>
+        <button type="button" id="shorts-player-like" class="shorts-player-like" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08A6.01 6.01 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <span data-shorts-player-like-count>203</span>
+        </button>
       </footer>
 
       <!-- Стеклянная выдвижная модалка описания -->
@@ -712,6 +781,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/shorts-page.js?v=16"></script>
+  <script src="/js/shorts-page.js?v=17"></script>
 </body>
 </html>

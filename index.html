@@ -19,7 +19,7 @@
   <link rel="preload" as="image" href="/assets/webp/myself_mar.webp" />
   <link rel="preload" as="image" href="/assets/webp/conflicts.webp" />
   <link rel="preload" as="image" href="/assets/webp/maraphones.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=151" />
+  <link rel="stylesheet" href="/css/style.css?v=152" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -92,9 +92,6 @@
               <span class="yandex-id-mark" aria-hidden="true">Я</span>
               <span>Войти с Яндекс ID</span>
             </button>
-            <button class="ios-auth-button ios-auth-button-secondary yookassa-review-button" type="button" data-yookassa-review-login>
-              <span>Демо-доступ для проверки ЮKassa</span>
-            </button>
           </div>
         </div>
 
@@ -113,9 +110,6 @@
             </button>
             <button class="ios-auth-button ios-auth-button-secondary" type="button" id="gateway-yandex-btn" data-yandex-login>
               <span>Войти через Яндекс</span>
-            </button>
-            <button class="ios-auth-button ios-auth-button-secondary yookassa-review-button" type="button" data-yookassa-review-login>
-              <span>Демо-доступ для проверки ЮKassa</span>
             </button>
             <p class="auth-error" id="gateway-auth-error"></p>
           </div>
@@ -222,57 +216,28 @@
           </div>
         </section>
 
-        <section class="today-bento-panel today-psychologists-panel is-coming-soon">
+        <section class="today-bento-panel today-psychologists-panel">
+          <header class="ios-section-header today-psychologists-header">
+            <p class="ios-section-kicker">Живая поддержка</p>
+            <h2 class="ios-section-title">Подбор психолога</h2>
+            <p class="ios-section-subtitle">Короткая витрина специалистов Системы. AI поможет сформулировать запрос и понять, с кем начать работу.</p>
+          </header>
           <div class="today-psychologists-card">
             <div class="today-psychologists-copy">
-              <p class="ios-section-kicker">Живая поддержка <span class="today-soon-badge">Скоро</span></p>
-              <h2>Психолог под ваш запрос</h2>
-              <p>Готовим подбор специалистов внутри Системы. Пока раздел в закрытой подготовке.</p>
+              <h3>Подберите специалиста бережно</h3>
+              <p>Ответьте на несколько вопросов Лизе, и она поможет сузить запрос: отношения, тревога, тело, психосоматика, зависимость или семейная система.</p>
               <div class="today-psychologists-tags" aria-label="Направления подбора">
                 <span>Тревога</span>
                 <span>Отношения</span>
                 <span>Созависимость</span>
                 <span>Психосоматика</span>
               </div>
-              <span class="today-psychologists-button is-disabled" aria-disabled="true">Скоро</span>
+              <div class="today-psychologists-actions">
+                <a class="today-psychologists-button" href="/ai/?topic=psychologist-selection">Подобрать с AI</a>
+                <a class="today-psychologists-link" href="/psychologists/">Все психологи</a>
+              </div>
             </div>
-            <div class="today-psychologists-team" aria-label="Психологи Системы">
-              <article class="today-psychologist-slot">
-                <div class="today-psychologist-photo">
-                  <img src="/assets/webp/rezakina.webp" alt="Анастасия Резакина" loading="lazy" decoding="async">
-                </div>
-                <strong>Анастасия Резакина</strong>
-                <span class="today-psychologist-badge">Опыт 10+ лет</span>
-              </article>
-              <article class="today-psychologist-slot">
-                <div class="today-psychologist-photo">
-                  <img src="/assets/webp/zemelkin.webp" alt="Владимир Земелькин" loading="lazy" decoding="async">
-                </div>
-                <strong>Владимир Земелькин</strong>
-                <span class="today-psychologist-badge">Опыт 10+ лет</span>
-              </article>
-              <article class="today-psychologist-slot">
-                <div class="today-psychologist-photo">
-                  <img src="/assets/webp/borisov.webp" alt="Стас Борисов" loading="lazy" decoding="async">
-                </div>
-                <strong>Стас Борисов</strong>
-                <span class="today-psychologist-badge">Опыт 10+ лет</span>
-              </article>
-              <article class="today-psychologist-slot">
-                <div class="today-psychologist-photo">
-                  <img src="/assets/webp/artamonova.webp" alt="Ева Артамонова" loading="lazy" decoding="async">
-                </div>
-                <strong>Ева Артамонова</strong>
-                <span class="today-psychologist-badge">Опыт 10+ лет</span>
-              </article>
-              <article class="today-psychologist-slot">
-                <div class="today-psychologist-photo">
-                  <img src="/assets/webp/lubkin.webp" alt="Дмитрий Лубкин" loading="lazy" decoding="async">
-                </div>
-                <strong>Дмитрий Лубкин</strong>
-                <span class="today-psychologist-badge">Опыт 11+ лет</span>
-              </article>
-            </div>
+            <div class="today-psychologists-team" data-psychologists-rail aria-label="Психологи Системы"></div>
           </div>
         </section>
 
@@ -495,11 +460,13 @@
 
   <!-- iOS Glass Tab Bar (Mobile Only) -->
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=72"></script>
+  <script src="/js/api.js?v=73"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=91"></script>
   <script src="/js/main.js?v=2"></script>
   <script src="/js/program-catalog.js?v=8"></script>
-  <script src="/js/home-page.js?v=28"></script>
+  <script src="/js/psychologists-data.js?v=1"></script>
+  <script src="/js/psychologists-page.js?v=1"></script>
+  <script src="/js/home-page.js?v=29"></script>
 </body>
 </html>

@@ -353,7 +353,6 @@ class ApiClient {
   // --- Auth ---
   register(data) { return this.request('POST', '/auth/register', data); }
   login(data)    { return this.request('POST', '/auth/login', data); }
-  yookassaReviewLogin() { return this.request('POST', '/auth/yookassa-review'); }
   requestPhoneCode(data) { return this.request('POST', '/auth/phone/request', data); }
   requestPhoneCall(data) { return this.request('POST', '/auth/phone/request-call', data); }
   verifyPhoneCode(data) { return this.request('POST', '/auth/phone/verify', data); }

@@ -7425,6 +7425,19 @@ body.audio-player-open::-webkit-scrollbar {
   margin-top: 18px;
 }
 
+.today-psychologists-header {
+  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
+  margin: 0 auto 12px;
+}
+
+.ios-section-subtitle {
+  max-width: 660px;
+  margin: 8px 0 0;
+  color: rgba(246,240,231,.58);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 .today-psychologists-card {
   width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
   margin: 0 auto;
@@ -7435,22 +7448,20 @@ body.audio-player-open::-webkit-scrollbar {
   align-items: stretch;
   position: relative;
   overflow: hidden;
-  border-radius: 34px;
-  border: 1px solid rgba(216,191,155,.2);
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,.18);
   background:
-    radial-gradient(circle at 18% 0%, rgba(216,191,155,.22), transparent 36%),
-    radial-gradient(circle at 88% 16%, rgba(91,128,112,.22), transparent 40%),
-    linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
-    rgba(7,16,14,.72);
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.20), transparent 28%),
+    radial-gradient(circle at 86% 10%, rgba(216,191,155,.20), transparent 34%),
+    radial-gradient(circle at 70% 110%, rgba(86,126,105,.34), transparent 42%),
+    linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.035) 48%, rgba(255,255,255,.085)),
+    rgba(10,20,18,.54);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    0 28px 76px rgba(0,0,0,.34);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  backdrop-filter: blur(24px) saturate(160%);
-}
-
-.today-psychologists-panel.is-coming-soon .today-psychologists-team {
-  opacity: .72;
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    0 22px 64px rgba(0,0,0,.30);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
 }
 
 .today-soon-badge {
@@ -7470,12 +7481,25 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologists-card::before {
   content: "";
   position: absolute;
-  inset: -24% -10% auto auto;
-  width: 360px;
-  height: 360px;
+  inset: 1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,.24), transparent 26%, rgba(255,255,255,.08) 58%, transparent 76%),
+    url("/assets/webp/map.png");
+  background-size: auto, 220px 220px;
+  opacity: .16;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.today-psychologists-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -16% -42% 34%;
+  height: 220px;
   border-radius: 50%;
-  background: rgba(216,191,155,.09);
-  filter: blur(24px);
+  background: rgba(216,191,155,.16);
+  filter: blur(34px);
   pointer-events: none;
 }
 
@@ -7488,16 +7512,16 @@ body.audio-player-open::-webkit-scrollbar {
   min-width: 0;
 }
 
-.today-psychologists-copy h2 {
-  margin: 4px 0 6px;
+.today-psychologists-copy h3 {
+  margin: 0 0 6px;
   color: #fff;
-  font-size: clamp(22px, 2.5vw, 32px);
-  line-height: 1;
-  letter-spacing: -.055em;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.04;
+  letter-spacing: -.045em;
 }
 
 .today-psychologists-copy p:not(.ios-section-kicker) {
-  max-width: 54ch;
+  max-width: 62ch;
   margin: 0;
   color: rgba(246,240,231,.7);
   font-size: 13px;
@@ -7522,6 +7546,13 @@ body.audio-player-open::-webkit-scrollbar {
   color: rgba(255,255,255,.76);
   font-size: 10.5px;
   font-weight: 750;
+}
+
+.today-psychologists-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .today-psychologists-button {
@@ -7553,20 +7584,47 @@ body.audio-player-open::-webkit-scrollbar {
   background: #fff;
 }
 
+.today-psychologists-link {
+  margin-top: 12px;
+  color: rgba(246,240,231,.72);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.today-psychologists-link:hover {
+  color: #fff;
+}
+
 .today-psychologists-team {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(168px, 1fr);
   gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.today-psychologists-team::-webkit-scrollbar {
+  display: none;
 }
 
 .today-psychologist-slot {
   min-width: 0;
+  display: grid;
   padding: 7px;
   border-radius: 17px;
   border: 1px solid rgba(255,255,255,.1);
   background:
     linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
   text-align: center;
+  color: inherit;
+  text-decoration: none;
+  scroll-snap-align: start;
 }
 
 .today-psychologist-photo {
@@ -7609,6 +7667,25 @@ body.audio-player-open::-webkit-scrollbar {
   letter-spacing: -.01em;
 }
 
+.today-psychologist-meta {
+  display: grid;
+  justify-items: center;
+}
+
+.today-psychologist-meta em {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  min-height: 48px;
+  margin-top: 7px;
+  color: rgba(246,240,231,.58);
+  font-size: 11px;
+  line-height: 1.42;
+  font-style: normal;
+}
+
 .today-psychologist-badge {
   display: inline-flex;
   align-items: center;
@@ -7623,6 +7700,271 @@ body.audio-player-open::-webkit-scrollbar {
   font-weight: 800;
   letter-spacing: .01em;
   white-space: nowrap;
+}
+
+.psychologists-page {
+  width: min(calc(100% - clamp(20px, 5vw, 72px)), 1160px);
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 44px) 0 104px;
+}
+
+.psychologists-hero {
+  min-height: 430px;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.18), rgba(0,0,0,.72) 72%, var(--bg-main) 100%),
+    radial-gradient(circle at 78% 20%, rgba(216,191,155,.18), transparent 38%),
+    url('/assets/webp/mmeditation.webp') center/cover no-repeat;
+}
+
+.psychologists-hero .hero-subtitle {
+  max-width: 680px;
+}
+
+.psych-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.psych-primary-btn,
+.psych-secondary-btn,
+.psych-card-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.psych-primary-btn,
+.psych-card-link {
+  border: 1px solid rgba(216,191,155,.34);
+  background: rgba(246,240,231,.94);
+  color: #07100E;
+}
+
+.psych-secondary-btn {
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.82);
+}
+
+.psych-list-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.psych-list-card,
+.psych-detail-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255,255,255,.12), transparent 30%),
+    linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
+    rgba(8,16,14,.62);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 24px 72px rgba(0,0,0,.28);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+}
+
+.psych-list-card {
+  display: grid;
+  grid-template-columns: minmax(190px, 250px) minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 28px);
+  padding: clamp(12px, 2vw, 18px);
+}
+
+.psych-list-photo {
+  display: block;
+  min-height: 280px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(255,255,255,.05);
+}
+
+.psych-list-photo img,
+.psych-detail-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.psych-list-copy {
+  align-self: center;
+  min-width: 0;
+  padding: 4px 4px 4px 0;
+}
+
+.psych-card-kicker {
+  margin: 0 0 8px;
+  color: rgba(216,191,155,.82);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.psych-list-copy h2 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1;
+  letter-spacing: -.05em;
+}
+
+.psych-list-copy h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.psych-list-copy p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+  max-width: 68ch;
+  margin: 0;
+  color: rgba(246,240,231,.68);
+  font-size: 14px;
+  line-height: 1.58;
+}
+
+.psych-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 16px;
+}
+
+.psych-tags span {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.76);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.psych-card-link {
+  margin-top: 18px;
+}
+
+.psych-detail-hero {
+  display: grid;
+  grid-template-columns: minmax(260px, 390px) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 46px);
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.psych-detail-photo {
+  min-height: 560px;
+  border-radius: 34px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 26px 86px rgba(0,0,0,.34);
+}
+
+.psych-detail-copy h1 {
+  margin: 0 0 14px;
+  color: #fff;
+  font-size: clamp(42px, 7vw, 82px);
+  line-height: .92;
+  letter-spacing: -.075em;
+}
+
+.psych-detail-lead {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(246,240,231,.72);
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.62;
+}
+
+.psych-back-link {
+  display: inline-flex;
+  margin-bottom: 18px;
+  color: rgba(255,255,255,.58);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.psych-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.psych-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.psych-detail-card {
+  padding: clamp(20px, 3vw, 28px);
+}
+
+.psych-detail-card h2 {
+  margin: 0 0 14px;
+  color: #fff;
+  font-size: 20px;
+  letter-spacing: -.03em;
+}
+
+.psych-detail-card p,
+.psych-detail-card li {
+  color: rgba(246,240,231,.68);
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.psych-detail-card p {
+  margin: 0 0 12px;
+}
+
+.psych-detail-card p:last-child {
+  margin-bottom: 0;
+}
+
+.psych-detail-card ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+@media (max-width: 800px) {
+  .psych-list-card,
+  .psych-detail-hero,
+  .psych-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .psych-list-photo {
+    min-height: 340px;
+  }
+
+  .psych-detail-photo {
+    min-height: 460px;
+  }
 }
 
 .today-event-yoga-panel {
@@ -7730,8 +8072,8 @@ body.audio-player-open::-webkit-scrollbar {
     scroll-snap-align: start;
   }
 
-  .today-psychologists-copy h2 {
-    font-size: clamp(30px, 9vw, 42px);
+  .today-psychologists-copy h3 {
+    font-size: clamp(22px, 7vw, 30px);
   }
 
   .today-event-yoga-card {
