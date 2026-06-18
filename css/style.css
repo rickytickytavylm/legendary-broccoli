@@ -7613,10 +7613,10 @@ body.audio-player-open::-webkit-scrollbar {
   display: grid;
   grid-template-columns: none;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(168px, 1fr);
-  gap: 10px;
+  grid-auto-columns: minmax(300px, 320px);
+  gap: 16px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -7629,26 +7629,38 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologist-slot {
   min-width: 0;
   display: grid;
-  padding: 7px;
-  border-radius: 17px;
-  border: 1px solid rgba(255,255,255,.1);
+  padding: 14px;
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,.12);
   background:
-    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
+    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    0 18px 48px rgba(0,0,0,.24);
   text-align: center;
   color: inherit;
   text-decoration: none;
   scroll-snap-align: start;
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+
+.today-psychologist-slot:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 22px 56px rgba(0,0,0,.32);
 }
 
 .today-psychologist-photo {
   width: 100%;
   aspect-ratio: 4 / 5;
-  margin-bottom: 8px;
+  margin-bottom: 14px;
   display: grid;
   place-items: center;
   overflow: hidden;
-  border-radius: 13px;
-  border: 1px solid rgba(216,191,155,.16);
+  border-radius: 20px;
+  border: 1px solid rgba(216,191,155,.18);
   background:
     radial-gradient(circle at 50% 18%, rgba(216,191,155,.20), transparent 32%),
     linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.025));
@@ -7673,29 +7685,30 @@ body.audio-player-open::-webkit-scrollbar {
 
 .today-psychologist-slot strong {
   display: block;
-  color: rgba(255,255,255,.9);
-  font-size: 11.5px;
+  color: rgba(255,255,255,.94);
+  font-size: 16px;
   font-weight: 800;
-  line-height: 1.22;
-  letter-spacing: -.01em;
+  line-height: 1.24;
+  letter-spacing: -.02em;
 }
 
 .today-psychologist-meta {
   display: grid;
   justify-items: center;
+  gap: 2px;
 }
 
 .today-psychologist-meta em {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   overflow: hidden;
-  max-height: calc(1.42em * 2);
-  margin-top: 7px;
-  color: rgba(246,240,231,.58);
-  font-size: 11px;
-  line-height: 1.42;
+  max-height: calc(1.45em * 3);
+  margin-top: 9px;
+  color: rgba(246,240,231,.62);
+  font-size: 13px;
+  line-height: 1.45;
   font-style: normal;
   text-overflow: ellipsis;
   word-break: break-word;
@@ -7705,13 +7718,13 @@ body.audio-player-open::-webkit-scrollbar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 6px;
-  padding: 3px 8px;
+  margin-top: 9px;
+  padding: 5px 11px;
   border-radius: 999px;
   border: 1px solid rgba(216,191,155,.34);
   background: rgba(216,191,155,.14);
   color: rgba(246,240,231,.92);
-  font-size: 9.8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: .01em;
   white-space: nowrap;
@@ -7987,79 +8000,151 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 .today-event-yoga-card {
+  display: block;
   width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
-  min-height: 164px;
   margin: 0 auto;
-  padding: 18px;
-  display: grid;
-  grid-template-columns: 170px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(18px, 3vw, 32px);
+  overflow: hidden;
   text-decoration: none;
   color: #fff;
-  border-radius: 32px;
-  border: 1px solid rgba(216,191,155,.2);
-  background:
-    radial-gradient(circle at 12% 0%, rgba(216,191,155,.2), transparent 34%),
-    radial-gradient(circle at 84% 12%, rgba(123,158,142,.18), transparent 40%),
-    linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
-    rgba(7,16,14,.62);
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: #080808;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    0 26px 72px rgba(0,0,0,.32);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  backdrop-filter: blur(22px) saturate(160%);
+    0 28px 72px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.today-event-yoga-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 34px 84px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.today-event-hero {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  min-height: 260px;
   overflow: hidden;
+  background: #111;
 }
 
-.today-event-yoga-card img {
+.today-event-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  background: linear-gradient(180deg, transparent, rgba(8,8,8,.92));
+  pointer-events: none;
+}
+
+.today-event-hero img {
   width: 100%;
-  height: 128px;
+  height: 100%;
+  display: block;
   object-fit: cover;
-  border-radius: 22px;
-  box-shadow: 0 18px 48px rgba(0,0,0,.36);
+  object-position: center 38%;
 }
 
-.today-event-yoga-card span {
-  min-width: 0;
-  display: grid;
-  gap: 5px;
+.today-event-body {
+  padding: 18px 22px 20px;
+  background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
 }
 
-.today-event-yoga-card small {
-  color: rgba(216,191,155,.82);
-  font-size: 11.5px;
+.today-event-kicker {
+  margin: 0 0 10px;
+  color: rgba(255,255,255,.46);
+  font-size: 11px;
   font-weight: 850;
-  letter-spacing: .12em;
+  letter-spacing: .16em;
   text-transform: uppercase;
 }
 
-.today-event-yoga-card strong {
+.today-event-headline {
+  margin: 0 0 10px;
+  max-width: 11ch;
   color: #fff;
-  font-size: clamp(22px, 2.2vw, 30px);
+  font-size: clamp(32px, 4.6vw, 48px);
+  font-weight: 850;
   line-height: 1.02;
-  letter-spacing: -.04em;
-  max-width: 12ch;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
 }
 
-.today-event-yoga-card em {
-  max-width: 42ch;
-  color: rgba(255,255,255,.62);
-  font-size: 13.5px;
+.today-event-subline {
+  margin: 0 0 18px;
+  max-width: 34ch;
+  color: rgba(255,255,255,.52);
+  font-size: clamp(14px, 1.6vw, 16px);
   line-height: 1.45;
-  font-style: normal;
 }
 
-.today-event-yoga-card b {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: rgba(255,255,255,.1);
-  color: rgba(255,255,255,.76);
-  font-size: 30px;
-  font-weight: 300;
+.today-event-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.today-event-app {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.today-event-icon {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+
+.today-event-appcopy {
+  min-width: 0;
+}
+
+.today-event-appcopy strong {
+  display: block;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+
+.today-event-appcopy span {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255,255,255,.48);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.today-event-cta {
+  flex-shrink: 0;
+  min-width: 78px;
+  height: 34px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  transition: background .18s ease;
+}
+
+.today-event-yoga-card:hover .today-event-cta {
+  background: rgba(255,255,255,.22);
 }
 
 @media (max-width: 768px) {
@@ -8076,10 +8161,10 @@ body.audio-player-open::-webkit-scrollbar {
   .today-psychologists-team {
     grid-template-columns: none;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(138px, 44%);
+    grid-auto-columns: minmax(248px, 84vw);
     overflow-x: auto;
     margin: 0 -2px;
-    padding: 0 2px 4px;
+    padding: 0 2px 6px;
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
   }
@@ -8089,38 +8174,29 @@ body.audio-player-open::-webkit-scrollbar {
   }
 
   .today-event-yoga-card {
-    width: min(calc(100% - 28px), 520px);
-    grid-template-columns: 1fr;
-    min-height: 0;
-    padding: 14px;
-    gap: 14px;
-    align-items: end;
-    border-radius: 28px;
+    width: min(calc(100% - 28px), 560px);
   }
 
-  .today-event-yoga-card img {
-    width: 100%;
-    height: 190px;
-    border-radius: 22px;
+  .today-event-hero {
+    aspect-ratio: 4 / 3;
+    min-height: 240px;
   }
 
-  .today-event-yoga-card span {
-    gap: 7px;
-    padding: 0 2px 2px;
+  .today-event-body {
+    padding: 16px 18px 18px;
   }
 
-  .today-event-yoga-card strong {
-    font-size: clamp(28px, 8vw, 36px);
-    max-width: 9ch;
+  .today-event-headline {
+    max-width: 10ch;
+    font-size: clamp(30px, 9vw, 40px);
   }
 
-  .today-event-yoga-card em {
-    display: block;
-    font-size: 13.5px;
+  .today-event-subline {
+    font-size: 14px;
   }
 
-  .today-event-yoga-card b {
-    display: none;
+  .today-event-appcopy strong {
+    font-size: 15px;
   }
 }
 
@@ -11191,43 +11267,32 @@ body.chat-page .notification-prompt-banner {
     margin-bottom: 14px;
   }
 
+  body.home-today-active .today-psychologists-team {
+    grid-auto-columns: minmax(280px, 300px);
+  }
+
   body.home-today-active .today-event-yoga-card {
     width: 100%;
-    min-height: 236px;
     margin: 0;
-    padding: 18px 22px 18px 18px;
-    grid-template-columns: minmax(280px, 36%) minmax(0, 1fr) auto;
-    gap: clamp(22px, 3vw, 38px);
-    border-radius: 30px;
-    background:
-      linear-gradient(90deg, rgba(0,0,0,.08), rgba(0,0,0,.42)),
-      radial-gradient(circle at 14% 0%, rgba(216,191,155,.22), transparent 36%),
-      radial-gradient(circle at 84% 12%, rgba(123,158,142,.2), transparent 42%),
-      linear-gradient(135deg, rgba(255,255,255,.095), rgba(255,255,255,.025)),
-      rgba(7,16,14,.72);
   }
 
-  body.home-today-active .today-event-yoga-card img {
-    width: 100%;
-    height: 200px;
-    min-width: 0;
-    border-radius: 22px;
+  body.home-today-active .today-event-hero {
+    aspect-ratio: 21 / 9;
+    min-height: 340px;
   }
 
-  body.home-today-active .today-event-yoga-card span {
-    align-content: center;
-    gap: 8px;
+  body.home-today-active .today-event-body {
+    padding: 22px 28px 24px;
   }
 
-  body.home-today-active .today-event-yoga-card strong {
-    max-width: 18ch;
-    font-size: clamp(32px, 3.3vw, 48px);
+  body.home-today-active .today-event-headline {
+    max-width: 12ch;
+    font-size: clamp(40px, 3.8vw, 56px);
   }
 
-  body.home-today-active .today-event-yoga-card em {
-    max-width: 56ch;
-    font-size: 15px;
-    color: rgba(255,255,255,.68);
+  body.home-today-active .today-event-subline {
+    max-width: 48ch;
+    font-size: 16px;
   }
 
   body.home-today-active .today-bento-secondary .today-main-card,
