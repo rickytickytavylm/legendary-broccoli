@@ -205,6 +205,95 @@ function escapeHtml(value) {
     }, 4000);
   }
 
+  function openAccountSubscriptionModal() {
+    if (document.getElementById('ios-subscription-modal')) return;
+
+    const style = document.createElement('style');
+    style.id = 'ios-sub-modal-styles';
+    style.textContent = `
+      .ios-sub-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .35s cubic-bezier(.16,1,.3,1)}
+      .ios-sub-modal.active{opacity:1;pointer-events:auto}
+      .ios-sub-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+      .ios-sub-modal-card{position:relative;width:100%;max-width:420px;padding:32px 24px 28px;border-radius:38px;border:1px solid rgba(255,255,255,.14);background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.12),transparent 45%),#0c0d12;box-shadow:0 30px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);color:#fff;text-align:center;display:flex;flex-direction:column;align-items:center;overflow:hidden;transform:scale(.94) translateY(16px);transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+      .ios-sub-modal.active .ios-sub-modal-card{transform:scale(1) translateY(0)}
+      .ios-sub-modal-close{position:absolute;top:20px;right:20px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);font-size:20px;display:grid;place-items:center;cursor:pointer;padding:0;line-height:1}
+      .ios-sub-badge{display:inline-flex;margin-bottom:20px;padding:6px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.08);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+      .ios-sub-title{margin:0 0 10px;font-size:28px;font-weight:800;line-height:1.1;letter-spacing:-.04em}
+      .ios-sub-desc{margin:0 0 24px;max-width:300px;color:rgba(255,255,255,.55);font-size:14px;line-height:1.5}
+      .ios-sub-features{width:100%;list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:14px;text-align:left}
+      .ios-sub-feature-item{display:flex;align-items:flex-start;gap:12px;color:rgba(255,255,255,.85);font-size:14px;line-height:1.4}
+      .ios-sub-feature-icon{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;flex:0 0 auto;font-size:11px;font-weight:700}
+      .ios-sub-accept{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;color:rgba(255,255,255,.58);font-size:11.5px;line-height:1.45;text-align:left}
+      .ios-sub-accept input{width:20px;height:20px;margin:1px 0 0;flex:0 0 auto;accent-color:#4f7cff}
+      .ios-sub-accept a{color:rgba(255,255,255,.86);text-decoration:underline}
+      .ios-sub-btn-buy{width:100%;min-height:52px;border:0;border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 10px 25px rgba(255,255,255,.15);cursor:pointer;transition:opacity .2s,transform .2s}
+      .ios-sub-btn-buy:disabled{opacity:.55;cursor:not-allowed}
+      .ios-sub-footer{margin:14px 0 0;color:rgba(255,255,255,.35);font-size:11px;line-height:1.4}
+      @media (max-width:520px){.ios-sub-modal{padding:max(14px,env(safe-area-inset-top,0px)) 10px max(14px,env(safe-area-inset-bottom,0px))}.ios-sub-modal-card{border-radius:26px;padding:20px 16px 16px}.ios-sub-title{font-size:22px}.ios-sub-desc,.ios-sub-feature-item{font-size:12.5px}.ios-sub-features{gap:9px;margin-bottom:16px}.ios-sub-btn-buy{min-height:46px;border-radius:18px;font-size:14px}}
+    `;
+    document.head.appendChild(style);
+
+    const modal = document.createElement('div');
+    modal.id = 'ios-subscription-modal';
+    modal.className = 'ios-sub-modal';
+    modal.innerHTML = `
+      <div class="ios-sub-modal-backdrop"></div>
+      <div class="ios-sub-modal-card">
+        <button class="ios-sub-modal-close" type="button" aria-label="Закрыть">×</button>
+        <div class="ios-sub-badge">Подписка Pro</div>
+        <h2 class="ios-sub-title">Полный доступ<br>к Системе Молодцова</h2>
+        <p class="ios-sub-desc">Pro открывает все видео-разделы, аудио, практики, Общий чат и расширенный доступ к Лизе.</p>
+        <ul class="ios-sub-features">
+          <li class="ios-sub-feature-item"><span class="ios-sub-feature-icon">✓</span><span><strong>Все материалы:</strong> курсы, марафоны, видео, аудио и практики.</span></li>
+          <li class="ios-sub-feature-item"><span class="ios-sub-feature-icon">✓</span><span><strong>Общий чат:</strong> живое общение и поддержка участников.</span></li>
+          <li class="ios-sub-feature-item"><span class="ios-sub-feature-icon">✓</span><span><strong>Лиза AI:</strong> бережная помощь по материалам системы.</span></li>
+        </ul>
+        <label class="ios-sub-accept">
+          <input data-payment-legal type="checkbox">
+          <span>Я принимаю <a href="/offer/" target="_blank" rel="noopener noreferrer">оферту</a> и <a href="/terms/" target="_blank" rel="noopener noreferrer">пользовательское соглашение</a></span>
+        </label>
+        <button class="ios-sub-btn-buy" type="button" disabled>
+          <span>Активировать подписку Pro</span><span style="font-weight:400;opacity:.6">—</span><span>2990 ₽</span>
+        </button>
+        <p class="ios-sub-footer">Оплата проходит через защищённый шлюз ЮKassa. Для теста подписка действует 5 минут.</p>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const buyBtn = modal.querySelector('.ios-sub-btn-buy');
+    const close = () => {
+      modal.classList.remove('active');
+      window.setTimeout(() => {
+        modal.remove();
+        style.remove();
+      }, 300);
+    };
+
+    modal.querySelector('.ios-sub-modal-close')?.addEventListener('click', close);
+    modal.querySelector('.ios-sub-modal-backdrop')?.addEventListener('click', close);
+    modal.querySelector('[data-payment-legal]')?.addEventListener('change', (event) => {
+      buyBtn.disabled = !event.target.checked;
+    });
+
+    buyBtn.addEventListener('click', async () => {
+      if (!window.requirePaymentLegalAccepted(modal)) return;
+      const original = buyBtn.innerHTML;
+      buyBtn.disabled = true;
+      buyBtn.innerHTML = 'Переходим к оплате...';
+      try {
+        const res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
+        if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
+        throw new Error('bad payment response');
+      } catch (err) {
+        buyBtn.disabled = false;
+        buyBtn.innerHTML = original;
+        alert(err.error || 'Ошибка при создании платежа. Попробуйте позже.');
+      }
+    });
+
+    window.setTimeout(() => modal.classList.add('active'), 20);
+  }
+
   async function initProfile() {
     showDashboardShell();
     refreshProfileHeader();
@@ -219,8 +308,6 @@ function escapeHtml(value) {
     const actionEl = document.getElementById('dash-subscription-action');
     const benefitsEl = document.getElementById('dash-subscription-benefits');
     const testEl = document.getElementById('dash-subscription-test');
-    const legalRow = document.getElementById('dash-payment-legal-row');
-    const legalCheckbox = document.getElementById('dash-payment-legal');
     if (!statusEl || !badgeEl) return;
 
     const expiresRaw = source?.subscription_expires_at || source?.expires_at || null;
@@ -241,7 +328,6 @@ function escapeHtml(value) {
       badgeEl.style.color = '#30d158';
       badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
       if (actionEl) actionEl.style.display = 'none';
-      if (legalRow) legalRow.style.display = 'none';
       if (benefitsEl) {
         benefitsEl.style.display = 'grid';
         benefitsEl.innerHTML = '<span>Открыты все видео-разделы и уроки</span><span>Доступен Общий чат участников</span><span>Доступна Лиза, AI-помощница системы</span>';
@@ -257,28 +343,8 @@ function escapeHtml(value) {
     badgeEl.style.border = '1px solid rgba(255, 255, 255, 0.05)';
     if (actionEl) {
       actionEl.style.display = 'grid';
-      if (legalRow) legalRow.style.display = 'grid';
-      actionEl.disabled = !(legalCheckbox && legalCheckbox.checked);
-      if (legalCheckbox) {
-        legalCheckbox.onchange = () => {
-          actionEl.disabled = !legalCheckbox.checked;
-        };
-      }
-      actionEl.onclick = async () => {
-        if (!window.requirePaymentLegalAccepted(actionEl.closest('.settings-list'))) return;
-        const originalHtml = actionEl.innerHTML;
-        actionEl.disabled = true;
-        actionEl.innerHTML = '<span class="settings-icon">★</span><span><strong>Переходим к оплате...</strong><small>Открываем защищенный шлюз ЮKassa</small></span>';
-        try {
-          const res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
-          if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
-          throw new Error('bad payment response');
-        } catch (err) {
-          actionEl.disabled = false;
-          actionEl.innerHTML = originalHtml;
-          alert(err.error || 'Ошибка при создании платежа. Попробуйте позже.');
-        }
-      };
+      actionEl.disabled = false;
+      actionEl.onclick = openAccountSubscriptionModal;
     }
     if (benefitsEl) {
       benefitsEl.style.display = 'grid';
