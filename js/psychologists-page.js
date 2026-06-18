@@ -86,7 +86,6 @@
           <p class="psych-detail-lead">${escapeHtml(person.intro)}</p>
           <div class="psych-tags">${tagList(person.approaches, 7)}</div>
           <div class="psych-detail-actions">
-            <a class="psych-primary-btn" href="/ai/?topic=psychologist-selection">Подобрать с AI</a>
             <a class="psych-secondary-btn" href="/account/">Связаться с куратором</a>
           </div>
         </div>

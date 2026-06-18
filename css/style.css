@@ -7430,6 +7430,16 @@ body.audio-player-open::-webkit-scrollbar {
   margin: 0 auto 12px;
 }
 
+.today-psychologists-toolbar {
+  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
+  margin: 0 auto 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 18px;
+}
+
 .ios-section-subtitle {
   max-width: 660px;
   margin: 8px 0 0;
@@ -7532,7 +7542,7 @@ body.audio-player-open::-webkit-scrollbar {
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-  margin-top: 12px;
+  margin: 0;
 }
 
 .today-psychologists-tags span {
@@ -7553,6 +7563,7 @@ body.audio-player-open::-webkit-scrollbar {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  margin: 0;
 }
 
 .today-psychologists-button {
@@ -7560,7 +7571,7 @@ body.audio-player-open::-webkit-scrollbar {
   align-items: center;
   justify-content: center;
   min-height: 40px;
-  margin-top: 12px;
+  margin-top: 0;
   padding: 0 14px;
   border-radius: 999px;
   border: 1px solid rgba(216,191,155,.34);
@@ -7585,7 +7596,7 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 .today-psychologists-link {
-  margin-top: 12px;
+  margin-top: 0;
   color: rgba(246,240,231,.72);
   font-size: 13px;
   font-weight: 800;
@@ -7597,6 +7608,8 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 .today-psychologists-team {
+  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: none;
   grid-auto-flow: column;
@@ -7675,15 +7688,17 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologist-meta em {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  min-height: 48px;
+  max-height: calc(1.42em * 2);
   margin-top: 7px;
   color: rgba(246,240,231,.58);
   font-size: 11px;
   line-height: 1.42;
   font-style: normal;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .today-psychologist-badge {
@@ -8048,13 +8063,14 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 @media (max-width: 768px) {
-  .today-psychologists-card {
+  .today-psychologists-toolbar,
+  .today-psychologists-team {
     width: min(calc(100% - 28px), 560px);
-    grid-template-columns: 1fr;
-    min-height: 0;
-    padding: 18px;
-    gap: 18px;
-    border-radius: 30px;
+  }
+
+  .today-psychologists-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .today-psychologists-team {
@@ -8070,10 +8086,6 @@ body.audio-player-open::-webkit-scrollbar {
 
   .today-psychologist-slot {
     scroll-snap-align: start;
-  }
-
-  .today-psychologists-copy h3 {
-    font-size: clamp(22px, 7vw, 30px);
   }
 
   .today-event-yoga-card {
@@ -11169,11 +11181,14 @@ body.chat-page .notification-prompt-banner {
     transform: translateX(3px);
   }
 
-  body.home-today-active .today-psychologists-card {
+  body.home-today-active .today-psychologists-toolbar,
+  body.home-today-active .today-psychologists-team {
     width: 100%;
     margin: 0;
-    min-height: 236px;
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 36%);
+  }
+
+  body.home-today-active .today-psychologists-toolbar {
+    margin-bottom: 14px;
   }
 
   body.home-today-active .today-event-yoga-card {

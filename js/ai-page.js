@@ -50,6 +50,9 @@ function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+const AI_QUOTE_OPEN = new Set(['«', '„', '“', '"', '‚', '‘']);
+const AI_QUOTE_CLOSE = new Set(['»', '“', '”', '"', '‘', '’']);
+
 function renderAiAssistantHtml(text) {
   const sorted = AI_COURSE_LINKS.concat(AI_PSYCHOLOGIST_LINKS)
     .flatMap((course) => course.aliases.map((alias) => ({ ...course, alias })))
@@ -58,12 +61,19 @@ function renderAiAssistantHtml(text) {
   const matches = [];
 
   sorted.forEach((course) => {
+    // Многословные/составные названия выделяем всегда — они однозначны.
+    // Одиночные общие слова (тревога, самооценка, имя) — только когда это явно ссылка:
+    // либо в кавычках, либо когда в тексте есть путь страницы (модель её рекомендует).
+    const isDistinct = /[\s\-]/.test(course.alias);
+    const hrefMentioned = source.includes(course.href);
     const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])(${escapeRegExp(course.alias)})(?=$|[^\\p{L}\\p{N}])`, 'giu');
     let match;
     while ((match = pattern.exec(source)) !== null) {
       const prefixLength = match[1].length;
       const start = match.index + prefixLength;
       const end = start + match[2].length;
+      const quoted = AI_QUOTE_OPEN.has(source[start - 1] || '') && AI_QUOTE_CLOSE.has(source[end] || '');
+      if (!(isDistinct || hrefMentioned || quoted)) continue;
       if (matches.some((item) => start < item.end && end > item.start)) continue;
       matches.push({ start, end, href: course.href, label: source.slice(start, end) });
     }
@@ -269,7 +279,7 @@ if (document.readyState === 'loading') {
 applyAiTopic();
 loadAiUsage();
 loadAiHistory();
-aiSend.addEventListener('click', submitQuestion);
+aiSend.addEventListener('click', () => submitQuestion());
 aiInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') submitQuestion();
 });
