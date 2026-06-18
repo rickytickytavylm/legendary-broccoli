@@ -38,8 +38,8 @@ function escapeHtml(value) {
                 ${features.map(f => `<li style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#4ade80;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>${escapeHtml(f)}</li>`).join('')}
               </ul>
               <label style="display:flex;gap:10px;align-items:flex-start;margin-top:auto;font-size:11.5px;line-height:1.45;color:rgba(255,255,255,.56)">
-                <input data-payment-legal type="checkbox" style="width:18px;height:18px;margin:1px 0 0;flex:0 0 auto;accent-color:#fff">
-                <span>Я принимаю <a href="https://sistema-molodtsova.ru/offer/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">оферту</a> и <a href="https://sistema-molodtsova.ru/terms/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">пользовательское соглашение</a></span>
+                <input data-payment-legal type="checkbox" style="width:20px;height:20px;margin:1px 0 0;flex:0 0 auto;accent-color:#4f7cff">
+                <span>Я принимаю <a href="/offer/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">оферту</a> и <a href="/terms/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">пользовательское соглашение</a></span>
               </label>
               <button class="btn btn-primary plan-subscribe-btn" style="width:100%;margin-top:12px" data-plan-slug="${escapeHtml(p.slug)}" disabled>Оформить</button>
             </div>

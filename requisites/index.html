@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- PWA Standalone Meta Tags -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Система" />
+  <link rel="apple-touch-icon" href="/assets/logo2.png" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Реквизиты — Система Молодцова</title>
+  <link rel="stylesheet" href="/css/style.css?v=124" />
+  <link rel="stylesheet" href="/css/nav.css?v=76" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { background:#07100E; }
+    .legal-page { width:min(100% - 32px, 860px); margin:0 auto; padding:132px 0 96px; }
+    .legal-kicker { margin:0 0 14px; color:rgba(255,255,255,.42); font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    .legal-page h1 { margin:0 0 18px; color:#fff; font-size:clamp(34px,7vw,66px); line-height:1; letter-spacing:-.06em; }
+    .legal-lead { margin:0 0 34px; max-width:720px; color:rgba(255,255,255,.62); font-size:17px; line-height:1.65; }
+    .legal-card { display:grid; gap:24px; padding:28px; border-radius:30px; border:1px solid rgba(255,255,255,.12); background:radial-gradient(circle at 18% 0%, rgba(255,255,255,.10), transparent 34%), linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)), rgba(7,8,10,.72); box-shadow:0 24px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.13); }
+    .legal-card h2 { margin:0 0 8px; color:#fff; font-size:21px; letter-spacing:-.035em; }
+    .legal-card p { margin:0; color:rgba(255,255,255,.62); line-height:1.7; }
+    .legal-card a { color:#9fc2ff; }
+    .legal-muted { color:rgba(255,255,255,.4); font-size:13px; }
+    .legal-row { display:flex; flex-wrap:wrap; gap:6px 16px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+    .legal-row:last-child { border-bottom:0; }
+    .legal-row strong { min-width:200px; color:rgba(255,255,255,.86); font-weight:700; }
+    .legal-row span { color:rgba(255,255,255,.62); }
+  </style>
+</head>
+<body class="dark-theme">
+  <main class="main-content legal-page">
+    <a href="/account/" class="back-link-glass" style="margin-bottom:24px;display:inline-flex">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Назад
+    </a>
+    <p class="legal-kicker">Документы</p>
+    <h1>Реквизиты</h1>
+    <p class="legal-lead">Сведения об индивидуальном предпринимателе, банковские реквизиты и контакты для пользователей платформы.</p>
+    <section class="legal-card">
+      <div>
+        <h2>Исполнитель</h2>
+        <div class="legal-row"><strong>Наименование</strong><span>Индивидуальный предприниматель Вашлаев Артур Владимирович</span></div>
+        <div class="legal-row"><strong>ИНН</strong><span>263009517709</span></div>
+        <div class="legal-row"><strong>ОГРНИП</strong><span>324774600033683</span></div>
+        <div class="legal-row"><strong>Юридический адрес</strong><span>105275, Россия, г. Москва, пр-кт Будённого, д. 51, корп. 6</span></div>
+      </div>
+      <div>
+        <h2>Банковские реквизиты</h2>
+        <div class="legal-row"><strong>Расчётный счёт</strong><span>40802810200009721879</span></div>
+        <div class="legal-row"><strong>Банк</strong><span>АО «ТБанк»</span></div>
+        <div class="legal-row"><strong>БИК</strong><span>044525974</span></div>
+        <div class="legal-row"><strong>Корреспондентский счёт</strong><span>30101810145250000974</span></div>
+        <div class="legal-row"><strong>ИНН банка</strong><span>7710140679</span></div>
+        <div class="legal-row"><strong>Адрес банка</strong><span>127287, г. Москва, ул. Хуторская 2-я, д. 38А, стр. 26</span></div>
+      </div>
+      <div>
+        <h2>Сайт и продукт</h2>
+        <p>Публичный сайт и документы: <a href="https://sistema-molodtsova.ru/" target="_blank" rel="noopener">sistema-molodtsova.ru</a>. Личный кабинет: <a href="https://система-молодцова.рф/" target="_blank" rel="noopener">система-молодцова.рф</a>.</p>
+        <p class="legal-muted">Материалы платформы носят образовательный и информационный характер и не заменяют медицинскую помощь, психотерапию или консультацию профильного специалиста.</p>
+      </div>
+    </section>
+  </main>
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js?v=72"></script>
+  <script src="/js/auth.js?v=18"></script>
+  <script src="/js/nav.js?v=91"></script>
+</body>
+</html>

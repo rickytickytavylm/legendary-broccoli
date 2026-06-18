@@ -659,9 +659,9 @@ function initOnboarding() {
     try {
       const res = await window.API.yookassaReviewLogin();
       window.API.setTokens(res.tokens);
+      // Ведём себя как обычный вход (как через Яндекс): онбординг для нового / «Сегодня» для вернувшегося.
       window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: res.user } }));
       if (window.refreshAuthUI) window.refreshAuthUI(res.user);
-      window.location.href = '/account/';
     } catch (err) {
       if (button) {
         button.disabled = false;
