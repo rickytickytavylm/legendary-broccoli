@@ -10385,14 +10385,20 @@ body.chat-page .notification-prompt-banner {
     align-self: stretch;
   }
 
+  body.home-today-active .today-event-yoga-panel {
+    grid-column: 1 / 13;
+    grid-row: 3;
+    margin-top: 0;
+  }
+
   body.home-today-active .today-bento-secondary {
     grid-column: 1 / 5;
-    grid-row: 3;
+    grid-row: 4;
   }
 
   body.home-today-active .today-bento-tools {
     grid-column: 5 / 13;
-    grid-row: 3;
+    grid-row: 4;
   }
 
   body.home-today-active .today-grid {
@@ -10581,6 +10587,45 @@ body.chat-page .notification-prompt-banner {
   body.home-today-active .today-feed-item:hover b {
     color: rgba(255,255,255,.7);
     transform: translateX(3px);
+  }
+
+  body.home-today-active .today-event-yoga-card {
+    width: 100%;
+    min-height: 236px;
+    margin: 0;
+    padding: 18px 22px 18px 18px;
+    grid-template-columns: minmax(280px, 36%) minmax(0, 1fr) auto;
+    gap: clamp(22px, 3vw, 38px);
+    border-radius: 30px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.08), rgba(0,0,0,.42)),
+      radial-gradient(circle at 14% 0%, rgba(216,191,155,.22), transparent 36%),
+      radial-gradient(circle at 84% 12%, rgba(123,158,142,.2), transparent 42%),
+      linear-gradient(135deg, rgba(255,255,255,.095), rgba(255,255,255,.025)),
+      rgba(7,16,14,.72);
+  }
+
+  body.home-today-active .today-event-yoga-card img {
+    width: 100%;
+    height: 200px;
+    min-width: 0;
+    border-radius: 22px;
+  }
+
+  body.home-today-active .today-event-yoga-card span {
+    align-content: center;
+    gap: 8px;
+  }
+
+  body.home-today-active .today-event-yoga-card strong {
+    max-width: 18ch;
+    font-size: clamp(32px, 3.3vw, 48px);
+  }
+
+  body.home-today-active .today-event-yoga-card em {
+    max-width: 56ch;
+    font-size: 15px;
+    color: rgba(255,255,255,.68);
   }
 
   body.home-today-active .today-bento-secondary .today-main-card,
