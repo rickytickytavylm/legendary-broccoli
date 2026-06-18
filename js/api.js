@@ -353,6 +353,7 @@ class ApiClient {
   // --- Auth ---
   register(data) { return this.request('POST', '/auth/register', data); }
   login(data)    { return this.request('POST', '/auth/login', data); }
+  yookassaReviewLogin() { return this.request('POST', '/auth/yookassa-review'); }
   requestPhoneCode(data) { return this.request('POST', '/auth/phone/request', data); }
   requestPhoneCall(data) { return this.request('POST', '/auth/phone/request-call', data); }
   verifyPhoneCode(data) { return this.request('POST', '/auth/phone/verify', data); }
@@ -613,6 +614,26 @@ class ApiClient {
 }
 
 window.API = new ApiClient();
+
+window.SISTEMA_LEGAL_LINKS = {
+  offer: 'https://sistema-molodtsova.ru/offer/',
+  privacy: 'https://sistema-molodtsova.ru/privacy/',
+  terms: 'https://sistema-molodtsova.ru/terms/',
+  requisites: 'https://sistema-molodtsova.ru/requisites/',
+};
+
+window.isPaymentLegalAccepted = function isPaymentLegalAccepted(scope = document) {
+  const checkbox = scope?.querySelector?.('[data-payment-legal]');
+  return checkbox ? checkbox.checked === true : false;
+};
+
+window.requirePaymentLegalAccepted = function requirePaymentLegalAccepted(scope = document) {
+  if (window.isPaymentLegalAccepted(scope)) return true;
+  alert('Перед оплатой нужно принять условия оферты и пользовательского соглашения.');
+  const checkbox = scope?.querySelector?.('[data-payment-legal]');
+  if (checkbox && typeof checkbox.focus === 'function') checkbox.focus();
+  return false;
+};
 
 function isAppleTouchVideoDevice() {
   const ua = navigator.userAgent || '';

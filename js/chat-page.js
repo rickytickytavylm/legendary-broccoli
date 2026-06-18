@@ -964,7 +964,11 @@
           </li>
         </ul>
 
-        <button class="ios-sub-btn-buy" id="ios-sub-buy-btn" type="button">
+        <label style="display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;color:rgba(255,255,255,.58);font-size:11.5px;line-height:1.45;text-align:left">
+          <input data-payment-legal type="checkbox" style="width:18px;height:18px;margin:1px 0 0;flex:0 0 auto;accent-color:#fff">
+          <span>Я принимаю <a href="https://sistema-molodtsova.ru/offer/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">оферту</a> и <a href="https://sistema-molodtsova.ru/terms/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">пользовательское соглашение</a></span>
+        </label>
+        <button class="ios-sub-btn-buy" id="ios-sub-buy-btn" type="button" disabled style="opacity:.55">
           <span>Активировать подписку Pro</span>
           <span style="font-weight: 400; opacity: 0.6;">—</span>
           <span id="ios-sub-price-val">Загрузка...</span>
@@ -992,6 +996,10 @@
 
     closeBtn.addEventListener('click', handleClose);
     backdrop.addEventListener('click', handleClose);
+    modal.querySelector('[data-payment-legal]')?.addEventListener('change', (event) => {
+      buyBtn.disabled = !event.target.checked;
+      buyBtn.style.opacity = event.target.checked ? '1' : '.55';
+    });
 
     let targetPlanSlug = 'monthly';
     window.API.getPlans()
@@ -1007,6 +1015,7 @@
       });
 
     buyBtn.addEventListener('click', async () => {
+      if (!window.requirePaymentLegalAccepted(modal)) return;
       buyBtn.disabled = true;
       buyBtn.style.opacity = '0.7';
       const originalText = buyBtn.innerHTML;

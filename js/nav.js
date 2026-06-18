@@ -576,16 +576,27 @@
         '<div style="display:inline-flex;margin-bottom:18px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase">Подписка Pro</div>' +
         '<h2 style="margin:0 0 12px;font-size:28px;line-height:1.08;letter-spacing:-.04em">Материал доступен<br>по подписке</h2>' +
         '<p style="margin:0 auto 22px;max-width:320px;color:rgba(255,255,255,.58);font-size:14px;line-height:1.5">Pro открывает все видео-разделы, аудио, практики, Общий чат и расширенный доступ к Лизе.</p>' +
-        '<button type="button" data-buy style="width:100%;min-height:54px;border:0;border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:800">Оформить подписку — 2990 ₽</button>' +
+        '<label style="display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;text-align:left;color:rgba(255,255,255,.58);font-size:11.5px;line-height:1.45">' +
+          '<input data-payment-legal type="checkbox" style="width:18px;height:18px;margin:1px 0 0;flex:0 0 auto;accent-color:#fff">' +
+          '<span>Я принимаю <a href="https://sistema-molodtsova.ru/offer/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">оферту</a> и <a href="https://sistema-molodtsova.ru/terms/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">пользовательское соглашение</a></span>' +
+        '</label>' +
+        '<button type="button" data-buy disabled style="width:100%;min-height:54px;border:0;border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:800;opacity:.55;cursor:not-allowed">Оформить подписку — 2990 ₽</button>' +
         '<p style="margin:14px 0 0;color:rgba(255,255,255,.35);font-size:11px;line-height:1.4">Для теста подписка действует 5 минут.</p>' +
       '</div>';
     modal.querySelector('[data-close]').addEventListener('click', function() { modal.remove(); });
     modal.addEventListener('click', function(event) {
       if (event.target === modal) modal.remove();
     });
+    modal.querySelector('[data-payment-legal]').addEventListener('change', function(event) {
+      var button = modal.querySelector('[data-buy]');
+      button.disabled = !event.target.checked;
+      button.style.opacity = event.target.checked ? '1' : '.55';
+      button.style.cursor = event.target.checked ? 'pointer' : 'not-allowed';
+    });
     modal.querySelector('[data-buy]').addEventListener('click', async function() {
       var button = modal.querySelector('[data-buy]');
       var original = button.textContent;
+      if (!window.requirePaymentLegalAccepted(modal)) return;
       if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) {
         modal.remove();
         if (window.openAuthModal) window.openAuthModal('login');

@@ -83,6 +83,9 @@
     .card .button { cursor: pointer; padding: 0.6rem; width: 100%; background-image: linear-gradient(0deg, hsl(189, 92%, 58%), hsl(189, 99%, 26%) 100%); font-size: 0.9rem; font-weight: 600; color: var(--white); border: 0; border-radius: 9999px; box-shadow: inset 0 -2px 25px -4px var(--white); transition: opacity .15s; }
     .card .button:active { opacity: .85; }
     .card .button:disabled { opacity: .5; cursor: not-allowed; }
+    .sub-accept { display: flex; gap: 10px; align-items: flex-start; font-size: 11.5px; line-height: 1.45; color: rgba(255,255,255,.56); }
+    .sub-accept input { width: 18px; height: 18px; margin: 1px 0 0; flex: 0 0 auto; accent-color: #fff; }
+    .sub-accept a { color: rgba(255,255,255,.82); text-decoration: underline; }
     .sub-legal { margin-top: 18px; font-size: 12px; color: rgba(255,255,255,.35); text-align: center; max-width: 340px; line-height: 1.5; }
     .sub-legal a { color: rgba(255,255,255,.5); text-decoration: underline; }
   </style>
@@ -143,7 +146,16 @@
             <span class="list_text">Лиза — AI-помощница системы</span>
           </li>
         </ul>
-        <button id="sub-btn" class="button">Оформить подписку — 2990 ₽</button>
+        <label class="sub-accept">
+          <input id="sub-legal" data-payment-legal type="checkbox">
+          <span>
+            Я принимаю
+            <a href="https://sistema-molodtsova.ru/offer/" target="_blank" rel="noopener noreferrer">оферту</a>
+            и
+            <a href="https://sistema-molodtsova.ru/terms/" target="_blank" rel="noopener noreferrer">пользовательское соглашение</a>
+          </span>
+        </label>
+        <button id="sub-btn" class="button" disabled>Оформить подписку — 2990 ₽</button>
       </div>
       <p class="sub-legal">
         Оплата банковской картой через <strong>ЮKassa</strong>.<br>
@@ -212,13 +224,21 @@
     </div>
   </footer>
 <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=70"></script>
+  <script src="/js/api.js?v=72"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=90"></script>
+  <script src="/js/nav.js?v=91"></script>
   <script>
     (function() {
       var btn = document.getElementById('sub-btn');
+      var legal = document.getElementById('sub-legal');
       var planSlug = 'monthly';
+      var tariffAvailable = true;
+
+      function syncLegalState() {
+        if (btn) btn.disabled = !tariffAvailable || !(legal && legal.checked);
+      }
+      legal && legal.addEventListener('change', syncLegalState);
+      syncLegalState();
 
       function fmtPrice(n) { return Number(n).toLocaleString('ru-RU'); }
 
@@ -234,11 +254,13 @@
             btn.textContent = 'Оформить подписку — 2990 ₽';
           } else {
             btn.textContent = 'Тарифы недоступны';
-            btn.disabled = true;
+            tariffAvailable = false;
+            syncLegalState();
           }
         }).catch(function() {
           btn.textContent = 'Тарифы недоступны';
-          btn.disabled = true;
+          tariffAvailable = false;
+          syncLegalState();
         });
       }
 
@@ -247,6 +269,7 @@
           if (window.openAuthModal) window.openAuthModal('login');
           return;
         }
+        if (!window.requirePaymentLegalAccepted(document.querySelector('.card'))) return;
         btn.disabled = true;
         var original = btn.textContent;
         btn.textContent = 'Переходим к оплате...';

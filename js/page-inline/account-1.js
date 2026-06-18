@@ -219,6 +219,8 @@ function escapeHtml(value) {
     const actionEl = document.getElementById('dash-subscription-action');
     const benefitsEl = document.getElementById('dash-subscription-benefits');
     const testEl = document.getElementById('dash-subscription-test');
+    const legalRow = document.getElementById('dash-payment-legal-row');
+    const legalCheckbox = document.getElementById('dash-payment-legal');
     if (!statusEl || !badgeEl) return;
 
     const expiresRaw = source?.subscription_expires_at || source?.expires_at || null;
@@ -239,6 +241,7 @@ function escapeHtml(value) {
       badgeEl.style.color = '#30d158';
       badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
       if (actionEl) actionEl.style.display = 'none';
+      if (legalRow) legalRow.style.display = 'none';
       if (benefitsEl) {
         benefitsEl.style.display = 'grid';
         benefitsEl.innerHTML = '<span>Открыты все видео-разделы и уроки</span><span>Доступен Общий чат участников</span><span>Доступна Лиза, AI-помощница системы</span>';
@@ -254,7 +257,15 @@ function escapeHtml(value) {
     badgeEl.style.border = '1px solid rgba(255, 255, 255, 0.05)';
     if (actionEl) {
       actionEl.style.display = 'grid';
+      if (legalRow) legalRow.style.display = 'grid';
+      actionEl.disabled = !(legalCheckbox && legalCheckbox.checked);
+      if (legalCheckbox) {
+        legalCheckbox.onchange = () => {
+          actionEl.disabled = !legalCheckbox.checked;
+        };
+      }
       actionEl.onclick = async () => {
+        if (!window.requirePaymentLegalAccepted(actionEl.closest('.settings-list'))) return;
         const originalHtml = actionEl.innerHTML;
         actionEl.disabled = true;
         actionEl.innerHTML = '<span class="settings-icon">★</span><span><strong>Переходим к оплате...</strong><small>Открываем защищенный шлюз ЮKassa</small></span>';

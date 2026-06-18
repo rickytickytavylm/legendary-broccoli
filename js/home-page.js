@@ -646,6 +646,31 @@ function initOnboarding() {
     localStorage.setItem(ONBOARDING_AFTER_AUTH_KEY, 'true');
     window.location.href = window.API.yandexLoginUrl('/');
   }
+
+  async function startYookassaReviewLogin(button) {
+    if (!window.API?.yookassaReviewLogin) return;
+    const errorEl = document.getElementById('gateway-auth-error');
+    const original = button ? button.innerHTML : '';
+    if (errorEl) errorEl.textContent = '';
+    if (button) {
+      button.disabled = true;
+      button.innerHTML = '<span>Открываем демо-кабинет...</span>';
+    }
+    try {
+      const res = await window.API.yookassaReviewLogin();
+      window.API.setTokens(res.tokens);
+      window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: res.user } }));
+      if (window.refreshAuthUI) window.refreshAuthUI(res.user);
+      window.location.href = '/account/';
+    } catch (err) {
+      if (button) {
+        button.disabled = false;
+        button.innerHTML = original;
+      }
+      if (errorEl) errorEl.textContent = err.error || 'Демо-доступ временно недоступен.';
+      else alert(err.error || 'Демо-доступ временно недоступен.');
+    }
+  }
   // Handle Android PWA installation click
   document.getElementById('onboarding-install-android-btn')?.addEventListener('click', async () => {
     if (!deferredInstallPrompt) {
@@ -716,6 +741,9 @@ function initOnboarding() {
   });
   document.querySelector('[data-yandex-login]')?.addEventListener('click', () => {
     startYandexOnboardingLogin();
+  });
+  document.querySelectorAll('[data-yookassa-review-login]').forEach((button) => {
+    button.addEventListener('click', () => startYookassaReviewLogin(button));
   });
   document.querySelector('[data-onboarding-start]')?.addEventListener('click', () => {
     onboardingIndex = 0;
