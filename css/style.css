@@ -7428,12 +7428,11 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologists-card {
   width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
   margin: 0 auto;
-  min-height: 214px;
   padding: clamp(16px, 2.4vw, 24px);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 38%);
-  gap: clamp(18px, 3vw, 34px);
-  align-items: center;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 2.4vw, 22px);
+  align-items: stretch;
   position: relative;
   overflow: hidden;
   border-radius: 34px;
@@ -7531,8 +7530,8 @@ body.audio-player-open::-webkit-scrollbar {
 
 .today-psychologists-team {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .today-psychologist-slot {
@@ -7548,7 +7547,7 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologist-photo {
   width: 100%;
   aspect-ratio: 4 / 5;
-  margin-bottom: 9px;
+  margin-bottom: 10px;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -7557,6 +7556,14 @@ body.audio-player-open::-webkit-scrollbar {
   background:
     radial-gradient(circle at 50% 18%, rgba(216,191,155,.20), transparent 32%),
     linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.025));
+}
+
+.today-psychologist-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
 }
 
 .today-psychologist-photo span {
@@ -7570,17 +7577,27 @@ body.audio-player-open::-webkit-scrollbar {
 
 .today-psychologist-slot strong {
   display: block;
-  color: rgba(255,255,255,.88);
-  font-size: 12px;
-  line-height: 1.25;
+  color: rgba(255,255,255,.9);
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.22;
+  letter-spacing: -.01em;
 }
 
-.today-psychologist-slot small {
-  display: block;
-  margin-top: 4px;
-  color: rgba(255,255,255,.43);
+.today-psychologist-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 7px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(216,191,155,.34);
+  background: rgba(216,191,155,.14);
+  color: rgba(246,240,231,.92);
   font-size: 10.5px;
-  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: .01em;
+  white-space: nowrap;
 }
 
 .today-event-yoga-panel {
@@ -7674,10 +7691,14 @@ body.audio-player-open::-webkit-scrollbar {
   }
 
   .today-psychologists-team {
-    grid-template-columns: repeat(3, minmax(92px, 1fr));
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(138px, 44%);
     overflow-x: auto;
-    padding-bottom: 2px;
+    margin: 0 -2px;
+    padding: 0 2px 4px;
     scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
   }
 
   .today-psychologist-slot {
