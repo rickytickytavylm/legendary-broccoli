@@ -250,6 +250,10 @@
       socket.on('feed:comment:created', (comment) => {
         appendCommentToUI(comment, true);
       });
+      socket.on('feed:comment:deleted', (payload) => {
+        if (!payload || !payload.id) return;
+        document.querySelectorAll(`[data-comment-id="${payload.id}"]`).forEach((node) => node.remove());
+      });
       socket.on('feed:comment:reactions', (payload) => {
         if (!payload || !payload.comment_id) return;
         document.querySelectorAll(`[data-comment-id="${payload.comment_id}"]`).forEach((node) => {
