@@ -521,26 +521,16 @@
           accessState = currentAccessState;
           window.__sistemaSubscriptionActive = isActive;
           window.__sistemaSubscriptionExpiresAt = expiresAt || null;
-          if (changed && window.API) {
-            if (window.API.clearSubscriptionCache) window.API.clearSubscriptionCache();
-            else if (window.API.clearContentCache) window.API.clearContentCache();
-          }
           updateLessonLocks(document);
           
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-            detail: { active: isActive, expires_at: expiresAt }
+            detail: { active: isActive, expires_at: expiresAt, subscription: data }
           }));
         }
       })
       .catch(function(err) {
         if (err && err.status === 429) return;
-        if (accessState !== 'free' && !hasProfileIdentity()) {
-          accessState = 'free';
-          updateLessonLocks(document);
-          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-            detail: { active: false }
-          }));
-        }
+        // Не сбрасываем доступ при временных ошибках сети/авторизации.
       })
       .finally(function() {
         window.__sistemaSubscriptionCheckInFlight = false;
@@ -558,12 +548,17 @@
       }
     }
   }, 5000);
-  document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) checkSubscriptionSync(true);
-  });
-  window.addEventListener('focus', function() {
+  var lastFocusSubscriptionCheckAt = 0;
+  function checkSubscriptionOnFocus() {
+    var now = Date.now();
+    if (now - lastFocusSubscriptionCheckAt < 30000) return;
+    lastFocusSubscriptionCheckAt = now;
     checkSubscriptionSync(true);
+  }
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) checkSubscriptionOnFocus();
   });
+  window.addEventListener('focus', checkSubscriptionOnFocus);
 
   window.addEventListener('sistema:subscription-changed', function(e) {
     const active = e.detail && e.detail.active;

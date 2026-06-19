@@ -1076,8 +1076,8 @@
       setStatus('Подключаемся…');
       installChatSettingsButton();
       if (window.API.restoreSession) await window.API.restoreSession();
-      if (window.API.confirmPayment) {
-        try { await window.API.confirmPayment(); } catch (e) { /* continue with fresh subscription check */ }
+      if (window.API.maybeConfirmPayment) {
+        try { await window.API.maybeConfirmPayment(); } catch (e) { /* continue with fresh subscription check */ }
       }
       const chatData = await window.API.getGeneralChat();
       state.userId = chatData?.user?.id || null;

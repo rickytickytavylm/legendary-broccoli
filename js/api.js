@@ -515,18 +515,48 @@ class ApiClient {
   getPlans()       { return this.request('GET', '/payment/plans'); }
   createPayment(data) { return this.request('POST', '/payment/create', data); }
   confirmPayment() {
-    this.clearSubscriptionCache();
-    return this.request('POST', '/payment/confirm');
+    return this.request('POST', '/payment/confirm')
+      .then((data) => {
+        if (data) {
+          this.subscriptionCache = data;
+          this.subscriptionCacheAt = Date.now();
+        }
+        this.clearPendingPaymentConfirm();
+        return data;
+      });
+  }
+  maybeConfirmPayment() {
+    if (!this.hasPendingPaymentConfirm()) return Promise.resolve(null);
+    return this.confirmPayment().catch(() => null);
   }
   activateTrial() {
-    this.clearSubscriptionCache();
-    return this.request('POST', '/payment/activate-trial');
+    return this.request('POST', '/payment/activate-trial')
+      .then((data) => {
+        if (data) {
+          this.subscriptionCache = data;
+          this.subscriptionCacheAt = Date.now();
+        }
+        return data;
+      });
   }
   isSubscriptionActive(subscription) {
     return !!(subscription && subscription.subscription_active === true);
   }
+  markPendingPaymentConfirm() {
+    try { sessionStorage.setItem('sistema:pending-payment-confirm', '1'); } catch (e) {}
+  }
+
+  clearPendingPaymentConfirm() {
+    try { sessionStorage.removeItem('sistema:pending-payment-confirm'); } catch (e) {}
+  }
+
+  hasPendingPaymentConfirm() {
+    try { return sessionStorage.getItem('sistema:pending-payment-confirm') === '1'; } catch (e) { return false; }
+  }
+
   redirectToPayment(payment) {
     if (!payment || !payment.payment_url) return false;
+    this.markPendingPaymentConfirm();
     if (payment.payment_method === 'post' && payment.payment_fields) {
       const form = document.createElement('form');
       form.method = 'POST';
@@ -547,7 +577,7 @@ class ApiClient {
     return true;
   }
   getSubscription(opts = {}) {
-    const ttl = opts.ttl || 3500;
+    const ttl = opts.ttl || 55000;
     if (!opts.fresh && this.subscriptionCache && Date.now() - this.subscriptionCacheAt < ttl) {
       return Promise.resolve(this.subscriptionCache);
     }

@@ -23,6 +23,8 @@ function escapeHtml(value) {
   let dashboardPromise = null;
   let dashboardLoadedOnce = false;
   let shortIdCopyTimer = null;
+  let subscriptionRefreshTimer = null;
+  let subscriptionRefreshInFlight = false;
 
   async function copyTextToClipboard(text) {
     const value = String(text || '').trim();
@@ -102,7 +104,7 @@ function escapeHtml(value) {
   function refreshAccountOverview() {
     showDashboardShell();
     refreshProfileHeader();
-    refreshSubscriptionCard();
+    scheduleSubscriptionRefresh();
     if (!dashboardLoadedOnce) loadDashboard();
   }
 
@@ -163,6 +165,7 @@ function escapeHtml(value) {
 
   async function confirmPaymentAndSync() {
     if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) return;
+    if (!window.API.hasPendingPaymentConfirm || !window.API.hasPendingPaymentConfirm()) return;
 
     let attempts = 0;
     const syncOnce = async () => {
@@ -180,10 +183,11 @@ function escapeHtml(value) {
         ? window.API.isSubscriptionActive(sub)
         : !!(sub && sub.subscription_active);
       renderSubscriptionCard(sub);
-      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: isActive, expires_at: expiresAt } }));
+      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+        detail: { active: isActive, expires_at: expiresAt, subscription: sub }
+      }));
       if (isActive) {
         if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
-        refreshSubscriptionCard();
       }
       return isActive;
     };
@@ -201,8 +205,11 @@ function escapeHtml(value) {
           return;
         }
       } catch (e) { /* ignore transient errors */ }
-      if (attempts >= 6) clearInterval(burst);
-    }, 4000);
+      if (attempts >= 4) {
+        clearInterval(burst);
+        window.API.clearPendingPaymentConfirm && window.API.clearPendingPaymentConfirm();
+      }
+    }, 5000);
   }
 
   function openAccountSubscriptionModal() {
@@ -318,7 +325,6 @@ function escapeHtml(value) {
   async function initProfile() {
     showDashboardShell();
     refreshProfileHeader();
-    refreshSubscriptionCard();
     loadDashboard();
     confirmPaymentAndSync();
   }
@@ -439,26 +445,37 @@ function escapeHtml(value) {
     return txt === '' || txt.indexOf('Загрузка') === 0;
   }
 
+  function scheduleSubscriptionRefresh(delayMs) {
+    clearTimeout(subscriptionRefreshTimer);
+    subscriptionRefreshTimer = setTimeout(() => refreshSubscriptionCard(), delayMs || 400);
+  }
+
   async function refreshSubscriptionCard(retry) {
+    if (subscriptionRefreshInFlight && !retry) return;
+    subscriptionRefreshInFlight = true;
     try {
-      const sub = await window.API.getSubscription({ fresh: true });
+      const sub = await window.API.getSubscription({ fresh: !retry });
       renderSubscriptionCard(sub);
     } catch (e) {
-      // 429: эндпоинт под лимитом (nav.js параллельно его дёргает).
-      // Никогда не оставляем карточку в состоянии «Загрузка...»: пробуем ещё раз чуть позже.
+      const cached = window.API && window.API.subscriptionCache;
+      if (cached) {
+        renderSubscriptionCard(cached);
+        return;
+      }
       if (e && e.status === 429) {
-        if ((retry || 0) < 4) {
-          setTimeout(() => refreshSubscriptionCard((retry || 0) + 1), 1500 * ((retry || 0) + 1));
+        if ((retry || 0) < 3) {
+          setTimeout(() => refreshSubscriptionCard((retry || 0) + 1), 2000 * ((retry || 0) + 1));
         }
         return;
       }
-      // Прочие ошибки: показываем сообщение только если карточка всё ещё пустая.
       if (subscriptionCardStillLoading()) {
         const statusEl = document.getElementById('dash-subscription-status');
         const badgeEl = document.getElementById('dash-subscription-badge');
         if (statusEl) statusEl.textContent = 'Не удалось проверить подписку. Обновите вход в профиль.';
         if (badgeEl) badgeEl.textContent = 'ошибка';
       }
+    } finally {
+      subscriptionRefreshInFlight = false;
     }
   }
 
@@ -484,10 +501,7 @@ function escapeHtml(value) {
         // Мгновенно рендерим статус из данных дашборда, чтобы карточка
         // никогда не зависала на «Загрузка...» (даже если /payment/subscription под лимитом).
         renderSubscriptionCard(user);
-        // ВАЖНО: /profile/dashboard не возвращает is_trial, поэтому затем берём
-        // авторитетные данные о подписке из /payment/subscription, иначе
-        // карточка триала затирается статичной «активной» и отсчёт замирает.
-        refreshSubscriptionCard();
+        scheduleSubscriptionRefresh();
 
         if (testEl) {
           testEl.onclick = async () => {
@@ -735,6 +749,17 @@ function escapeHtml(value) {
     return 'дней';
   }
 
-  window.addEventListener('sistema:subscription-changed', function() {
-    refreshSubscriptionCard();
+  window.addEventListener('sistema:subscription-changed', function(e) {
+    const detail = e && e.detail;
+    if (detail && detail.subscription) {
+      renderSubscriptionCard(detail.subscription);
+      return;
+    }
+    const cached = window.API && window.API.subscriptionCache;
+    const cacheAge = Date.now() - (window.API && window.API.subscriptionCacheAt ? window.API.subscriptionCacheAt : 0);
+    if (cached && cacheAge < 15000) {
+      renderSubscriptionCard(cached);
+      return;
+    }
+    scheduleSubscriptionRefresh(800);
   });
