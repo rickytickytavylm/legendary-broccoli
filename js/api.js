@@ -326,7 +326,7 @@ class ApiClient {
     const refreshed = await this.ensureFreshAccessToken();
     if (!refreshed) return null;
     try {
-      const data = await this.me({ fresh: true });
+      const data = await this.me();
       return data.user || null;
     } catch (err) {
       if (err && (err.code === 'USER_INVALID' || err.code === 'TOKEN_INVALID' || err.code === 'TOKEN_REVOKED')) {
@@ -1512,6 +1512,7 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
   function trackClick(event) {
     const element = findTrackableElement(event.target);
     if (!element) return;
+    if (element.closest('.tabbar-item, .sidebar-item, .mobile-profile-dot, .mobile-header-brand')) return;
 
     const now = Date.now();
     const descriptor = getElementDescriptor(element);

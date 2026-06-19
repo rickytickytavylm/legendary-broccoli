@@ -25,6 +25,14 @@ function escapeHtml(value) {
   let shortIdCopyTimer = null;
   let subscriptionRefreshTimer = null;
   let subscriptionRefreshInFlight = false;
+  let lastRenderedSubKey = '';
+  let profileInitStarted = false;
+
+  function subscriptionRenderKey(source) {
+    if (!source) return '';
+    const expires = source.subscription_expires_at || source.expires_at || '';
+    return [source.subscription_active ? '1' : '0', source.is_trial ? '1' : '0', expires].join('|');
+  }
 
   async function copyTextToClipboard(text) {
     const value = String(text || '').trim();
@@ -101,11 +109,15 @@ function escapeHtml(value) {
     shortIdEl.append(valueButton, iconButton, status);
   }
 
-  function refreshAccountOverview() {
+  function refreshAccountOverview(event) {
     showDashboardShell();
-    refreshProfileHeader();
-    scheduleSubscriptionRefresh();
-    if (!dashboardLoadedOnce) loadDashboard();
+    const user = event && event.detail && event.detail.user;
+    if (user) {
+      renderProfileHeader(user);
+    }
+    if (!dashboardLoadedOnce && !profileInitStarted) {
+      loadDashboard();
+    }
   }
 
   window.addEventListener('auth:change', refreshAccountOverview);
@@ -323,8 +335,9 @@ function escapeHtml(value) {
   }
 
   async function initProfile() {
+    if (profileInitStarted) return;
+    profileInitStarted = true;
     showDashboardShell();
-    refreshProfileHeader();
     loadDashboard();
     confirmPaymentAndSync();
   }
@@ -356,14 +369,20 @@ function escapeHtml(value) {
       ? window.API.isSubscriptionActive(source)
       : !!source?.subscription_active;
     const isTrial = !!source?.is_trial;
-
-    // Сбрасываем предыдущий таймер обратного отсчёта, чтобы не плодить интервалы.
-    if (window.__trialCountdownTimer) {
-      clearInterval(window.__trialCountdownTimer);
-      window.__trialCountdownTimer = null;
-    }
+    const renderKey = subscriptionRenderKey(source);
 
     if (isActive && isTrial && expiresAt) {
+      const trialKey = 'trial:' + expiresAt;
+      const cdEl = document.getElementById('trial-countdown');
+      if (window.__trialRenderKey === trialKey && window.__trialCountdownTimer && cdEl && lastRenderedSubKey === renderKey) {
+        return;
+      }
+      lastRenderedSubKey = renderKey;
+      window.__trialRenderKey = trialKey;
+      if (window.__trialCountdownTimer) {
+        clearInterval(window.__trialCountdownTimer);
+        window.__trialCountdownTimer = null;
+      }
       const untilStr = new Date(expiresRaw).toLocaleString('ru-RU', {
         day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit',
       });
@@ -400,6 +419,13 @@ function escapeHtml(value) {
       window.__trialCountdownTimer = setInterval(tick, 1000);
       return;
     }
+
+    if (window.__trialCountdownTimer) {
+      clearInterval(window.__trialCountdownTimer);
+      window.__trialCountdownTimer = null;
+      window.__trialRenderKey = null;
+    }
+    lastRenderedSubKey = renderKey;
 
     if (isActive) {
       let dateStr = '';
@@ -447,14 +473,16 @@ function escapeHtml(value) {
 
   function scheduleSubscriptionRefresh(delayMs) {
     clearTimeout(subscriptionRefreshTimer);
-    subscriptionRefreshTimer = setTimeout(() => refreshSubscriptionCard(), delayMs || 400);
+    subscriptionRefreshTimer = setTimeout(() => refreshSubscriptionCard(), delayMs || 1200);
   }
 
   async function refreshSubscriptionCard(retry) {
     if (subscriptionRefreshInFlight && !retry) return;
     subscriptionRefreshInFlight = true;
     try {
-      const sub = await window.API.getSubscription({ fresh: !retry });
+      const sub = await window.API.getSubscription({ fresh: !!retry });
+      const key = subscriptionRenderKey(sub);
+      if (key === lastRenderedSubKey && !retry) return;
       renderSubscriptionCard(sub);
     } catch (e) {
       const cached = window.API && window.API.subscriptionCache;
@@ -501,7 +529,9 @@ function escapeHtml(value) {
         // Мгновенно рендерим статус из данных дашборда, чтобы карточка
         // никогда не зависала на «Загрузка...» (даже если /payment/subscription под лимитом).
         renderSubscriptionCard(user);
-        scheduleSubscriptionRefresh();
+        if (!user.is_trial) {
+          scheduleSubscriptionRefresh(1500);
+        }
 
         if (testEl) {
           testEl.onclick = async () => {
@@ -751,15 +781,12 @@ function escapeHtml(value) {
 
   window.addEventListener('sistema:subscription-changed', function(e) {
     const detail = e && e.detail;
-    if (detail && detail.subscription) {
-      renderSubscriptionCard(detail.subscription);
+    const sub = detail && detail.subscription;
+    if (sub) {
+      const key = subscriptionRenderKey(sub);
+      if (key === lastRenderedSubKey) return;
+      renderSubscriptionCard(sub);
       return;
     }
-    const cached = window.API && window.API.subscriptionCache;
-    const cacheAge = Date.now() - (window.API && window.API.subscriptionCacheAt ? window.API.subscriptionCacheAt : 0);
-    if (cached && cacheAge < 15000) {
-      renderSubscriptionCard(cached);
-      return;
-    }
-    scheduleSubscriptionRefresh(800);
+    scheduleSubscriptionRefresh(2000);
   });

@@ -3,7 +3,7 @@
  * Injected into every page. Handles scroll-triggered reveal via GPU transform only.
  */
 (function initNav() {
-  var APP_BUILD_VERSION = '2026-06-03-payment-confirm-locks-1';
+  var APP_BUILD_VERSION = '2026-06-19-perf-nav-1';
   try {
     var storedBuild = localStorage.getItem('sistema:app-build-version');
     if (storedBuild !== APP_BUILD_VERSION) {
@@ -84,7 +84,7 @@
   }
 
   // ── Inject CSS ─────────────────────────────────────────
-  var navCssHref = '/css/nav.css?v=76';
+  var navCssHref = '/css/nav.css?v=77';
   var navCssLink = document.querySelector('link[href*="nav.css"]');
   if (navCssLink) {
     navCssLink.setAttribute('href', navCssHref);
@@ -429,24 +429,25 @@
   window.addEventListener('auth:change', function(event) {
     if (event && event.detail && event.detail.user) window.__sistemaCurrentUser = event.detail.user;
     renderMobileAuthAction(true);
-    accessState = 'unknown';
     if (typeof checkSubscriptionSync === 'function') {
-      checkSubscriptionSync(true);
+      checkSubscriptionSync(false);
     }
   });
 
   var accessState = 'free';
 
   if (window.API && window.API.restoreSession) {
-    window.API.restoreSession()
-      .then(function(user) {
-        if (!user) return;
-        window.__sistemaCurrentUser = user;
-        renderMobileAuthAction(true);
-        window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: user } }));
-        if (window.refreshAuthUI) window.refreshAuthUI(user);
-      })
-      .catch(function() {});
+    setTimeout(function() {
+      window.API.restoreSession()
+        .then(function(user) {
+          if (!user) return;
+          window.__sistemaCurrentUser = user;
+          renderMobileAuthAction(true);
+          window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: user } }));
+          if (window.refreshAuthUI) window.refreshAuthUI({ detail: { user: user } });
+        })
+        .catch(function() {});
+    }, 0);
   }
 
   function getLessonIndex(lesson) {
@@ -516,13 +517,11 @@
           : !!(data && data.subscription_active);
         var currentAccessState = isActive ? 'pro' : 'free';
         
-        if (accessState !== currentAccessState || force) {
-          var changed = accessState !== currentAccessState;
+        window.__sistemaSubscriptionActive = isActive;
+        window.__sistemaSubscriptionExpiresAt = expiresAt || null;
+        if (accessState !== currentAccessState) {
           accessState = currentAccessState;
-          window.__sistemaSubscriptionActive = isActive;
-          window.__sistemaSubscriptionExpiresAt = expiresAt || null;
           updateLessonLocks(document);
-          
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
             detail: { active: isActive, expires_at: expiresAt, subscription: data }
           }));
@@ -537,7 +536,7 @@
       });
   }
 
-  checkSubscriptionSync(true);
+  setTimeout(function() { checkSubscriptionSync(false); }, 0);
   setInterval(checkSubscriptionSync, 60000);
   setInterval(function() {
     if (window.__sistemaSubscriptionExpiresAt) {
@@ -547,13 +546,13 @@
         checkSubscriptionSync(true);
       }
     }
-  }, 5000);
+  }, 15000);
   var lastFocusSubscriptionCheckAt = 0;
   function checkSubscriptionOnFocus() {
     var now = Date.now();
-    if (now - lastFocusSubscriptionCheckAt < 30000) return;
+    if (now - lastFocusSubscriptionCheckAt < 60000) return;
     lastFocusSubscriptionCheckAt = now;
-    checkSubscriptionSync(true);
+    checkSubscriptionSync(false);
   }
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden) checkSubscriptionOnFocus();
