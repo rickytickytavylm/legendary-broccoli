@@ -621,7 +621,9 @@
     });
   }
 
-  playerLikeBtn?.addEventListener('click', function () {
+  playerLikeBtn?.addEventListener('click', function (ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
     toggleShortLike(currentLikeSlug);
   });
 
@@ -735,6 +737,8 @@
       if (Date.now() - lastSwipeAt < 360) return;
       if (ev.target.closest && ev.target.closest('.shorts-player-spinner')) return;
       if (ev.target.closest && ev.target.closest('#shorts-player-progress')) return;
+      if (ev.target.closest && ev.target.closest('.shorts-player-actions')) return;
+      if (ev.target.closest && ev.target.closest('#shorts-player-like')) return;
       togglePlayback();
     });
   }

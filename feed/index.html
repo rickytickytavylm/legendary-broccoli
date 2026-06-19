@@ -16,7 +16,7 @@
   <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
   <meta property="og:title" content="Лента — Система Молодцова" />
   <meta property="og:image" content="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=143" />
+  <link rel="stylesheet" href="/css/style.css?v=156" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1144,14 +1144,30 @@
 
     @media (min-width: 901px) {
       .comment-sheet {
-        left: 50%;
-        transform: translateX(-50%) translateY(100%);
-        width: 480px;
+        left: calc(232px + max(28px, (100vw - 232px - 620px) / 2));
+        right: auto;
+        width: min(620px, calc(100vw - 304px));
+        transform: translateY(100%);
         border-radius: 20px 20px 0 0;
       }
       .comment-sheet.visible {
-        transform: translateX(-50%) translateY(0);
+        transform: translateY(0);
       }
+      .comment-sheet-list,
+      .comment-sheet-input-wrap {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+
+    .comment-avatar-fallback {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,.88);
     }
 
     @media (min-width: 901px) {
@@ -1513,6 +1529,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/page-inline/feed-1.js?v=14"></script>
+  <script src="/js/page-inline/feed-1.js?v=15"></script>
 </body>
 </html>

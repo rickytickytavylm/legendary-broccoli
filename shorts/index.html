@@ -255,34 +255,60 @@
     }
 
     .shorts-player-like {
-      margin-top: 10px;
-      align-self: flex-start;
-      display: inline-flex;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 7px;
-      min-height: 36px;
-      padding: 8px 12px;
+      justify-content: center;
+      gap: 4px;
+      min-width: 48px;
+      min-height: 48px;
+      padding: 6px 4px;
+      border: 0;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      color: rgba(255,255,255,.82);
+      background: transparent;
+      color: rgba(255,255,255,.92);
       font: inherit;
-      font-size: 13px;
-      font-weight: 850;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
       cursor: pointer;
-      -webkit-backdrop-filter: blur(14px);
-      backdrop-filter: blur(14px);
+      pointer-events: auto;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .shorts-player-actions {
+      position: absolute;
+      right: max(10px, env(safe-area-inset-right));
+      bottom: max(108px, calc(14% + env(safe-area-inset-bottom)));
+      z-index: 8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      pointer-events: none;
     }
 
     .shorts-player-like.is-liked {
       color: #fff;
-      border-color: rgba(255,90,121,.48);
-      background: rgba(255,90,121,.24);
+    }
+
+    .shorts-player-like.is-liked svg {
+      color: #ff4d6d;
+      fill: #ff4d6d;
     }
 
     .shorts-player-like svg {
-      width: 16px;
-      height: 16px;
+      width: 28px;
+      height: 28px;
+      display: block;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.75));
+    }
+
+    .shorts-player-like span {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      text-shadow: 0 1px 6px rgba(0,0,0,.9);
     }
 
     button.short-card.short-card--busy {
@@ -750,14 +776,16 @@
           <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.7-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>
           <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M7 5h3.4v14H7V5zm6.6 0H17v14h-3.4V5z"/></svg>
         </button>
+        <div class="shorts-player-actions">
+          <button type="button" id="shorts-player-like" class="shorts-player-like" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08A6.01 6.01 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span data-shorts-player-like-count>203</span>
+          </button>
+        </div>
         <div class="shorts-player-progress" id="shorts-player-progress" role="slider" aria-label="Позиция видео" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="shorts-player-progress-bar"></span></div>
       </div>
       <footer class="shorts-player-foot">
         <p id="shorts-player-title" class="shorts-player-title" title="Нажмите, чтобы раскрыть описание"></p>
-        <button type="button" id="shorts-player-like" class="shorts-player-like" aria-pressed="false">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08A6.01 6.01 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-          <span data-shorts-player-like-count>203</span>
-        </button>
       </footer>
 
       <!-- Стеклянная выдвижная модалка описания -->
@@ -781,6 +809,6 @@
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/nav.js?v=90"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/shorts-page.js?v=17"></script>
+  <script src="/js/shorts-page.js?v=18"></script>
 </body>
 </html>

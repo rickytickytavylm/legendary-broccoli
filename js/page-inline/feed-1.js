@@ -161,10 +161,30 @@
   }
 
   function renderCommentAvatar(comment) {
-    if (comment?.avatar_url) {
-      return `<img src="${escapeHtml(comment.avatar_url)}" alt="" loading="lazy" decoding="async" />`;
+    const name = String(comment?.author_name || 'У').trim();
+    const letter = name.slice(0, 1).toUpperCase() || 'У';
+    let url = String(comment?.avatar_url || '').trim();
+    if (!url && name.toLowerCase() === 'система') {
+      url = '/assets/webp/logo2.webp';
     }
-    return escapeHtml((comment?.author_name || 'У').trim().slice(0, 1).toUpperCase() || 'У');
+    if (url) {
+      return `<img src="${escapeHtml(url)}" data-comment-avatar-fallback="${escapeHtml(letter)}" alt="" loading="lazy" decoding="async" />`;
+    }
+    return escapeHtml(letter);
+  }
+
+  function bindCommentAvatarFallbacks(root = document) {
+    root.querySelectorAll('.comment-avatar img[data-comment-avatar-fallback]').forEach((img) => {
+      if (img.dataset.fallbackBound === '1') return;
+      img.dataset.fallbackBound = '1';
+      img.addEventListener('error', () => {
+        const fallback = img.getAttribute('data-comment-avatar-fallback') || '?';
+        const span = document.createElement('span');
+        span.className = 'comment-avatar-fallback';
+        span.textContent = fallback;
+        img.replaceWith(span);
+      }, { once: true });
+    });
   }
 
   function renderCommentItem(comment) {
@@ -207,6 +227,7 @@
     div.className = 'comment-item';
     div.dataset.commentId = comment.id;
     div.innerHTML = renderCommentItem(comment);
+    bindCommentAvatarFallbacks(div);
     return div;
   }
 
@@ -512,6 +533,7 @@
         comment.reactions = data.reactions || [];
         item.__feedComment = comment;
         item.innerHTML = renderCommentItem(comment);
+        bindCommentAvatarFallbacks(item);
       } catch (err) {
         console.error('[feed] Error reacting to comment:', err);
       }

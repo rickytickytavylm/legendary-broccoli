@@ -7608,16 +7608,13 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 .today-psychologists-team {
-  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: none;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(300px, 320px);
-  gap: 16px;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  gap: 14px;
   overflow-x: auto;
-  padding-bottom: 6px;
-  scroll-snap-type: x proximity;
+  padding: 0 0 8px;
+  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -7627,107 +7624,59 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 .today-psychologist-slot {
+  position: relative;
+  flex: 0 0 min(58vw, 238px);
+  height: min(72vw, 308px);
   min-width: 0;
-  display: grid;
-  padding: 14px;
-  border-radius: 26px;
-  border: 1px solid rgba(255,255,255,.12);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 18px 48px rgba(0,0,0,.24);
-  text-align: center;
-  color: inherit;
+  padding: 18px;
+  border-radius: 24px;
+  overflow: hidden;
+  color: #fff;
   text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   scroll-snap-align: start;
-  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+  border: 1px solid rgba(255,255,255,.18);
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.74)),
+    var(--card-bg) center/cover no-repeat;
+  background-color: #101010;
+  box-shadow: 0 20px 48px rgba(0,0,0,.42);
+  transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, border-color .3s ease;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .today-psychologist-slot:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255,255,255,.18);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 22px 56px rgba(0,0,0,.32);
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,.28);
+  box-shadow: 0 24px 56px rgba(0,0,0,.48);
 }
 
-.today-psychologist-photo {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  margin-bottom: 14px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid rgba(216,191,155,.18);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(216,191,155,.20), transparent 32%),
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.025));
-}
-
-.today-psychologist-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 22%;
-  display: block;
-}
-
-.today-psychologist-photo span {
-  width: 44%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.04));
-  border: 1px solid rgba(255,255,255,.13);
+.today-psychologist-slot span {
+  margin-bottom: 7px;
+  color: rgba(255,255,255,.62);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
 }
 
 .today-psychologist-slot strong {
   display: block;
-  color: rgba(255,255,255,.94);
-  font-size: 16px;
+  color: #fff;
+  font-size: 23px;
+  line-height: 1.05;
+  letter-spacing: -.04em;
   font-weight: 800;
-  line-height: 1.24;
-  letter-spacing: -.02em;
 }
 
-.today-psychologist-meta {
-  display: grid;
-  justify-items: center;
-  gap: 2px;
-}
-
-.today-psychologist-meta em {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  overflow: hidden;
-  max-height: calc(1.45em * 3);
-  margin-top: 9px;
-  color: rgba(246,240,231,.62);
-  font-size: 13px;
-  line-height: 1.45;
-  font-style: normal;
-  text-overflow: ellipsis;
-  word-break: break-word;
-}
-
-.today-psychologist-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 9px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  border: 1px solid rgba(216,191,155,.34);
-  background: rgba(216,191,155,.14);
-  color: rgba(246,240,231,.92);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .01em;
-  white-space: nowrap;
+.today-psychologist-slot small {
+  margin-top: 8px;
+  color: rgba(255,255,255,.66);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .psychologists-page {
@@ -7791,30 +7740,25 @@ body.audio-player-open::-webkit-scrollbar {
 .psych-detail-card {
   position: relative;
   overflow: hidden;
-  border-radius: 30px;
-  border: 1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 12% 0%, rgba(255,255,255,.12), transparent 30%),
-    linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
-    rgba(8,16,14,.62);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 24px 72px rgba(0,0,0,.28);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
-  backdrop-filter: blur(24px) saturate(170%);
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+  box-shadow: 0 10px 32px rgba(0,0,0,.18);
 }
 
 .psych-list-card {
   display: grid;
-  grid-template-columns: minmax(190px, 250px) minmax(0, 1fr);
-  gap: clamp(16px, 3vw, 28px);
-  padding: clamp(12px, 2vw, 18px);
+  grid-template-columns: minmax(140px, 190px) minmax(0, 1fr);
+  gap: clamp(14px, 2.5vw, 22px);
+  padding: clamp(10px, 1.6vw, 14px);
 }
 
 .psych-list-photo {
   display: block;
-  min-height: 280px;
-  border-radius: 22px;
+  min-height: 210px;
+  border-radius: 16px;
   overflow: hidden;
-  background: rgba(255,255,255,.05);
+  background: rgba(255,255,255,.04);
 }
 
 .psych-list-photo img,
@@ -7833,20 +7777,20 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 .psych-card-kicker {
-  margin: 0 0 8px;
-  color: rgba(216,191,155,.82);
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: .12em;
+  margin: 0 0 6px;
+  color: rgba(216,191,155,.72);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
   text-transform: uppercase;
 }
 
 .psych-list-copy h2 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: #fff;
-  font-size: clamp(24px, 3vw, 36px);
-  line-height: 1;
-  letter-spacing: -.05em;
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height: 1.08;
+  letter-spacing: -.03em;
 }
 
 .psych-list-copy h2 a {
@@ -7857,38 +7801,41 @@ body.audio-player-open::-webkit-scrollbar {
 .psych-list-copy p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   overflow: hidden;
   max-width: 68ch;
   margin: 0;
-  color: rgba(246,240,231,.68);
-  font-size: 14px;
-  line-height: 1.58;
+  color: rgba(246,240,231,.58);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .psych-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 16px;
+  gap: 6px;
+  margin-top: 12px;
 }
 
 .psych-tags span {
   display: inline-flex;
-  min-height: 26px;
+  min-height: 24px;
   align-items: center;
-  padding: 5px 10px;
+  padding: 4px 9px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
-  color: rgba(255,255,255,.76);
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  color: rgba(246,240,231,.62);
   font-size: 11px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .psych-card-link {
-  margin-top: 18px;
+  margin-top: 14px;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 12px;
 }
 
 .psych-detail-hero {
@@ -8148,29 +8095,9 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 @media (max-width: 768px) {
-  .today-psychologists-toolbar,
-  .today-psychologists-team {
-    width: min(calc(100% - 28px), 560px);
-  }
-
   .today-psychologists-toolbar {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .today-psychologists-team {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(248px, 84vw);
-    overflow-x: auto;
-    margin: 0 -2px;
-    padding: 0 2px 6px;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .today-psychologist-slot {
-    scroll-snap-align: start;
   }
 
   .today-event-yoga-card {
@@ -11267,32 +11194,46 @@ body.chat-page .notification-prompt-banner {
     margin-bottom: 14px;
   }
 
+  body.home-today-active .today-psychologists-panel {
+    overflow: hidden;
+  }
+
   body.home-today-active .today-psychologists-team {
-    grid-auto-columns: minmax(280px, 300px);
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-right: 72px;
+    scroll-padding-right: 72px;
+  }
+
+  body.home-today-active .today-psychologist-slot {
+    flex: 0 0 238px;
+    height: 308px;
   }
 
   body.home-today-active .today-event-yoga-card {
-    width: 100%;
+    width: min(680px, 100%);
     margin: 0;
   }
 
   body.home-today-active .today-event-hero {
     aspect-ratio: 21 / 9;
-    min-height: 340px;
+    min-height: 200px;
+    max-height: 260px;
   }
 
   body.home-today-active .today-event-body {
-    padding: 22px 28px 24px;
+    padding: 18px 22px 20px;
   }
 
   body.home-today-active .today-event-headline {
     max-width: 12ch;
-    font-size: clamp(40px, 3.8vw, 56px);
+    font-size: clamp(28px, 2.2vw, 38px);
   }
 
   body.home-today-active .today-event-subline {
-    max-width: 48ch;
-    font-size: 16px;
+    max-width: 42ch;
+    font-size: 14px;
   }
 
   body.home-today-active .today-bento-secondary .today-main-card,
@@ -11717,15 +11658,43 @@ body.chat-page .notification-prompt-banner {
   pointer-events: auto;
 }
 
+@media (max-width: 768px) {
+  .home-marathon-orbit {
+    width: 100%;
+    margin: 4px 0 30px;
+    overflow: visible;
+  }
+
+  .home-marathon-orbit-stage {
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    padding: 8px 16px 12px;
+    scroll-padding-left: 16px;
+  }
+
+  .home-marathon-header {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .today-psychologists-team {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding: 0 16px 8px;
+    scroll-padding-left: 16px;
+  }
+}
+
 @media (max-width: 520px) {
   .home-marathon-orbit {
     margin-top: 8px;
     margin-bottom: 34px;
   }
   .home-marathon-orbit-stage {
-    width: calc(100vw - 24px);
-    margin: 0 auto;
-    padding: 8px 12px 10px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 16px 10px;
     cursor: default;
   }
   .home-marathon-card {

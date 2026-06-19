@@ -33,15 +33,10 @@
     const rail = document.querySelector('[data-psychologists-rail]');
     if (!rail || !psychologists.length) return;
     rail.innerHTML = psychologists.map((person) => `
-      <a class="today-psychologist-slot" href="/psychologists/${escapeHtml(person.slug)}/">
-        <span class="today-psychologist-photo">
-          <img ${imageAttrs(person)}>
-        </span>
-        <span class="today-psychologist-meta">
-          <strong>${escapeHtml(person.name)}</strong>
-          <span class="today-psychologist-badge">${escapeHtml(person.experience)}</span>
-          <em>${escapeHtml(person.railText)}</em>
-        </span>
+      <a class="today-psychologist-slot" href="/psychologists/${escapeHtml(person.slug)}/" style="--card-bg:url('${escapeHtml(person.image)}')">
+        <span>${escapeHtml((person.role || 'Психолог').split(',')[0].trim())}</span>
+        <strong>${escapeHtml(person.shortName || person.name.split(' ')[0])}</strong>
+        <small>${escapeHtml(person.experience)}</small>
       </a>
     `).join('');
     bindImageFallbacks(rail);
