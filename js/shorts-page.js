@@ -585,7 +585,7 @@
       like.setAttribute('tabindex', '0');
       like.setAttribute('aria-label', 'Нравится');
       like.dataset.shortLike = slug;
-      like.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.08A6.01 6.01 0 0 1 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span data-short-like-count></span>';
+      like.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M2 21h2.5a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H2v11Zm19.83-9.12c.11-.25.17-.52.17-.8V10a2 2 0 0 0-2-2h-5.5l.83-3.98.03-.32a1.5 1.5 0 0 0-.44-1.06L13.92 2 8.3 7.62A2 2 0 0 0 7.5 9.2V19a2 2 0 0 0 2 2h8.5a2 2 0 0 0 1.84-1.22l2-4.66Z"/></svg><span data-short-like-count></span>';
       like.addEventListener('click', function (event) {
         event.preventDefault();
         event.stopPropagation();

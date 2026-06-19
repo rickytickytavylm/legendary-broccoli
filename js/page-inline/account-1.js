@@ -464,7 +464,10 @@ function escapeHtml(value) {
       const testEl = document.getElementById('dash-subscription-test');
 
       if (statusEl && badgeEl) {
-        renderSubscriptionCard(user);
+        // ВАЖНО: /profile/dashboard не возвращает is_trial, поэтому берём
+        // авторитетные данные о подписке из /payment/subscription, иначе
+        // карточка триала затирается статичной «активной» и отсчёт замирает.
+        refreshSubscriptionCard();
 
         if (testEl) {
           testEl.onclick = async () => {

@@ -36,7 +36,7 @@
       <a class="today-psychologist-slot" href="/psychologists/${escapeHtml(person.slug)}/" style="--card-bg:url('${escapeHtml(person.image)}')">
         <span>${escapeHtml((person.role || 'Психолог').split(',')[0].trim())}</span>
         <strong>${escapeHtml(person.shortName || person.name.split(' ')[0])}</strong>
-        <small>${escapeHtml(person.experience)}</small>
+        <small>${escapeHtml(person.railText || '')}</small>
       </a>
     `).join('');
     bindImageFallbacks(rail);
@@ -73,9 +73,9 @@
       <section class="psych-detail-hero">
         <div class="psych-detail-photo">
           <img ${imageAttrs(person, 'loading="eager"')}>
+          <a class="psych-back-link" href="/psychologists/">← Все психологи</a>
         </div>
         <div class="psych-detail-copy">
-          <a class="psych-back-link" href="/psychologists/">← Все психологи</a>
           <p class="psych-card-kicker">${escapeHtml(person.role)}</p>
           <h1>${escapeHtml(person.name)}</h1>
           <p class="psych-detail-lead">${escapeHtml(person.intro)}</p>
@@ -104,6 +104,13 @@
           <ul>${person.conditions.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
         </article>` : ''}
       </section>
+
+      <div class="psych-detail-cta">
+        <a class="psych-book-btn" href="https://t.me/ZabolotnovK" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="20" height="20"><path d="M21.94 4.34a1.5 1.5 0 0 0-1.6-.23L3.3 11.2c-1.06.44-1.02 1.98.06 2.36l4.2 1.47 1.6 5.02c.26.82 1.32 1.02 1.87.36l2.3-2.77 4.2 3.1c.62.46 1.51.13 1.69-.62l3.06-13.6a1.5 1.5 0 0 0-.34-1.36ZM9.7 14.1l8.2-6.06-6.5 7.06-.2 2.94-1.5-3.94Z"/></svg>
+          <span>Записаться на консультацию</span>
+        </a>
+      </div>
     `;
     bindImageFallbacks(page);
   }

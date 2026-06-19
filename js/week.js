@@ -76,6 +76,7 @@ function escapeHtml(value) {
     const weekKeys = Object.keys(weeks).sort((a,b)=>parseInt(a)-parseInt(b));
 
     accordion.innerHTML = '';
+    let globalIdx = 0;
     weekKeys.forEach((wk, wi) => {
       const group = document.createElement('div');
       group.className = 'week-group';
@@ -85,10 +86,12 @@ function escapeHtml(value) {
       const content = document.createElement('div');
       content.className = 'week-content' + (wi === 0 ? ' open' : '');
       weeks[wk].forEach((l, i) => {
-        const isFirst = wi===0 && i===0;
+        const idx = globalIdx++;
+        const isFirst = idx === 0;
         const row = document.createElement('div');
         row.className = 'lesson-row' + (isFirst ? ' active' : '');
         row.dataset.id = l.id;
+        row.dataset.idx = String(idx);
         row.innerHTML = `
           <div class="l-num">${i+1}</div>
           <div class="l-info">
@@ -111,6 +114,12 @@ function escapeHtml(value) {
       group.appendChild(content);
       accordion.appendChild(group);
     });
+    if (typeof window.updateLessonLocks === 'function') {
+      window.updateLessonLocks(accordion);
+    }
+    if (typeof window.checkSubscriptionSync === 'function') {
+      window.checkSubscriptionSync(true);
+    }
   }
 
   try {

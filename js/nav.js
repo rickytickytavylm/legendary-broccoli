@@ -463,26 +463,33 @@
     return Math.max(0, siblings.indexOf(lesson));
   }
 
+  function applyLessonLock(item) {
+    var idx = getLessonIndex(item);
+    var locked = accessState === 'free' && idx > 0;
+    item.classList.toggle('locked', locked);
+    item.setAttribute('aria-disabled', locked ? 'true' : 'false');
+    if (locked && !item.querySelector('.lesson-lock-note')) {
+      var lock = document.createElement('span');
+      lock.className = 'lesson-lock-note';
+      lock.textContent = '🔒';
+      lock.setAttribute('aria-label', 'Доступно по подписке');
+      item.appendChild(lock);
+    }
+    if (!locked) {
+      Array.prototype.forEach.call(item.querySelectorAll('.lesson-lock-note'), function(note) {
+        note.remove();
+      });
+    }
+  }
+
   function updateLessonLocks(root) {
     var scope = root || document;
-    Array.prototype.forEach.call(scope.querySelectorAll('.lesson-item, .lesson-row'), function(item) {
-      var idx = getLessonIndex(item);
-      var locked = accessState === 'free' && idx > 0;
-      item.classList.toggle('locked', locked);
-      item.setAttribute('aria-disabled', locked ? 'true' : 'false');
-      if (locked && !item.querySelector('.lesson-lock-note')) {
-        var lock = document.createElement('span');
-        lock.className = 'lesson-lock-note';
-        lock.textContent = '🔒';
-        lock.setAttribute('aria-label', 'Доступно по подписке');
-        item.appendChild(lock);
-      }
-      if (!locked) {
-        Array.prototype.forEach.call(item.querySelectorAll('.lesson-lock-note'), function(note) {
-          note.remove();
-        });
-      }
-    });
+    // Если сам root — это карточка урока, обрабатываем и его (querySelectorAll ищет только потомков).
+    if (scope.nodeType === 1 && scope.classList &&
+        (scope.classList.contains('lesson-item') || scope.classList.contains('lesson-row'))) {
+      applyLessonLock(scope);
+    }
+    Array.prototype.forEach.call(scope.querySelectorAll('.lesson-item, .lesson-row'), applyLessonLock);
   }
 
   function checkSubscriptionSync(force) {
