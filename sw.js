@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v35-ios-refresh';
+const CACHE_NAME = 'sistema-static-v36-boot-fix';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -21,8 +21,8 @@ self.addEventListener('fetch', (event) => {
   // (cache: 'reload' bypasses Safari/PWA HTTP cache more reliably).
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request, { cache: 'reload' }).catch(() => {
-        return caches.match(event.request);
+      fetch(event.request, { cache: 'reload' }).catch(async () => {
+        return await caches.match(event.request) || await caches.match('/') || Response.error();
       })
     );
     return;
@@ -30,14 +30,18 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
   if (url.origin === self.location.origin && /\.(?:js|css)$/i.test(url.pathname)) {
-    event.respondWith(fetch(event.request, { cache: 'reload' }));
+    event.respondWith(
+      fetch(event.request, { cache: 'reload' }).catch(async () => {
+        return await caches.match(event.request) || Response.error();
+      })
+    );
     return;
   }
 
   event.respondWith(
-    fetch(event.request).catch(() => {
+    fetch(event.request).catch(async () => {
       // In case of network failure (offline), try to serve from cache if available
-      return caches.match(event.request);
+      return await caches.match(event.request) || Response.error();
     })
   );
 });

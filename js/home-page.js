@@ -862,12 +862,21 @@ function initOnboarding() {
       }
       localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
       if (completed) {
-        syncTodayRouteFromRecentActivity(data.recent_activity);
-        renderToday();
-        showNewHomeState('today');
-        if (pendingLizaTour) {
-          pendingLizaTour = false;
-          window.setTimeout(() => showLizaTourIfNeeded(), 450);
+        const showToday = () => {
+          renderToday();
+          showNewHomeState('today');
+          if (pendingLizaTour) {
+            pendingLizaTour = false;
+            window.setTimeout(() => showLizaTourIfNeeded(), 450);
+          }
+        };
+        if (window.API?.request) {
+          window.API.request('GET', '/profile/dashboard', null, { fresh: true })
+            .then((dashboard) => syncTodayRouteFromRecentActivity(dashboard?.recent_activity || []))
+            .catch(() => {})
+            .finally(showToday);
+        } else {
+          showToday();
         }
         return;
       }
