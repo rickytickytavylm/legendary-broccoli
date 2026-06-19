@@ -23,16 +23,6 @@ function escapeHtml(value) {
   let dashboardPromise = null;
   let dashboardLoadedOnce = false;
   let shortIdCopyTimer = null;
-  let subscriptionRefreshTimer = null;
-  let subscriptionRefreshInFlight = false;
-  let lastRenderedSubKey = '';
-  let profileInitStarted = false;
-
-  function subscriptionRenderKey(source) {
-    if (!source) return '';
-    const expires = source.subscription_expires_at || source.expires_at || '';
-    return [source.subscription_active ? '1' : '0', source.is_trial ? '1' : '0', expires].join('|');
-  }
 
   async function copyTextToClipboard(text) {
     const value = String(text || '').trim();
@@ -109,15 +99,11 @@ function escapeHtml(value) {
     shortIdEl.append(valueButton, iconButton, status);
   }
 
-  function refreshAccountOverview(event) {
+  function refreshAccountOverview() {
     showDashboardShell();
-    const user = event && event.detail && event.detail.user;
-    if (user) {
-      renderProfileHeader(user);
-    }
-    if (!dashboardLoadedOnce && !profileInitStarted) {
-      loadDashboard();
-    }
+    refreshProfileHeader();
+    refreshSubscriptionCard();
+    if (!dashboardLoadedOnce) loadDashboard();
   }
 
   window.addEventListener('auth:change', refreshAccountOverview);
@@ -177,7 +163,6 @@ function escapeHtml(value) {
 
   async function confirmPaymentAndSync() {
     if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) return;
-    if (!window.API.hasPendingPaymentConfirm || !window.API.hasPendingPaymentConfirm()) return;
 
     let attempts = 0;
     const syncOnce = async () => {
@@ -195,11 +180,10 @@ function escapeHtml(value) {
         ? window.API.isSubscriptionActive(sub)
         : !!(sub && sub.subscription_active);
       renderSubscriptionCard(sub);
-      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-        detail: { active: isActive, expires_at: expiresAt, subscription: sub }
-      }));
+      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: isActive, expires_at: expiresAt } }));
       if (isActive) {
         if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
+        refreshSubscriptionCard();
       }
       return isActive;
     };
@@ -217,11 +201,8 @@ function escapeHtml(value) {
           return;
         }
       } catch (e) { /* ignore transient errors */ }
-      if (attempts >= 4) {
-        clearInterval(burst);
-        window.API.clearPendingPaymentConfirm && window.API.clearPendingPaymentConfirm();
-      }
-    }, 5000);
+      if (attempts >= 6) clearInterval(burst);
+    }, 4000);
   }
 
   function openAccountSubscriptionModal() {
@@ -335,9 +316,9 @@ function escapeHtml(value) {
   }
 
   async function initProfile() {
-    if (profileInitStarted) return;
-    profileInitStarted = true;
     showDashboardShell();
+    refreshProfileHeader();
+    refreshSubscriptionCard();
     loadDashboard();
     confirmPaymentAndSync();
   }
@@ -369,20 +350,14 @@ function escapeHtml(value) {
       ? window.API.isSubscriptionActive(source)
       : !!source?.subscription_active;
     const isTrial = !!source?.is_trial;
-    const renderKey = subscriptionRenderKey(source);
+
+    // Сбрасываем предыдущий таймер обратного отсчёта, чтобы не плодить интервалы.
+    if (window.__trialCountdownTimer) {
+      clearInterval(window.__trialCountdownTimer);
+      window.__trialCountdownTimer = null;
+    }
 
     if (isActive && isTrial && expiresAt) {
-      const trialKey = 'trial:' + expiresAt;
-      const cdEl = document.getElementById('trial-countdown');
-      if (window.__trialRenderKey === trialKey && window.__trialCountdownTimer && cdEl && lastRenderedSubKey === renderKey) {
-        return;
-      }
-      lastRenderedSubKey = renderKey;
-      window.__trialRenderKey = trialKey;
-      if (window.__trialCountdownTimer) {
-        clearInterval(window.__trialCountdownTimer);
-        window.__trialCountdownTimer = null;
-      }
       const untilStr = new Date(expiresRaw).toLocaleString('ru-RU', {
         day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit',
       });
@@ -419,13 +394,6 @@ function escapeHtml(value) {
       window.__trialCountdownTimer = setInterval(tick, 1000);
       return;
     }
-
-    if (window.__trialCountdownTimer) {
-      clearInterval(window.__trialCountdownTimer);
-      window.__trialCountdownTimer = null;
-      window.__trialRenderKey = null;
-    }
-    lastRenderedSubKey = renderKey;
 
     if (isActive) {
       let dateStr = '';
@@ -464,46 +432,16 @@ function escapeHtml(value) {
     if (testEl) testEl.style.display = 'none';
   }
 
-  function subscriptionCardStillLoading() {
-    const statusEl = document.getElementById('dash-subscription-status');
-    if (!statusEl) return false;
-    const txt = (statusEl.textContent || '').trim();
-    return txt === '' || txt.indexOf('Загрузка') === 0;
-  }
-
-  function scheduleSubscriptionRefresh(delayMs) {
-    clearTimeout(subscriptionRefreshTimer);
-    subscriptionRefreshTimer = setTimeout(() => refreshSubscriptionCard(), delayMs || 1200);
-  }
-
-  async function refreshSubscriptionCard(retry) {
-    if (subscriptionRefreshInFlight && !retry) return;
-    subscriptionRefreshInFlight = true;
+  async function refreshSubscriptionCard() {
     try {
-      const sub = await window.API.getSubscription({ fresh: !!retry });
-      const key = subscriptionRenderKey(sub);
-      if (key === lastRenderedSubKey && !retry) return;
+      const sub = await window.API.getSubscription({ fresh: true });
       renderSubscriptionCard(sub);
     } catch (e) {
-      const cached = window.API && window.API.subscriptionCache;
-      if (cached) {
-        renderSubscriptionCard(cached);
-        return;
-      }
-      if (e && e.status === 429) {
-        if ((retry || 0) < 3) {
-          setTimeout(() => refreshSubscriptionCard((retry || 0) + 1), 2000 * ((retry || 0) + 1));
-        }
-        return;
-      }
-      if (subscriptionCardStillLoading()) {
-        const statusEl = document.getElementById('dash-subscription-status');
-        const badgeEl = document.getElementById('dash-subscription-badge');
-        if (statusEl) statusEl.textContent = 'Не удалось проверить подписку. Обновите вход в профиль.';
-        if (badgeEl) badgeEl.textContent = 'ошибка';
-      }
-    } finally {
-      subscriptionRefreshInFlight = false;
+      if (e && e.status === 429) return;
+      const statusEl = document.getElementById('dash-subscription-status');
+      const badgeEl = document.getElementById('dash-subscription-badge');
+      if (statusEl) statusEl.textContent = 'Не удалось проверить подписку. Обновите вход в профиль.';
+      if (badgeEl) badgeEl.textContent = 'ошибка';
     }
   }
 
@@ -526,12 +464,10 @@ function escapeHtml(value) {
       const testEl = document.getElementById('dash-subscription-test');
 
       if (statusEl && badgeEl) {
-        // Мгновенно рендерим статус из данных дашборда, чтобы карточка
-        // никогда не зависала на «Загрузка...» (даже если /payment/subscription под лимитом).
-        renderSubscriptionCard(user);
-        if (!user.is_trial) {
-          scheduleSubscriptionRefresh(1500);
-        }
+        // ВАЖНО: /profile/dashboard не возвращает is_trial, поэтому берём
+        // авторитетные данные о подписке из /payment/subscription, иначе
+        // карточка триала затирается статичной «активной» и отсчёт замирает.
+        refreshSubscriptionCard();
 
         if (testEl) {
           testEl.onclick = async () => {
@@ -779,14 +715,6 @@ function escapeHtml(value) {
     return 'дней';
   }
 
-  window.addEventListener('sistema:subscription-changed', function(e) {
-    const detail = e && e.detail;
-    const sub = detail && detail.subscription;
-    if (sub) {
-      const key = subscriptionRenderKey(sub);
-      if (key === lastRenderedSubKey) return;
-      renderSubscriptionCard(sub);
-      return;
-    }
-    scheduleSubscriptionRefresh(2000);
+  window.addEventListener('sistema:subscription-changed', function() {
+    refreshSubscriptionCard();
   });

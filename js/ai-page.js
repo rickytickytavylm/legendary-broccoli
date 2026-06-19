@@ -18,6 +18,7 @@ const AI_COURSE_LINKS = [
   { title: 'Самооценка', href: '/marathons/#section-samoocenka', aliases: ['Самооценка'] },
   { title: 'Конфликты', href: '/marathons/#section-konflikty', aliases: ['Конфликты'] },
   { title: 'Материнство и опора', href: '/marathons/#section-rezakina', aliases: ['Материнство и опора', 'Материнство'] },
+  { title: 'Йога и терапия', href: '/event-yoga/', aliases: ['Йога и терапия', 'ивент Йога и терапия', 'Ивент Системы'] },
 ];
 
 const AI_PSYCHOLOGIST_LINKS = [
@@ -216,23 +217,11 @@ function applyAiTopic() {
   const desc = document.querySelector('.ai-desc');
   if (title) title.innerHTML = 'Подбор психолога<br>с AI';
   if (desc) desc.textContent = 'Лиза поможет аккуратно описать запрос и сузить выбор специалиста Системы.';
-  if (aiInput) {
-    aiInput.placeholder = 'Например: тревога, отношения, психосоматика...';
-    aiInput.value = 'Хочу подобрать психолога под свой запрос';
-  }
+  if (aiInput) aiInput.placeholder = 'Опишите запрос своими словами';
 }
 
 function maybeStartPsychologistSelection(historyMessages) {
-  if (AI_TOPIC !== 'psychologist-selection') return;
-  if (!window.API || !window.API.accessToken) return;
-  const key = 'sistema:ai-topic-started:psychologist-selection';
-  if (sessionStorage.getItem(key) === '1') return;
-  const hasRecentSelection = (historyMessages || []).some((message) =>
-    String(message.content || '').toLowerCase().includes('подобрать психолога')
-  );
-  if (hasRecentSelection) return;
-  sessionStorage.setItem(key, '1');
-  window.setTimeout(() => submitQuestion(PSYCHOLOGIST_SELECTION_MESSAGE), 220);
+  return;
 }
 
 function updateAiLayoutMetrics() {

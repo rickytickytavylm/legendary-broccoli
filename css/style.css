@@ -7638,14 +7638,26 @@ body.audio-player-open::-webkit-scrollbar {
   justify-content: flex-end;
   scroll-snap-align: start;
   border: 1px solid rgba(255,255,255,.18);
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.45) 52%, rgba(0,0,0,.88) 100%),
-    var(--card-bg) center/cover no-repeat;
-  background-color: #101010;
+  background: var(--card-bg) center/cover no-repeat;
+  background-color: #050706;
   box-shadow: 0 20px 48px rgba(0,0,0,.42);
   transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, border-color .3s ease;
   isolation: isolate;
   -webkit-tap-highlight-color: transparent;
+}
+
+.today-psychologist-slot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.04) 0%, rgba(0,0,0,.5) 50%, rgba(0,0,0,.96) 100%);
+  pointer-events: none;
+}
+
+.today-psychologist-slot > * {
+  position: relative;
+  z-index: 1;
 }
 
 .today-psychologist-slot:hover {
@@ -7688,6 +7700,29 @@ body.audio-player-open::-webkit-scrollbar {
   width: min(calc(100% - clamp(20px, 5vw, 72px)), 1160px);
   margin: 0 auto;
   padding: clamp(24px, 4vw, 44px) 0 104px;
+}
+
+body.psychologist-detail-page .main-content {
+  max-width: none;
+  width: 100%;
+  padding: 0 0 40px;
+}
+
+body.psychologist-detail-page .psychologists-page {
+  width: 100%;
+  padding: 0 0 104px;
+}
+
+body.psychologist-detail-page .psych-detail-copy,
+body.psychologist-detail-page .psych-detail-grid,
+body.psychologist-detail-page .psych-detail-cta {
+  width: min(calc(100% - clamp(20px, 5vw, 72px)), 1160px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.psych-detail-back-source {
+  display: none !important;
 }
 
 .psychologists-hero {
@@ -7852,7 +7887,7 @@ body.audio-player-open::-webkit-scrollbar {
   position: relative;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  margin-top: calc(-1 * clamp(24px, 4vw, 44px));
+  margin-top: 0;
   margin-bottom: clamp(20px, 3vw, 30px);
   aspect-ratio: 4 / 3;
   max-height: min(72svh, 640px);
@@ -7888,32 +7923,6 @@ body.audio-player-open::-webkit-scrollbar {
   color: rgba(246,240,231,.72);
   font-size: clamp(16px, 2vw, 19px);
   line-height: 1.62;
-}
-
-.psych-back-link {
-  position: absolute;
-  top: max(16px, calc(12px + env(safe-area-inset-top)));
-  left: clamp(16px, 5vw, 40px);
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.22);
-  background: rgba(20,24,22,.42);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
-  color: rgba(255,255,255,.9);
-  font-size: 13px;
-  font-weight: 800;
-  text-decoration: none;
-}
-
-.psych-detail-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 24px;
 }
 
 .psych-detail-cta {
@@ -8204,6 +8213,11 @@ body.audio-player-open::-webkit-scrollbar {
   .today-event-appcopy strong {
     font-size: 13px;
   }
+}
+
+.today-meditation-panel {
+  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
+  margin: clamp(18px, 4vw, 34px) auto 0;
 }
 
 .today-meditation-card {

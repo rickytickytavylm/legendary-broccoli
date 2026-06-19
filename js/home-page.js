@@ -219,6 +219,44 @@ function onboardingProfile() {
   }
 }
 
+function saveTodayRouteKey(routeKey, sync = true) {
+  if (!routes[routeKey]) return;
+  const profile = onboardingProfile();
+  const route = routeConfig(profile, routeKey);
+  const savedProfile = {
+    ...profile,
+    focus: routeKey,
+    routeKey,
+    route: route.title,
+    focusLabel: route.title,
+    firstStep: route.firstStep,
+    firstStepDesc: route.firstStepDesc,
+    primary: route.primary,
+    secondary: route.secondary,
+    updatedAt: new Date().toISOString(),
+  };
+  localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(savedProfile));
+  if (sync && window.API?.trackActivity) {
+    window.API.trackActivity('onboarding_route_changed', {
+      entity_type: 'onboarding',
+      entity_id: routeKey,
+      metadata: savedProfile,
+    }).catch(() => {});
+  }
+}
+
+function syncTodayRouteFromRecentActivity(activity = []) {
+  const latest = (activity || []).find((item) => item.event_type === 'onboarding_route_changed' && item.metadata?.routeKey);
+  if (!latest || !routes[latest.metadata.routeKey]) return false;
+  const local = onboardingProfile();
+  const localAt = Date.parse(local.updatedAt || local.completedAt || 0) || 0;
+  const remoteAt = Date.parse(latest.created_at || latest.metadata.updatedAt || 0) || 0;
+  if (remoteAt && remoteAt < localAt) return false;
+  localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(latest.metadata));
+  currentTodayRouteKey = latest.metadata.routeKey;
+  return true;
+}
+
 function programSlugFromHref(href = '') {
   return href.replace(/^https?:\/\/[^/]+/i, '').split('?')[0].replace(/^\/|\/$/g, '');
 }
@@ -346,7 +384,9 @@ function renderToday(routeKey) {
 function shiftTodayRoute(delta) {
   const currentIndex = Math.max(0, todayRouteKeys.indexOf(currentTodayRouteKey || selectedRouteKey(JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}'))));
   const nextIndex = (currentIndex + delta + todayRouteKeys.length) % todayRouteKeys.length;
-  renderToday(todayRouteKeys[nextIndex]);
+  const nextKey = todayRouteKeys[nextIndex];
+  saveTodayRouteKey(nextKey);
+  renderToday(nextKey);
 }
 
 const lizaTourSteps = [
@@ -822,6 +862,7 @@ function initOnboarding() {
       }
       localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
       if (completed) {
+        syncTodayRouteFromRecentActivity(data.recent_activity);
         renderToday();
         showNewHomeState('today');
         if (pendingLizaTour) {

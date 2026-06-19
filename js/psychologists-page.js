@@ -69,20 +69,18 @@
     const person = psychologists.find((item) => item.slug === slug) || psychologists[0];
     if (!person) return;
     document.title = `${person.name} — психолог Системы Молодцова`;
+    document.body.classList.add('psychologist-detail-page');
     page.innerHTML = `
+      <a class="back-link-glass psych-detail-back-source" href="/psychologists/" aria-label="Назад к психологам">Назад</a>
       <section class="psych-detail-hero">
         <div class="psych-detail-photo">
           <img ${imageAttrs(person, 'loading="eager"')}>
-          <a class="psych-back-link" href="/psychologists/">← Все психологи</a>
         </div>
         <div class="psych-detail-copy">
           <p class="psych-card-kicker">${escapeHtml(person.role)}</p>
           <h1>${escapeHtml(person.name)}</h1>
           <p class="psych-detail-lead">${escapeHtml(person.intro)}</p>
           <div class="psych-tags">${tagList(person.approaches, 7)}</div>
-          <div class="psych-detail-actions">
-            <a class="psych-secondary-btn" href="/account/">Связаться с куратором</a>
-          </div>
         </div>
       </section>
 

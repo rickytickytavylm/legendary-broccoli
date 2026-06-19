@@ -159,18 +159,18 @@
       icon: icon('<path d="M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="m11 10 4 2.5-4 2.5z"/>')
     },
     {
-      id: 'community',
+      id: 'resources',
       href: '/community/',
-      label: 'Сообщество',
-      labelShort: 'Сообщество',
-      icon: icon('<path d="M16 11a4 4 0 1 0-8 0"/><path d="M3 21a7 7 0 0 1 18 0"/><path d="M18 8a3 3 0 0 1 3 3"/><path d="M6 8a3 3 0 0 0-3 3"/>')
+      label: 'Ресурсы',
+      labelShort: 'Ресурсы',
+      icon: icon('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/><path d="M8 7h8"/><path d="M8 11h6"/>')
     },
     {
-      id: 'meditations',
-      href: '/meditations/',
-      label: 'Медитации',
-      labelShort: 'Медитации',
-      icon: icon('<path d="M12 4v16"/><path d="M8 7v10"/><path d="M16 7v10"/><path d="M4 10v4"/><path d="M20 10v4"/>')
+      id: 'chat',
+      href: '/chat/',
+      label: 'Чат',
+      labelShort: 'Чат',
+      icon: icon('<path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.4-5.2A8 8 0 1 1 21 12Z"/><path d="M8 11h8"/><path d="M8 15h5"/>')
     },
     {
       id: 'ai',
@@ -799,6 +799,48 @@
     });
     video.addEventListener('webkitbeginfullscreen', function() {
       document.body.classList.add('video-fullscreen-active');
+    });
+    attachVideoResume(video);
+  }
+
+  function videoResumeKey(video) {
+    var src = video.currentSrc || video.src || video.getAttribute('src') || '';
+    if (!src) {
+      var source = video.querySelector('source[src]');
+      if (source) src = source.getAttribute('src') || '';
+    }
+    var lesson = video.closest('[data-lesson-id], [data-idx], [data-video-slug]');
+    var hint = lesson ? (lesson.dataset.lessonId || lesson.dataset.videoSlug || lesson.dataset.idx || '') : '';
+    return 'sistema:video-progress:' + location.pathname + ':' + hint + ':' + src.split('?')[0];
+  }
+
+  function attachVideoResume(video) {
+    if (!video || video.dataset.resumeVideo === 'true') return;
+    video.dataset.resumeVideo = 'true';
+    var restored = false;
+    function restore() {
+      if (restored || !Number.isFinite(video.duration) || video.duration < 20) return;
+      restored = true;
+      try {
+        var saved = JSON.parse(localStorage.getItem(videoResumeKey(video)) || 'null');
+        var seconds = Number(saved && saved.t);
+        if (Number.isFinite(seconds) && seconds > 5 && seconds < video.duration - 8) video.currentTime = seconds;
+      } catch (e) {}
+    }
+    function save() {
+      if (!Number.isFinite(video.currentTime) || !Number.isFinite(video.duration) || video.duration < 20) return;
+      try {
+        localStorage.setItem(videoResumeKey(video), JSON.stringify({ t: Math.floor(video.currentTime), d: Math.floor(video.duration), at: Date.now() }));
+      } catch (e) {}
+    }
+    video.addEventListener('loadedmetadata', restore);
+    video.addEventListener('canplay', restore, { once: true });
+    video.addEventListener('timeupdate', function() {
+      if (!video.paused && Math.floor(video.currentTime) % 5 === 0) save();
+    });
+    video.addEventListener('pause', save);
+    video.addEventListener('ended', function() {
+      try { localStorage.removeItem(videoResumeKey(video)); } catch (e) {}
     });
   }
 

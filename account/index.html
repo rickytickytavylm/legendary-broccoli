@@ -12,8 +12,8 @@
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Профиль — Система Молодцова</title>
-  <link rel="stylesheet" href="/css/style.css?v=157" />
-  <link rel="stylesheet" href="/css/nav.css?v=77" />
+  <link rel="stylesheet" href="/css/style.css?v=160" />
+  <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ─── Layout ─────────────────────────────────────── */
@@ -1000,6 +1000,13 @@
         margin-left: 0;
         margin-right: 0;
       }
+      .profile-settings-shell {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
+      .profile-danger-group {
+        grid-column: span 2;
+      }
       .settings-row {
         min-height: 56px;
       }
@@ -1310,41 +1317,8 @@
       }
     }
 
-    /* ─── Mobile / tablet: одна колонка, без desktop-grid ── */
-    @media (max-width: 1279px) {
-      body.account-page .profile-wrap {
-        display: block !important;
-        grid-template-columns: none !important;
-      }
-
-      body.account-page .profile-user-card,
-      body.account-page .activity-rings-card {
-        width: 100% !important;
-        max-width: 680px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-
-      body.account-page .profile-settings-shell {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        width: min(100%, 680px) !important;
-        max-width: 680px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-
-      body.account-page .profile-settings-group:nth-child(1),
-      body.account-page .profile-settings-group:nth-child(2),
-      body.account-page .profile-settings-group:nth-child(3),
-      body.account-page .profile-danger-group {
-        grid-column: auto !important;
-        grid-row: auto !important;
-      }
-    }
-
     /* ─── Desktop profile composition ─────────────────── */
-    @media (min-width: 1280px) {
+    @media (min-width: 1024px) {
       body.account-page {
         background:
           radial-gradient(circle at 24% -4%, rgba(45, 98, 170, .15), transparent 38%),
@@ -1818,9 +1792,9 @@
   </div>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=74"></script>
+  <script src="/js/api.js?v=72"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=94"></script>
-  <script src="/js/page-inline/account-1.js?v=18"></script>
+  <script src="/js/nav.js?v=93"></script>
+  <script src="/js/page-inline/account-1.js?v=15"></script>
 </body>
 </html>
