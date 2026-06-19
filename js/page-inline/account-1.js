@@ -164,6 +164,11 @@ function escapeHtml(value) {
   async function confirmPaymentAndSync() {
     if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) return;
 
+    // Тяжёлый confirm + burst-поллинг нужен ТОЛЬКО при возврате с оплаты.
+    // На обычном открытии профиля карточку подписки обновляет refreshSubscriptionCard(),
+    // а лишние POST /payment/confirm на каждом заходе создавали 401-штормы и тормоза.
+    if (!window.API.hasPendingPaymentConfirm || !window.API.hasPendingPaymentConfirm()) return;
+
     let attempts = 0;
     const syncOnce = async () => {
       let res = null;
@@ -631,7 +636,7 @@ function escapeHtml(value) {
 
   initProfile();
 
-  document.getElementById('open-diary-btn').addEventListener('click', async (e) => {
+  document.getElementById('open-diary-btn')?.addEventListener('click', async (e) => {
     e.preventDefault();
     alert('Ссылку на Telegram-канал добавим после финального подключения каналов.');
     return;
