@@ -317,7 +317,24 @@ function escapeHtml(value) {
     });
 
     window.setTimeout(() => modal.classList.add('active'), 20);
-    if (window.injectTrialOption) window.injectTrialOption(modal);
+    if (window.injectTrialOption) {
+      window.injectTrialOption(modal, {
+        onActivated(subscription) {
+          renderSubscriptionCard(subscription);
+          const expiresAt = subscription && subscription.expires_at ? new Date(subscription.expires_at).getTime() : null;
+          window.__sistemaSubscriptionActive = true;
+          window.__sistemaSubscriptionExpiresAt = expiresAt || null;
+          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+            detail: { active: true, expires_at: expiresAt, subscription }
+          }));
+          modal.classList.remove('active');
+          window.setTimeout(() => {
+            modal.remove();
+            style.remove();
+          }, 300);
+        }
+      });
+    }
   }
 
   async function initProfile() {
@@ -469,11 +486,6 @@ function escapeHtml(value) {
       const testEl = document.getElementById('dash-subscription-test');
 
       if (statusEl && badgeEl) {
-        // ВАЖНО: /profile/dashboard не возвращает is_trial, поэтому берём
-        // авторитетные данные о подписке из /payment/subscription, иначе
-        // карточка триала затирается статичной «активной» и отсчёт замирает.
-        refreshSubscriptionCard();
-
         if (testEl) {
           testEl.onclick = async () => {
             const originalText = testEl.textContent;
@@ -720,6 +732,10 @@ function escapeHtml(value) {
     return 'дней';
   }
 
-  window.addEventListener('sistema:subscription-changed', function() {
+  window.addEventListener('sistema:subscription-changed', function(event) {
+    if (event?.detail?.subscription) {
+      renderSubscriptionCard(event.detail.subscription);
+      return;
+    }
     refreshSubscriptionCard();
   });

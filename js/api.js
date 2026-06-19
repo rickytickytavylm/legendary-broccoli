@@ -756,10 +756,15 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
     buyBtn.insertAdjacentElement('afterend', btn);
     btn.insertAdjacentElement('afterend', note);
 
-    const finish = () => {
-      window.API.clearSubscriptionCache && window.API.clearSubscriptionCache();
+    const finish = (subscription) => {
+      if (subscription) {
+        window.API.subscriptionCache = subscription;
+        window.API.subscriptionCacheAt = Date.now();
+      } else {
+        window.API.clearSubscriptionCache && window.API.clearSubscriptionCache();
+      }
       if (typeof opts.onActivated === 'function') {
-        opts.onActivated();
+        opts.onActivated(subscription);
       } else {
         if (typeof window.checkSubscriptionSync === 'function') {
           window.checkSubscriptionSync(true);
@@ -787,7 +792,7 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
       try {
         const res = await window.API.activateTrial();
         if (res && (res.trial_granted || res.subscription_active)) {
-          finish();
+          finish(res);
           return;
         }
         // Триал уже был использован ранее и доступ сейчас неактивен.
