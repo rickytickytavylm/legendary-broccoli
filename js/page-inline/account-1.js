@@ -432,16 +432,33 @@ function escapeHtml(value) {
     if (testEl) testEl.style.display = 'none';
   }
 
-  async function refreshSubscriptionCard() {
+  function subscriptionCardStillLoading() {
+    const statusEl = document.getElementById('dash-subscription-status');
+    if (!statusEl) return false;
+    const txt = (statusEl.textContent || '').trim();
+    return txt === '' || txt.indexOf('Загрузка') === 0;
+  }
+
+  async function refreshSubscriptionCard(retry) {
     try {
       const sub = await window.API.getSubscription({ fresh: true });
       renderSubscriptionCard(sub);
     } catch (e) {
-      if (e && e.status === 429) return;
-      const statusEl = document.getElementById('dash-subscription-status');
-      const badgeEl = document.getElementById('dash-subscription-badge');
-      if (statusEl) statusEl.textContent = 'Не удалось проверить подписку. Обновите вход в профиль.';
-      if (badgeEl) badgeEl.textContent = 'ошибка';
+      // 429: эндпоинт под лимитом (nav.js параллельно его дёргает).
+      // Никогда не оставляем карточку в состоянии «Загрузка...»: пробуем ещё раз чуть позже.
+      if (e && e.status === 429) {
+        if ((retry || 0) < 4) {
+          setTimeout(() => refreshSubscriptionCard((retry || 0) + 1), 1500 * ((retry || 0) + 1));
+        }
+        return;
+      }
+      // Прочие ошибки: показываем сообщение только если карточка всё ещё пустая.
+      if (subscriptionCardStillLoading()) {
+        const statusEl = document.getElementById('dash-subscription-status');
+        const badgeEl = document.getElementById('dash-subscription-badge');
+        if (statusEl) statusEl.textContent = 'Не удалось проверить подписку. Обновите вход в профиль.';
+        if (badgeEl) badgeEl.textContent = 'ошибка';
+      }
     }
   }
 
@@ -464,7 +481,10 @@ function escapeHtml(value) {
       const testEl = document.getElementById('dash-subscription-test');
 
       if (statusEl && badgeEl) {
-        // ВАЖНО: /profile/dashboard не возвращает is_trial, поэтому берём
+        // Мгновенно рендерим статус из данных дашборда, чтобы карточка
+        // никогда не зависала на «Загрузка...» (даже если /payment/subscription под лимитом).
+        renderSubscriptionCard(user);
+        // ВАЖНО: /profile/dashboard не возвращает is_trial, поэтому затем берём
         // авторитетные данные о подписке из /payment/subscription, иначе
         // карточка триала затирается статичной «активной» и отсчёт замирает.
         refreshSubscriptionCard();
