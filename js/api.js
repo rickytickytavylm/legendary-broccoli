@@ -518,6 +518,10 @@ class ApiClient {
     this.clearSubscriptionCache();
     return this.request('POST', '/payment/confirm');
   }
+  activateTrial() {
+    this.clearSubscriptionCache();
+    return this.request('POST', '/payment/activate-trial');
+  }
   isSubscriptionActive(subscription) {
     return !!(subscription && subscription.subscription_active === true);
   }
@@ -666,6 +670,109 @@ window.requirePaymentLegalAccepted = function requirePaymentLegalAccepted(scope 
   const checkbox = scope?.querySelector?.('[data-payment-legal]');
   if (checkbox && typeof checkbox.focus === 'function') checkbox.focus();
   return false;
+};
+
+// === Trial CTA (1-day free trial, no card) ===
+// Врезает кнопку триала в любую модалку подписки (.ios-sub-btn-buy / [data-buy]).
+// Показывается только если триал ещё доступен (не использован, нет оплаты, доступ неактивен).
+function ensureTrialStyles() {
+  if (document.getElementById('trial-cta-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'trial-cta-styles';
+  style.textContent = `
+    .trial-cta{width:100%;min-height:50px;margin-top:12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06));
+      backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+      color:#fff;font-size:15px;font-weight:700;letter-spacing:-.01em;
+      display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 24px rgba(0,0,0,.25);
+      transition:transform .2s ease,background .2s ease,opacity .2s ease}
+    .trial-cta:hover{background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.1));transform:translateY(-1px)}
+    .trial-cta:active{transform:translateY(1px)}
+    .trial-cta:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .trial-cta .trial-spark{font-size:14px;line-height:1}
+    .trial-cta-note{margin:10px 0 0;font-size:11px;line-height:1.4;color:rgba(255,255,255,.4)}
+    @media (max-width:520px){.trial-cta{min-height:46px;border-radius:18px;font-size:14px}}
+  `;
+  document.head.appendChild(style);
+}
+
+window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
+  try {
+    if (!scope || !window.API) return;
+    const buyBtn = scope.querySelector('.ios-sub-btn-buy, [data-buy]');
+    if (!buyBtn) return;
+    if (scope.querySelector('.trial-cta')) return;
+
+    const loggedIn = window.API.isLoggedIn && window.API.isLoggedIn();
+    // Для залогиненного проверяем право на триал; для гостя показываем оптимистично (после входа перепроверим).
+    if (loggedIn) {
+      const data = await window.API.getSubscription({ fresh: true }).catch(() => null);
+      if (!data || data.trial_available !== true) return;
+    }
+
+    ensureTrialStyles();
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'trial-cta';
+    btn.innerHTML = '<span class="trial-spark">✦</span><span>Попробовать 1 день бесплатно</span>';
+
+    const note = document.createElement('p');
+    note.className = 'trial-cta-note';
+    note.textContent = 'Без карты и без оплаты. Полный доступ на пробный период.';
+
+    buyBtn.insertAdjacentElement('afterend', btn);
+    btn.insertAdjacentElement('afterend', note);
+
+    const finish = () => {
+      window.API.clearSubscriptionCache && window.API.clearSubscriptionCache();
+      if (typeof opts.onActivated === 'function') {
+        opts.onActivated();
+      } else {
+        if (typeof window.checkSubscriptionSync === 'function') {
+          window.checkSubscriptionSync(true);
+        }
+        window.location.reload();
+      }
+    };
+
+    btn.addEventListener('click', async () => {
+      if (!(window.API.isLoggedIn && window.API.isLoggedIn())) {
+        if (window.openAuthModal) {
+          window.openAuthModal('login');
+          window.addEventListener('auth:change', function handler() {
+            window.removeEventListener('auth:change', handler);
+            btn.click();
+          }, { once: true });
+        } else {
+          alert('Войдите, чтобы активировать пробный период.');
+        }
+        return;
+      }
+      const original = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span>Активируем доступ…</span>';
+      try {
+        const res = await window.API.activateTrial();
+        if (res && (res.trial_granted || res.subscription_active)) {
+          finish();
+          return;
+        }
+        // Триал уже был использован ранее и доступ сейчас неактивен.
+        btn.disabled = true;
+        btn.innerHTML = '<span>Пробный период уже использован</span>';
+        note.textContent = 'Вы уже использовали бесплатный период. Оформите подписку, чтобы продолжить.';
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = original;
+        alert((err && err.error) || 'Не удалось активировать пробный период. Попробуйте позже.');
+      }
+    });
+  } catch (e) {
+    /* триал-кнопка не должна ломать модалку */
+  }
 };
 
 function isAppleTouchVideoDevice() {

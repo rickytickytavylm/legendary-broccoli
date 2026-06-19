@@ -435,7 +435,7 @@
     }
   });
 
-  var accessState = hasJwtSession() ? 'unknown' : 'free';
+  var accessState = 'free';
 
   if (window.API && window.API.restoreSession) {
     window.API.restoreSession()
@@ -542,12 +542,54 @@
 
   checkSubscriptionSync(true);
   setInterval(checkSubscriptionSync, 60000);
+  setInterval(function() {
+    if (window.__sistemaSubscriptionExpiresAt) {
+      var now = Date.now();
+      var expiresAt = window.__sistemaSubscriptionExpiresAt;
+      if (expiresAt && now >= expiresAt) {
+        checkSubscriptionSync(true);
+      }
+    }
+  }, 5000);
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden) checkSubscriptionSync(true);
   });
   window.addEventListener('focus', function() {
     checkSubscriptionSync(true);
   });
+
+  window.addEventListener('sistema:subscription-changed', function(e) {
+    const active = e.detail && e.detail.active;
+    const newAccessState = active ? 'pro' : 'free';
+    if (accessState !== newAccessState) {
+      accessState = newAccessState;
+      updateLessonLocks(document);
+    }
+  });
+
+  var lessonObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(function(node) {
+          if (node.nodeType === 1) {
+            if (node.classList && (node.classList.contains('lesson-item') || node.classList.contains('lesson-row'))) {
+              updateLessonLocks(node);
+            } else {
+              var lessons = node.querySelectorAll ? node.querySelectorAll('.lesson-item, .lesson-row') : [];
+              if (lessons.length > 0) {
+                updateLessonLocks(node);
+              }
+            }
+          }
+        });
+      }
+    });
+  });
+
+  if (document.body) {
+    lessonObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
   window.checkSubscriptionSync = checkSubscriptionSync;
   window.updateLessonLocks = updateLessonLocks;
 
@@ -583,9 +625,26 @@
         '<button type="button" data-buy disabled style="width:100%;min-height:54px;border:0;border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:800;opacity:.55;cursor:not-allowed">Оформить подписку — 2990 ₽</button>' +
         '<p style="margin:14px 0 0;color:rgba(255,255,255,.35);font-size:11px;line-height:1.4">Для теста подписка действует 5 минут.</p>' +
       '</div>';
-    modal.querySelector('[data-close]').addEventListener('click', function() { modal.remove(); });
+    const resetButtonState = () => {
+      if (modal.dataset.paymentInitiated === 'true') {
+        var button = modal.querySelector('[data-buy]');
+        button.disabled = false;
+        button.textContent = 'Оформить подписку — 2990 ₽';
+        button.style.opacity = '1';
+        button.style.cursor = 'pointer';
+        delete modal.dataset.paymentInitiated;
+      }
+    };
+
+    modal.querySelector('[data-close]').addEventListener('click', function() {
+      resetButtonState();
+      modal.remove();
+    });
     modal.addEventListener('click', function(event) {
-      if (event.target === modal) modal.remove();
+      if (event.target === modal) {
+        resetButtonState();
+        modal.remove();
+      }
     });
     modal.querySelector('[data-payment-legal]').addEventListener('change', function(event) {
       var button = modal.querySelector('[data-buy]');
@@ -606,7 +665,10 @@
       button.textContent = 'Переходим к оплате...';
       try {
         var res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
-        if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
+        if (window.API.redirectToPayment && window.API.redirectToPayment(res)) {
+          modal.dataset.paymentInitiated = 'true';
+          return;
+        }
         throw new Error('bad payment response');
       } catch (err) {
         button.disabled = false;
@@ -615,6 +677,7 @@
       }
     });
     document.body.appendChild(modal);
+    if (window.injectTrialOption) window.injectTrialOption(modal);
   }
 
   window.openSubscriptionModalForAccess = openGlobalSubscriptionModal;

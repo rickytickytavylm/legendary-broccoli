@@ -180,8 +180,8 @@ function escapeHtml(value) {
         ? window.API.isSubscriptionActive(sub)
         : !!(sub && sub.subscription_active);
       renderSubscriptionCard(sub);
+      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: isActive, expires_at: expiresAt } }));
       if (isActive) {
-        window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: true, expires_at: expiresAt } }));
         if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
         refreshSubscriptionCard();
       }
@@ -282,7 +282,10 @@ function escapeHtml(value) {
       buyBtn.innerHTML = 'Переходим к оплате...';
       try {
         const res = await window.API.createPayment({ plan_slug: 'monthly', provider: 'yookassa' });
-        if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
+        if (window.API.redirectToPayment && window.API.redirectToPayment(res)) {
+          modal.dataset.paymentInitiated = 'true';
+          return;
+        }
         throw new Error('bad payment response');
       } catch (err) {
         buyBtn.disabled = false;
@@ -291,7 +294,25 @@ function escapeHtml(value) {
       }
     });
 
+    const resetButtonState = () => {
+      if (modal.dataset.paymentInitiated === 'true') {
+        buyBtn.disabled = false;
+        buyBtn.innerHTML = '<span>Активировать подписку Pro</span><span style="font-weight:400;opacity:.6">—</span><span>2990 ₽</span>';
+        delete modal.dataset.paymentInitiated;
+      }
+    };
+
+    modal.querySelector('.ios-sub-modal-close')?.addEventListener('click', () => {
+      resetButtonState();
+      close();
+    });
+    modal.querySelector('.ios-sub-modal-backdrop')?.addEventListener('click', () => {
+      resetButtonState();
+      close();
+    });
+
     window.setTimeout(() => modal.classList.add('active'), 20);
+    if (window.injectTrialOption) window.injectTrialOption(modal);
   }
 
   async function initProfile() {
@@ -300,6 +321,19 @@ function escapeHtml(value) {
     refreshSubscriptionCard();
     loadDashboard();
     confirmPaymentAndSync();
+  }
+
+  function formatTrialRemaining(ms) {
+    if (ms < 0) ms = 0;
+    const totalSec = Math.floor(ms / 1000);
+    const d = Math.floor(totalSec / 86400);
+    const h = Math.floor((totalSec % 86400) / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    const pad = (n) => (n < 10 ? '0' + n : '' + n);
+    if (d > 0) return d + ' д ' + h + ' ч';
+    if (h > 0) return h + ' ч ' + pad(m) + ' мин';
+    return m + ' мин ' + pad(s) + ' сек';
   }
 
   function renderSubscriptionCard(source) {
@@ -315,6 +349,51 @@ function escapeHtml(value) {
     const isActive = window.API?.isSubscriptionActive
       ? window.API.isSubscriptionActive(source)
       : !!source?.subscription_active;
+    const isTrial = !!source?.is_trial;
+
+    // Сбрасываем предыдущий таймер обратного отсчёта, чтобы не плодить интервалы.
+    if (window.__trialCountdownTimer) {
+      clearInterval(window.__trialCountdownTimer);
+      window.__trialCountdownTimer = null;
+    }
+
+    if (isActive && isTrial && expiresAt) {
+      const untilStr = new Date(expiresRaw).toLocaleString('ru-RU', {
+        day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit',
+      });
+      statusEl.innerHTML =
+        'Пробный доступ Pro активен — осталось <strong id="trial-countdown" style="color:#fff;white-space:nowrap">…</strong>' +
+        '<br><span style="color:rgba(255,255,255,.45);font-size:13px">до ' + untilStr + '</span>';
+      badgeEl.textContent = 'пробный период';
+      badgeEl.style.background = 'rgba(10, 132, 255, 0.16)';
+      badgeEl.style.color = '#5ac8fa';
+      badgeEl.style.border = '1px solid rgba(10, 132, 255, 0.28)';
+      if (actionEl) actionEl.style.display = 'none';
+      if (benefitsEl) {
+        benefitsEl.style.display = 'grid';
+        benefitsEl.innerHTML = '<span>Открыты все видео-разделы и уроки</span><span>Доступен Общий чат участников</span><span>Доступна Лиза, AI-помощница системы</span>';
+      }
+      if (testEl) testEl.style.display = 'none';
+
+      const tick = () => {
+        const left = expiresAt - Date.now();
+        if (left <= 0) {
+          if (window.__trialCountdownTimer) {
+            clearInterval(window.__trialCountdownTimer);
+            window.__trialCountdownTimer = null;
+          }
+          refreshSubscriptionCard();
+          if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
+          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: false } }));
+          return;
+        }
+        const cdEl = document.getElementById('trial-countdown');
+        if (cdEl) cdEl.textContent = formatTrialRemaining(left);
+      };
+      tick();
+      window.__trialCountdownTimer = setInterval(tick, 1000);
+      return;
+    }
 
     if (isActive) {
       let dateStr = '';

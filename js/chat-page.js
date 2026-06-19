@@ -980,12 +980,19 @@
     document.body.appendChild(modal);
 
     setTimeout(() => modal.classList.add('active'), 20);
+    if (window.injectTrialOption) window.injectTrialOption(modal);
 
     const closeBtn = modal.querySelector('.ios-sub-modal-close');
     const backdrop = modal.querySelector('.ios-sub-modal-backdrop');
     const buyBtn = modal.querySelector('#ios-sub-buy-btn');
 
     const handleClose = () => {
+      if (modal.dataset.paymentInitiated === 'true') {
+        buyBtn.disabled = false;
+        buyBtn.style.opacity = '1';
+        buyBtn.innerHTML = '<span>Оформить подписку</span><span style="font-weight:400;opacity:.6">—</span><span>2990 ₽</span>';
+        delete modal.dataset.paymentInitiated;
+      }
       modal.classList.remove('active');
       setTimeout(() => {
         modal.remove();
@@ -1043,6 +1050,7 @@
       try {
         const res = await window.API.createPayment({ plan_slug: targetPlanSlug, provider: 'yookassa' });
         if (window.API.redirectToPayment(res)) {
+          modal.dataset.paymentInitiated = 'true';
           return;
         } else {
           alert('Ошибка создания платежа');
