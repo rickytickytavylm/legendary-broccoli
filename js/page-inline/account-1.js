@@ -335,6 +335,8 @@ function escapeHtml(value) {
             modal.remove();
             style.remove();
           }, 300);
+          dashboardPromise = null;
+          loadDashboard();
         }
       });
     }
