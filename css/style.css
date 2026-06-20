@@ -7625,10 +7625,10 @@ body.audio-player-open::-webkit-scrollbar {
 
 .today-psychologist-slot {
   position: relative;
-  flex: 0 0 min(58vw, 238px);
-  height: min(72vw, 308px);
+  flex: 0 0 min(64vw, 268px);
+  height: min(76vw, 328px);
   min-width: 0;
-  padding: 18px;
+  padding: 22px;
   border-radius: 24px;
   overflow: hidden;
   color: #fff;
@@ -7668,9 +7668,9 @@ body.audio-player-open::-webkit-scrollbar {
 }
 
 .today-psychologist-slot span {
-  margin-bottom: 7px;
+  margin-bottom: 10px;
   color: rgba(255,255,255,.62);
-  font-size: 9px;
+  font-size: 9.5px;
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -7679,17 +7679,17 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologist-slot strong {
   display: block;
   color: #fff;
-  font-size: 23px;
-  line-height: 1.05;
+  font-size: 24px;
+  line-height: 1.1;
   letter-spacing: -.04em;
   font-weight: 800;
 }
 
 .today-psychologist-slot small {
-  margin-top: 6px;
+  margin-top: 10px;
   color: rgba(255,255,255,.72);
-  font-size: 11.5px;
-  line-height: 1.35;
+  font-size: 12px;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;

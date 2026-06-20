@@ -503,10 +503,8 @@
         var isActive = window.API && window.API.isSubscriptionActive
           ? window.API.isSubscriptionActive(data)
           : !!(data && data.subscription_active);
-        // Guard: if trial was recently activated, ignore stale responses showing inactive
-        if (!isActive && window.__sistemaTrialActivatedAt && (Date.now() - window.__sistemaTrialActivatedAt < 15000)) {
-          return;
-        }
+        // High-water-mark: if we know the subscription is active, ignore stale responses showing inactive.
+        if (!isActive && window.__sistemaSubscriptionActive === true) return;
         var currentAccessState = isActive ? 'pro' : 'free';
         
         window.__sistemaSubscriptionActive = isActive;

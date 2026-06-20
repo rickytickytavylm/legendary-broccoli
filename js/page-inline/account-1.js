@@ -330,38 +330,22 @@ function escapeHtml(value) {
           
           window.__sistemaSubscriptionActive = isActive;
           window.__sistemaSubscriptionExpiresAt = expiresAt || null;
-          if (isActive) window.__sistemaTrialActivatedAt = Date.now();
           
+          // Immediately render the card with the data from activateTrial response.
+          // This is the authoritative source — no need to re-fetch from backend.
           renderSubscriptionCard(subscription);
           
+          // Notify the rest of the app (nav.js locks, etc.)
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
             detail: { active: isActive, expires_at: expiresAt, subscription }
           }));
           
+          // Close the modal
           modal.classList.remove('active');
           window.setTimeout(() => {
             modal.remove();
             style.remove();
           }, 300);
-          
-          // Safe dashboard reload
-          try {
-            dashboardPromise = null;
-            loadDashboard();
-          } catch (e) { console.error('Silent dashboard reload error:', e); }
-
-          // Force-refresh subscription card from backend to ensure UI is in sync.
-          // Clear any pending subscription promise so getSubscription makes a fresh
-          // request instead of returning stale data from before trial activation.
-          try {
-            if (window.API) {
-              window.API.subscriptionPromise = null;
-              window.API.subscriptionCache = subscription;
-              window.API.subscriptionCacheAt = Date.now();
-            }
-            __lastRefreshSubCardAt = 0;
-            setTimeout(() => refreshSubscriptionCard({ force: true }), 500);
-          } catch (e) { console.error('Silent sub card refresh error:', e); }
         }
       });
     }
@@ -780,11 +764,10 @@ function escapeHtml(value) {
   }
 
   window.addEventListener('sistema:subscription-changed', function(event) {
-    // Guard: ignore stale events showing inactive right after trial activation
+    // High-water-mark: if we know the subscription is active, ignore stale events saying inactive.
+    // When the trial expires, the countdown timer resets __sistemaSubscriptionActive to false.
     var eventActive = event?.detail?.active;
-    if (eventActive === false && window.__sistemaTrialActivatedAt && (Date.now() - window.__sistemaTrialActivatedAt < 15000)) {
-      return;
-    }
+    if (eventActive === false && window.__sistemaSubscriptionActive === true) return;
     if (event?.detail?.subscription) {
       renderSubscriptionCard(event.detail.subscription);
       return;
