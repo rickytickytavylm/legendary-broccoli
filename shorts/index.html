@@ -5,14 +5,14 @@
   <link rel="manifest" href="/manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Система" />
+  <meta name="apple-mobile-web-app-title" content="РЎРёСЃС‚РµРјР°" />
   <link rel="apple-touch-icon" href="/assets/logo2.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' wss: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <title>Shorts — Система Молодцова</title>
+  <title>Shorts вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°</title>
   <link rel="stylesheet" href="/css/style.css?v=160" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,7 +33,7 @@
       padding-bottom: clamp(104px, 22vw, 128px);
     }
 
-    /* Как сообщество: лишний верхний отступ у области сетки после hero */
+    /* РљР°Рє СЃРѕРѕР±С‰РµСЃС‚РІРѕ: Р»РёС€РЅРёР№ РІРµСЂС…РЅРёР№ РѕС‚СЃС‚СѓРї Сѓ РѕР±Р»Р°СЃС‚Рё СЃРµС‚РєРё РїРѕСЃР»Рµ hero */
     @media (max-width: 620px) {
       body.shorts-page .shorts-after-hero.ux-page-shell {
         padding-top: clamp(12px, 3.2vw, 20px);
@@ -370,8 +370,8 @@
       display: none;
     }
 
-    /* Полноэкранный вертикальный режим как в Shorts/Reels — без touch-action:none (ломало тапы по controls на iOS)
-       Важно: не полагаться только на .u-hidden — здесь есть display:flex, он перебивает глобальный .u-hidden. */
+    /* РџРѕР»РЅРѕСЌРєСЂР°РЅРЅС‹Р№ РІРµСЂС‚РёРєР°Р»СЊРЅС‹Р№ СЂРµР¶РёРј РєР°Рє РІ Shorts/Reels вЂ” Р±РµР· touch-action:none (Р»РѕРјР°Р»Рѕ С‚Р°РїС‹ РїРѕ controls РЅР° iOS)
+       Р’Р°Р¶РЅРѕ: РЅРµ РїРѕР»Р°РіР°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РЅР° .u-hidden вЂ” Р·РґРµСЃСЊ РµСЃС‚СЊ display:flex, РѕРЅ РїРµСЂРµР±РёРІР°РµС‚ РіР»РѕР±Р°Р»СЊРЅС‹Р№ .u-hidden. */
     .shorts-player-overlay {
       position: fixed;
       inset: 0;
@@ -492,7 +492,7 @@
       }
     }
 
-    /* Вертикально «во весь экран»: под шапкой с кнопкой; contain — без обрезки кадра */
+    /* Р’РµСЂС‚РёРєР°Р»СЊРЅРѕ В«РІРѕ РІРµСЃСЊ СЌРєСЂР°РЅВ»: РїРѕРґ С€Р°РїРєРѕР№ СЃ РєРЅРѕРїРєРѕР№; contain вЂ” Р±РµР· РѕР±СЂРµР·РєРё РєР°РґСЂР° */
     .shorts-player-stage video {
       position: absolute;
       inset: 0;
@@ -574,7 +574,7 @@
       }
     }
 
-    /* Краевая матовка поверх видео: усиливает кадр, не блокирует тапы (pointer-events: none) */
+    /* РљСЂР°РµРІР°СЏ РјР°С‚РѕРІРєР° РїРѕРІРµСЂС… РІРёРґРµРѕ: СѓСЃРёР»РёРІР°РµС‚ РєР°РґСЂ, РЅРµ Р±Р»РѕРєРёСЂСѓРµС‚ С‚Р°РїС‹ (pointer-events: none) */
     .shorts-player-vignette {
       position: absolute;
       inset: 0;
@@ -629,7 +629,7 @@
     }
 
     .shorts-player-title::after {
-      content: " ... Ещё";
+      content: " ... Р•С‰С‘";
       display: inline-block;
       color: #ffffff;
       font-weight: 800;
@@ -637,7 +637,7 @@
       text-shadow: 0 1px 4px rgba(0,0,0,0.9);
     }
 
-    /* Жидкое стекло (Liquid Glass) Выдвижная модалка для описания */
+    /* Р–РёРґРєРѕРµ СЃС‚РµРєР»Рѕ (Liquid Glass) Р’С‹РґРІРёР¶РЅР°СЏ РјРѕРґР°Р»РєР° РґР»СЏ РѕРїРёСЃР°РЅРёСЏ */
     .shorts-desc-modal {
       position: fixed;
       inset: 0;
@@ -744,9 +744,9 @@
   <main class="main-content">
     <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/shorts_hero.webp') center/cover no-repeat;">
       <div class="hero-content text-left">
-        <p class="hub-kicker fade-up">Видео</p>
+        <p class="hub-kicker fade-up">Р’РёРґРµРѕ</p>
         <h1 class="hero-title fade-up">Shorts</h1>
-        <p class="hero-subtitle fade-up">Короткие видео с ключевыми идеями</p>
+        <p class="hero-subtitle fade-up">РљРѕСЂРѕС‚РєРёРµ РІРёРґРµРѕ СЃ РєР»СЋС‡РµРІС‹РјРё РёРґРµСЏРјРё</p>
       </div>
     </section>
 
@@ -760,7 +760,7 @@
           type="button"
           class="shorts-player-dismiss"
           data-shorts-player-close
-          aria-label="Закрыть"
+          aria-label="Р—Р°РєСЂС‹С‚СЊ"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -774,23 +774,23 @@
         </div>
         <video id="shorts-player-video" playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload noplaybackrate noremoteplayback"></video>
         <div class="shorts-player-vignette" aria-hidden="true"></div>
-        <button type="button" id="shorts-player-center-control" class="shorts-player-center-control" aria-label="Пауза">
+        <button type="button" id="shorts-player-center-control" class="shorts-player-center-control" aria-label="РџР°СѓР·Р°">
           <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l10.7-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>
           <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M7 5h3.4v14H7V5zm6.6 0H17v14h-3.4V5z"/></svg>
         </button>
         <div class="shorts-player-actions">
-          <button type="button" id="shorts-player-like" class="shorts-player-like" aria-pressed="false" aria-label="Нравится">
+          <button type="button" id="shorts-player-like" class="shorts-player-like" aria-pressed="false" aria-label="РќСЂР°РІРёС‚СЃСЏ">
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M2 21h2.5a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H2v11Zm19.83-9.12c.11-.25.17-.52.17-.8V10a2 2 0 0 0-2-2h-5.5l.83-3.98.03-.32a1.5 1.5 0 0 0-.44-1.06L13.92 2 8.3 7.62A2 2 0 0 0 7.5 9.2V19a2 2 0 0 0 2 2h8.5a2 2 0 0 0 1.84-1.22l2-4.66Z"/></svg>
             <span data-shorts-player-like-count>203</span>
           </button>
         </div>
-        <div class="shorts-player-progress" id="shorts-player-progress" role="slider" aria-label="Позиция видео" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="shorts-player-progress-bar"></span></div>
+        <div class="shorts-player-progress" id="shorts-player-progress" role="slider" aria-label="РџРѕР·РёС†РёСЏ РІРёРґРµРѕ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="shorts-player-progress-bar"></span></div>
       </div>
       <footer class="shorts-player-foot">
-        <p id="shorts-player-title" class="shorts-player-title" title="Нажмите, чтобы раскрыть описание"></p>
+        <p id="shorts-player-title" class="shorts-player-title" title="РќР°Р¶РјРёС‚Рµ, С‡С‚РѕР±С‹ СЂР°СЃРєСЂС‹С‚СЊ РѕРїРёСЃР°РЅРёРµ"></p>
       </footer>
 
-      <!-- Стеклянная выдвижная модалка описания -->
+      <!-- РЎС‚РµРєР»СЏРЅРЅР°СЏ РІС‹РґРІРёР¶РЅР°СЏ РјРѕРґР°Р»РєР° РѕРїРёСЃР°РЅРёСЏ -->
       <div id="shorts-desc-modal" class="shorts-desc-modal u-hidden" aria-hidden="true">
         <div class="shorts-desc-modal-backdrop" data-shorts-desc-close></div>
         <div class="shorts-desc-modal-content">
@@ -798,7 +798,7 @@
           <div class="shorts-desc-modal-body">
             <p id="shorts-desc-modal-text"></p>
           </div>
-          <button type="button" class="shorts-desc-modal-close" data-shorts-desc-close>Свернуть</button>
+          <button type="button" class="shorts-desc-modal-close" data-shorts-desc-close>РЎРІРµСЂРЅСѓС‚СЊ</button>
         </div>
       </div>
     </div>
