@@ -798,6 +798,9 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
           window.API.subscriptionCache = optimistic;
           window.API.subscriptionCacheAt = Date.now();
           window.API.subscriptionPromise = null;
+          try {
+            sessionStorage.setItem('sistema:trial-activated-subscription', JSON.stringify(optimistic));
+          } catch (e) {}
           window.__sistemaSubscriptionActive = true;
           window.__sistemaSubscriptionExpiresAt = expiresRaw
             ? (new Date(expiresRaw).getTime() || null)

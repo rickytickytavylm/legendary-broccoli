@@ -359,6 +359,13 @@ function escapeHtml(value) {
 
   async function initProfile() {
     showDashboardShell();
+    try {
+      const storedTrial = sessionStorage.getItem('sistema:trial-activated-subscription');
+      if (storedTrial) {
+        const parsed = JSON.parse(storedTrial);
+        renderSubscriptionCard(parsed);
+      }
+    } catch (e) {}
     refreshProfileHeader();
     if (window.API?.hasPendingPaymentConfirm?.()) {
       await confirmPaymentAndSync();
@@ -500,6 +507,11 @@ function escapeHtml(value) {
     __lastRefreshSubCardAt = now;
     try {
       const sub = await window.API.getSubscription({ fresh: !!opts.force });
+      try {
+        if (sub && sub.subscription_active) {
+          sessionStorage.removeItem('sistema:trial-activated-subscription');
+        }
+      } catch (e) {}
       renderSubscriptionCard(sub);
     } catch (e) {
       if (e && e.status === 429) return;
