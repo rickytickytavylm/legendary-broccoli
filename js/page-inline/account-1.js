@@ -338,6 +338,8 @@ function escapeHtml(value) {
             modal.remove();
             style.remove();
           }, 300);
+          // Reload dashboard data with new access level (no full page reload).
+          try { dashboardPromise = null; loadDashboard(); } catch (e) {}
         }
       });
     }
