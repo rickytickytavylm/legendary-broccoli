@@ -6663,6 +6663,13 @@ body.audio-player-open::-webkit-scrollbar {
   display: flex;
   align-items: center;
   gap: 6px;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-craft:hover {
+  color: rgba(255,255,255,0.75);
 }
 
 .footer-craft svg {

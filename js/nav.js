@@ -216,34 +216,15 @@
             '<li><a href="#">Возврат средств</a></li>' +
           '</ul>' +
         '</div>' +
-        '<div class="footer-col footer-cta">' +
-          '<h4 class="footer-heading">Будьте в курсе</h4>' +
-          '<p class="footer-desc">Получайте важные материалы<br>и анонсы прямо в Telegram.</p>' +
-          '<a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" class="btn-footer-telegram">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>' +
-            'Подписаться в Telegram' +
-          '</a>' +
-          '<div class="footer-socials">' +
-            '<a href="https://t.me/obrazmisl" target="_blank" rel="noopener noreferrer" aria-label="Telegram">' +
-              '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>' +
-            '</a>' +
-            '<a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube">' +
-              '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>' +
-            '</a>' +
-            '<a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">' +
-              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>' +
-            '</a>' +
-          '</div>' +
-        '</div>' +
       '</div>' +
       '<div class="footer-bottom">' +
         '<div class="footer-trust">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
           'Ваши данные под надёжной защитой.' +
         '</div>' +
-        '<div class="footer-craft">Сделано с вниманием к деталям' +
+        '<a class="footer-craft" href="https://melniapps.com/" target="_blank" rel="noopener noreferrer">Сделано с вниманием к деталям' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"></path></svg>' +
-        '</div>' +
+        '</a>' +
       '</div>' +
     '</footer>';
 
