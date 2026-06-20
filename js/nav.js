@@ -526,15 +526,6 @@
 
   setTimeout(function() { checkSubscriptionSync(false); }, 0);
   setInterval(checkSubscriptionSync, 60000);
-  setInterval(function() {
-    if (window.__sistemaSubscriptionExpiresAt) {
-      var now = Date.now();
-      var expiresAt = window.__sistemaSubscriptionExpiresAt;
-      if (expiresAt && now >= expiresAt) {
-        checkSubscriptionSync(true);
-      }
-    }
-  }, 15000);
   var lastFocusSubscriptionCheckAt = 0;
   function checkSubscriptionOnFocus() {
     var now = Date.now();

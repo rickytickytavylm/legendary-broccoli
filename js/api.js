@@ -736,9 +736,8 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
     if (scope.querySelector('.trial-cta')) return;
 
     const loggedIn = window.API.isLoggedIn && window.API.isLoggedIn();
-    // Для залогиненного проверяем право на триал; для гостя показываем оптимистично (после входа перепроверим).
     if (loggedIn) {
-      const data = await window.API.getSubscription({ fresh: true }).catch(() => null);
+      const data = await window.API.getSubscription().catch(() => null);
       if (!data || data.trial_available !== true) return;
     }
 
@@ -747,7 +746,7 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'trial-cta';
-    btn.innerHTML = '<span class="trial-spark">✦</span><span>Попробовать 1 день бесплатно</span>';
+    btn.innerHTML = '<span class="trial-spark">✦</span><span>Попробовать бесплатно</span>';
 
     const note = document.createElement('p');
     note.className = 'trial-cta-note';
@@ -755,23 +754,6 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
 
     buyBtn.insertAdjacentElement('afterend', btn);
     btn.insertAdjacentElement('afterend', note);
-
-    const finish = (subscription) => {
-      if (subscription) {
-        window.API.subscriptionCache = subscription;
-        window.API.subscriptionCacheAt = Date.now();
-      } else {
-        window.API.clearSubscriptionCache && window.API.clearSubscriptionCache();
-      }
-      if (typeof opts.onActivated === 'function') {
-        opts.onActivated(subscription);
-      } else {
-        if (typeof window.checkSubscriptionSync === 'function') {
-          window.checkSubscriptionSync(true);
-        }
-        window.location.reload();
-      }
-    };
 
     btn.addEventListener('click', async () => {
       if (!(window.API.isLoggedIn && window.API.isLoggedIn())) {
@@ -792,10 +774,17 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
       try {
         const res = await window.API.activateTrial();
         if (res && (res.trial_granted || res.subscription_active)) {
-          finish(res);
+          window.API.subscriptionCache = res;
+          window.API.subscriptionCacheAt = Date.now();
+          if (typeof opts.onActivated === 'function') {
+            opts.onActivated(res);
+          } else {
+            window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+              detail: { active: true, expires_at: res.expires_at, subscription: res }
+            }));
+          }
           return;
         }
-        // Триал уже был использован ранее и доступ сейчас неактивен.
         btn.disabled = true;
         btn.innerHTML = '<span>Пробный период уже использован</span>';
         note.textContent = 'Вы уже использовали бесплатный период. Оформите подписку, чтобы продолжить.';
@@ -806,7 +795,7 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
       }
     });
   } catch (e) {
-    /* триал-кнопка не должна ломать модалку */
+    /* trial button must not break the modal */
   }
 };
 

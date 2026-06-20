@@ -323,11 +323,11 @@ function escapeHtml(value) {
     if (window.injectTrialOption) {
       window.injectTrialOption(modal, {
         onActivated(subscription) {
+          renderSubscriptionCard(subscription);
           const isActive = window.API?.isSubscriptionActive
             ? window.API.isSubscriptionActive(subscription)
             : !!(subscription && subscription.subscription_active);
           const expiresAt = subscription && subscription.expires_at ? new Date(subscription.expires_at).getTime() : null;
-          renderSubscriptionCard(subscription);
           window.__sistemaSubscriptionActive = isActive;
           window.__sistemaSubscriptionExpiresAt = expiresAt || null;
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
@@ -338,8 +338,6 @@ function escapeHtml(value) {
             modal.remove();
             style.remove();
           }, 300);
-          dashboardPromise = null;
-          loadDashboard();
         }
       });
     }
@@ -415,8 +413,11 @@ function escapeHtml(value) {
             clearInterval(window.__trialCountdownTimer);
             window.__trialCountdownTimer = null;
           }
-          refreshSubscriptionCard({ force: true });
-          if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
+          // Render free state locally — no extra API call.
+          // nav.js 60s interval will sync subscription status.
+          window.__sistemaSubscriptionActive = false;
+          window.__sistemaSubscriptionExpiresAt = null;
+          renderSubscriptionCard({ subscription_active: false, is_trial: false, expires_at: null });
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: false } }));
           return;
         }
@@ -752,5 +753,8 @@ function escapeHtml(value) {
       renderSubscriptionCard(event.detail.subscription);
       return;
     }
-    refreshSubscriptionCard({ force: true });
+    // No payload — don't force a fresh API call, just re-render from cache.
+    if (window.API?.subscriptionCache) {
+      renderSubscriptionCard(window.API.subscriptionCache);
+    }
   });

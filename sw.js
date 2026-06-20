@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v38-sw-reload-fix';
+const CACHE_NAME = 'sistema-static-v39-trial-rewrite';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
