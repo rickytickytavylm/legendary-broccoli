@@ -787,6 +787,15 @@ window.paintSubscriptionBadgeDirect = function paintSubscriptionBadgeDirect(sub)
     const isActive = !!(sub && sub.subscription_active === true);
     const isTrial = !!(sub && sub.is_trial);
     const expiresRaw = sub && (sub.subscription_expires_at || sub.expires_at);
+    
+    // БЛОКИРОВКА ПЕРЕРИСОВКИ:
+    // Если на карточке УЖЕ нарисован активный триал, мы запрещаем любой функции
+    // перерисовывать его обратно в "неактивна" или "доступны первые видео".
+    if (badgeEl.textContent === 'пробный период' && !isActive) {
+      if (window.sistemaClientLog) window.sistemaClientLog('trial-badge-blocked-downgrade', { sub: sub || null });
+      return;
+    }
+
     const paintBenefits = () => {
       if (benefitsEl) {
         benefitsEl.style.display = 'grid';

@@ -518,6 +518,13 @@ function escapeHtml(value) {
           sessionStorage.removeItem('sistema:trial-activated-subscription');
         }
       } catch (e) {}
+      
+      const badgeEl = document.getElementById('dash-subscription-badge');
+      if (badgeEl && badgeEl.textContent === 'пробный период' && !(sub && sub.subscription_active)) {
+        if (window.sistemaClientLog) window.sistemaClientLog('profile-refresh-blocked-downgrade', { sub: sub || null });
+        return;
+      }
+      
       renderSubscriptionCard(sub);
     } catch (e) {
       if (e && e.status === 429) return;
@@ -799,6 +806,13 @@ function escapeHtml(value) {
     // When the trial expires, the countdown timer resets __sistemaSubscriptionActive to false.
     var eventActive = event?.detail?.active;
     if (eventActive === false && window.__sistemaSubscriptionActive === true) return;
+    
+    const badgeEl = document.getElementById('dash-subscription-badge');
+    if (badgeEl && badgeEl.textContent === 'пробный период' && eventActive === false) {
+      if (window.sistemaClientLog) window.sistemaClientLog('profile-event-blocked-downgrade', { detail: event?.detail || null });
+      return;
+    }
+    
     if (event?.detail?.subscription) {
       renderSubscriptionCard(event.detail.subscription);
       return;

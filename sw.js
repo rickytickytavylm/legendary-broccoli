@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v41-mobile-trial-sync';
+const CACHE_NAME = 'sistema-static-v45-cache-break';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
