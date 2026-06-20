@@ -33,14 +33,15 @@ function eventYogaIsAppleTouchDevice() {
   return /iPad|iPhone|iPod/i.test(ua) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 
-function initEventYogaSection(section) {
+function initEventYogaSection(section, sectionIndex) {
   const lessons = section.lessons || [];
-  const sectionId = section.id || 'event-yoga';
+  const sectionId = section.id || `event-yoga-${sectionIndex || 0}`;
   const video = document.getElementById(`video-${sectionId}`);
   const loader = document.getElementById(`loader-${sectionId}`);
   const list = document.getElementById(`list-${sectionId}`);
   const now = document.getElementById(`now-${sectionId}`);
   const container = document.getElementById(`container-${sectionId}`);
+  const sectionEl = document.getElementById(`section-${sectionId}`);
   let hlsInstance = null;
 
   function setLoading(loading) {
@@ -183,6 +184,7 @@ function initEventYogaSection(section) {
   list.querySelectorAll('.lesson-item').forEach((item) => {
     item.addEventListener('click', (event) => {
       event.preventDefault();
+      event.stopPropagation();
       list.querySelectorAll('.lesson-item').forEach((node) => node.classList.remove('active'));
       item.classList.add('active');
       item.blur();
@@ -191,7 +193,8 @@ function initEventYogaSection(section) {
         hidePreview: true,
       });
       window.requestAnimationFrame(() => {
-        if (video) video.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const scrollTarget = sectionEl || container || video;
+        if (scrollTarget) scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
   });

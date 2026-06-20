@@ -581,7 +581,7 @@ class ApiClient {
     if (!opts.fresh && this.subscriptionCache && Date.now() - this.subscriptionCacheAt < ttl) {
       return Promise.resolve(this.subscriptionCache);
     }
-    if (this.subscriptionPromise) return this.subscriptionPromise;
+    if (this.subscriptionPromise && !opts.fresh) return this.subscriptionPromise;
 
     this.subscriptionPromise = this.request('GET', '/payment/subscription', null, { fresh: true })
       .then((data) => {

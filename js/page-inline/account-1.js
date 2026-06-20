@@ -330,6 +330,7 @@ function escapeHtml(value) {
           
           window.__sistemaSubscriptionActive = isActive;
           window.__sistemaSubscriptionExpiresAt = expiresAt || null;
+          if (isActive) window.__sistemaTrialActivatedAt = Date.now();
           
           renderSubscriptionCard(subscription);
           
@@ -349,10 +350,17 @@ function escapeHtml(value) {
             loadDashboard();
           } catch (e) { console.error('Silent dashboard reload error:', e); }
 
-          // Force-refresh subscription card from backend to ensure UI is in sync
+          // Force-refresh subscription card from backend to ensure UI is in sync.
+          // Clear any pending subscription promise so getSubscription makes a fresh
+          // request instead of returning stale data from before trial activation.
           try {
+            if (window.API) {
+              window.API.subscriptionPromise = null;
+              window.API.subscriptionCache = subscription;
+              window.API.subscriptionCacheAt = Date.now();
+            }
             __lastRefreshSubCardAt = 0;
-            refreshSubscriptionCard({ force: true });
+            setTimeout(() => refreshSubscriptionCard({ force: true }), 500);
           } catch (e) { console.error('Silent sub card refresh error:', e); }
         }
       });
@@ -772,6 +780,11 @@ function escapeHtml(value) {
   }
 
   window.addEventListener('sistema:subscription-changed', function(event) {
+    // Guard: ignore stale events showing inactive right after trial activation
+    var eventActive = event?.detail?.active;
+    if (eventActive === false && window.__sistemaTrialActivatedAt && (Date.now() - window.__sistemaTrialActivatedAt < 15000)) {
+      return;
+    }
     if (event?.detail?.subscription) {
       renderSubscriptionCard(event.detail.subscription);
       return;

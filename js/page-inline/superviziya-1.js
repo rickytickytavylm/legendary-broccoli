@@ -154,6 +154,10 @@ function escapeHtml(value) {
         `).join('');
 
         data.forEach((section, idx) => initSection(section, idx === 0));
+
+        if (window.updateLessonLocks) {
+          window.updateLessonLocks(container);
+        }
       } catch (e) {
         container.innerHTML = '<p class="u-error-muted">Не удалось загрузить данные</p>';
       }

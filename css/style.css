@@ -1498,7 +1498,7 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
 .today-support-card::after {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: 0;
   pointer-events: none;
   border-radius: inherit;
   background:
@@ -7649,7 +7649,7 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologist-slot::after {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: 0;
   border-radius: inherit;
   z-index: 0;
   background: linear-gradient(180deg, rgba(0,0,0,.04) 0%, rgba(0,0,0,.5) 50%, rgba(0,0,0,.96) 100%);
@@ -10752,7 +10752,7 @@ body.chat-page .notification-prompt-banner {
 .carousel-3d-card::before {
   content: '';
   position: absolute;
-  inset: -1px;
+  inset: 0;
   border-radius: inherit;
   background: linear-gradient(180deg, rgba(0,0,0,.02) 0%, rgba(0,0,0,.32) 40%, rgba(0,0,0,.72) 80%, rgba(0,0,0,.88) 100%);
   z-index: 1;
