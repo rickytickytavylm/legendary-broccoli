@@ -437,27 +437,20 @@ function escapeHtml(value) {
       if (testEl) testEl.style.display = 'none';
 
       const tick = () => {
-        const left = expiresAt - Date.now();
+        let left = expiresAt - Date.now();
+        if (left <= 0) left = 0; 
+
+        const cdEl = document.getElementById('trial-countdown');
+        if (cdEl) cdEl.textContent = formatTrialRemaining(left);
+
         if (left <= 0) {
           if (window.__trialCountdownTimer) {
             clearInterval(window.__trialCountdownTimer);
             window.__trialCountdownTimer = null;
           }
-          window.__sistemaSubscriptionActive = false;
-          window.__sistemaSubscriptionExpiresAt = null;
-          
-          // CRITICAL: Clear the stale cache so the event listener doesn't recreate the timer infinitely.
-          if (window.API) {
-             window.API.subscriptionCache = null;
-             window.API.subscriptionCacheAt = 0;
-          }
-
-          renderSubscriptionCard({ subscription_active: false, is_trial: false, expires_at: null });
-          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: false } }));
-          return;
+          // Больше не делаем авто-опрос при 0 из-за бага со сбитыми часами на телефоне.
+          // Сервер сам перестанет пускать, когда время выйдет.
         }
-        const cdEl = document.getElementById('trial-countdown');
-        if (cdEl) cdEl.textContent = formatTrialRemaining(left);
       };
       tick();
       window.__trialCountdownTimer = setInterval(tick, 1000);

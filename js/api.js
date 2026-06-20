@@ -814,23 +814,21 @@ window.paintSubscriptionBadgeDirect = function paintSubscriptionBadgeDirect(sub)
       }
       if (actionEl) actionEl.style.display = 'none';
       paintBenefits();
-      // Сторож: пока триал активен, не даём ничему перетереть плашку обратно в «неактивна».
-      const expiresMs = expiresRaw ? (new Date(expiresRaw).getTime() || 0) : 0;
-      window.__sistemaTrialBadgeUntil = expiresMs;
-      if (!window.__sistemaTrialBadgeGuard) {
-        window.__sistemaTrialBadgeGuard = setInterval(function() {
-          const until = window.__sistemaTrialBadgeUntil || 0;
-          if (!until || Date.now() >= until) {
-            clearInterval(window.__sistemaTrialBadgeGuard);
-            window.__sistemaTrialBadgeGuard = null;
-            return;
-          }
-          const b = document.getElementById('dash-subscription-badge');
-          if (b && b.textContent !== 'пробный период') {
-            window.paintSubscriptionBadgeDirect({ subscription_active: true, is_trial: true, expires_at: new Date(until).toISOString() });
-          }
-        }, 400);
-      }
+      // Сторож: держим плашку, если часы на устройстве спешат.
+      // 5 минут * 60 сек * 1000 мс = 300000 мс
+      const localEnd = Date.now() + 300000;
+      if (window.__sistemaTrialBadgeGuard) clearInterval(window.__sistemaTrialBadgeGuard);
+      window.__sistemaTrialBadgeGuard = setInterval(function() {
+        if (Date.now() >= localEnd) {
+          clearInterval(window.__sistemaTrialBadgeGuard);
+          window.__sistemaTrialBadgeGuard = null;
+          return;
+        }
+        const b = document.getElementById('dash-subscription-badge');
+        if (b && b.textContent !== 'пробный период') {
+          window.paintSubscriptionBadgeDirect({ subscription_active: true, is_trial: true });
+        }
+      }, 400);
     } else if (isActive) {
       badgeEl.textContent = 'активна';
       badgeEl.style.background = 'rgba(48, 209, 88, 0.15)';
