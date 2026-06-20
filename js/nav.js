@@ -3,7 +3,7 @@
  * Injected into every page. Handles scroll-triggered reveal via GPU transform only.
  */
 (function initNav() {
-  var APP_BUILD_VERSION = '2026-06-19-perf-nav-1';
+  var APP_BUILD_VERSION = '2026-06-19-sw-reload-fix';
   try {
     var storedBuild = localStorage.getItem('sistema:app-build-version');
     if (storedBuild !== APP_BUILD_VERSION) {
@@ -97,15 +97,14 @@
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      // Whether the page already had an active controller at load time.
-      // If it did, a later controllerchange means a real UPDATE → safe to reload once.
-      // If it did NOT (first install), claim() will fire controllerchange but we must
-      // NOT reload, otherwise it can create a reload loop on slow connections.
       var hadController = !!navigator.serviceWorker.controller;
       var refreshing = false;
 
       navigator.serviceWorker.addEventListener('controllerchange', function() {
         if (refreshing || !hadController) return;
+        // Guard against reload loops: only reload once per browser session.
+        if (sessionStorage.getItem('sistema:sw-reloaded')) return;
+        sessionStorage.setItem('sistema:sw-reloaded', '1');
         refreshing = true;
         window.location.reload();
       });
@@ -113,8 +112,6 @@
       navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
         .then(function(reg) {
           console.log('ServiceWorker registered with scope:', reg.scope);
-          // Force an immediate update check on app launch.
-          reg.update().catch(function() {});
         })
         .catch(function(err) {
           console.warn('ServiceWorker registration failed:', err);

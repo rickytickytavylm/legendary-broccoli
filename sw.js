@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v37-csp-socket-fix';
+const CACHE_NAME = 'sistema-static-v38-sw-reload-fix';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

@@ -106,7 +106,10 @@ function escapeHtml(value) {
     if (!dashboardLoadedOnce) loadDashboard();
   }
 
-  window.addEventListener('auth:change', refreshAccountOverview);
+  window.addEventListener('auth:change', function() {
+    __lastRefreshSubCardAt = 0;
+    refreshAccountOverview();
+  });
   window.refreshAuthUI = refreshAccountOverview;
 
   function setPanelVisible(element, visible, display = 'block') {
@@ -412,7 +415,7 @@ function escapeHtml(value) {
             clearInterval(window.__trialCountdownTimer);
             window.__trialCountdownTimer = null;
           }
-          refreshSubscriptionCard();
+          refreshSubscriptionCard({ force: true });
           if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: false } }));
           return;
@@ -462,9 +465,13 @@ function escapeHtml(value) {
     if (testEl) testEl.style.display = 'none';
   }
 
-  async function refreshSubscriptionCard() {
+  var __lastRefreshSubCardAt = 0;
+  async function refreshSubscriptionCard(opts = {}) {
+    var now = Date.now();
+    if (!opts.force && now - __lastRefreshSubCardAt < 30000) return;
+    __lastRefreshSubCardAt = now;
     try {
-      const sub = await window.API.getSubscription({ fresh: true });
+      const sub = await window.API.getSubscription({ fresh: !!opts.force });
       renderSubscriptionCard(sub);
     } catch (e) {
       if (e && e.status === 429) return;
@@ -745,5 +752,5 @@ function escapeHtml(value) {
       renderSubscriptionCard(event.detail.subscription);
       return;
     }
-    refreshSubscriptionCard();
+    refreshSubscriptionCard({ force: true });
   });
