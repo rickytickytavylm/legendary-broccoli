@@ -535,6 +535,13 @@ class ApiClient {
         if (data) {
           this.subscriptionCache = data;
           this.subscriptionCacheAt = Date.now();
+          this.subscriptionPromise = null;
+          if (data.subscription_active) {
+            window.__sistemaSubscriptionActive = true;
+            window.__sistemaSubscriptionExpiresAt = data.expires_at
+              ? new Date(data.expires_at).getTime() || null
+              : null;
+          }
         }
         return data;
       });
