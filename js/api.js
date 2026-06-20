@@ -753,11 +753,11 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'trial-cta';
-    btn.innerHTML = '<span class="trial-spark">✦</span><span>Попробовать бесплатно</span>';
+    btn.innerHTML = '<span class="trial-spark">✦</span><span>Попробовать 1 день бесплатно</span>';
 
     const note = document.createElement('p');
     note.className = 'trial-cta-note';
-    note.textContent = 'Без карты и без оплаты. Полный доступ на пробный период.';
+    note.textContent = 'Полный доступ на 1 день. Без карты и без оплаты.';
 
     buyBtn.insertAdjacentElement('afterend', btn);
     btn.insertAdjacentElement('afterend', note);
@@ -780,14 +780,33 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
       btn.innerHTML = '<span>Активируем доступ…</span>';
       try {
         const res = await window.API.activateTrial();
-        if (res && (res.trial_granted || res.subscription_active)) {
-          window.API.subscriptionCache = res;
+        const activated = !!(res && (res.trial_granted === true || res.subscription_active === true));
+        if (activated) {
+          // Гарантированно показываем «пробный период» сразу, не завися от того,
+          // какие именно поля вернул сервер. Триал = активный доступ с флагом is_trial.
+          const expiresRaw = res.expires_at || res.subscription_expires_at || null;
+          const optimistic = {
+            subscription_active: true,
+            is_trial: true,
+            access_reason: 'trial',
+            trial_started_at: res.trial_started_at || new Date().toISOString(),
+            expires_at: expiresRaw,
+            subscription_expires_at: res.subscription_expires_at || expiresRaw,
+            trial_available: false,
+            trial_used: true,
+          };
+          window.API.subscriptionCache = optimistic;
           window.API.subscriptionCacheAt = Date.now();
+          window.API.subscriptionPromise = null;
+          window.__sistemaSubscriptionActive = true;
+          window.__sistemaSubscriptionExpiresAt = expiresRaw
+            ? (new Date(expiresRaw).getTime() || null)
+            : null;
           if (typeof opts.onActivated === 'function') {
-            opts.onActivated(res);
+            opts.onActivated(optimistic);
           } else {
             window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-              detail: { active: true, expires_at: res.expires_at, subscription: res }
+              detail: { active: true, expires_at: expiresRaw, subscription: optimistic }
             }));
           }
           return;

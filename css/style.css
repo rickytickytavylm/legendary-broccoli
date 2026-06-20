@@ -7638,22 +7638,14 @@ body.audio-player-open::-webkit-scrollbar {
   justify-content: flex-end;
   scroll-snap-align: start;
   border: 1px solid rgba(255,255,255,.18);
-  background: var(--card-bg) center/cover no-repeat;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.04) 0%, rgba(0,0,0,.5) 50%, rgba(0,0,0,.96) 100%),
+    var(--card-bg) center/cover no-repeat;
   background-color: #050706;
   box-shadow: 0 20px 48px rgba(0,0,0,.42);
   transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, border-color .3s ease;
   isolation: isolate;
   -webkit-tap-highlight-color: transparent;
-}
-
-.today-psychologist-slot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  z-index: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,.04) 0%, rgba(0,0,0,.5) 50%, rgba(0,0,0,.96) 100%);
-  pointer-events: none;
 }
 
 .today-psychologist-slot > * {
