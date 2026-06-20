@@ -753,6 +753,7 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'trial-cta';
+    btn.setAttribute('data-trial-activate', 'true');
     btn.innerHTML = '<span class="trial-spark">✦</span><span>Попробовать 1 день бесплатно</span>';
 
     const note = document.createElement('p');
@@ -762,98 +763,142 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
     buyBtn.insertAdjacentElement('afterend', btn);
     btn.insertAdjacentElement('afterend', note);
 
-    btn.addEventListener('click', async () => {
-      if (!(window.API.isLoggedIn && window.API.isLoggedIn())) {
-        if (window.openAuthModal) {
-          window.openAuthModal('login');
-          window.addEventListener('auth:change', function handler() {
-            window.removeEventListener('auth:change', handler);
-            btn.click();
-          }, { once: true });
-        } else {
-          alert('Войдите, чтобы активировать пробный период.');
-        }
-        return;
-      }
-      const original = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span>Активируем доступ…</span>';
-      try {
-        const res = await window.API.activateTrial();
-        const activated = !!(res && (res.trial_granted === true || res.subscription_active === true));
-        if (activated) {
-          // Гарантированно показываем «пробный период» сразу, не завися от того,
-          // какие именно поля вернул сервер. Триал = активный доступ с флагом is_trial.
-          const expiresRaw = res.expires_at || res.subscription_expires_at || null;
-          const optimistic = {
-            subscription_active: true,
-            is_trial: true,
-            access_reason: 'trial',
-            trial_started_at: res.trial_started_at || new Date().toISOString(),
-            expires_at: expiresRaw,
-            subscription_expires_at: res.subscription_expires_at || expiresRaw,
-            trial_available: false,
-            trial_used: true,
-          };
-          window.API.subscriptionCache = optimistic;
-          window.API.subscriptionCacheAt = Date.now();
-          window.API.subscriptionPromise = null;
-          try {
-            sessionStorage.setItem('sistema:trial-activated-subscription', JSON.stringify(optimistic));
-          } catch (e) {}
-          window.__sistemaSubscriptionActive = true;
-          window.__sistemaSubscriptionExpiresAt = expiresRaw
-            ? (new Date(expiresRaw).getTime() || null)
-            : null;
-          if (typeof opts.onActivated === 'function') {
-            opts.onActivated(optimistic);
-          } else {
-            window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-              detail: { active: true, expires_at: expiresRaw, subscription: optimistic }
-            }));
-          }
-          if (typeof window.sistemaRenderSubscriptionCard === 'function') {
-            window.sistemaRenderSubscriptionCard(optimistic);
-          }
-          // Сверка с сервером чуть позже — на случай, если мгновенный ответ был неполным
-          // (важно для iOS PWA, где порядок и кэш запросов отличаются).
-          setTimeout(() => {
-            window.API.getSubscription({ fresh: true })
-              .then((fresh) => {
-                if (!fresh) return;
-                window.API.subscriptionCache = fresh;
-                window.API.subscriptionCacheAt = Date.now();
-                const freshActive = !!fresh.subscription_active;
-                if (freshActive) {
-                  window.__sistemaSubscriptionActive = true;
-                  window.__sistemaSubscriptionExpiresAt = fresh.expires_at
-                    ? (new Date(fresh.expires_at).getTime() || null)
-                    : null;
-                }
-                if (typeof window.sistemaRenderSubscriptionCard === 'function') {
-                  window.sistemaRenderSubscriptionCard(fresh);
-                }
-                window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-                  detail: { active: freshActive, expires_at: fresh.expires_at, subscription: fresh }
-                }));
-              })
-              .catch(() => {});
-          }, 1200);
-          return;
-        }
-        btn.disabled = true;
-        btn.innerHTML = '<span>Пробный период уже использован</span>';
-        note.textContent = 'Вы уже использовали бесплатный период. Оформите подписку, чтобы продолжить.';
-      } catch (err) {
-        btn.disabled = false;
-        btn.innerHTML = original;
-        alert((err && err.error) || 'Не удалось активировать пробный период. Попробуйте позже.');
-      }
-    });
+    if (typeof opts.onActivated === 'function') btn.__trialOnActivated = opts.onActivated;
+    btn.__trialNote = note;
   } catch (e) {
     /* trial button must not break the modal */
   }
 };
+
+window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
+  const expiresRaw = res && (res.expires_at || res.subscription_expires_at) || null;
+  const optimistic = {
+    ...(res || {}),
+    subscription_active: true,
+    is_trial: true,
+    access_reason: 'trial',
+    trial_started_at: (res && res.trial_started_at) || new Date().toISOString(),
+    expires_at: expiresRaw,
+    subscription_expires_at: (res && res.subscription_expires_at) || expiresRaw,
+    trial_available: false,
+    trial_used: true,
+  };
+  if (window.API) {
+    window.API.subscriptionCache = optimistic;
+    window.API.subscriptionCacheAt = Date.now();
+    window.API.subscriptionPromise = null;
+  }
+  try { sessionStorage.setItem('sistema:trial-activated-subscription', JSON.stringify(optimistic)); } catch (e) {}
+  window.__sistemaSubscriptionActive = true;
+  window.__sistemaSubscriptionExpiresAt = expiresRaw ? (new Date(expiresRaw).getTime() || null) : null;
+  if (typeof onActivated === 'function') {
+    onActivated(optimistic);
+  }
+  if (typeof window.sistemaRenderSubscriptionCard === 'function') {
+    window.sistemaRenderSubscriptionCard(optimistic);
+  }
+  window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+    detail: { active: true, expires_at: expiresRaw, subscription: optimistic }
+  }));
+  setTimeout(() => {
+    if (!window.API) return;
+    window.API.getSubscription({ fresh: true })
+      .then((fresh) => {
+        if (!fresh) return;
+        window.API.subscriptionCache = fresh;
+        window.API.subscriptionCacheAt = Date.now();
+        if (typeof window.sistemaRenderSubscriptionCard === 'function') {
+          window.sistemaRenderSubscriptionCard(fresh);
+        }
+        window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+          detail: { active: !!fresh.subscription_active, expires_at: fresh.expires_at, subscription: fresh }
+        }));
+      })
+      .catch(() => {});
+  }, 800);
+  return optimistic;
+};
+
+window.sistemaClientLog = function sistemaClientLog(step, data) {
+  try {
+    const payload = Object.assign({ step: step, path: location.pathname, ts: Date.now() }, data || {});
+    const url = (window.API && window.API.base ? window.API.base : '/api') + '/payment/client-log';
+    const body = JSON.stringify(payload);
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      keepalive: true,
+      body: body,
+    }).catch(() => {});
+  } catch (e) {}
+};
+
+document.addEventListener('click', async function handleTrialClick(event) {
+  const btn = event.target && event.target.closest && event.target.closest('[data-trial-activate], .trial-cta');
+  if (!btn || !window.API || btn.__trialInFlight) return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  window.sistemaClientLog('trial-click', {
+    btnClass: btn.className || null,
+    hasAttr: btn.hasAttribute && btn.hasAttribute('data-trial-activate'),
+    loggedIn: !!(window.API.isLoggedIn && window.API.isLoggedIn()),
+  });
+  if (!(window.API.isLoggedIn && window.API.isLoggedIn())) {
+    if (window.openAuthModal) {
+      window.openAuthModal('login');
+      window.addEventListener('auth:change', function handler() {
+        window.removeEventListener('auth:change', handler);
+        setTimeout(() => btn.click(), 0);
+      }, { once: true });
+    } else {
+      alert('Войдите, чтобы активировать пробный период.');
+    }
+    return;
+  }
+
+  const original = btn.innerHTML || btn.textContent;
+  btn.__trialInFlight = true;
+  btn.disabled = true;
+  if (btn.classList && btn.classList.contains('trial-cta')) {
+    btn.innerHTML = '<span>Активируем доступ...</span>';
+  } else {
+    const strong = btn.querySelector && btn.querySelector('strong');
+    if (strong) strong.textContent = 'Активируем пробный период...';
+  }
+  try {
+    window.sistemaClientLog('trial-request-start', {});
+    const res = await window.API.activateTrial();
+    window.sistemaClientLog('trial-response', {
+      trial_granted: res && res.trial_granted,
+      subscription_active: res && res.subscription_active,
+      is_trial: res && res.is_trial,
+      expires_at: res && (res.expires_at || res.subscription_expires_at),
+    });
+    const activated = !!(res && (res.trial_granted === true || res.subscription_active === true));
+    if (!activated) {
+      window.sistemaClientLog('trial-not-activated', { res: res || null });
+      btn.disabled = true;
+      if (btn.classList && btn.classList.contains('trial-cta')) {
+        btn.innerHTML = '<span>Пробный период уже использован</span>';
+        if (btn.__trialNote) btn.__trialNote.textContent = 'Вы уже использовали бесплатный период. Оформите подписку, чтобы продолжить.';
+      }
+      return;
+    }
+    window.handleTrialActivated(res, btn.__trialOnActivated);
+    window.sistemaClientLog('trial-rendered', {
+      badge: (document.getElementById('dash-subscription-badge') || {}).textContent || null,
+      hasCardFn: typeof window.sistemaRenderSubscriptionCard === 'function',
+    });
+  } catch (err) {
+    window.sistemaClientLog('trial-error', { error: (err && (err.error || err.message)) || String(err), status: err && err.status });
+    btn.disabled = false;
+    if (btn.classList && btn.classList.contains('trial-cta')) btn.innerHTML = original;
+    alert((err && err.error) || 'Не удалось активировать пробный период. Попробуйте позже.');
+  } finally {
+    btn.__trialInFlight = false;
+  }
+}, true);
 
 function isAppleTouchVideoDevice() {
   const ua = navigator.userAgent || '';

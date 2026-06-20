@@ -410,6 +410,7 @@ function escapeHtml(value) {
     const isTrial = !!source?.is_trial
       || (isActive && !!source?.trial_started_at && source?.access_reason === 'trial')
       || (isActive && !!source?.trial_started_at && !source?.last_payment);
+    const isTrialAvailable = source?.trial_available === true;
 
     // Сбрасываем предыдущий таймер обратного отсчёта, чтобы не плодить интервалы.
     if (window.__trialCountdownTimer) {
@@ -483,7 +484,9 @@ function escapeHtml(value) {
       return;
     }
 
-    statusEl.textContent = 'Доступны первые видео. Pro открывает весь каталог, чат и AI.';
+    statusEl.textContent = isTrialAvailable
+      ? 'Пробный период доступен. Нажмите ниже, чтобы включить Pro на 1 день.'
+      : 'Доступны первые видео. Pro открывает весь каталог, чат и AI.';
     badgeEl.textContent = 'неактивна';
     badgeEl.style.background = 'rgba(255, 255, 255, 0.08)';
     badgeEl.style.color = 'rgba(255, 255, 255, 0.4)';
@@ -491,7 +494,19 @@ function escapeHtml(value) {
     if (actionEl) {
       actionEl.style.display = 'grid';
       actionEl.disabled = false;
-      actionEl.onclick = openAccountSubscriptionModal;
+      const titleEl = actionEl.querySelector('strong');
+      const subEl = actionEl.querySelector('small');
+      if (isTrialAvailable) {
+        actionEl.setAttribute('data-trial-activate', 'true');
+        if (titleEl) titleEl.textContent = 'Активировать пробный период';
+        if (subEl) subEl.textContent = '1 день бесплатно, без карты и оплаты';
+        actionEl.onclick = null;
+      } else {
+        actionEl.removeAttribute('data-trial-activate');
+        if (titleEl) titleEl.textContent = 'Активировать Sistema Pro';
+        if (subEl) subEl.textContent = 'Все видео, Общий чат и AI — 2990 ₽';
+        actionEl.onclick = openAccountSubscriptionModal;
+      }
     }
     if (benefitsEl) {
       benefitsEl.style.display = 'grid';

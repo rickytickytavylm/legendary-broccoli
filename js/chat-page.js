@@ -2016,10 +2016,12 @@
         modal.classList.remove('active');
         setTimeout(() => modal.remove(), 300);
       }
-      const statusText = document.getElementById('chat-status')?.textContent || '';
-      if (statusText.includes('подписка') || statusText.includes('Подписка') || statusText.includes('Подключаемся')) {
-        await boot();
-      }
+      state.messages = new Map();
+      state.latestId = 0;
+      state.loading = true;
+      setStatus('Подключаем чат...');
+      render();
+      await boot();
     } else {
       state.messages = [];
       setStatus('Требуется подписка Pro');
