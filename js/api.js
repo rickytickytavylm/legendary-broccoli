@@ -770,6 +770,36 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
   }
 };
 
+window.paintSubscriptionBadgeDirect = function paintSubscriptionBadgeDirect(sub) {
+  try {
+    const badgeEl = document.getElementById('dash-subscription-badge');
+    const statusEl = document.getElementById('dash-subscription-status');
+    const actionEl = document.getElementById('dash-subscription-action');
+    if (!badgeEl) return;
+    const isActive = !!(sub && sub.subscription_active === true);
+    const isTrial = !!(sub && sub.is_trial);
+    const expiresRaw = sub && (sub.subscription_expires_at || sub.expires_at);
+    if (isActive && isTrial) {
+      badgeEl.textContent = 'пробный период';
+      badgeEl.style.background = 'rgba(10, 132, 255, 0.16)';
+      badgeEl.style.color = '#5ac8fa';
+      badgeEl.style.border = '1px solid rgba(10, 132, 255, 0.28)';
+      if (statusEl) {
+        let untilStr = '';
+        if (expiresRaw) { try { untilStr = ' до ' + new Date(expiresRaw).toLocaleString('ru-RU', { day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' }); } catch (e) {} }
+        statusEl.textContent = 'Пробный доступ Pro активен' + untilStr;
+      }
+      if (actionEl) actionEl.style.display = 'none';
+    } else if (isActive) {
+      badgeEl.textContent = 'активна';
+      badgeEl.style.background = 'rgba(48, 209, 88, 0.15)';
+      badgeEl.style.color = '#30d158';
+      badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
+      if (actionEl) actionEl.style.display = 'none';
+    }
+  } catch (e) {}
+};
+
 window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
   const expiresRaw = res && (res.expires_at || res.subscription_expires_at) || null;
   const optimistic = {
@@ -800,6 +830,10 @@ window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
   window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
     detail: { active: true, expires_at: expiresRaw, subscription: optimistic }
   }));
+  // ГАРАНТИРОВАННЫЙ прямой апдейт плашки профиля — ПОСЛЕ всех слушателей,
+  // чтобы ничто не перетёрло её обратно в «неактивна».
+  window.paintSubscriptionBadgeDirect(optimistic);
+  setTimeout(() => window.paintSubscriptionBadgeDirect(optimistic), 50);
   setTimeout(() => {
     if (!window.API) return;
     window.API.getSubscription({ fresh: true })
@@ -807,9 +841,8 @@ window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
         if (!fresh) return;
         window.API.subscriptionCache = fresh;
         window.API.subscriptionCacheAt = Date.now();
-        if (typeof window.sistemaRenderSubscriptionCard === 'function') {
-          window.sistemaRenderSubscriptionCard(fresh);
-        }
+        window.paintSubscriptionBadgeDirect(fresh);
+        if (window.sistemaClientLog) window.sistemaClientLog('trial-reconcile', { active: !!fresh.subscription_active, is_trial: !!fresh.is_trial });
         window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
           detail: { active: !!fresh.subscription_active, expires_at: fresh.expires_at, subscription: fresh }
         }));
@@ -886,10 +919,12 @@ document.addEventListener('click', async function handleTrialClick(event) {
       return;
     }
     window.handleTrialActivated(res, btn.__trialOnActivated);
-    window.sistemaClientLog('trial-rendered', {
-      badge: (document.getElementById('dash-subscription-badge') || {}).textContent || null,
-      hasCardFn: typeof window.sistemaRenderSubscriptionCard === 'function',
-    });
+    setTimeout(() => {
+      window.sistemaClientLog('trial-rendered', {
+        badge: (document.getElementById('dash-subscription-badge') || {}).textContent || null,
+        hasCardFn: typeof window.sistemaRenderSubscriptionCard === 'function',
+      });
+    }, 120);
   } catch (err) {
     window.sistemaClientLog('trial-error', { error: (err && (err.error || err.message)) || String(err), status: err && err.status });
     btn.disabled = false;
