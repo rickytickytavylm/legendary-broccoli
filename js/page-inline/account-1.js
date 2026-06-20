@@ -185,11 +185,11 @@ function escapeHtml(value) {
         ? window.API.isSubscriptionActive(sub)
         : !!(sub && sub.subscription_active);
       renderSubscriptionCard(sub);
-      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: isActive, expires_at: expiresAt } }));
-      if (isActive) {
-        if (typeof window.checkSubscriptionSync === 'function') window.checkSubscriptionSync(true);
-        refreshSubscriptionCard();
-      }
+      window.__sistemaSubscriptionActive = isActive;
+      window.__sistemaSubscriptionExpiresAt = expiresAt || null;
+      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+        detail: { active: isActive, expires_at: expiresAt, subscription: sub }
+      }));
       return isActive;
     };
 
@@ -320,12 +320,15 @@ function escapeHtml(value) {
     if (window.injectTrialOption) {
       window.injectTrialOption(modal, {
         onActivated(subscription) {
-          renderSubscriptionCard(subscription);
+          const isActive = window.API?.isSubscriptionActive
+            ? window.API.isSubscriptionActive(subscription)
+            : !!(subscription && subscription.subscription_active);
           const expiresAt = subscription && subscription.expires_at ? new Date(subscription.expires_at).getTime() : null;
-          window.__sistemaSubscriptionActive = true;
+          renderSubscriptionCard(subscription);
+          window.__sistemaSubscriptionActive = isActive;
           window.__sistemaSubscriptionExpiresAt = expiresAt || null;
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-            detail: { active: true, expires_at: expiresAt, subscription }
+            detail: { active: isActive, expires_at: expiresAt, subscription }
           }));
           modal.classList.remove('active');
           window.setTimeout(() => {
@@ -340,9 +343,12 @@ function escapeHtml(value) {
   async function initProfile() {
     showDashboardShell();
     refreshProfileHeader();
-    refreshSubscriptionCard();
+    if (window.API?.hasPendingPaymentConfirm?.()) {
+      await confirmPaymentAndSync();
+    } else {
+      refreshSubscriptionCard();
+    }
     loadDashboard();
-    confirmPaymentAndSync();
   }
 
   function formatTrialRemaining(ms) {

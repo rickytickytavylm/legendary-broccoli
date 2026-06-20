@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v36-boot-fix';
+const CACHE_NAME = 'sistema-static-v37-csp-socket-fix';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -29,7 +29,10 @@ self.addEventListener('fetch', (event) => {
   }
 
   const url = new URL(event.request.url);
-  if (url.origin === self.location.origin && /\.(?:js|css)$/i.test(url.pathname)) {
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+  if (/\.(?:js|css)$/i.test(url.pathname)) {
     event.respondWith(
       fetch(event.request, { cache: 'reload' }).catch(async () => {
         return await caches.match(event.request) || Response.error();
