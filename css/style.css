@@ -7649,7 +7649,8 @@ body.audio-player-open::-webkit-scrollbar {
 .today-psychologist-slot::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -1px;
+  border-radius: inherit;
   z-index: 0;
   background: linear-gradient(180deg, rgba(0,0,0,.04) 0%, rgba(0,0,0,.5) 50%, rgba(0,0,0,.96) 100%);
   pointer-events: none;
@@ -7706,6 +7707,10 @@ body.psychologist-detail-page .main-content {
   max-width: none;
   width: 100%;
   padding: 0 0 40px;
+}
+
+body.psychologist-detail-page {
+  padding-top: 0 !important;
 }
 
 body.psychologist-detail-page .psychologists-page {
@@ -7773,7 +7778,7 @@ body.psychologist-detail-page .psych-detail-cta {
 
 .psych-list-grid {
   display: grid;
-  gap: 16px;
+  gap: 24px;
 }
 
 .psych-list-card,
@@ -7788,15 +7793,15 @@ body.psychologist-detail-page .psych-detail-cta {
 
 .psych-list-card {
   display: grid;
-  grid-template-columns: minmax(140px, 190px) minmax(0, 1fr);
-  gap: clamp(14px, 2.5vw, 22px);
-  padding: clamp(10px, 1.6vw, 14px);
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 28px);
+  padding: clamp(16px, 2vw, 22px);
 }
 
 .psych-list-photo {
   display: block;
-  min-height: 210px;
-  border-radius: 16px;
+  min-height: 240px;
+  border-radius: 18px;
   overflow: hidden;
   background: rgba(255,255,255,.04);
 }
@@ -7813,11 +7818,11 @@ body.psychologist-detail-page .psych-detail-cta {
 .psych-list-copy {
   align-self: center;
   min-width: 0;
-  padding: 4px 4px 4px 0;
+  padding: 6px 8px 6px 0;
 }
 
 .psych-card-kicker {
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   color: rgba(246,240,231,.5);
   font-size: 10px;
   font-weight: 800;
@@ -7826,10 +7831,10 @@ body.psychologist-detail-page .psych-detail-cta {
 }
 
 .psych-list-copy h2 {
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   color: #fff;
   font-size: clamp(18px, 2.2vw, 24px);
-  line-height: 1.08;
+  line-height: 1.12;
   letter-spacing: -.03em;
 }
 
@@ -7848,14 +7853,14 @@ body.psychologist-detail-page .psych-detail-cta {
   margin: 0;
   color: rgba(246,240,231,.58);
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .psych-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .psych-tags span {
@@ -7872,9 +7877,9 @@ body.psychologist-detail-page .psych-detail-cta {
 }
 
 .psych-card-link {
-  margin-top: 14px;
-  min-height: 36px;
-  padding: 0 14px;
+  margin-top: 20px;
+  min-height: 38px;
+  padding: 0 16px;
   font-size: 12px;
 }
 
@@ -8248,9 +8253,7 @@ body.psychologist-detail-page .psych-detail-cta {
 }
 
 .today-meditation-card .today-support-button {
-  background: rgba(7,16,14,.88);
-  color: #F6F0E7;
-  border-color: rgba(216,191,155,.32);
+  text-decoration: none;
 }
 
 .today-support-card:not(.today-meditation-card) {
@@ -10749,8 +10752,9 @@ body.chat-page .notification-prompt-banner {
 .carousel-3d-card::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 35%);
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(0,0,0,.02) 0%, rgba(0,0,0,.32) 40%, rgba(0,0,0,.72) 80%, rgba(0,0,0,.88) 100%);
   z-index: 1;
   pointer-events: none;
 }

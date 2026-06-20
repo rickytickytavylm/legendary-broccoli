@@ -183,7 +183,6 @@ function initEventYogaSection(section) {
   list.querySelectorAll('.lesson-item').forEach((item) => {
     item.addEventListener('click', (event) => {
       event.preventDefault();
-      const scrollBefore = window.scrollY;
       list.querySelectorAll('.lesson-item').forEach((node) => node.classList.remove('active'));
       item.classList.add('active');
       item.blur();
@@ -192,7 +191,7 @@ function initEventYogaSection(section) {
         hidePreview: true,
       });
       window.requestAnimationFrame(() => {
-        if (Math.abs(window.scrollY - scrollBefore) > 24) window.scrollTo({ top: scrollBefore, behavior: 'auto' });
+        if (video) video.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     });
   });

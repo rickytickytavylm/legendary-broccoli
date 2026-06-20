@@ -348,6 +348,12 @@ function escapeHtml(value) {
             dashboardPromise = null;
             loadDashboard();
           } catch (e) { console.error('Silent dashboard reload error:', e); }
+
+          // Force-refresh subscription card from backend to ensure UI is in sync
+          try {
+            __lastRefreshSubCardAt = 0;
+            refreshSubscriptionCard({ force: true });
+          } catch (e) { console.error('Silent sub card refresh error:', e); }
         }
       });
     }
@@ -390,7 +396,9 @@ function escapeHtml(value) {
     const isActive = window.API?.isSubscriptionActive
       ? window.API.isSubscriptionActive(source)
       : !!source?.subscription_active;
-    const isTrial = !!source?.is_trial;
+    const isTrial = !!source?.is_trial
+      || (isActive && !!source?.trial_started_at && source?.access_reason === 'trial')
+      || (isActive && !!source?.trial_started_at && !source?.last_payment);
 
     // Сбрасываем предыдущий таймер обратного отсчёта, чтобы не плодить интервалы.
     if (window.__trialCountdownTimer) {
