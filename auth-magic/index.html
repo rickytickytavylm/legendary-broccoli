@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+п»ї<!DOCTYPE html>
 <html lang="ru">
 <head>
   <!-- PWA Standalone Meta Tags -->
   <link rel="manifest" href="/manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Система" />
+  <meta name="apple-mobile-web-app-title" content="РЎРёСЃС‚РµРјР°" />
   <link rel="apple-touch-icon" href="/assets/logo2.png" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' wss: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Вход — Система Молодцова</title>
+  <title>Р’С…РѕРґ вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°</title>
   <link rel="stylesheet" href="/css/style.css?v=160" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -46,31 +46,31 @@
 </head>
 <body>
   <div class="magic-shell">
-    <a class="magic-logo-card" href="/" aria-label="Система Молодцова">
-      <img src="/assets/webp/logo2-Photoroom.webp" alt="Система Молодцова" loading="lazy" decoding="async">
+    <a class="magic-logo-card" href="/" aria-label="РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°">
+      <img src="/assets/webp/logo2-Photoroom.webp" alt="РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°" loading="lazy" decoding="async">
     </a>
     <main class="magic-card">
-      <div class="magic-kicker">Безопасный вход</div>
+      <div class="magic-kicker">Р‘РµР·РѕРїР°СЃРЅС‹Р№ РІС…РѕРґ</div>
       <div class="magic-icon" id="magic-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-6.2-8.56"/><path d="M21 3v6h-6"/></svg>
       </div>
-      <h1 id="magic-title">Проверяем ссылку</h1>
-      <p id="magic-text">Это займёт пару секунд. Если всё в порядке, мы сразу откроем личный кабинет.</p>
+      <h1 id="magic-title">РџСЂРѕРІРµСЂСЏРµРј СЃСЃС‹Р»РєСѓ</h1>
+      <p id="magic-text">Р­С‚Рѕ Р·Р°Р№РјС‘С‚ РїР°СЂСѓ СЃРµРєСѓРЅРґ. Р•СЃР»Рё РІСЃС‘ РІ РїРѕСЂСЏРґРєРµ, РјС‹ СЃСЂР°Р·Сѓ РѕС‚РєСЂРѕРµРј Р»РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚.</p>
       <form id="resend-form" class="magic-actions u-hidden">
-        <input class="magic-input" type="email" id="email" placeholder="Ваша почта" autocomplete="email">
-        <button class="magic-btn primary" type="submit" id="resend-btn">Отправить новую ссылку</button>
-        <a class="magic-btn secondary" href="/">На главную</a>
+        <input class="magic-input" type="email" id="email" placeholder="Р’Р°С€Р° РїРѕС‡С‚Р°" autocomplete="email">
+        <button class="magic-btn primary" type="submit" id="resend-btn">РћС‚РїСЂР°РІРёС‚СЊ РЅРѕРІСѓСЋ СЃСЃС‹Р»РєСѓ</button>
+        <a class="magic-btn secondary" href="/">РќР° РіР»Р°РІРЅСѓСЋ</a>
       </form>
       <div id="done-actions" class="magic-actions u-hidden">
-        <a class="magic-btn primary" href="/account/">Открыть профиль</a>
-        <button class="magic-btn secondary" id="request-new-link-btn" type="button">Запросить новую ссылку</button>
+        <a class="magic-btn primary" href="/account/">РћС‚РєСЂС‹С‚СЊ РїСЂРѕС„РёР»СЊ</a>
+        <button class="magic-btn secondary" id="request-new-link-btn" type="button">Р—Р°РїСЂРѕСЃРёС‚СЊ РЅРѕРІСѓСЋ СЃСЃС‹Р»РєСѓ</button>
       </div>
       <p class="magic-small" id="magic-small"></p>
     </main>
   </div>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js?v=80"></script>
+  <script src="/js/api.js?v=70"></script>
   <script src="/js/auth.js?v=18"></script>
   <script src="/js/page-inline/auth-magic-1.js?v=1"></script>
 </body>

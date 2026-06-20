@@ -812,6 +812,30 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
           if (typeof window.sistemaRenderSubscriptionCard === 'function') {
             window.sistemaRenderSubscriptionCard(optimistic);
           }
+          // Сверка с сервером чуть позже — на случай, если мгновенный ответ был неполным
+          // (важно для iOS PWA, где порядок и кэш запросов отличаются).
+          setTimeout(() => {
+            window.API.getSubscription({ fresh: true })
+              .then((fresh) => {
+                if (!fresh) return;
+                window.API.subscriptionCache = fresh;
+                window.API.subscriptionCacheAt = Date.now();
+                const freshActive = !!fresh.subscription_active;
+                if (freshActive) {
+                  window.__sistemaSubscriptionActive = true;
+                  window.__sistemaSubscriptionExpiresAt = fresh.expires_at
+                    ? (new Date(fresh.expires_at).getTime() || null)
+                    : null;
+                }
+                if (typeof window.sistemaRenderSubscriptionCard === 'function') {
+                  window.sistemaRenderSubscriptionCard(fresh);
+                }
+                window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+                  detail: { active: freshActive, expires_at: fresh.expires_at, subscription: fresh }
+                }));
+              })
+              .catch(() => {});
+          }, 1200);
           return;
         }
         btn.disabled = true;
