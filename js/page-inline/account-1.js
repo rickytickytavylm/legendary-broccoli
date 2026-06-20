@@ -321,27 +321,7 @@ function escapeHtml(value) {
 
     window.setTimeout(() => modal.classList.add('active'), 20);
     if (window.injectTrialOption) {
-      window.injectTrialOption(modal, {
-        onActivated(subscription) {
-          renderSubscriptionCard(subscription);
-          const isActive = window.API?.isSubscriptionActive
-            ? window.API.isSubscriptionActive(subscription)
-            : !!(subscription && subscription.subscription_active);
-          const expiresAt = subscription && subscription.expires_at ? new Date(subscription.expires_at).getTime() : null;
-          window.__sistemaSubscriptionActive = isActive;
-          window.__sistemaSubscriptionExpiresAt = expiresAt || null;
-          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-            detail: { active: isActive, expires_at: expiresAt, subscription }
-          }));
-          modal.classList.remove('active');
-          window.setTimeout(() => {
-            modal.remove();
-            style.remove();
-          }, 300);
-          // Reload dashboard data with new access level (no full page reload).
-          try { dashboardPromise = null; loadDashboard(); } catch (e) {}
-        }
-      });
+      window.injectTrialOption(modal);
     }
   }
 

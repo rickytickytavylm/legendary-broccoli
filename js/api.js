@@ -779,9 +779,7 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
           if (typeof opts.onActivated === 'function') {
             opts.onActivated(res);
           } else {
-            window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
-              detail: { active: true, expires_at: res.expires_at, subscription: res }
-            }));
+            window.location.reload();
           }
           return;
         }
