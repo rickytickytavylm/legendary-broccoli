@@ -594,6 +594,13 @@ class ApiClient {
       .then((data) => {
         this.subscriptionCache = data;
         this.subscriptionCacheAt = Date.now();
+        // Если сервер говорит, что активен пробный период — красим плашку напрямую,
+        // не доверяя странице (её renderSubscriptionCard на части устройств не переключает плашку).
+        try {
+          if (data && data.subscription_active === true && typeof window.paintSubscriptionBadgeDirect === 'function') {
+            window.paintSubscriptionBadgeDirect(data);
+          }
+        } catch (e) {}
         return data;
       })
       .catch((err) => {
@@ -775,10 +782,17 @@ window.paintSubscriptionBadgeDirect = function paintSubscriptionBadgeDirect(sub)
     const badgeEl = document.getElementById('dash-subscription-badge');
     const statusEl = document.getElementById('dash-subscription-status');
     const actionEl = document.getElementById('dash-subscription-action');
+    const benefitsEl = document.getElementById('dash-subscription-benefits');
     if (!badgeEl) return;
     const isActive = !!(sub && sub.subscription_active === true);
     const isTrial = !!(sub && sub.is_trial);
     const expiresRaw = sub && (sub.subscription_expires_at || sub.expires_at);
+    const paintBenefits = () => {
+      if (benefitsEl) {
+        benefitsEl.style.display = 'grid';
+        benefitsEl.innerHTML = '<span>Открыты все видео-разделы и уроки</span><span>Доступен Общий чат участников</span><span>Доступна Лиза, AI-помощница системы</span>';
+      }
+    };
     if (isActive && isTrial) {
       badgeEl.textContent = 'пробный период';
       badgeEl.style.background = 'rgba(10, 132, 255, 0.16)';
@@ -790,12 +804,31 @@ window.paintSubscriptionBadgeDirect = function paintSubscriptionBadgeDirect(sub)
         statusEl.textContent = 'Пробный доступ Pro активен' + untilStr;
       }
       if (actionEl) actionEl.style.display = 'none';
+      paintBenefits();
+      // Сторож: пока триал активен, не даём ничему перетереть плашку обратно в «неактивна».
+      const expiresMs = expiresRaw ? (new Date(expiresRaw).getTime() || 0) : 0;
+      window.__sistemaTrialBadgeUntil = expiresMs;
+      if (!window.__sistemaTrialBadgeGuard) {
+        window.__sistemaTrialBadgeGuard = setInterval(function() {
+          const until = window.__sistemaTrialBadgeUntil || 0;
+          if (!until || Date.now() >= until) {
+            clearInterval(window.__sistemaTrialBadgeGuard);
+            window.__sistemaTrialBadgeGuard = null;
+            return;
+          }
+          const b = document.getElementById('dash-subscription-badge');
+          if (b && b.textContent !== 'пробный период') {
+            window.paintSubscriptionBadgeDirect({ subscription_active: true, is_trial: true, expires_at: new Date(until).toISOString() });
+          }
+        }, 400);
+      }
     } else if (isActive) {
       badgeEl.textContent = 'активна';
       badgeEl.style.background = 'rgba(48, 209, 88, 0.15)';
       badgeEl.style.color = '#30d158';
       badgeEl.style.border = '1px solid rgba(48, 209, 88, 0.2)';
       if (actionEl) actionEl.style.display = 'none';
+      paintBenefits();
     }
   } catch (e) {}
 };
