@@ -696,6 +696,8 @@ class ApiClient {
 
 window.API = new ApiClient();
 
+window.SISTEMA_PRO_PRICE_RUB = 999;
+
 window.SISTEMA_LEGAL_LINKS = {
   offer: 'https://sistema-molodtsova.ru/offer/',
   privacy: 'https://sistema-molodtsova.ru/privacy/',
@@ -792,7 +794,6 @@ window.paintSubscriptionBadgeDirect = function paintSubscriptionBadgeDirect(sub)
     // Если на карточке УЖЕ нарисован активный триал, мы запрещаем любой функции
     // перерисовывать его обратно в "неактивна" или "доступны первые видео".
     if (badgeEl.textContent === 'пробный период' && !isActive) {
-      if (window.sistemaClientLog) window.sistemaClientLog('trial-badge-blocked-downgrade', { sub: sub || null });
       return;
     }
 
@@ -814,9 +815,8 @@ window.paintSubscriptionBadgeDirect = function paintSubscriptionBadgeDirect(sub)
       }
       if (actionEl) actionEl.style.display = 'none';
       paintBenefits();
-      // Сторож: держим плашку, если часы на устройстве спешат.
-      // 5 минут * 60 сек * 1000 мс = 300000 мс
-      const localEnd = Date.now() + 300000;
+      // Сторож: держим плашку, если часы на устройстве спешат (1 день).
+      const localEnd = Date.now() + 86400000;
       if (window.__sistemaTrialBadgeGuard) clearInterval(window.__sistemaTrialBadgeGuard);
       window.__sistemaTrialBadgeGuard = setInterval(function() {
         if (Date.now() >= localEnd) {
@@ -882,7 +882,6 @@ window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
         window.API.subscriptionCache = fresh;
         window.API.subscriptionCacheAt = Date.now();
         window.paintSubscriptionBadgeDirect(fresh);
-        if (window.sistemaClientLog) window.sistemaClientLog('trial-reconcile', { active: !!fresh.subscription_active, is_trial: !!fresh.is_trial });
         window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
           detail: { active: !!fresh.subscription_active, expires_at: fresh.expires_at, subscription: fresh }
         }));
@@ -892,31 +891,11 @@ window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
   return optimistic;
 };
 
-window.sistemaClientLog = function sistemaClientLog(step, data) {
-  try {
-    const payload = Object.assign({ step: step, path: location.pathname, ts: Date.now() }, data || {});
-    const url = (window.API && window.API.base ? window.API.base : '/api') + '/payment/client-log';
-    const body = JSON.stringify(payload);
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      keepalive: true,
-      body: body,
-    }).catch(() => {});
-  } catch (e) {}
-};
-
 document.addEventListener('click', async function handleTrialClick(event) {
   const btn = event.target && event.target.closest && event.target.closest('[data-trial-activate], .trial-cta');
   if (!btn || !window.API || btn.__trialInFlight) return;
   event.preventDefault();
   event.stopImmediatePropagation();
-  window.sistemaClientLog('trial-click', {
-    btnClass: btn.className || null,
-    hasAttr: btn.hasAttribute && btn.hasAttribute('data-trial-activate'),
-    loggedIn: !!(window.API.isLoggedIn && window.API.isLoggedIn()),
-  });
   if (!(window.API.isLoggedIn && window.API.isLoggedIn())) {
     if (window.openAuthModal) {
       window.openAuthModal('login');
@@ -940,17 +919,9 @@ document.addEventListener('click', async function handleTrialClick(event) {
     if (strong) strong.textContent = 'Активируем пробный период...';
   }
   try {
-    window.sistemaClientLog('trial-request-start', {});
     const res = await window.API.activateTrial();
-    window.sistemaClientLog('trial-response', {
-      trial_granted: res && res.trial_granted,
-      subscription_active: res && res.subscription_active,
-      is_trial: res && res.is_trial,
-      expires_at: res && (res.expires_at || res.subscription_expires_at),
-    });
     const activated = !!(res && (res.trial_granted === true || res.subscription_active === true));
     if (!activated) {
-      window.sistemaClientLog('trial-not-activated', { res: res || null });
       btn.disabled = true;
       if (btn.classList && btn.classList.contains('trial-cta')) {
         btn.innerHTML = '<span>Пробный период уже использован</span>';
@@ -959,14 +930,7 @@ document.addEventListener('click', async function handleTrialClick(event) {
       return;
     }
     window.handleTrialActivated(res, btn.__trialOnActivated);
-    setTimeout(() => {
-      window.sistemaClientLog('trial-rendered', {
-        badge: (document.getElementById('dash-subscription-badge') || {}).textContent || null,
-        hasCardFn: typeof window.sistemaRenderSubscriptionCard === 'function',
-      });
-    }, 120);
   } catch (err) {
-    window.sistemaClientLog('trial-error', { error: (err && (err.error || err.message)) || String(err), status: err && err.status });
     btn.disabled = false;
     if (btn.classList && btn.classList.contains('trial-cta')) btn.innerHTML = original;
     alert((err && err.error) || 'Не удалось активировать пробный период. Попробуйте позже.');

@@ -973,7 +973,7 @@
           <span style="font-weight: 400; opacity: 0.6;">—</span>
           <span id="ios-sub-price-val">Загрузка...</span>
         </button>
-        <p class="ios-sub-footer">Оплата проходит через защищённый шлюз ЮKassa. Для теста подписка действует 5 минут.</p>
+        <p class="ios-sub-footer">Оплата проходит через защищённый шлюз ЮKassa. Подписка действует 30 дней.</p>
       </div>
     `;
 
@@ -990,7 +990,7 @@
       if (modal.dataset.paymentInitiated === 'true') {
         buyBtn.disabled = false;
         buyBtn.style.opacity = '1';
-        buyBtn.innerHTML = '<span>Оформить подписку</span><span style="font-weight:400;opacity:.6">—</span><span>2990 ₽</span>';
+        buyBtn.innerHTML = '<span>Оформить подписку</span><span style="font-weight:400;opacity:.6">—</span><span>999 ₽</span>';
         delete modal.dataset.paymentInitiated;
       }
       modal.classList.remove('active');
@@ -1015,10 +1015,10 @@
         if (p) {
           targetPlanSlug = p.slug;
         }
-        modal.querySelector('#ios-sub-price-val').textContent = '2990 ₽';
+        modal.querySelector('#ios-sub-price-val').textContent = (p && p.price_rub ? Number(p.price_rub).toLocaleString('ru-RU') : '999') + ' ₽';
       })
       .catch(() => {
-        modal.querySelector('#ios-sub-price-val').textContent = '2990 ₽';
+        modal.querySelector('#ios-sub-price-val').textContent = '999 ₽';
       });
 
     buyBtn.addEventListener('click', async () => {

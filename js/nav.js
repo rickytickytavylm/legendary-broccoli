@@ -585,14 +585,14 @@
           '<input data-payment-legal type="checkbox" style="width:20px;height:20px;margin:1px 0 0;flex:0 0 auto;accent-color:#4f7cff">' +
           '<span>Я принимаю <a href="/offer/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">оферту</a> и <a href="/terms/" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,.86);text-decoration:underline">пользовательское соглашение</a></span>' +
         '</label>' +
-        '<button type="button" data-buy disabled style="width:100%;min-height:54px;border:0;border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:800;opacity:.55;cursor:not-allowed">Оформить подписку — 2990 ₽</button>' +
-        '<p style="margin:14px 0 0;color:rgba(255,255,255,.35);font-size:11px;line-height:1.4">Для теста подписка действует 5 минут.</p>' +
+        '<button type="button" data-buy disabled style="width:100%;min-height:54px;border:0;border-radius:999px;background:#fff;color:#000;font-size:16px;font-weight:800;opacity:.55;cursor:not-allowed">Оформить подписку — 999 ₽</button>' +
+        '<p style="margin:14px 0 0;color:rgba(255,255,255,.35);font-size:11px;line-height:1.4">Подписка Pro действует 30 дней.</p>' +
       '</div>';
     const resetButtonState = () => {
       if (modal.dataset.paymentInitiated === 'true') {
         var button = modal.querySelector('[data-buy]');
         button.disabled = false;
-        button.textContent = 'Оформить подписку — 2990 ₽';
+        button.textContent = 'Оформить подписку — 999 ₽';
         button.style.opacity = '1';
         button.style.cursor = 'pointer';
         delete modal.dataset.paymentInitiated;

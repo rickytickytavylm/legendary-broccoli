@@ -261,9 +261,9 @@ function escapeHtml(value) {
           <span>Я принимаю <a href="/offer/" target="_blank" rel="noopener noreferrer">оферту</a> и <a href="/terms/" target="_blank" rel="noopener noreferrer">пользовательское соглашение</a></span>
         </label>
         <button class="ios-sub-btn-buy" type="button" disabled>
-          <span>Активировать подписку Pro</span><span style="font-weight:400;opacity:.6">—</span><span>2990 ₽</span>
+          <span>Активировать подписку Pro</span><span style="font-weight:400;opacity:.6">—</span><span>999 ₽</span>
         </button>
-        <p class="ios-sub-footer">Оплата проходит через защищённый шлюз ЮKassa. Для теста подписка действует 5 минут.</p>
+        <p class="ios-sub-footer">Оплата проходит через защищённый шлюз ЮKassa. Подписка действует 30 дней.</p>
       </div>
     `;
     document.body.appendChild(modal);
@@ -305,7 +305,7 @@ function escapeHtml(value) {
     const resetButtonState = () => {
       if (modal.dataset.paymentInitiated === 'true') {
         buyBtn.disabled = false;
-        buyBtn.innerHTML = '<span>Активировать подписку Pro</span><span style="font-weight:400;opacity:.6">—</span><span>2990 ₽</span>';
+        buyBtn.innerHTML = '<span>Активировать подписку Pro</span><span style="font-weight:400;opacity:.6">—</span><span>999 ₽</span>';
         delete modal.dataset.paymentInitiated;
       }
     };
@@ -489,7 +489,7 @@ function escapeHtml(value) {
       const titleEl = actionEl.querySelector('strong');
       const subEl = actionEl.querySelector('small');
       if (titleEl) titleEl.textContent = 'Активировать Sistema Pro';
-      if (subEl) subEl.textContent = 'Все видео, Общий чат и AI — 2990 ₽';
+      if (subEl) subEl.textContent = 'Все видео, Общий чат и AI — 999 ₽';
       actionEl.onclick = openAccountSubscriptionModal;
     }
     if (benefitsEl) {
@@ -514,7 +514,6 @@ function escapeHtml(value) {
       
       const badgeEl = document.getElementById('dash-subscription-badge');
       if (badgeEl && badgeEl.textContent === 'пробный период' && !(sub && sub.subscription_active)) {
-        if (window.sistemaClientLog) window.sistemaClientLog('profile-refresh-blocked-downgrade', { sub: sub || null });
         return;
       }
       
@@ -547,22 +546,6 @@ function escapeHtml(value) {
       const testEl = document.getElementById('dash-subscription-test');
 
       if (statusEl && badgeEl) {
-        if (testEl) {
-          testEl.onclick = async () => {
-            const originalText = testEl.textContent;
-            testEl.disabled = true;
-            testEl.textContent = 'Активируем...';
-            try {
-              await window.API.request('POST', '/payment/test-activate');
-              await loadDashboard();
-            } catch (err) {
-              alert(err.error || 'Не удалось активировать тестовую подписку.');
-            } finally {
-              testEl.disabled = false;
-              testEl.textContent = originalText;
-            }
-          };
-        }
         renderSubscriptionCard(user);
       }
 
@@ -802,7 +785,6 @@ function escapeHtml(value) {
     
     const badgeEl = document.getElementById('dash-subscription-badge');
     if (badgeEl && badgeEl.textContent === 'пробный период' && eventActive === false) {
-      if (window.sistemaClientLog) window.sistemaClientLog('profile-event-blocked-downgrade', { detail: event?.detail || null });
       return;
     }
     

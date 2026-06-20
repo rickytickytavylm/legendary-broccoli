@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sistema-static-v45-cache-break';
+const CACHE_NAME = 'sistema-static-v46-release-pay';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
