@@ -809,6 +809,9 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
               detail: { active: true, expires_at: expiresRaw, subscription: optimistic }
             }));
           }
+          if (typeof window.sistemaRenderSubscriptionCard === 'function') {
+            window.sistemaRenderSubscriptionCard(optimistic);
+          }
           return;
         }
         btn.disabled = true;

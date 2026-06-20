@@ -362,6 +362,12 @@ function escapeHtml(value) {
     loadDashboard();
   }
 
+  async function forceSubscriptionSync() {
+    __lastRefreshSubCardAt = 0;
+    if (window.API?.clearSubscriptionCache) window.API.clearSubscriptionCache();
+    await refreshSubscriptionCard({ force: true });
+  }
+
   function formatTrialRemaining(ms) {
     if (ms < 0) ms = 0;
     const totalSec = Math.floor(ms / 1000);
@@ -533,6 +539,7 @@ function escapeHtml(value) {
             }
           };
         }
+        renderSubscriptionCard(user);
       }
 
       document.getElementById('streak-val')?.replaceChildren(document.createTextNode(String(stats.streak_days || 0)));
@@ -776,4 +783,15 @@ function escapeHtml(value) {
     if (window.API?.subscriptionCache) {
       renderSubscriptionCard(window.API.subscriptionCache);
     }
+  });
+
+  window.sistemaRenderSubscriptionCard = renderSubscriptionCard;
+  window.sistemaForceSubscriptionSync = forceSubscriptionSync;
+
+  window.addEventListener('pageshow', function() {
+    forceSubscriptionSync().catch(() => {});
+  });
+
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) forceSubscriptionSync().catch(() => {});
   });
