@@ -345,7 +345,13 @@ function escapeHtml(value) {
           window.setTimeout(() => {
             modal.remove();
             style.remove();
-          }, 300);
+            // Железная гарантия корректного статуса: перечитываем профиль с нуля,
+            // как это делает возврат после оплаты. Работает одинаково на десктопе и iPhone.
+            try {
+              if (window.API && window.API.clearSubscriptionCache) window.API.clearSubscriptionCache();
+            } catch (e) {}
+            window.location.reload();
+          }, 320);
         }
       });
     }
