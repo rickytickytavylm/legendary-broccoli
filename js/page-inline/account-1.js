@@ -321,7 +321,35 @@ function escapeHtml(value) {
 
     window.setTimeout(() => modal.classList.add('active'), 20);
     if (window.injectTrialOption) {
-      window.injectTrialOption(modal);
+      window.injectTrialOption(modal, {
+        onActivated(subscription) {
+          const isActive = window.API?.isSubscriptionActive
+            ? window.API.isSubscriptionActive(subscription)
+            : !!(subscription && subscription.subscription_active);
+          const expiresAt = subscription && subscription.expires_at ? new Date(subscription.expires_at).getTime() : null;
+          
+          window.__sistemaSubscriptionActive = isActive;
+          window.__sistemaSubscriptionExpiresAt = expiresAt || null;
+          
+          renderSubscriptionCard(subscription);
+          
+          window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+            detail: { active: isActive, expires_at: expiresAt, subscription }
+          }));
+          
+          modal.classList.remove('active');
+          window.setTimeout(() => {
+            modal.remove();
+            style.remove();
+          }, 300);
+          
+          // Safe dashboard reload
+          try {
+            dashboardPromise = null;
+            loadDashboard();
+          } catch (e) { console.error('Silent dashboard reload error:', e); }
+        }
+      });
     }
   }
 
@@ -395,10 +423,15 @@ function escapeHtml(value) {
             clearInterval(window.__trialCountdownTimer);
             window.__trialCountdownTimer = null;
           }
-          // Render free state locally — no extra API call.
-          // nav.js 60s interval will sync subscription status.
           window.__sistemaSubscriptionActive = false;
           window.__sistemaSubscriptionExpiresAt = null;
+          
+          // CRITICAL: Clear the stale cache so the event listener doesn't recreate the timer infinitely.
+          if (window.API) {
+             window.API.subscriptionCache = null;
+             window.API.subscriptionCacheAt = 0;
+          }
+
           renderSubscriptionCard({ subscription_active: false, is_trial: false, expires_at: null });
           window.dispatchEvent(new CustomEvent('sistema:subscription-changed', { detail: { active: false } }));
           return;
