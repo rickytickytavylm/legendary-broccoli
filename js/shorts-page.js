@@ -211,7 +211,6 @@
       preloadVideoEl.playsInline = true;
       preloadVideoEl.setAttribute('playsinline', '');
       preloadVideoEl.setAttribute('webkit-playsinline', '');
-      preloadVideoEl.setAttribute('crossorigin', 'anonymous');
       preloadVideoEl.src = nextUrl;
       preloadUrl = nextUrl;
       try {
@@ -331,7 +330,7 @@
         return;
       }
       var poster = item.poster ? String(item.poster) : '';
-      openPlayerWithUrl(url, item.caption || '', poster, true);
+      openPlayerWithUrl(url, item.caption || '', poster, true, slug);
       setPlayerLikeSlug(item.slug || '');
     });
   }
@@ -389,7 +388,6 @@
     neu.setAttribute('disablepictureinpicture', '');
     neu.setAttribute('controlslist', 'nodownload noplaybackrate noremoteplayback');
     neu.preload = 'auto';
-    neu.setAttribute('crossorigin', 'anonymous');
     neu.muted = false;
 
     var oldEl = stageEl.querySelector('#shorts-player-video');
@@ -447,8 +445,9 @@
    * @param {string} title
    * @param {string} posterHref
    * @param {boolean} [reuseOverlay] уже открыт — только смена трека (автоплей следующего)
+   * @param {string} [slug] для fallback на proxy при ошибке presigned URL
    */
-  function openPlayerWithUrl(url, title, posterHref, reuseOverlay) {
+  function openPlayerWithUrl(url, title, posterHref, reuseOverlay, slug) {
     if (!overlay || !stageEl || !url) return;
 
     if (titleEl) titleEl.textContent = title || '';
@@ -462,6 +461,8 @@
     prepareVideoForSource(!!reuseOverlay);
     if (!videoEl) return;
 
+    var sourceUrl = url;
+    var triedProxyFallback = false;
     var sep = url.indexOf('?') >= 0 ? '&' : '?';
     var playUrl = url + sep + '__ts=' + Date.now();
 
@@ -478,11 +479,40 @@
       requestAutoplay();
     }
 
-    vidListeners.settle = function () {
-      settle();
-    };
+    function attachLoadListeners() {
+      vidListeners.settle = function () {
+        settle();
+      };
+      videoEl.addEventListener('loadeddata', vidListeners.settle);
+      videoEl.addEventListener('loadedmetadata', vidListeners.settle);
+      videoEl.addEventListener('canplay', vidListeners.settle);
+      loadKickTimer = window.setTimeout(function () {
+        if (settled) return;
+        if (videoEl.readyState >= 2) settle();
+      }, 1400);
+    }
+
+    function retryWithProxy() {
+      var proxyUrl = shortsStreamUrl(slug);
+      if (!proxyUrl) return false;
+      sourceUrl = proxyUrl;
+      settled = false;
+      clearLoadKickTimer();
+      attachLoadListeners();
+      var sep2 = proxyUrl.indexOf('?') >= 0 ? '&' : '?';
+      videoEl.src = proxyUrl + sep2 + '__ts=' + Date.now();
+      try {
+        videoEl.load();
+        requestAutoplay();
+      } catch (ignore) {}
+      return true;
+    }
 
     vidListeners.onErr = function () {
+      if (!triedProxyFallback && slug && /yandexcloud\.net/i.test(sourceUrl)) {
+        triedProxyFallback = true;
+        if (retryWithProxy()) return;
+      }
       clearLoadKickTimer();
       detachVideoListeners();
       setStageBusy(false, '');
@@ -514,25 +544,18 @@
     videoEl.setAttribute('playsinline', '');
     videoEl.setAttribute('webkit-playsinline', '');
     videoEl.preload = 'auto';
-    videoEl.setAttribute('crossorigin', 'anonymous');
     videoEl.controls = false;
     videoEl.muted = false;
     videoEl.setAttribute('disablepictureinpicture', '');
     videoEl.setAttribute('controlslist', 'nodownload noplaybackrate noremoteplayback');
 
-    videoEl.addEventListener('loadeddata', vidListeners.settle);
-    videoEl.addEventListener('loadedmetadata', vidListeners.settle);
-    videoEl.addEventListener('canplay', vidListeners.settle);
     videoEl.addEventListener('error', vidListeners.onErr);
     videoEl.addEventListener('timeupdate', vidListeners.onTime);
     videoEl.addEventListener('durationchange', vidListeners.onTime);
     videoEl.addEventListener('play', vidListeners.onPlayState);
     videoEl.addEventListener('pause', vidListeners.onPlayState);
 
-    loadKickTimer = window.setTimeout(function () {
-      if (settled) return;
-      if (videoEl.readyState >= 2) settle();
-    }, 1400);
+    attachLoadListeners();
 
     videoEl.src = playUrl;
     try {
@@ -559,7 +582,7 @@
         showToast('Некорректная ссылка на ролик.', 4000);
         return;
       }
-      openPlayerWithUrl(url, caption || '', poster, false);
+      openPlayerWithUrl(url, caption || '', poster, false, slug);
       setPlayerLikeSlug(slug);
     }).catch(function () {
       cardBtn.classList.remove('short-card--busy');
