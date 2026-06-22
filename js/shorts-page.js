@@ -1,5 +1,5 @@
 /**
- * Shorts: превью из /data/shorts.json; видео — GET /api/video/shorts-mp4?slug=…
+ * Shorts: превью из /data/shorts.json; видео — presigned URL из YOS (/api/video/presign), fallback — proxy
  * Совместимость с iOS: без «ложного» тапа по первой карточке после входа через таб,
  * принудительный cache-bust у плеера, canplay как запасное к loadeddata.
  * По окончании ролика — автоматически открывается следующий («рейл», как короткие видео).
@@ -40,6 +40,8 @@
   var playbackAttemptTimer = null;
   var progressSeeking = false;
   var currentLikeSlug = '';
+  /** @type {Record<string, { url: string, expiresAt: number }>} */
+  var presignCache = Object.create(null);
 
   if (!root) return;
 
@@ -187,38 +189,35 @@
     preloadUrl = '';
   }
 
-  function buildPlaybackUrlForIndex(index) {
-    if (!shortsItems.length) return '';
-    var n = shortsItems.length;
-    var item = shortsItems[((index % n) + n) % n];
-    if (!item) return '';
-    var url = playbackUrlFor(item, item.slug);
-    if (!url) return '';
-    var sep = url.indexOf('?') >= 0 ? '&' : '?';
-    return url + sep + '__preload=1';
-  }
-
   function preloadNextShort() {
     if (!shortsItems || shortsItems.length < 2 || !overlay || overlay.classList.contains('u-hidden')) {
       clearNextPreload();
       return;
     }
-    var nextUrl = buildPlaybackUrlForIndex(playingIndex + 1);
-    if (!nextUrl || nextUrl === preloadUrl) return;
+    var n = shortsItems.length;
+    var item = shortsItems[((playingIndex + 1) % n + n) % n];
+    if (!item) return;
 
-    clearNextPreload();
-    preloadVideoEl = document.createElement('video');
-    preloadVideoEl.preload = 'auto';
-    preloadVideoEl.muted = true;
-    preloadVideoEl.playsInline = true;
-    preloadVideoEl.setAttribute('playsinline', '');
-    preloadVideoEl.setAttribute('webkit-playsinline', '');
-    preloadVideoEl.setAttribute('crossorigin', 'anonymous');
-    preloadVideoEl.src = nextUrl;
-    preloadUrl = nextUrl;
-    try {
-      preloadVideoEl.load();
-    } catch (ignore) {}
+    resolvePlaybackUrl(item, item.slug).then(function (url) {
+      if (!url || !overlay || overlay.classList.contains('u-hidden')) return;
+      var sep = url.indexOf('?') >= 0 ? '&' : '?';
+      var nextUrl = url + sep + '__preload=1';
+      if (nextUrl === preloadUrl) return;
+
+      clearNextPreload();
+      preloadVideoEl = document.createElement('video');
+      preloadVideoEl.preload = 'auto';
+      preloadVideoEl.muted = true;
+      preloadVideoEl.playsInline = true;
+      preloadVideoEl.setAttribute('playsinline', '');
+      preloadVideoEl.setAttribute('webkit-playsinline', '');
+      preloadVideoEl.setAttribute('crossorigin', 'anonymous');
+      preloadVideoEl.src = nextUrl;
+      preloadUrl = nextUrl;
+      try {
+        preloadVideoEl.load();
+      } catch (ignore) {}
+    });
   }
 
   function clearControlHideTimer() {
@@ -326,28 +325,50 @@
     if (!item) return;
 
     var slug = item.slug;
-    var url = playbackUrlFor(item, slug);
-    if (!url) {
-      showToast('Не удалось открыть ролик.', 3200);
-      return;
-    }
-    var poster = item.poster ? String(item.poster) : '';
-    openPlayerWithUrl(url, item.caption || '', poster, true);
-    setPlayerLikeSlug(item.slug || '');
+    resolvePlaybackUrl(item, slug).then(function (url) {
+      if (!url) {
+        showToast('Не удалось открыть ролик.', 3200);
+        return;
+      }
+      var poster = item.poster ? String(item.poster) : '';
+      openPlayerWithUrl(url, item.caption || '', poster, true);
+      setPlayerLikeSlug(item.slug || '');
+    });
   }
 
-  function playbackUrlFor(item, slug) {
+  function resolvePlaybackUrl(item, slug) {
     var raw = item && item.playUrl ? String(item.playUrl).trim() : '';
     if (raw) {
-      if (/^https?:\/\//i.test(raw)) return raw;
+      if (/^https?:\/\//i.test(raw)) return Promise.resolve(raw);
       var path = raw.charAt(0) === '/' ? raw : '/' + raw;
       try {
-        return new URL(path, location.href).href;
+        return Promise.resolve(new URL(path, location.href).href);
       } catch (e) {
-        return raw;
+        return Promise.resolve(raw);
       }
     }
-    return shortsStreamUrl(slug);
+
+    var cacheKey = String(slug || '');
+    var cached = presignCache[cacheKey];
+    if (cached && cached.expiresAt > Date.now() + 120000) {
+      return Promise.resolve(cached.url);
+    }
+
+    if (window.API && typeof window.API.getVideoPresign === 'function') {
+      return window.API.getVideoPresign(cacheKey).then(function (res) {
+        var url = res && res.url ? String(res.url) : '';
+        if (!url) throw new Error('empty presign');
+        presignCache[cacheKey] = {
+          url: url,
+          expiresAt: Date.now() + (Number(res.expires_in) || 3600) * 1000,
+        };
+        return url;
+      }).catch(function () {
+        return shortsStreamUrl(cacheKey);
+      });
+    }
+
+    return Promise.resolve(shortsStreamUrl(cacheKey));
   }
 
   /**
@@ -529,18 +550,21 @@
       return;
     }
 
-    var url = playbackUrlFor(item, slug);
-    if (!url) {
-      showToast('Некорректная ссылка на ролик.', 4000);
-      return;
-    }
-
     playingIndex = typeof itemIndex === 'number' && itemIndex >= 0 ? itemIndex : 0;
     var poster = item && item.poster ? String(item.poster) : '';
     cardBtn.classList.add('short-card--busy');
-    openPlayerWithUrl(url, caption || '', poster, false);
-    setPlayerLikeSlug(slug);
-    cardBtn.classList.remove('short-card--busy');
+    resolvePlaybackUrl(item, slug).then(function (url) {
+      cardBtn.classList.remove('short-card--busy');
+      if (!url) {
+        showToast('Некорректная ссылка на ролик.', 4000);
+        return;
+      }
+      openPlayerWithUrl(url, caption || '', poster, false);
+      setPlayerLikeSlug(slug);
+    }).catch(function () {
+      cardBtn.classList.remove('short-card--busy');
+      showToast('Не удалось открыть ролик.', 3200);
+    });
   }
 
   function render(items) {
