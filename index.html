@@ -271,13 +271,14 @@
             <p class="ios-section-subtitle">Групповой чат по вашему направлению с ведущим программы.</p>
           </header>
           <a class="today-support-card today-therapy-group-card" data-today-therapy-group href="/therapy-group/" aria-label="Открыть терапевтическую группу" style="--ux-bg:url('/assets/webp/king_calm.webp')">
-            <span class="today-pro-badge">Система Pro</span>
+            <span class="today-pro-badge" data-therapy-pro-badge>Система Pro</span>
+            <span class="today-soon-badge hidden" data-therapy-soon-badge>Скоро</span>
             <div>
               <h3 data-today-therapy-title>Терапевтическая группа</h3>
               <p data-today-therapy-leader>Ведущий: Светлана Плешакова</p>
               <p>Общение с участниками вашего направления в закрытом чате.</p>
             </div>
-            <span class="today-support-button">Открыть чат</span>
+            <span class="today-support-button" data-therapy-cta>Открыть чат</span>
           </a>
         </section>
 
@@ -377,7 +378,7 @@
         <section class="today-bento-panel today-bento-tools">
           <header class="ios-section-header">
             <p class="ios-section-kicker">Помощь и поддержка</p>
-            <h2 class="ios-section-title">Инструменты и чат</h2>
+            <h2 class="ios-section-title">Инструменты</h2>
           </header>
 
           <div class="today-grid">
@@ -389,7 +390,7 @@
               <span class="today-support-button">Спросить</span>
             </a>
 
-            <a href="/chat/" class="today-support-card today-chat-card" style="--ux-bg:url('/assets/webp/coman.webp')">
+            <a href="/chat/" class="today-support-card today-chat-card hidden" data-general-chat-card hidden aria-hidden="true" style="--ux-bg:url('/assets/webp/coman.webp')">
               <span class="today-pro-badge">Система Pro</span>
               <div>
                 <h3>Общий чат</h3>
@@ -501,13 +502,13 @@
 <script src="/js/config.js"></script>
   <script src="/js/api.js?v=88"></script>
   <script src="/js/auth.js?v=18"></script>
-  <script src="/js/nav.js?v=99"></script>
+  <script src="/js/nav.js?v=100"></script>
   <script src="/js/main.js?v=2"></script>
   <script src="/js/program-catalog.js?v=8"></script>
   <script src="/js/psychologists-data.js?v=1"></script>
   <script src="/js/psychologists-page.js?v=5"></script>
   <script src="/js/therapy-groups-config.js?v=1"></script>
-  <script src="/js/home-page.js?v=4"></script>
+  <script src="/js/home-page.js?v=5"></script>
 </body>
 </html>
 

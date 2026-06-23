@@ -42,7 +42,7 @@ const onboardingSteps = [
     title: 'Что сейчас важнее?',
     desc: 'Выберите направление. Система покажет две подходящие программы для старта.',
     options: [
-      { value: 'calm', label: 'Спокойствие' },
+      { value: 'calm', label: 'Йога / Забота о себе' },
       { value: 'body', label: 'Тело / симптомы' },
       { value: 'relationships', label: 'Отношения / созависимость' },
       { value: 'selfworth', label: 'Опора' },
@@ -90,9 +90,9 @@ function getDeviceContext() {
 
 const routes = {
   calm: {
-    title: 'Спокойствие',
+    title: 'Йога / Забота о себе',
     desc: 'Два мягких входа: через движение и через внимание к телу.',
-    short: 'спокойствие',
+    short: 'йога / забота о себе',
     heroImage: '/assets/webp/king_calm.webp',
     heroPos: 'center 38%',
     programs: [
@@ -157,6 +157,7 @@ const routes = {
   },
 };
 
+const THERAPY_GROUP_LIVE_ROUTES = new Set(['calm', 'relationships']);
 const todayRouteKeys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication'];
 let currentTodayRouteKey = null;
 let todayTouchStartX = 0;
@@ -379,16 +380,30 @@ function renderToday(routeKey) {
   if (dots) {
     dots.innerHTML = todayRouteKeys.map((key) => `<span class="${key === currentTodayRouteKey ? 'active' : ''}"></span>`).join('');
   }
-  const therapyCfg = window.SISTEMA_THERAPY_GROUPS && window.SISTEMA_THERAPY_GROUPS[selectedRouteKey(profile)];
+  const therapyRoute = currentTodayRouteKey || selectedRouteKey(profile);
+  const therapyCfg = window.SISTEMA_THERAPY_GROUPS && window.SISTEMA_THERAPY_GROUPS[therapyRoute];
   const therapyCard = document.querySelector('[data-today-therapy-group]');
+  const therapyLive = THERAPY_GROUP_LIVE_ROUTES.has(therapyRoute);
   if (therapyCard && therapyCfg) {
-    const therapyRoute = selectedRouteKey(profile);
-    therapyCard.href = `/therapy-group/?route=${encodeURIComponent(therapyRoute)}`;
+    therapyCard.classList.toggle('is-soon', !therapyLive);
+    if (therapyLive) {
+      therapyCard.href = `/therapy-group/?route=${encodeURIComponent(therapyRoute)}`;
+      therapyCard.removeAttribute('aria-disabled');
+    } else {
+      therapyCard.setAttribute('href', '#');
+      therapyCard.setAttribute('aria-disabled', 'true');
+    }
     therapyCard.style.setProperty('--ux-bg', `url('${therapyCfg.image}')`);
     const therapyTitle = therapyCard.querySelector('[data-today-therapy-title]');
     const therapyLeader = therapyCard.querySelector('[data-today-therapy-leader]');
+    const therapySoon = therapyCard.querySelector('[data-therapy-soon-badge]');
+    const therapyPro = therapyCard.querySelector('[data-therapy-pro-badge]');
+    const therapyCta = therapyCard.querySelector('[data-therapy-cta]');
     if (therapyTitle) therapyTitle.textContent = therapyCfg.title;
     if (therapyLeader) therapyLeader.textContent = `Ведущий: ${therapyCfg.leader}`;
+    if (therapySoon) therapySoon.classList.toggle('hidden', therapyLive);
+    if (therapyPro) therapyPro.classList.toggle('hidden', !therapyLive);
+    if (therapyCta) therapyCta.textContent = therapyLive ? 'Открыть чат' : 'Скоро';
   }
 }
 

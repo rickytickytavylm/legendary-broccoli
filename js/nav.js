@@ -126,6 +126,8 @@
   });
 
   // ── Nav items config ────────────────────────────────────
+  var GENERAL_CHAT_ENABLED = false;
+
   var NAV_ITEMS = [
     {
       id: 'home',
@@ -168,6 +170,10 @@
       icon: icon('<path d="M12 3 14.4 8.8 20 11l-5.6 2.2L12 19l-2.4-5.8L4 11l5.6-2.2L12 3Z"/><path d="M19 16v4"/><path d="M17 18h4"/>')
     }
   ];
+
+  if (!GENERAL_CHAT_ENABLED) {
+    NAV_ITEMS = NAV_ITEMS.filter(function (item) { return item.id !== 'chat'; });
+  }
 
   var BOTTOM_ITEMS = [
     {

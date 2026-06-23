@@ -1,8 +1,8 @@
 window.SISTEMA_THERAPY_GROUPS = {
   calm: {
     routeKey: 'calm',
-    title: 'Спокойствие',
-    directionLabel: 'Спокойствие',
+    title: 'Йога / Забота о себе',
+    directionLabel: 'Йога / Забота о себе',
     leader: 'Светлана Плешакова',
     image: '/assets/webp/king_calm.webp',
   },
