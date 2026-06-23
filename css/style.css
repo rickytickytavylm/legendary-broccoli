@@ -8055,6 +8055,42 @@ body.psychologist-detail-page .psych-detail-cta {
   margin-top: 18px;
 }
 
+.today-therapy-group-panel {
+  margin-top: 18px;
+}
+
+.today-therapy-group-card {
+  display: grid;
+  min-height: 168px;
+}
+
+.today-therapy-group-card > div {
+  padding-right: 118px;
+}
+
+@media (max-width: 760px) {
+  .today-therapy-group-card {
+    align-content: end;
+    gap: 10px;
+  }
+
+  .today-therapy-group-card > div {
+    padding-right: 0;
+  }
+
+  .today-therapy-group-card .today-pro-badge {
+    position: relative !important;
+    top: auto;
+    right: auto;
+    justify-self: start;
+    align-self: start;
+    min-height: 28px;
+    padding: 0 12px;
+    font-size: 10px;
+    order: -1;
+  }
+}
+
 .today-event-yoga-card {
   display: block;
   width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);

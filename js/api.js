@@ -641,6 +641,32 @@ class ApiClient {
     return this.request('POST', `/chat/general/messages/${id}/reactions`, { emoji });
   }
 
+  getTherapyGroupChat(routeKey) {
+    return this.request('GET', `/chat/therapy-groups/${encodeURIComponent(routeKey)}`, null, { fresh: true });
+  }
+  getTherapyGroupMessages(routeKey, limit = 60, beforeId = null, afterId = null) {
+    const qs = new URLSearchParams({ limit: String(limit) });
+    if (beforeId) qs.set('before_id', String(beforeId));
+    if (afterId) qs.set('after_id', String(afterId));
+    return this.request('GET', `/chat/therapy-groups/${encodeURIComponent(routeKey)}/messages?` + qs.toString(), null, { fresh: true });
+  }
+  sendTherapyGroupMessage(routeKey, text, opts = {}) {
+    return this.request('POST', `/chat/therapy-groups/${encodeURIComponent(routeKey)}/messages`, {
+      type: 'text',
+      text,
+      reply_to_message_id: opts.reply_to_message_id || null,
+    });
+  }
+  updateTherapyGroupMessage(routeKey, id, text) {
+    return this.request('PUT', `/chat/therapy-groups/${encodeURIComponent(routeKey)}/messages/${id}`, { type: 'text', text });
+  }
+  deleteTherapyGroupMessage(routeKey, id) {
+    return this.request('DELETE', `/chat/therapy-groups/${encodeURIComponent(routeKey)}/messages/${id}`);
+  }
+  reactTherapyGroupMessage(routeKey, id, emoji) {
+    return this.request('POST', `/chat/therapy-groups/${encodeURIComponent(routeKey)}/messages/${id}/reactions`, { emoji });
+  }
+
   // --- AI ---
   getAiUsage() { return this.request('GET', '/ai/usage'); }
   getAiHistory(limit = 80) { return this.request('GET', '/ai/history?limit=' + encodeURIComponent(limit)); }

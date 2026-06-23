@@ -44,7 +44,7 @@ const onboardingSteps = [
     options: [
       { value: 'calm', label: 'Спокойствие' },
       { value: 'body', label: 'Тело / симптомы' },
-      { value: 'relationships', label: 'Отношения' },
+      { value: 'relationships', label: 'Отношения / созависимость' },
       { value: 'selfworth', label: 'Опора' },
       { value: 'selfstudy', label: 'Понять себя глубже' },
       { value: 'communication', label: 'Коммуникация / конфликты' },
@@ -112,9 +112,9 @@ const routes = {
     ],
   },
   relationships: {
-    title: 'Отношения',
-    desc: 'Два входа: зависимые сценарии и мужско-женская динамика.',
-    short: 'отношения',
+    title: 'Отношения / созависимость',
+    desc: 'Основной вход — созависимость; дополнительно — мужско-женская динамика.',
+    short: 'отношения / созависимость',
     heroImage: '/assets/webp/new_soc.webp',
     heroPos: 'center 35%',
     programs: [
@@ -378,6 +378,17 @@ function renderToday(routeKey) {
   setTodayProgramState('secondary', route.secondary);
   if (dots) {
     dots.innerHTML = todayRouteKeys.map((key) => `<span class="${key === currentTodayRouteKey ? 'active' : ''}"></span>`).join('');
+  }
+  const therapyCfg = window.SISTEMA_THERAPY_GROUPS && window.SISTEMA_THERAPY_GROUPS[selectedRouteKey(profile)];
+  const therapyCard = document.querySelector('[data-today-therapy-group]');
+  if (therapyCard && therapyCfg) {
+    const therapyRoute = selectedRouteKey(profile);
+    therapyCard.href = `/therapy-group/?route=${encodeURIComponent(therapyRoute)}`;
+    therapyCard.style.setProperty('--ux-bg', `url('${therapyCfg.image}')`);
+    const therapyTitle = therapyCard.querySelector('[data-today-therapy-title]');
+    const therapyLeader = therapyCard.querySelector('[data-today-therapy-leader]');
+    if (therapyTitle) therapyTitle.textContent = therapyCfg.title;
+    if (therapyLeader) therapyLeader.textContent = `Ведущий: ${therapyCfg.leader}`;
   }
 }
 
