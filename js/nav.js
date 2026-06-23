@@ -126,7 +126,27 @@
   });
 
   // ── Nav items config ────────────────────────────────────
-  var GENERAL_CHAT_ENABLED = false;
+  var THERAPY_ROUTE_KEYS = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication'];
+  var YOGA_TELEGRAM_CLUB_URL = 'https://t.me/+P3saVqIBL8gzZTIy';
+
+  function getUserDirectionRouteKey() {
+    try {
+      var profile = JSON.parse(localStorage.getItem('sistema:onboarding-profile') || '{}');
+      if (THERAPY_ROUTE_KEYS.indexOf(profile.focus) !== -1) return profile.focus;
+      if (THERAPY_ROUTE_KEYS.indexOf(profile.routeKey) !== -1) return profile.routeKey;
+    } catch (e) {}
+    return 'relationships';
+  }
+
+  function getTherapyChatHref() {
+    var route = getUserDirectionRouteKey();
+    if (route === 'calm') return YOGA_TELEGRAM_CLUB_URL;
+    return '/therapy-group/?route=' + encodeURIComponent(route);
+  }
+
+  function isTherapyChatExternal() {
+    return getUserDirectionRouteKey() === 'calm';
+  }
 
   var NAV_ITEMS = [
     {
@@ -157,7 +177,7 @@
     },
     {
       id: 'chat',
-      href: '/chat/',
+      href: '/therapy-group/',
       label: 'Чат',
       labelShort: 'Чат',
       icon: icon('<path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.4-5.2A8 8 0 1 1 21 12Z"/><path d="M8 11h8"/><path d="M8 15h5"/>')
@@ -170,10 +190,6 @@
       icon: icon('<path d="M12 3 14.4 8.8 20 11l-5.6 2.2L12 19l-2.4-5.8L4 11l5.6-2.2L12 3Z"/><path d="M19 16v4"/><path d="M17 18h4"/>')
     }
   ];
-
-  if (!GENERAL_CHAT_ENABLED) {
-    NAV_ITEMS = NAV_ITEMS.filter(function (item) { return item.id !== 'chat'; });
-  }
 
   var BOTTOM_ITEMS = [
     {
@@ -266,6 +282,24 @@
     return currentPath === '/' + slug + '/' || currentPath.endsWith('/' + slug + '/') || currentPath.endsWith('/' + slug + '.html');
   }
 
+  function isNavItemActive(item) {
+    if (item.id === 'chat') {
+      return currentPath.indexOf('/therapy-group') !== -1 || currentPath.indexOf('/chat') !== -1;
+    }
+    return isActive(item.href);
+  }
+
+  function navItemHref(item) {
+    return item.id === 'chat' ? getTherapyChatHref() : item.href;
+  }
+
+  function navItemExternalAttrs(item) {
+    if (item.id === 'chat' && isTherapyChatExternal()) {
+      return ' target="_blank" rel="noopener noreferrer"';
+    }
+    return '';
+  }
+
   function makeIcon(svgStr) {
     return '<span class="sidebar-icon">' + svgStr + '</span>';
   }
@@ -280,7 +314,7 @@
   sidebar.className = 'app-sidebar';
 
   var navItemsHTML = NAV_ITEMS.map(function(item) {
-    return '<a href="' + item.href + '" class="sidebar-item' + (isActive(item.href) ? ' active' : '') + '">' +
+    return '<a href="' + navItemHref(item) + '" class="sidebar-item' + (isNavItemActive(item) ? ' active' : '') + '"' + navItemExternalAttrs(item) + '>' +
       makeIcon(item.icon) +
       '<span class="sidebar-label">' + item.label + '</span>' +
       '</a>';
@@ -318,7 +352,7 @@
 
   tabbar.innerHTML = NAV_ITEMS.map(function(item) {
     var shortsCls = item.id === 'shorts' ? ' tabbar-item-shorts' : '';
-    return '<a href="' + item.href + '" class="tabbar-item' + shortsCls + (isActive(item.href) ? ' active' : '') + '">' +
+    return '<a href="' + navItemHref(item) + '" class="tabbar-item' + shortsCls + (isNavItemActive(item) ? ' active' : '') + '"' + navItemExternalAttrs(item) + '>' +
       makeTabIcon(item.icon) +
       '<span class="tabbar-label">' + (item.labelShort || item.label) + '</span>' +
       '</a>';

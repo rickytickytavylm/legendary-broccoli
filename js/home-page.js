@@ -157,7 +157,6 @@ const routes = {
   },
 };
 
-const THERAPY_GROUP_LIVE_ROUTES = new Set(['calm', 'relationships']);
 const todayRouteKeys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication'];
 let currentTodayRouteKey = null;
 let todayTouchStartX = 0;
@@ -382,28 +381,44 @@ function renderToday(routeKey) {
   }
   const therapyRoute = currentTodayRouteKey || selectedRouteKey(profile);
   const therapyCfg = window.SISTEMA_THERAPY_GROUPS && window.SISTEMA_THERAPY_GROUPS[therapyRoute];
+  const therapyState = window.getTherapyGroupCardState
+    ? window.getTherapyGroupCardState(therapyRoute)
+    : null;
   const therapyCard = document.querySelector('[data-today-therapy-group]');
-  const therapyLive = THERAPY_GROUP_LIVE_ROUTES.has(therapyRoute);
-  if (therapyCard && therapyCfg) {
-    therapyCard.classList.toggle('is-soon', !therapyLive);
-    if (therapyLive) {
-      therapyCard.href = `/therapy-group/?route=${encodeURIComponent(therapyRoute)}`;
-      therapyCard.removeAttribute('aria-disabled');
+  const therapyPanel = document.querySelector('[data-today-therapy-panel]');
+  if (therapyCard && therapyCfg && therapyState) {
+    therapyCard.classList.remove('is-soon');
+    therapyCard.href = therapyState.href;
+    therapyCard.removeAttribute('aria-disabled');
+    if (therapyState.external) {
+      therapyCard.setAttribute('target', '_blank');
+      therapyCard.setAttribute('rel', 'noopener noreferrer');
     } else {
-      therapyCard.setAttribute('href', '#');
-      therapyCard.setAttribute('aria-disabled', 'true');
+      therapyCard.removeAttribute('target');
+      therapyCard.removeAttribute('rel');
     }
     therapyCard.style.setProperty('--ux-bg', `url('${therapyCfg.image}')`);
+    therapyCard.setAttribute('aria-label', therapyState.external ? 'Открыть йога-клуб' : 'Открыть терапевтическую группу');
     const therapyTitle = therapyCard.querySelector('[data-today-therapy-title]');
     const therapyLeader = therapyCard.querySelector('[data-today-therapy-leader]');
+    const therapyDesc = therapyCard.querySelector('[data-today-therapy-desc]');
     const therapySoon = therapyCard.querySelector('[data-therapy-soon-badge]');
     const therapyPro = therapyCard.querySelector('[data-therapy-pro-badge]');
     const therapyCta = therapyCard.querySelector('[data-therapy-cta]');
-    if (therapyTitle) therapyTitle.textContent = therapyCfg.title;
-    if (therapyLeader) therapyLeader.textContent = `Ведущий: ${therapyCfg.leader}`;
-    if (therapySoon) therapySoon.classList.toggle('hidden', therapyLive);
-    if (therapyPro) therapyPro.classList.toggle('hidden', !therapyLive);
-    if (therapyCta) therapyCta.textContent = therapyLive ? 'Открыть чат' : 'Скоро';
+    if (therapyTitle) therapyTitle.textContent = therapyState.cardTitle;
+    if (therapyLeader) therapyLeader.textContent = therapyState.leader;
+    if (therapyDesc) therapyDesc.textContent = therapyState.desc;
+    if (therapySoon) therapySoon.classList.add('hidden');
+    if (therapyPro) therapyPro.classList.toggle('hidden', !therapyState.showPro);
+    if (therapyCta) therapyCta.textContent = therapyState.cta;
+    if (therapyPanel) {
+      const panelKicker = therapyPanel.querySelector('[data-therapy-panel-kicker]');
+      const panelTitle = therapyPanel.querySelector('[data-therapy-panel-title]');
+      const panelSubtitle = therapyPanel.querySelector('[data-therapy-panel-subtitle]');
+      if (panelKicker) panelKicker.classList.toggle('hidden', !therapyState.showPro);
+      if (panelTitle) panelTitle.textContent = therapyState.panelTitle;
+      if (panelSubtitle) panelSubtitle.textContent = therapyState.panelSubtitle;
+    }
   }
 }
 

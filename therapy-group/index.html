@@ -99,12 +99,16 @@
   </main>
 
   <script src="/js/config.js?v=2"></script>
-  <script src="/js/therapy-groups-config.js?v=1"></script>
+  <script src="/js/therapy-groups-config.js?v=2"></script>
   <script>
     (function initTherapyGroupPage() {
       const params = new URLSearchParams(location.search);
-      const route = params.get('route') || 'calm';
+      const route = params.get('route') || window.getUserDirectionRouteKey?.() || 'relationships';
       const cfg = window.SISTEMA_THERAPY_GROUPS && window.SISTEMA_THERAPY_GROUPS[route];
+      if (cfg && cfg.kind === 'telegram-club' && cfg.externalUrl) {
+        location.replace(cfg.externalUrl);
+        return;
+      }
       const root = document.querySelector('[data-chat-root]');
       if (root) root.dataset.therapyRoute = route;
       if (cfg) {

@@ -14,7 +14,20 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' wss: https://api.sistema-molodtsov.ru wss://api.sistema-molodtsov.ru https://web-production-3cb7a.up.railway.app wss://web-production-3cb7a.up.railway.app https://*.up.railway.app wss://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Общий чат — Система Молодцова</title>
-  <script>location.replace('/');</script>
+  <script>
+    (function redirectLegacyChat() {
+      var route = 'relationships';
+      var yogaClub = 'https://t.me/+P3saVqIBL8gzZTIy';
+      var keys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication'];
+      try {
+        var profile = JSON.parse(localStorage.getItem('sistema:onboarding-profile') || '{}');
+        if (keys.indexOf(profile.focus) !== -1) route = profile.focus;
+        else if (keys.indexOf(profile.routeKey) !== -1) route = profile.routeKey;
+      } catch (e) {}
+      if (route === 'calm') location.replace(yogaClub);
+      else location.replace('/therapy-group/?route=' + encodeURIComponent(route));
+    })();
+  </script>
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
   <link rel="stylesheet" href="/css/style.css?v=161" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />

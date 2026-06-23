@@ -5,7 +5,7 @@
 
   const therapyRoute = root.dataset.therapyRoute
     || new URLSearchParams(location.search).get('route')
-    || 'calm';
+    || 'relationships';
 
   const chatApi = {
     getChat() { return window.API.getTherapyGroupChat(therapyRoute); },
@@ -352,7 +352,7 @@
         <div class="chat-settings-grabber"></div>
         <div class="chat-settings-head">
           <div>
-            <span>Общий чат</span>
+            <span>Терапевтическая группа</span>
             <h2>Настройки</h2>
           </div>
           <button type="button" data-chat-settings-close aria-label="Закрыть">×</button>
@@ -978,13 +978,13 @@
       <div class="ios-sub-modal-card">
         <button class="ios-sub-modal-close" type="button" aria-label="Закрыть">×</button>
         <div class="ios-sub-badge">Подписка Pro</div>
-        <h2 class="ios-sub-title">Доступ в общий чат<br>Системы Молодцова</h2>
-        <p class="ios-sub-desc">Подписка открывает Общий чат участников, все видео-разделы и расширенный доступ к Лизе — AI-помощнице системы.</p>
+        <h2 class="ios-sub-title">Доступ в терапевтическую<br>группу Системы</h2>
+        <p class="ios-sub-desc">Подписка открывает терапевтические группы по направлениям, все видео-разделы и расширенный доступ к Лизе — AI-помощнице системы.</p>
         
         <ul class="ios-sub-features">
           <li class="ios-sub-feature-item">
             <span class="ios-sub-feature-icon">✓</span>
-            <span><strong>Общий чат:</strong> Живое общение, обмен опытом и поддержка участников.</span>
+            <span><strong>Терапевтическая группа:</strong> Чат со специалистом и участниками вашего направления по конкретной теме.</span>
           </li>
           <li class="ios-sub-feature-item">
             <span class="ios-sub-feature-icon">✓</span>
@@ -1797,7 +1797,7 @@
       }
       render();
       scrollToBottom();
-      window.setTimeout(() => setStatus('Общий чат открыт'), 1200);
+      window.setTimeout(() => setStatus('Терапевтическая группа открыта'), 1200);
     } catch (err) {
       setStatus(err?.error || 'Не удалось отправить сообщение');
     } finally {
