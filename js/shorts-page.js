@@ -463,6 +463,7 @@
 
     var sourceUrl = url;
     var triedProxyFallback = false;
+    var triedPresignRefresh = false;
     var sep = url.indexOf('?') >= 0 ? '&' : '?';
     var playUrl = url + sep + '__ts=' + Date.now();
 
@@ -508,16 +509,51 @@
       return true;
     }
 
-    vidListeners.onErr = function () {
-      if (!triedProxyFallback && slug && /yandexcloud\.net/i.test(sourceUrl)) {
-        triedProxyFallback = true;
-        if (retryWithProxy()) return;
-      }
+    function showPlaybackError() {
       clearLoadKickTimer();
       detachVideoListeners();
       setStageBusy(false, '');
       hidePlayer();
       showToast('Не удалось открыть видео. Обновите страницу или попробуйте через минуту.', 5500);
+    }
+
+    vidListeners.onErr = function () {
+      if (!triedPresignRefresh && slug && /yandexcloud\.net/i.test(sourceUrl)) {
+        triedPresignRefresh = true;
+        delete presignCache[slug];
+        if (window.API && typeof window.API.getVideoPresign === 'function') {
+          window.API.getVideoPresign(slug).then(function (res) {
+            var freshUrl = res && res.url ? String(res.url) : '';
+            if (!freshUrl || !videoEl) throw new Error('empty presign');
+            presignCache[slug] = {
+              url: freshUrl,
+              expiresAt: Date.now() + (Number(res.expires_in) || 3600) * 1000,
+            };
+            sourceUrl = freshUrl;
+            settled = false;
+            clearLoadKickTimer();
+            attachLoadListeners();
+            var sepFresh = freshUrl.indexOf('?') >= 0 ? '&' : '?';
+            videoEl.src = freshUrl + sepFresh + '__ts=' + Date.now();
+            try {
+              videoEl.load();
+              requestAutoplay();
+            } catch (ignore) {}
+          }).catch(function () {
+            if (!triedProxyFallback && retryWithProxy()) {
+              triedProxyFallback = true;
+            } else {
+              showPlaybackError();
+            }
+          });
+          return;
+        }
+      }
+      if (!triedProxyFallback && slug && /yandexcloud\.net/i.test(sourceUrl)) {
+        triedProxyFallback = true;
+        if (retryWithProxy()) return;
+      }
+      showPlaybackError();
     };
 
     if (shortsItems.length >= 2) {

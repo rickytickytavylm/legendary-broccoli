@@ -490,7 +490,9 @@ class ApiClient {
           window.location.href = '/subscription/';
         }
       }
-      if (err.code !== 'HLS_NOT_READY' && err.status !== 404) throw err;
+      if (err.code !== 'HLS_NOT_READY' && err.code !== 'VIDEO_STORAGE_TIMEOUT' && err.status !== 404 && err.status !== 503) {
+        throw err;
+      }
     }
 
     const mp4 = await this.getVideoPresign(slug);
@@ -1528,6 +1530,21 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
         let mediaRecoveryTried = false;
         let tokenRefreshing = false;
         let proxyFallbackTried = false;
+        let mp4FallbackTried = false;
+        const fallbackToMp4 = async () => {
+          if (mp4FallbackTried || video.dataset.streamFallback === 'mp4') return;
+          mp4FallbackTried = true;
+          try {
+            if (hls && typeof hls.destroy === 'function') hls.destroy();
+            video._hlsInstance = null;
+            if (setHls) setHls(null);
+            const mp4 = await window.API.getVideoPresign(slug);
+            video.dataset.streamFallback = 'mp4';
+            video.dataset.streamType = 'mp4';
+            video.src = new URL(mp4.url, API_ORIGIN).href;
+            video.load();
+          } catch (err) {}
+        };
         const done = () => {
           if (settled) return;
           settled = true;
@@ -1566,6 +1583,11 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
           if (!data.fatal) return;
 
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            const httpCode = data.response && (data.response.code || data.response.status);
+            if ((httpCode === 503 || httpCode === 504) && !mp4FallbackTried) {
+              fallbackToMp4();
+              return;
+            }
             if (!proxyFallbackTried) {
               proxyFallbackTried = true;
               window.API.getVideoStream(slug, { delivery: 'proxy' })
@@ -1579,8 +1601,12 @@ window.attachVideoSource = async function attachVideoSource(video, slug, current
                   }
                 })
                 .catch(() => {
-                  hls.startLoad();
+                  fallbackToMp4();
                 });
+              return;
+            }
+            if (!mp4FallbackTried) {
+              fallbackToMp4();
               return;
             }
             hls.startLoad();
