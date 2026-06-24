@@ -84,7 +84,7 @@
   }
 
   // ── Inject CSS ─────────────────────────────────────────
-  var navCssHref = '/css/nav.css?v=77';
+  var navCssHref = '/css/nav.css?v=78';
   var navCssLink = document.querySelector('link[href*="nav.css"]');
   if (navCssLink) {
     navCssLink.setAttribute('href', navCssHref);
@@ -174,13 +174,6 @@
       label: 'Ресурсы',
       labelShort: 'Ресурсы',
       icon: icon('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/><path d="M8 7h8"/><path d="M8 11h6"/>')
-    },
-    {
-      id: 'chat',
-      href: '/therapy-group/',
-      label: 'Чат',
-      labelShort: 'Чат',
-      icon: icon('<path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1.4-5.2A8 8 0 1 1 21 12Z"/><path d="M8 11h8"/><path d="M8 15h5"/>')
     },
     {
       id: 'ai',
@@ -283,20 +276,14 @@
   }
 
   function isNavItemActive(item) {
-    if (item.id === 'chat') {
-      return currentPath.indexOf('/therapy-group') !== -1 || currentPath.indexOf('/chat') !== -1;
-    }
     return isActive(item.href);
   }
 
   function navItemHref(item) {
-    return item.id === 'chat' ? getTherapyChatHref() : item.href;
+    return item.href;
   }
 
-  function navItemExternalAttrs(item) {
-    if (item.id === 'chat' && isTherapyChatExternal()) {
-      return ' target="_blank" rel="noopener noreferrer"';
-    }
+  function navItemExternalAttrs() {
     return '';
   }
 
