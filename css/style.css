@@ -7721,8 +7721,17 @@ body.audio-player-open::-webkit-scrollbar {
 
 body.psychologist-detail-page .main-content {
   max-width: none;
-  width: 100%;
   padding: 0 0 40px;
+}
+
+@media (min-width: 769px) {
+  body.psychologist-detail-page .main-content {
+    width: calc(100vw - 232px);
+    margin-left: 232px !important;
+    margin-right: 0 !important;
+    padding: 0 clamp(16px, 2.5vw, 32px) 40px;
+    box-sizing: border-box;
+  }
 }
 
 body.psychologist-detail-page {
@@ -7737,8 +7746,9 @@ body.psychologist-detail-page .psychologists-page {
 body.psychologist-detail-page .psych-detail-copy,
 body.psychologist-detail-page .psych-detail-grid,
 body.psychologist-detail-page .psych-detail-cta {
-  width: min(calc(100% - clamp(20px, 5vw, 72px)), 1160px);
-  margin-left: auto;
+  width: 100%;
+  max-width: min(1080px, 100%);
+  margin-left: 0;
   margin-right: auto;
 }
 
@@ -7933,11 +7943,12 @@ body.psychologist-detail-page .psych-detail-cta {
 @media (min-width: 801px) {
   .psych-detail-hero {
     display: grid;
-    grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
-    gap: clamp(24px, 3.5vw, 40px);
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    gap: clamp(20px, 2.5vw, 32px);
     align-items: end;
-    width: min(calc(100% - clamp(20px, 5vw, 72px)), 1160px);
-    margin: clamp(24px, 4vw, 44px) auto clamp(20px, 4vw, 32px);
+    width: 100%;
+    max-width: min(1080px, 100%);
+    margin: clamp(24px, 3vw, 36px) 0 clamp(20px, 3vw, 28px);
     padding: 0;
   }
 
@@ -7947,7 +7958,7 @@ body.psychologist-detail-page .psych-detail-cta {
     margin-top: 0;
     margin-bottom: 0;
     aspect-ratio: 4 / 5;
-    max-height: 400px;
+    max-height: 380px;
     border-radius: 24px;
     border: 1px solid rgba(255,255,255,.1);
     box-shadow: 0 20px 56px rgba(0,0,0,.28);
@@ -7959,13 +7970,15 @@ body.psychologist-detail-page .psych-detail-cta {
 
   body.psychologist-detail-page .psych-detail-copy {
     width: auto;
+    min-width: 0;
     margin: 0;
     padding-bottom: 8px;
   }
 
   .psych-detail-copy h1 {
-    font-size: clamp(34px, 4.2vw, 56px);
-    line-height: .96;
+    font-size: clamp(30px, 3.6vw, 48px);
+    line-height: 1;
+    overflow-wrap: anywhere;
   }
 }
 
