@@ -143,6 +143,14 @@
     let label = 'Zoom-встреча';
     let hasPasscode = false;
 
+    // Жёстко допускаем только http/https — защита от javascript:/data: в href.
+    try {
+      const scheme = new URL(url).protocol;
+      if (scheme !== 'http:' && scheme !== 'https:') return null;
+    } catch (err) {
+      return null;
+    }
+
     try {
       const parsed = new URL(url);
       const meetingMatch = parsed.pathname.match(/\/(?:j|s|w)\/(\d+)/i);
