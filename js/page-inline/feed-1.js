@@ -3,6 +3,14 @@
   const root = document.getElementById('feed-posts-root');
   const fallbackTemplate = document.getElementById('feed-static-fallback');
   const defaultAvatar = '/assets/webp/ruslan_promo.webp';
+  // Квадратный фирменный знак (как в приложении) для автора «Система»
+  const brandMarkAvatar = '/assets/brand-mark.png';
+
+  function resolveAuthorAvatar(post) {
+    const name = String(post?.author_name || '').trim().toLowerCase();
+    if (name === 'система' || name === 'система молодцова') return brandMarkAvatar;
+    return post?.author_avatar_url || defaultAvatar;
+  }
   let feedPostsInitialized = false;
   let isFeedAdmin = false;
   let currentFeedPosts = [];
@@ -53,7 +61,7 @@
   }
 
   function formatLikes(count) {
-    return `Нравится: ${count}`;
+    return String(count);
   }
 
   function formatPostTime(value) {
@@ -112,7 +120,7 @@
           </div>
         ` : ''}
         <div class="post-author">
-          <img class="post-avatar" src="${escapeHtml(post.author_avatar_url || defaultAvatar)}" alt="${escapeHtml(post.author_name || 'Руслан Молодцов')}" loading="lazy" decoding="async" />
+          <img class="post-avatar" src="${escapeHtml(resolveAuthorAvatar(post))}" alt="${escapeHtml(post.author_name || 'Руслан Молодцов')}" loading="lazy" decoding="async" />
           <div class="post-author-info">
             <span class="post-author-name">${escapeHtml(post.author_name || 'Руслан Молодцов')}</span>
             <span class="post-time">${escapeHtml(formatPostTime(post.published_at || post.created_at))}</span>
@@ -164,8 +172,8 @@
     const name = String(comment?.author_name || 'У').trim();
     const letter = name.slice(0, 1).toUpperCase() || 'У';
     let url = String(comment?.avatar_url || '').trim();
-    if (!url && name.toLowerCase() === 'система') {
-      url = '/assets/webp/logo2.webp';
+    if (name.toLowerCase() === 'система' || name.toLowerCase() === 'система молодцова') {
+      url = '/assets/brand-mark.png';
     }
     if (url) {
       return `<img src="${escapeHtml(url)}" data-comment-avatar-fallback="${escapeHtml(letter)}" alt="" loading="lazy" decoding="async" />`;
@@ -460,11 +468,22 @@
     const likes = post.querySelector('[data-likes]');
     const baseLikes = Number(likes?.dataset.baseLikes || 0);
 
+    // Инлайн-счётчик лайков рядом с сердцем (как в приложении)
+    let likeCountEl = likeButton?.querySelector('[data-like-count]');
+    if (likeButton && !likeCountEl) {
+      likeCountEl = document.createElement('span');
+      likeCountEl.className = 'post-action-count';
+      likeCountEl.setAttribute('data-like-count', '');
+      likeButton.appendChild(likeCountEl);
+    }
+
     function renderLike() {
       const isLiked = likedPosts.has(postId);
       likeButton?.classList.toggle('liked', isLiked);
       likeButton?.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
-      if (likes) likes.textContent = formatLikes(baseLikes + (isLiked ? 1 : 0));
+      const total = baseLikes + (isLiked ? 1 : 0);
+      if (likeCountEl) likeCountEl.textContent = total > 0 ? String(total) : '';
+      if (likes) likes.textContent = formatLikes(total);
     }
 
     renderLike();

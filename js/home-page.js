@@ -499,7 +499,13 @@ function finishOnboarding() {
   localStorage.setItem(ONBOARDING_SCHEMA_KEY, ONBOARDING_SCHEMA_VERSION);
   localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(savedProfile));
   if (window.API?.updateProfile) {
-    window.API.updateProfile({ display_name: onboardingState.name, onboarding_complete: true }).catch(() => {});
+    // onboarding_focus — единый источник правды по направлению на сервере,
+    // чтобы iOS/Android подхватывали ту же терапевтическую группу и «Сегодня».
+    window.API.updateProfile({
+      display_name: onboardingState.name,
+      onboarding_complete: true,
+      onboarding_focus: savedProfile.routeKey,
+    }).catch(() => {});
   }
   if (window.API?.logActivity) {
     window.API.logActivity({
@@ -876,6 +882,19 @@ function initOnboarding() {
     const realUser = isRealUser(user) ? user : null;
     window.__sistemaCurrentUser = realUser;
     const completed = !!realUser?.onboarding_complete;
+    // Сервер — источник правды по направлению: если онбординг проходили на другом
+    // устройстве (iOS/Android), подтягиваем focus в локальный кэш, чтобы «Сегодня»
+    // и терапевтическая группа открывались на правильном направлении.
+    if (realUser?.onboarding_focus) {
+      try {
+        const prof = JSON.parse(localStorage.getItem(ONBOARDING_PROFILE_KEY) || '{}');
+        if (prof.focus !== realUser.onboarding_focus || prof.routeKey !== realUser.onboarding_focus) {
+          prof.focus = realUser.onboarding_focus;
+          prof.routeKey = realUser.onboarding_focus;
+          localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(prof));
+        }
+      } catch (e) { /* ignore */ }
+    }
     const continueOnboarding = localStorage.getItem(ONBOARDING_AFTER_AUTH_KEY) === 'true';
     const navEntry = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
     const isBackForward = navEntry && (navEntry.type === 'back_forward' || navEntry.type === 'prerender');

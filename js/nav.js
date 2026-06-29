@@ -317,7 +317,7 @@
   sidebar.innerHTML =
     '<div class="sidebar-head">' +
       '<a href="/" class="sidebar-brand">' +
-        '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark">' +
+        '<img src="/assets/logo-wordmark.png" alt="Система" class="sidebar-logo-img sidebar-logo-wordmark" style="width:118px;height:auto">' +
       '</a>' +
     '</div>' +
     '<nav class="sidebar-nav">' + navItemsHTML + '</nav>' +
@@ -355,7 +355,7 @@
 
   mobileHeader.innerHTML =
     '<a href="/" class="mobile-header-brand">' +
-      '<img src="/assets/webp/logo2-Photoroom.webp" alt="Система" class="mobile-header-logo">' +
+      '<img src="/assets/logo-wordmark.png" alt="Система" class="mobile-header-logo" style="width:108px;height:auto">' +
     '</a>' +
     '<div class="mobile-header-actions">' +
       '<a href="/account/" class="mobile-profile-dot" aria-label="Профиль"><span class="mobile-profile-avatar"><span class="mobile-avatar-head"></span><span class="mobile-avatar-body"></span></span></a>' +
