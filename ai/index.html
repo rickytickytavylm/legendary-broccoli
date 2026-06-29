@@ -509,41 +509,111 @@
         overflow: hidden;
       }
 
+      /* ---- Empty state: greeting + composer centered (ChatGPT/Claude style) ---- */
       .ai-page {
         height: 100svh;
         min-height: 100svh;
-        justify-content: flex-start;
-        padding: 40px 24px 36px;
+        justify-content: center;
+        padding: 32px 24px 28px;
         overflow: hidden;
       }
 
       .ai-shell {
-        height: 100%;
+        height: auto;
+        max-height: 100%;
         min-height: 0;
+        justify-content: center;
+      }
+
+      .ai-hero {
+        flex: 0 0 auto;
+        margin-bottom: 22px;
       }
 
       .ai-chat-panel {
         min-height: 0;
-        flex: 1;
+        flex: 0 0 auto;
         justify-content: flex-end;
-        overflow: hidden;
-        padding-top: 8px;
+        overflow: visible;
+        padding-top: 0;
       }
 
       .ai-conversation {
-        flex: 1;
+        flex: 0 0 auto;
         min-height: 0;
         max-height: none;
-        padding: 16px 0 22px;
+        max-width: none;
+        width: 100%;
+        padding: 0;
+        margin: 0;
         overflow-y: auto;
+      }
+
+      /* Readable centered column; the scroll container stays full-width so the
+         scrollbar sits at the panel edge, not floating mid-screen. */
+      .ai-conversation > * {
+        width: 100%;
+        max-width: 768px;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       .ai-input-bar {
         flex: 0 0 auto;
+        max-width: 768px;
       }
 
       .ai-footnote {
         flex: 0 0 auto;
+      }
+
+      /* ---- Active conversation: collapse hero, fill height, pin composer ---- */
+      body.ai-has-messages .ai-page {
+        justify-content: flex-start;
+        padding: 28px 24px 28px;
+      }
+
+      body.ai-has-messages .ai-shell {
+        height: 100%;
+        justify-content: stretch;
+      }
+
+      body.ai-has-messages .ai-hero {
+        display: none;
+      }
+
+      body.ai-has-messages .ai-chat-panel {
+        flex: 1;
+        justify-content: flex-end;
+      }
+
+      body.ai-has-messages .ai-conversation {
+        flex: 1;
+        padding: 8px 0 18px;
+        scroll-padding-bottom: 18px;
+        overscroll-behavior: contain;
+      }
+
+      /* Thin, subtle scrollbar (ChatGPT-like) */
+      .ai-conversation {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,.18) transparent;
+      }
+      .ai-conversation::-webkit-scrollbar {
+        width: 10px;
+      }
+      .ai-conversation::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .ai-conversation::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.16);
+        border-radius: 999px;
+        border: 3px solid transparent;
+        background-clip: padding-box;
+      }
+      .ai-conversation::-webkit-scrollbar-thumb:hover {
+        background: rgba(255,255,255,.30);
+        background-clip: padding-box;
       }
     }
   </style>
