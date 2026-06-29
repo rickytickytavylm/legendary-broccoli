@@ -5,7 +5,7 @@
   <link rel="manifest" href="/manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Система" />
+  <meta name="apple-mobile-web-app-title" content="РЎРёСЃС‚РµРјР°" />
   <link rel="apple-touch-icon" href="/assets/logo2.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
@@ -13,7 +13,7 @@
   <meta name="color-scheme" content="dark" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' wss: https://api.sistema-molodtsov.ru wss://api.sistema-molodtsov.ru https://web-production-3cb7a.up.railway.app wss://web-production-3cb7a.up.railway.app https://*.up.railway.app wss://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; media-src 'self' blob: data: https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <title>Общий чат — Система Молодцова</title>
+  <title>РћР±С‰РёР№ С‡Р°С‚ вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°</title>
   <script>
     (function redirectLegacyChat() {
       var route = 'relationships';
@@ -40,35 +40,35 @@
   <main class="chat-page-shell" data-chat-root>
     <section class="chat-panel">
       <header class="chat-desktop-topbar">
-        <a href="/" class="chat-desktop-back" aria-label="Вернуться на главную">
+        <a href="/" class="chat-desktop-back" aria-label="Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР° РіР»Р°РІРЅСѓСЋ">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-          <span>Назад</span>
+          <span>РќР°Р·Р°Рґ</span>
         </a>
         <div>
-          <strong>Общий чат</strong>
-          <span>Сообщество Система Pro</span>
+          <strong>РћР±С‰РёР№ С‡Р°С‚</strong>
+          <span>РЎРѕРѕР±С‰РµСЃС‚РІРѕ РЎРёСЃС‚РµРјР° Pro</span>
         </div>
       </header>
-      <div class="chat-status" data-chat-status>Подключаемся…</div>
+      <div class="chat-status" data-chat-status>РџРѕРґРєР»СЋС‡Р°РµРјСЃСЏвЂ¦</div>
 
       <!-- Notification Permission Prompt Banner -->
       <div class="notification-prompt-banner hidden" id="notification-banner">
         <div class="notification-banner-content">
           <div class="notification-banner-text">
-            <strong>Включить push-уведомления?</strong>
-            <span>Получайте мгновенные ответы на заблокированный экран.</span>
+            <strong>Р’РєР»СЋС‡РёС‚СЊ push-СѓРІРµРґРѕРјР»РµРЅРёСЏ?</strong>
+            <span>РџРѕР»СѓС‡Р°Р№С‚Рµ РјРіРЅРѕРІРµРЅРЅС‹Рµ РѕС‚РІРµС‚С‹ РЅР° Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅРЅС‹Р№ СЌРєСЂР°РЅ.</span>
           </div>
           <div class="notification-banner-buttons">
-            <button class="banner-btn-decline" id="notification-decline-btn">Позже</button>
-            <button class="banner-btn-accept" id="notification-accept-btn">Включить</button>
+            <button class="banner-btn-decline" id="notification-decline-btn">РџРѕР·Р¶Рµ</button>
+            <button class="banner-btn-accept" id="notification-accept-btn">Р’РєР»СЋС‡РёС‚СЊ</button>
           </div>
         </div>
       </div>
 
       <div class="chat-messages-wrap">
         <div class="chat-empty hidden" data-chat-empty>
-          <strong>Пока тихо</strong>
-          <span>Напишите первое сообщение для теста общего чата.</span>
+          <strong>РџРѕРєР° С‚РёС…Рѕ</strong>
+          <span>РќР°РїРёС€РёС‚Рµ РїРµСЂРІРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РґР»СЏ С‚РµСЃС‚Р° РѕР±С‰РµРіРѕ С‡Р°С‚Р°.</span>
         </div>
         <div class="chat-messages" data-chat-messages>
           <div class="sistema-loader-state">
@@ -77,22 +77,22 @@
               <span class="sistema-loader-bar"></span>
               <span class="sistema-loader-bar"></span>
             </div>
-            <span>Загружаем чат…</span>
+            <span>Р—Р°РіСЂСѓР¶Р°РµРј С‡Р°С‚вЂ¦</span>
           </div>
         </div>
       </div>
 
       <form class="chat-composer" data-chat-form>
-        <button class="chat-media-trigger hidden" type="button" id="chat-voice-rec-btn" aria-label="Записать голосовое">
+        <button class="chat-media-trigger hidden" type="button" id="chat-voice-rec-btn" aria-label="Р—Р°РїРёСЃР°С‚СЊ РіРѕР»РѕСЃРѕРІРѕРµ">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v4M8 23h8"/></svg>
         </button>
-        <button class="chat-media-trigger hidden" type="button" id="chat-video-rec-btn" aria-label="Записать кружочек">
+        <button class="chat-media-trigger hidden" type="button" id="chat-video-rec-btn" aria-label="Р—Р°РїРёСЃР°С‚СЊ РєСЂСѓР¶РѕС‡РµРє">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="3"/></svg>
         </button>
         
-        <textarea data-chat-input rows="1" maxlength="3000" placeholder="Написать..." spellcheck="false" autocomplete="off" autocapitalize="sentences"></textarea>
+        <textarea data-chat-input rows="1" maxlength="3000" placeholder="РќР°РїРёСЃР°С‚СЊ..." spellcheck="false" autocomplete="off" autocapitalize="sentences"></textarea>
         
-        <button data-chat-send type="submit" aria-label="Отправить">
+        <button data-chat-send type="submit" aria-label="РћС‚РїСЂР°РІРёС‚СЊ">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
         </button>
       </form>
@@ -108,8 +108,8 @@
             <span id="rec-timer">00:00</span>
           </div>
           <div class="rec-actions">
-            <button type="button" class="rec-btn rec-cancel-btn" id="rec-cancel-btn">Отмена</button>
-            <button type="button" class="rec-btn rec-stop-btn" id="rec-stop-btn">Готово</button>
+            <button type="button" class="rec-btn rec-cancel-btn" id="rec-cancel-btn">РћС‚РјРµРЅР°</button>
+            <button type="button" class="rec-btn rec-stop-btn" id="rec-stop-btn">Р“РѕС‚РѕРІРѕ</button>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@
 
   <script src="/js/config.js?v=2"></script>
   <script src="/js/api.js?v=88"></script>
-  <script src="/js/nav.js?v=100"></script>
+  <script src="/js/nav.js?v=102"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
   <script src="/js/chat-page.js?v=31"></script>
 </body>
