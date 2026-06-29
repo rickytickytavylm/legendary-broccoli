@@ -506,10 +506,7 @@
     }
 
     .post-likes {
-      padding: 4px 18px 8px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
+      display: none;
     }
 
     .post-caption {
@@ -791,30 +788,26 @@
       cursor: not-allowed;
     }
 
-    .post-action-btn {
-      position: relative;
+    .post-action-count,
+    .post-comment-count {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      margin-left: 6px;
+    }
+
+    .post-action-count:empty {
+      display: none;
+      margin-left: 0;
     }
 
     .post-comment-count {
       display: none;
-      position: absolute;
-      top: -3px;
-      right: -5px;
-      background: #ff4f76;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 4px;
-      border-radius: 8px;
-      line-height: 1;
-      min-width: 14px;
-      text-align: center;
-      border: 1px solid #07100e;
-      z-index: 5;
     }
 
     .post-comment-count.visible {
-      display: block !important;
+      display: inline-block;
     }
 
     /* ── Post Comments Preview ── */
