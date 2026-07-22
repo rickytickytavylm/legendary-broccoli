@@ -434,6 +434,9 @@ class ApiClient {
     });
   }
   logActivity(data) { return this.request('POST', '/profile/activity', data); }
+  getTherapyGroupSignups() { return this.request('GET', '/profile/therapy-group-signups'); }
+  createTherapyGroupSignup(routeKey) { return this.request('POST', '/profile/therapy-group-signup', { route_key: routeKey, platform: 'web' }); }
+  cancelTherapyGroupSignup(routeKey) { return this.request('POST', '/profile/therapy-group-signup/cancel', { route_key: routeKey }); }
   trackActivity(eventType, data = {}) {
     if (!this.isLoggedIn()) return Promise.resolve({ skipped: true });
     return this.logActivity({

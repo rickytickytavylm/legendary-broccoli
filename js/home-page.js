@@ -397,6 +397,11 @@ function renderToday(routeKey) {
       therapyCard.removeAttribute('target');
       therapyCard.removeAttribute('rel');
     }
+    if (therapyState.recruitment) {
+      therapyCard.dataset.therapyRecruit = therapyState.routeKey;
+    } else {
+      delete therapyCard.dataset.therapyRecruit;
+    }
     therapyCard.style.setProperty('--ux-bg', `url('${therapyCfg.image}')`);
     therapyCard.setAttribute('aria-label', therapyState.external ? 'Открыть йога-клуб' : 'Открыть терапевтическую группу');
     const therapyTitle = therapyCard.querySelector('[data-today-therapy-title]');
@@ -419,6 +424,43 @@ function renderToday(routeKey) {
       if (panelTitle) panelTitle.textContent = therapyState.panelTitle;
       if (panelSubtitle) panelSubtitle.textContent = therapyState.panelSubtitle;
     }
+  }
+}
+
+async function handleTherapyRecruitClick(event) {
+  const card = event.currentTarget;
+  const routeKey = card?.dataset?.therapyRecruit;
+  if (!routeKey) return; // не режим набора (например, йога-клуб) — обычная ссылка
+  event.preventDefault();
+
+  const api = window.API;
+  if (!api || typeof api.createTherapyGroupSignup !== 'function') return;
+  if (typeof api.isLoggedIn === 'function' && !api.isLoggedIn()) {
+    window.location.href = '/?login=1';
+    return;
+  }
+
+  const ctaEl = card.querySelector('[data-therapy-cta]');
+  const prevCta = ctaEl ? ctaEl.textContent : '';
+  if (card.dataset.therapyBusy === '1') return;
+  card.dataset.therapyBusy = '1';
+  if (ctaEl) ctaEl.textContent = 'Отправляем…';
+
+  try {
+    const res = await api.createTherapyGroupSignup(routeKey);
+    const already = res && res.already;
+    if (ctaEl) ctaEl.textContent = already ? 'Вы записаны' : 'Заявка принята';
+    const descEl = card.querySelector('[data-today-therapy-desc]');
+    if (descEl) {
+      descEl.textContent = already
+        ? 'Вы уже в списке набора. Ведущий свяжется с вами о старте группы.'
+        : 'Готово! Мы записали вас в набор — ведущий свяжется о старте группы.';
+    }
+  } catch (err) {
+    if (ctaEl) ctaEl.textContent = prevCta || 'Записаться';
+    alert('Не удалось отправить заявку. Попробуйте ещё раз чуть позже.');
+  } finally {
+    card.dataset.therapyBusy = '';
   }
 }
 
@@ -851,6 +893,7 @@ function initOnboarding() {
   });
   document.querySelector('[data-today-prev]')?.addEventListener('click', () => shiftTodayRoute(-1));
   document.querySelector('[data-today-next]')?.addEventListener('click', () => shiftTodayRoute(1));
+  document.querySelector('[data-today-therapy-group]')?.addEventListener('click', handleTherapyRecruitClick);
   document.querySelectorAll('[data-today-primary], [data-today-secondary-link]').forEach((link) => {
     link.addEventListener('click', () => markProgramOpened(link.getAttribute('href') || ''));
   });

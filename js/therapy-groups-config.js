@@ -108,14 +108,15 @@ window.getTherapyGroupCardState = function getTherapyGroupCardState(routeKey) {
   }
   return {
     routeKey: key,
-    href: `/therapy-group/?route=${encodeURIComponent(key)}`,
+    href: '#',
     external: false,
-    panelTitle: 'Терапевтическая группа',
-    panelSubtitle: 'Групповой чат по вашему направлению с ведущим программы.',
-    cardTitle: 'Терапевтическая группа',
+    recruitment: true,
+    panelTitle: 'Набор в группу',
+    panelSubtitle: 'Идёт набор терапевтической группы по вашему направлению.',
+    cardTitle: 'Набор группы',
     leader: `Ведущий: ${cfg.leader}`,
-    desc: cfg.cardDesc || 'Чат со специалистом и участниками вашего направления по конкретной теме.',
-    cta: 'Открыть чат',
-    showPro: true,
+    desc: 'Идёт набор группы по вашему направлению. Оставьте заявку — ведущий свяжется с вами о старте.',
+    cta: 'Записаться',
+    showPro: false,
   };
 };
