@@ -2,7 +2,7 @@
  * API Client for Система Молодцова
  * JWT auth, automatic refresh, video streaming
  */
-const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.sistema-molodtsov.ru/api');
+const API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:3000/api' : 'https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai/api');
 const API_ORIGIN = new URL(API_BASE, location.href).origin;
 const CONTENT_CACHE_TTL = 5 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 15000;
