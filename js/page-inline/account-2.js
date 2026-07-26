@@ -263,7 +263,7 @@ function escapeHtml(value) {
         <button class="ios-sub-btn-buy" type="button" disabled>
           <span>Активировать подписку Pro</span><span style="font-weight:400;opacity:.6">—</span><span>999 ₽</span>
         </button>
-        <p class="ios-sub-footer">Оплата проходит через защищённый шлюз ЮKassa. Подписка действует 30 дней.</p>
+        <p class="ios-sub-footer">Оплата через ЮKassa. Доступ на 30 дней — на сайте и в приложении, если войти тем же аккаунтом.</p>
       </div>
     `;
     document.body.appendChild(modal);
@@ -357,8 +357,84 @@ function escapeHtml(value) {
     }
   }
 
+  // Приход из App Store / Play приложения: ?from=app&intent=continue_access
+  // Нужен только для текста. Доступ общий по аккаунту, детект «из аппа» на сервере не обязателен.
+  function captureAppBridgeParams() {
+    try {
+      const params = new URLSearchParams(location.search || '');
+      const from = String(params.get('from') || '').toLowerCase();
+      if (from !== 'app' && from !== 'ios' && from !== 'android') return null;
+      const bridge = {
+        from: 'app',
+        platform: String(params.get('platform') || from || 'app'),
+        intent: String(params.get('intent') || 'continue_access'),
+        at: Date.now(),
+      };
+      sessionStorage.setItem('sistema:app-bridge', JSON.stringify(bridge));
+      // Чистим URL, чтобы при шаринге/обновлении не висел служебный хвост.
+      params.delete('from');
+      params.delete('platform');
+      params.delete('intent');
+      const clean = location.pathname + (params.toString() ? `?${params}` : '') + (location.hash || '');
+      history.replaceState({}, document.title, clean);
+      return bridge;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function readAppBridge() {
+    try {
+      const raw = sessionStorage.getItem('sistema:app-bridge');
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      // Баннер актуален только в этой сессии браузера (~2 часа).
+      if (!parsed || !parsed.at || Date.now() - parsed.at > 2 * 60 * 60 * 1000) {
+        sessionStorage.removeItem('sistema:app-bridge');
+        return null;
+      }
+      return parsed;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function showAppBridgeBanner(bridge) {
+    if (!bridge || document.getElementById('app-bridge-banner')) return;
+    const host = document.querySelector('.profile-wrap') || document.querySelector('main') || document.body;
+    if (!host) return;
+
+    if (!document.getElementById('app-bridge-banner-styles')) {
+      const style = document.createElement('style');
+      style.id = 'app-bridge-banner-styles';
+      style.textContent = `
+        .app-bridge-banner{margin:0 0 18px;padding:16px 18px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.88)}
+        .app-bridge-banner strong{display:block;margin:0 0 6px;font-size:15px;font-weight:800;letter-spacing:-.02em}
+        .app-bridge-banner p{margin:0;font-size:13px;line-height:1.45;color:rgba(255,255,255,.58)}
+      `;
+      document.head.appendChild(style);
+    }
+
+    const intent = bridge.intent || '';
+    // Текст для человека, не для разработки: коротко, без «from/intent/синхронизации».
+    const title = intent === 'continue_access'
+      ? 'Продолжите здесь'
+      : 'Один аккаунт — везде';
+    const text = intent === 'continue_access'
+      ? 'Оформите полный доступ на сайте. Потом просто вернитесь в приложение — всё откроется само, вход тот же.'
+      : 'Если вы уже пользуетесь приложением: доступ с сайта работает и там. Достаточно войти тем же аккаунтом.';
+
+    const banner = document.createElement('div');
+    banner.id = 'app-bridge-banner';
+    banner.className = 'app-bridge-banner';
+    banner.innerHTML = `<strong>${title}</strong><p>${text}</p>`;
+    host.insertBefore(banner, host.firstChild);
+  }
+
   async function initProfile() {
+    const bridge = captureAppBridgeParams() || readAppBridge();
     showDashboardShell();
+    showAppBridgeBanner(bridge);
     try {
       const storedTrial = sessionStorage.getItem('sistema:trial-activated-subscription');
       if (storedTrial) {
