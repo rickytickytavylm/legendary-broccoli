@@ -786,7 +786,6 @@ function initOnboarding() {
       await window.loginWithFirebase(provider, {
         button,
         errorEl,
-        force: true,
         // finishFirebaseSession already emits auth:change with user — no reload.
         onSuccess: () => {},
       });
@@ -954,8 +953,21 @@ function initOnboarding() {
     return window.matchMedia?.('(display-mode: standalone)')?.matches || false;
   };
 
+  let bootGeneration = 0;
   const boot = (user) => {
     const realUser = isRealUser(user) ? user : null;
+    // Ignore duplicate auth:change storms (Firebase loop used to re-boot splash every ~0.5s).
+    if (
+      realUser
+      && window.__sistemaCurrentUser
+      && window.__sistemaCurrentUser.id === realUser.id
+      && document.body.classList.contains('home-onboarding-active')
+      && !document.body.classList.contains('home-splash-active')
+    ) {
+      window.__sistemaCurrentUser = realUser;
+      return;
+    }
+    const myGen = ++bootGeneration;
     window.__sistemaCurrentUser = realUser;
     const completed = !!realUser?.onboarding_complete;
     // Сервер — источник правды по направлению: если онбординг проходили на другом
@@ -982,6 +994,7 @@ function initOnboarding() {
       window.API?.updateProfile?.({ pwa_installed: true }).catch(() => {});
     }
     window.setTimeout(() => {
+      if (myGen !== bootGeneration) return;
       if (realUser && continueOnboarding && !completed) {
         localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
         onboardingIndex = 0;

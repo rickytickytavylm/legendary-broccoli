@@ -307,32 +307,52 @@
   async function loadFirebaseAuth() {
     await ensureFirebaseConfig();
     if (!window.FirebaseAuth) {
-      await import('/js/firebase-auth.js');
+      // Cache-bust: unversioned import was serving a broken loop build on iPhone.
+      await import('/js/firebase-auth.js?v=3');
     }
     return window.FirebaseAuth;
   }
 
+  let firebaseExchangeInFlight = false;
+
   async function finishFirebaseSession(idToken, options = {}) {
     if (!window.API?.firebaseLogin) throw new Error('API unavailable');
-    // Already have our app session — never re-exchange + reload (that caused onboarding flicker).
-    if (window.API.isLoggedIn?.() && !options.force) {
+    // Absolute guard: never re-hit /auth/firebase when app JWT already exists.
+    if (window.API.isLoggedIn?.()) {
+      try {
+        const fa = await loadFirebaseAuth();
+        await fa.clearFirebaseSession?.();
+      } catch (_) { /* ignore */ }
       return null;
     }
-    const data = await window.API.firebaseLogin(idToken);
-    const access = data.accessToken || data.tokens?.access;
-    const refresh = data.refreshToken || data.tokens?.refresh;
-    if (!access || !refresh) throw new Error('No tokens');
-    window.API.setTokens({ access, refresh });
-    window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: data.user } }));
-    if (typeof options.onSuccess === 'function') {
-      options.onSuccess(data);
+    if (sessionStorage.getItem('sistema:firebase-exchange-done') === '1') return null;
+    if (firebaseExchangeInFlight) return null;
+    firebaseExchangeInFlight = true;
+    try {
+      const data = await window.API.firebaseLogin(idToken);
+      const access = data.accessToken || data.tokens?.access;
+      const refresh = data.refreshToken || data.tokens?.refresh;
+      if (!access || !refresh) throw new Error('No tokens');
+      window.API.setTokens({ access, refresh });
+      sessionStorage.setItem('sistema:firebase-exchange-done', '1');
+      try {
+        const fa = await loadFirebaseAuth();
+        await fa.clearFirebaseSession?.();
+      } catch (_) { /* ignore */ }
+      window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: data.user } }));
+      if (typeof options.onSuccess === 'function') {
+        options.onSuccess(data);
+        return data;
+      }
+      window.closeAuthModal?.();
       return data;
+    } finally {
+      firebaseExchangeInFlight = false;
     }
-    window.closeAuthModal?.();
-    return data;
   }
 
   async function loginWithFirebase(provider, options = {}) {
+    if (window.API?.isLoggedIn?.()) return null;
     const btn = options.button
       || document.getElementById(provider === 'apple' ? 'auth-apple-btn' : 'auth-google-btn');
     const errEl = options.errorEl || document.getElementById('auth-error');
@@ -342,13 +362,14 @@
       errEl.style.display = 'none';
     }
     try {
+      sessionStorage.removeItem('sistema:firebase-exchange-done');
       const firebaseAuth = await loadFirebaseAuth();
       const signed = provider === 'apple'
         ? await firebaseAuth.signInWithApple()
         : await firebaseAuth.signInWithGoogle();
       // Redirect flow: browser leaves the page; result handled on return.
       if (!signed?.idToken) return null;
-      return finishFirebaseSession(signed.idToken, { ...options, force: true });
+      return finishFirebaseSession(signed.idToken, options);
     } catch (err) {
       if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') {
         return null;
@@ -370,8 +391,11 @@
   }
 
   async function consumeFirebaseRedirect() {
-    const pending = sessionStorage.getItem('sistema:firebase-auth-pending') === '1'
-      || /[?&#](apiKey|authType|code)=/.test(location.href + location.hash);
+    // Already in app session — skip Firebase completely (stops /auth/firebase spam).
+    if (window.API?.isLoggedIn?.()) return null;
+    if (sessionStorage.getItem('sistema:firebase-exchange-done') === '1') return null;
+
+    const pending = sessionStorage.getItem('sistema:firebase-auth-pending') === '1';
     try {
       const firebaseAuth = await loadFirebaseAuth();
       const signed = await firebaseAuth.consumeRedirectResult();
@@ -387,7 +411,7 @@
         }
         return null;
       }
-      return finishFirebaseSession(signed.idToken, { force: true });
+      return finishFirebaseSession(signed.idToken);
     } catch (err) {
       console.warn('[firebase] redirect result failed', err);
       const errEl = document.getElementById('gateway-welcome-auth-error')

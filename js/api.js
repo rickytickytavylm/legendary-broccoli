@@ -359,6 +359,8 @@ class ApiClient {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     try {
+      sessionStorage.removeItem('sistema:firebase-exchange-done');
+      sessionStorage.removeItem('sistema:firebase-auth-pending');
       Object.keys(sessionStorage)
         .filter((key) => key.startsWith('sistema:content-cache:'))
         .forEach((key) => sessionStorage.removeItem(key));

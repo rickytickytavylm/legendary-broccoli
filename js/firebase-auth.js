@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
+  signOut,
 } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js';
 
 function getFirebaseApp() {
@@ -43,7 +44,6 @@ async function signInWithProvider(provider) {
     if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
       throw err;
     }
-    // Popup blocked / broken (common in in-app browsers) → full-page redirect.
     if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
       sessionStorage.setItem('sistema:firebase-auth-pending', '1');
       await signInWithRedirect(auth, provider);
@@ -60,7 +60,24 @@ window.FirebaseAuth = {
   async signInWithApple() {
     return signInWithProvider(makeAppleProvider());
   },
+  /** Drop Firebase session so it cannot re-trigger exchange on next load. */
+  async clearFirebaseSession() {
+    try {
+      const auth = getAuth(getFirebaseApp());
+      if (auth.currentUser) await signOut(auth);
+    } catch (_) { /* ignore */ }
+  },
   async consumeRedirectResult() {
+    // App JWT already present — do not touch Firebase Auth at all.
+    if (window.API?.isLoggedIn?.()) {
+      sessionStorage.removeItem('sistema:firebase-auth-pending');
+      return null;
+    }
+    if (sessionStorage.getItem('sistema:firebase-exchange-done') === '1') {
+      sessionStorage.removeItem('sistema:firebase-auth-pending');
+      return null;
+    }
+
     const auth = getAuth(getFirebaseApp());
     let result = null;
     try {
@@ -68,19 +85,12 @@ window.FirebaseAuth = {
     } catch (err) {
       console.warn('[firebase] getRedirectResult', err);
     }
-    if (result?.user) {
-      sessionStorage.removeItem('sistema:firebase-auth-pending');
-      return tokenFromUser(result.user);
-    }
 
-    // Fallback ONLY right after an interrupted redirect, and only if our JWT is missing.
-    // Using auth.currentUser on every page load caused an infinite reload flicker.
-    const pending = sessionStorage.getItem('sistema:firebase-auth-pending') === '1';
-    const alreadyIn = !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
     sessionStorage.removeItem('sistema:firebase-auth-pending');
-    if (pending && !alreadyIn && auth.currentUser) {
-      return tokenFromUser(auth.currentUser);
-    }
+
+    // Only accept a real redirect payload. Never use sticky currentUser —
+    // that caused infinite /api/auth/firebase spam + UI reboot loop.
+    if (result?.user) return tokenFromUser(result.user);
     return null;
   },
 };
