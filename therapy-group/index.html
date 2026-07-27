@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#030605" />
   <meta name="color-scheme" content="dark" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://www.gstatic.com https://apis.google.com https://appleid.cdn-apple.com https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' wss: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai wss://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://api.sistema-molodtsov.ru wss://api.sistema-molodtsov.ru https://web-production-3cb7a.up.railway.app wss://web-production-3cb7a.up.railway.app https://*.up.railway.app wss://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com; media-src 'self' blob: data: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; frame-src 'self' https://accounts.google.com https://appleid.apple.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com https://oauth.telegram.org https://telegram.org; manifest-src 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://www.gstatic.com https://apis.google.com https://appleid.cdn-apple.com https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.gstatic.com wss: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai wss://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://api.sistema-molodtsov.ru wss://api.sistema-molodtsov.ru https://web-production-3cb7a.up.railway.app wss://web-production-3cb7a.up.railway.app https://*.up.railway.app wss://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com; media-src 'self' blob: data: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; frame-src 'self' https://accounts.google.com https://appleid.apple.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com https://oauth.telegram.org https://telegram.org; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Терапевтическая группа — Система Молодцова</title>
   <link rel="icon" type="image/png" href="/assets/webp/logo2.webp" />
@@ -100,26 +100,7 @@
 
   <script src="/js/config.js?v=2"></script>
   <script src="/js/therapy-groups-config.js?v=2"></script>
-  <script>
-    (function initTherapyGroupPage() {
-      const params = new URLSearchParams(location.search);
-      const route = params.get('route') || window.getUserDirectionRouteKey?.() || 'relationships';
-      const cfg = window.SISTEMA_THERAPY_GROUPS && window.SISTEMA_THERAPY_GROUPS[route];
-      if (cfg && cfg.kind === 'telegram-club' && cfg.externalUrl) {
-        location.replace(cfg.externalUrl);
-        return;
-      }
-      const root = document.querySelector('[data-chat-root]');
-      if (root) root.dataset.therapyRoute = route;
-      if (cfg) {
-        document.title = 'Терапевтическая группа — ' + cfg.title;
-        const title = document.querySelector('[data-therapy-chat-title]');
-        const subtitle = document.querySelector('[data-therapy-chat-subtitle]');
-        if (title) title.textContent = cfg.title;
-        if (subtitle) subtitle.textContent = 'Ведущий: ' + cfg.leader;
-      }
-    })();
-  </script>
+  <script src="/js/page-inline/therapy-group-1.js?v=1"></script>
   <script src="/js/api.js?v=90"></script>
   <script src="/js/nav.js?v=102"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>

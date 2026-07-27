@@ -10,7 +10,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#000000" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://www.gstatic.com https://apis.google.com https://appleid.cdn-apple.com https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' wss: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com; media-src 'self' blob: data: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; frame-src 'self' https://accounts.google.com https://appleid.apple.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com https://oauth.telegram.org https://telegram.org; manifest-src 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://www.gstatic.com https://apis.google.com https://appleid.cdn-apple.com https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.gstatic.com wss: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com; media-src 'self' blob: data: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; frame-src 'self' https://accounts.google.com https://appleid.apple.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com https://oauth.telegram.org https://telegram.org; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 <title>Подписка — Система Молодцова</title>
   <meta name="description" content="Тарифы и подписка на Систему Молодцова" />
@@ -214,65 +214,7 @@
   <script src="/js/api.js?v=90"></script>
   <script src="/js/auth.js?v=25"></script>
   <script src="/js/nav.js?v=102"></script>
-  <script>
-    (function() {
-      var btn = document.getElementById('sub-btn');
-      var legal = document.getElementById('sub-legal');
-      var planSlug = 'monthly';
-      var tariffAvailable = true;
-
-      function syncLegalState() {
-        if (btn) btn.disabled = !tariffAvailable || !(legal && legal.checked);
-      }
-      legal && legal.addEventListener('change', syncLegalState);
-      syncLegalState();
-
-      function fmtPrice(n) { return Number(n).toLocaleString('ru-RU'); }
-
-      if (window.API && window.API.getPlans) {
-        window.API.getPlans().then(function(data) {
-          var plans = data && data.plans;
-          var p = plans && plans.find(function(x) { return x.slug === 'monthly'; });
-          if (!p && plans) p = plans[0];
-          if (p) {
-            planSlug = p.slug;
-            document.querySelector('.card .card_title').textContent = p.title || 'Система Молодцова';
-            document.querySelector('.card .card_paragraph').textContent = p.description || 'Полный доступ ко всем материалам';
-            btn.textContent = 'Оформить подписку — ' + fmtPrice(p.price_rub) + ' ₽';
-          } else {
-            btn.textContent = 'Тарифы недоступны';
-            tariffAvailable = false;
-            syncLegalState();
-          }
-        }).catch(function() {
-          btn.textContent = 'Тарифы недоступны';
-          tariffAvailable = false;
-          syncLegalState();
-        });
-      }
-
-      async function doSubscribe() {
-        if (!window.API || !window.API.isLoggedIn || !window.API.isLoggedIn()) {
-          if (window.openAuthModal) window.openAuthModal('login');
-          return;
-        }
-        if (!window.requirePaymentLegalAccepted(document.querySelector('.card'))) return;
-        btn.disabled = true;
-        var original = btn.textContent;
-        btn.textContent = 'Переходим к оплате...';
-        try {
-          var res = await window.API.createPayment({ plan_slug: planSlug, provider: 'yookassa' });
-          if (window.API.redirectToPayment && window.API.redirectToPayment(res)) return;
-          throw new Error('bad payment response');
-        } catch (err) {
-          btn.disabled = false;
-          btn.textContent = original;
-          alert(err.error || 'Ошибка при создании платежа. Попробуйте позже.');
-        }
-      }
-      btn.addEventListener('click', doSubscribe);
-    })();
-  </script>
+  <script src="/js/page-inline/subscription-2.js?v=1"></script>
 </body>
 </html>
 
