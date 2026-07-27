@@ -30,6 +30,9 @@
     .auth-social svg{width:19px;height:19px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.22))}
     .auth-apple{background:#fff;color:#000}
     .auth-apple:hover{background:#f5f5f7}
+    .auth-google{background:#fff;color:#1f1f1f}
+    .auth-google:hover{background:#f7f7f7}
+    .auth-google svg,.auth-apple svg{position:relative;z-index:1}
     .auth-tg{margin-top:2px}
     .auth-tg span,.auth-tg svg{position:relative;z-index:1}
     .auth-yandex-mark{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;border-radius:50%;background:rgba(255,255,255,.9);color:#111;font-weight:900;font-family:Arial,sans-serif;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.9)}
@@ -112,8 +115,16 @@
             <span class="auth-yandex-mark">Я</span>
             <span>Войти через Яндекс</span>
           </button>
+          <button type="button" class="auth-social auth-google" id="auth-google-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            <span>Войти через Google</span>
+          </button>
+          <button type="button" class="auth-social auth-apple" id="auth-apple-btn">
+            <svg class="auth-apple-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.365 1.43c0 1.14-.46 2.23-1.21 3.03-.79.84-2.1 1.49-3.2 1.4-.14-1.1.4-2.27 1.16-3.05.8-.84 2.18-1.45 3.25-1.38zM20.5 17.2c-.58 1.33-.85 1.92-1.6 3.1-1.04 1.63-2.5 3.66-4.32 3.68-1.62.02-2.04-1.06-4.25-1.05-2.21.01-2.68 1.08-4.3 1.06-1.81-.02-3.2-1.85-4.24-3.47C-.2 16.95-.9 12.3 1.1 9.42c1.02-1.5 2.64-2.45 4.2-2.45 1.57 0 2.55.98 3.85.98 1.25 0 2.01-1 3.9-1 1.4 0 2.88.76 3.9 2.07-3.43 1.88-2.87 6.78.55 8.18z"/></svg>
+            <span>Войти через Apple</span>
+          </button>
           <p class="auth-error" id="auth-error" class="u-hidden"></p>
-          <p class="auth-note" id="auth-note">Telegram подтвердит профиль и сразу откроет доступ.</p>
+          <p class="auth-note" id="auth-note">Один аккаунт — доступ на сайте и в приложении.</p>
         </form>
       </div>
     `;
@@ -128,6 +139,10 @@
     if (tgBtn) tgBtn.addEventListener('click', startTelegramLogin);
     const yandexBtn = document.getElementById('auth-yandex-btn');
     if (yandexBtn) yandexBtn.addEventListener('click', startYandexLogin);
+    const googleBtn = document.getElementById('auth-google-btn');
+    if (googleBtn) googleBtn.addEventListener('click', () => startFirebaseLogin('google'));
+    const appleBtn = document.getElementById('auth-apple-btn');
+    if (appleBtn) appleBtn.addEventListener('click', () => startFirebaseLogin('apple'));
   }
 
   let authStep = 'phone';
@@ -271,8 +286,74 @@
     window.location.href = window.API.yandexLoginUrl();
   }
 
+  function ensureFirebaseConfig() {
+    if (window.FIREBASE_CONFIG) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-firebase-config]');
+      if (existing) {
+        existing.addEventListener('load', () => resolve());
+        existing.addEventListener('error', reject);
+        return;
+      }
+      const s = document.createElement('script');
+      s.src = '/js/firebase-config.js';
+      s.dataset.firebaseConfig = '1';
+      s.onload = () => resolve();
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function loadFirebaseAuth() {
+    await ensureFirebaseConfig();
+    if (!window.FirebaseAuth) {
+      await import('/js/firebase-auth.js');
+    }
+    return window.FirebaseAuth;
+  }
+
+  async function startFirebaseLogin(provider) {
+    const btnId = provider === 'apple' ? 'auth-apple-btn' : 'auth-google-btn';
+    const btn = document.getElementById(btnId);
+    const errEl = document.getElementById('auth-error');
+    if (btn) btn.disabled = true;
+    if (errEl) {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
+    }
+    try {
+      const firebaseAuth = await loadFirebaseAuth();
+      const { idToken } = provider === 'apple'
+        ? await firebaseAuth.signInWithApple()
+        : await firebaseAuth.signInWithGoogle();
+      if (!window.API?.firebaseLogin) throw new Error('API unavailable');
+      const data = await window.API.firebaseLogin(idToken);
+      const access = data.accessToken || data.tokens?.access;
+      const refresh = data.refreshToken || data.tokens?.refresh;
+      if (!access || !refresh) throw new Error('No tokens');
+      window.API.setTokens({ access, refresh });
+      window.dispatchEvent(new CustomEvent('auth:change'));
+      window.closeAuthModal?.();
+      window.location.reload();
+    } catch (err) {
+      if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') {
+        return;
+      }
+      if (errEl) {
+        const appleHint = provider === 'apple'
+          ? ' Вход через Apple на сайте ещё настраивается.'
+          : '';
+        errEl.textContent = (err?.message || 'Не удалось войти.') + appleHint;
+        errEl.style.display = 'block';
+      }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
   window.startTelegramLogin = startTelegramLogin;
   window.startYandexLogin = startYandexLogin;
+  window.startFirebaseLogin = startFirebaseLogin;
 
   function setupCallFallbackButton() {
     const callBtn = document.getElementById('auth-call');

@@ -417,6 +417,9 @@ class ApiClient {
   yandexLoginUrl(returnTo = location.pathname + location.search + location.hash) {
     return this.base + '/yandex/login?returnTo=' + encodeURIComponent(returnTo || '/');
   }
+  firebaseLogin(idToken) {
+    return this.request('POST', '/auth/firebase', { idToken });
+  }
 
   // --- Content ---
   getCategories()  { return this.request('GET', '/content/categories'); }
