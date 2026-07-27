@@ -312,6 +312,23 @@
     return window.FirebaseAuth;
   }
 
+  async function finishFirebaseSession(idToken, options = {}) {
+    if (!window.API?.firebaseLogin) throw new Error('API unavailable');
+    const data = await window.API.firebaseLogin(idToken);
+    const access = data.accessToken || data.tokens?.access;
+    const refresh = data.refreshToken || data.tokens?.refresh;
+    if (!access || !refresh) throw new Error('No tokens');
+    window.API.setTokens({ access, refresh });
+    window.dispatchEvent(new CustomEvent('auth:change'));
+    if (typeof options.onSuccess === 'function') {
+      options.onSuccess(data);
+      return data;
+    }
+    window.closeAuthModal?.();
+    window.location.reload();
+    return data;
+  }
+
   async function loginWithFirebase(provider, options = {}) {
     const btn = options.button
       || document.getElementById(provider === 'apple' ? 'auth-apple-btn' : 'auth-google-btn');
@@ -323,37 +340,51 @@
     }
     try {
       const firebaseAuth = await loadFirebaseAuth();
-      const { idToken } = provider === 'apple'
+      const signed = provider === 'apple'
         ? await firebaseAuth.signInWithApple()
         : await firebaseAuth.signInWithGoogle();
-      if (!window.API?.firebaseLogin) throw new Error('API unavailable');
-      const data = await window.API.firebaseLogin(idToken);
-      const access = data.accessToken || data.tokens?.access;
-      const refresh = data.refreshToken || data.tokens?.refresh;
-      if (!access || !refresh) throw new Error('No tokens');
-      window.API.setTokens({ access, refresh });
-      window.dispatchEvent(new CustomEvent('auth:change'));
-      if (typeof options.onSuccess === 'function') {
-        options.onSuccess(data);
-        return data;
-      }
-      window.closeAuthModal?.();
-      window.location.reload();
-      return data;
+      // Redirect flow: browser leaves the page; result handled on return.
+      if (!signed?.idToken) return null;
+      return finishFirebaseSession(signed.idToken, options);
     } catch (err) {
       if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') {
         return null;
       }
       if (errEl) {
-        const appleHint = provider === 'apple'
-          ? ' Вход через Apple на сайте ещё настраивается.'
-          : '';
-        errEl.textContent = (err?.message || 'Не удалось войти.') + appleHint;
+        let msg = err?.message || 'Не удалось войти.';
+        if (/unauthorized-domain|invalid-action|requested action is invalid/i.test(String(msg + (err?.code || '')))) {
+          msg = 'Домен сайта не разрешён в Firebase (Authorized domains).';
+        } else if (provider === 'apple') {
+          msg += ' Вход через Apple на сайте ещё настраивается.';
+        }
+        errEl.textContent = msg;
         errEl.style.display = 'block';
       }
       throw err;
     } finally {
       if (btn) btn.disabled = false;
+    }
+  }
+
+  async function consumeFirebaseRedirect() {
+    try {
+      const firebaseAuth = await loadFirebaseAuth();
+      const signed = await firebaseAuth.consumeRedirectResult();
+      if (!signed?.idToken) return null;
+      const onSuccess = sessionStorage.getItem('sistema:onboarding-after-auth') === 'true'
+        ? () => { window.location.reload(); }
+        : undefined;
+      return finishFirebaseSession(signed.idToken, { onSuccess });
+    } catch (err) {
+      console.warn('[firebase] redirect result failed', err);
+      const errEl = document.getElementById('gateway-welcome-auth-error')
+        || document.getElementById('gateway-auth-error')
+        || document.getElementById('auth-error');
+      if (errEl) {
+        errEl.textContent = err?.message || 'Не удалось завершить вход через Google/Apple.';
+        errEl.style.display = 'block';
+      }
+      return null;
     }
   }
 
@@ -365,6 +396,14 @@
   window.startYandexLogin = startYandexLogin;
   window.startFirebaseLogin = startFirebaseLogin;
   window.loginWithFirebase = loginWithFirebase;
+  window.consumeFirebaseRedirect = consumeFirebaseRedirect;
+
+  // After Google/Apple redirect back to the site
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { consumeFirebaseRedirect(); });
+  } else {
+    consumeFirebaseRedirect();
+  }
 
   function setupCallFallbackButton() {
     const callBtn = document.getElementById('auth-call');
