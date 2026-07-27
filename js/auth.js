@@ -367,14 +367,26 @@
   }
 
   async function consumeFirebaseRedirect() {
+    const pending = sessionStorage.getItem('sistema:firebase-auth-pending') === '1'
+      || /[?&#](apiKey|authType|code)=/.test(location.href + location.hash);
     try {
       const firebaseAuth = await loadFirebaseAuth();
       const signed = await firebaseAuth.consumeRedirectResult();
-      if (!signed?.idToken) return null;
-      const onSuccess = sessionStorage.getItem('sistema:onboarding-after-auth') === 'true'
-        ? () => { window.location.reload(); }
-        : undefined;
-      return finishFirebaseSession(signed.idToken, { onSuccess });
+      if (!signed?.idToken) {
+        if (pending) {
+          const errEl = document.getElementById('gateway-welcome-auth-error')
+            || document.getElementById('gateway-auth-error')
+            || document.getElementById('auth-error');
+          if (errEl) {
+            errEl.textContent = 'Google/Apple вход не завершился. Нажмите кнопку ещё раз.';
+            errEl.style.display = 'block';
+          }
+        }
+        return null;
+      }
+      return finishFirebaseSession(signed.idToken, {
+        onSuccess: () => { window.location.replace('/'); },
+      });
     } catch (err) {
       console.warn('[firebase] redirect result failed', err);
       const errEl = document.getElementById('gateway-welcome-auth-error')
@@ -398,12 +410,12 @@
   window.loginWithFirebase = loginWithFirebase;
   window.consumeFirebaseRedirect = consumeFirebaseRedirect;
 
-  // After Google/Apple redirect back to the site
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { consumeFirebaseRedirect(); });
-  } else {
-    consumeFirebaseRedirect();
-  }
+  // Resolve before home boot so we don't flash the auth screen after Google/Apple.
+  window.firebaseAuthReady = (async () => {
+    try {
+      await consumeFirebaseRedirect();
+    } catch (_) { /* shown in UI */ }
+  })();
 
   function setupCallFallbackButton() {
     const callBtn = document.getElementById('auth-call');

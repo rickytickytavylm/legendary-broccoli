@@ -938,7 +938,15 @@ function initOnboarding() {
   }, { passive: true });
   const isRealUser = (u) => {
     if (!u) return false;
-    return !!(u.yandex_id || u.telegram_id || u.email || u.phone);
+    return !!(
+      u.yandex_id
+      || u.telegram_id
+      || u.email
+      || u.phone
+      || u.firebase_uid
+      || u.google_id
+      || u.apple_id
+    );
   };
 
   const isPWA = () => {
@@ -1015,11 +1023,17 @@ function initOnboarding() {
     }, skipSplashDelay ? 0 : 1200);
   };
 
-  const restoreAndBoot = () => {
+  const restoreAndBoot = async () => {
+    try {
+      if (window.firebaseAuthReady) await window.firebaseAuthReady;
+    } catch (_) { /* ignore */ }
     if (window.API?.restoreSession) {
-      window.API.restoreSession()
-        .then((user) => boot(user))
-        .catch(() => boot(null));
+      try {
+        const user = await window.API.restoreSession();
+        boot(user);
+      } catch (_) {
+        boot(null);
+      }
       return;
     }
     boot(null);

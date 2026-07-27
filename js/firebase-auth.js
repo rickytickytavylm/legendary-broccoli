@@ -14,15 +14,6 @@ function getFirebaseApp() {
   return getApps().length ? getApps()[0] : initializeApp(config);
 }
 
-function prefersRedirect() {
-  const ua = navigator.userAgent || '';
-  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true;
-  return isIOS || isSafari || isStandalone || window.innerWidth < 820;
-}
-
 function makeGoogleProvider() {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
@@ -36,33 +27,51 @@ function makeAppleProvider() {
   return provider;
 }
 
-async function signInWithProvider(provider, mode) {
+async function tokenFromUser(user) {
+  if (!user) return null;
+  const idToken = await user.getIdToken();
+  return { idToken, user };
+}
+
+async function signInWithProvider(provider) {
   const auth = getAuth(getFirebaseApp());
-  const useRedirect = mode === 'redirect' || (mode !== 'popup' && prefersRedirect());
-  if (useRedirect) {
-    sessionStorage.setItem('sistema:firebase-auth-pending', '1');
-    await signInWithRedirect(auth, provider);
-    return null;
+  try {
+    const result = await signInWithPopup(auth, provider);
+    return tokenFromUser(result.user);
+  } catch (err) {
+    const code = String(err?.code || '');
+    if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+      throw err;
+    }
+    // Popup blocked / broken (common in in-app browsers) → full-page redirect.
+    if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
+      sessionStorage.setItem('sistema:firebase-auth-pending', '1');
+      await signInWithRedirect(auth, provider);
+      return null;
+    }
+    throw err;
   }
-  const result = await signInWithPopup(auth, provider);
-  const idToken = await result.user.getIdToken();
-  return { idToken, user: result.user };
 }
 
 window.FirebaseAuth = {
-  prefersRedirect,
-  async signInWithGoogle(mode) {
-    return signInWithProvider(makeGoogleProvider(), mode);
+  async signInWithGoogle() {
+    return signInWithProvider(makeGoogleProvider());
   },
-  async signInWithApple(mode) {
-    return signInWithProvider(makeAppleProvider(), mode);
+  async signInWithApple() {
+    return signInWithProvider(makeAppleProvider());
   },
   async consumeRedirectResult() {
     const auth = getAuth(getFirebaseApp());
-    const result = await getRedirectResult(auth);
+    let result = null;
+    try {
+      result = await getRedirectResult(auth);
+    } catch (err) {
+      console.warn('[firebase] getRedirectResult', err);
+    }
     sessionStorage.removeItem('sistema:firebase-auth-pending');
-    if (!result?.user) return null;
-    const idToken = await result.user.getIdToken();
-    return { idToken, user: result.user };
+    if (result?.user) return tokenFromUser(result.user);
+    // Safari may lose redirect payload; persisted Firebase session can still exist.
+    if (auth.currentUser) return tokenFromUser(auth.currentUser);
+    return null;
   },
 };
