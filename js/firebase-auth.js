@@ -68,10 +68,19 @@ window.FirebaseAuth = {
     } catch (err) {
       console.warn('[firebase] getRedirectResult', err);
     }
+    if (result?.user) {
+      sessionStorage.removeItem('sistema:firebase-auth-pending');
+      return tokenFromUser(result.user);
+    }
+
+    // Fallback ONLY right after an interrupted redirect, and only if our JWT is missing.
+    // Using auth.currentUser on every page load caused an infinite reload flicker.
+    const pending = sessionStorage.getItem('sistema:firebase-auth-pending') === '1';
+    const alreadyIn = !!(window.API && window.API.isLoggedIn && window.API.isLoggedIn());
     sessionStorage.removeItem('sistema:firebase-auth-pending');
-    if (result?.user) return tokenFromUser(result.user);
-    // Safari may lose redirect payload; persisted Firebase session can still exist.
-    if (auth.currentUser) return tokenFromUser(auth.currentUser);
+    if (pending && !alreadyIn && auth.currentUser) {
+      return tokenFromUser(auth.currentUser);
+    }
     return null;
   },
 };

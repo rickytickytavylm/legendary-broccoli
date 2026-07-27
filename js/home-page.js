@@ -786,9 +786,9 @@ function initOnboarding() {
       await window.loginWithFirebase(provider, {
         button,
         errorEl,
-        onSuccess: () => {
-          window.location.reload();
-        },
+        force: true,
+        // finishFirebaseSession already emits auth:change with user — no reload.
+        onSuccess: () => {},
       });
     } catch (_) {
       // error shown in errorEl
@@ -1039,24 +1039,30 @@ function initOnboarding() {
     boot(null);
   };
 
+  let bootedOnce = false;
   window.addEventListener('auth:change', (event) => {
     const user = event?.detail?.user || window.__sistemaCurrentUser;
-    if (user && isRealUser(user)) {
-      const completed = !!user.onboarding_complete;
-      localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
-      if (completed) {
-        renderToday();
-        showNewHomeState('today');
-      } else {
-        onboardingIndex = 0;
-        onboardingState.name = displayUserName(user);
-        renderOnboarding();
-        showNewHomeState('onboarding');
-      }
+    if (!user || !isRealUser(user)) return;
+    // Avoid fighting with the initial splash→onboarding boot sequence.
+    if (!bootedOnce) {
+      boot(user);
+      bootedOnce = true;
+      return;
+    }
+    const completed = !!user.onboarding_complete;
+    localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
+    if (completed) {
+      renderToday();
+      showNewHomeState('today');
+    } else {
+      onboardingIndex = 0;
+      onboardingState.name = displayUserName(user);
+      renderOnboarding();
+      showNewHomeState('onboarding');
     }
   });
 
-  restoreAndBoot();
+  restoreAndBoot().then(() => { bootedOnce = true; });
 }
 
 window.refreshAuthUI = function(user) {

@@ -314,18 +314,21 @@
 
   async function finishFirebaseSession(idToken, options = {}) {
     if (!window.API?.firebaseLogin) throw new Error('API unavailable');
+    // Already have our app session — never re-exchange + reload (that caused onboarding flicker).
+    if (window.API.isLoggedIn?.() && !options.force) {
+      return null;
+    }
     const data = await window.API.firebaseLogin(idToken);
     const access = data.accessToken || data.tokens?.access;
     const refresh = data.refreshToken || data.tokens?.refresh;
     if (!access || !refresh) throw new Error('No tokens');
     window.API.setTokens({ access, refresh });
-    window.dispatchEvent(new CustomEvent('auth:change'));
+    window.dispatchEvent(new CustomEvent('auth:change', { detail: { user: data.user } }));
     if (typeof options.onSuccess === 'function') {
       options.onSuccess(data);
       return data;
     }
     window.closeAuthModal?.();
-    window.location.reload();
     return data;
   }
 
@@ -345,7 +348,7 @@
         : await firebaseAuth.signInWithGoogle();
       // Redirect flow: browser leaves the page; result handled on return.
       if (!signed?.idToken) return null;
-      return finishFirebaseSession(signed.idToken, options);
+      return finishFirebaseSession(signed.idToken, { ...options, force: true });
     } catch (err) {
       if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') {
         return null;
@@ -384,9 +387,7 @@
         }
         return null;
       }
-      return finishFirebaseSession(signed.idToken, {
-        onSuccess: () => { window.location.replace('/'); },
-      });
+      return finishFirebaseSession(signed.idToken, { force: true });
     } catch (err) {
       console.warn('[firebase] redirect result failed', err);
       const errEl = document.getElementById('gateway-welcome-auth-error')
