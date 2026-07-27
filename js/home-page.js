@@ -776,6 +776,25 @@ function initOnboarding() {
     window.location.href = window.API.yandexLoginUrl('/');
   }
 
+  async function startFirebaseOnboardingLogin(provider, button) {
+    if (!window.loginWithFirebase) return;
+    localStorage.setItem(ONBOARDING_AFTER_AUTH_KEY, 'true');
+    const errorEl = button?.closest('.auth-gateway-actions')?.querySelector('.auth-error')
+      || document.getElementById('gateway-welcome-auth-error')
+      || document.getElementById('gateway-auth-error');
+    try {
+      await window.loginWithFirebase(provider, {
+        button,
+        errorEl,
+        onSuccess: () => {
+          window.location.reload();
+        },
+      });
+    } catch (_) {
+      // error shown in errorEl
+    }
+  }
+
   // Handle Android PWA installation click
   document.getElementById('onboarding-install-android-btn')?.addEventListener('click', async () => {
     if (!deferredInstallPrompt) {
@@ -844,8 +863,14 @@ function initOnboarding() {
   document.querySelector('[data-telegram-login]')?.addEventListener('click', () => {
     return;
   });
-  document.querySelector('[data-yandex-login]')?.addEventListener('click', () => {
-    startYandexOnboardingLogin();
+  document.querySelectorAll('[data-yandex-login]').forEach((btn) => {
+    btn.addEventListener('click', () => startYandexOnboardingLogin());
+  });
+  document.querySelectorAll('[data-google-login]').forEach((btn) => {
+    btn.addEventListener('click', () => startFirebaseOnboardingLogin('google', btn));
+  });
+  document.querySelectorAll('[data-apple-login]').forEach((btn) => {
+    btn.addEventListener('click', () => startFirebaseOnboardingLogin('apple', btn));
   });
   document.querySelector('[data-onboarding-start]')?.addEventListener('click', () => {
     onboardingIndex = 0;

@@ -312,10 +312,10 @@
     return window.FirebaseAuth;
   }
 
-  async function startFirebaseLogin(provider) {
-    const btnId = provider === 'apple' ? 'auth-apple-btn' : 'auth-google-btn';
-    const btn = document.getElementById(btnId);
-    const errEl = document.getElementById('auth-error');
+  async function loginWithFirebase(provider, options = {}) {
+    const btn = options.button
+      || document.getElementById(provider === 'apple' ? 'auth-apple-btn' : 'auth-google-btn');
+    const errEl = options.errorEl || document.getElementById('auth-error');
     if (btn) btn.disabled = true;
     if (errEl) {
       errEl.textContent = '';
@@ -333,11 +333,16 @@
       if (!access || !refresh) throw new Error('No tokens');
       window.API.setTokens({ access, refresh });
       window.dispatchEvent(new CustomEvent('auth:change'));
+      if (typeof options.onSuccess === 'function') {
+        options.onSuccess(data);
+        return data;
+      }
       window.closeAuthModal?.();
       window.location.reload();
+      return data;
     } catch (err) {
       if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') {
-        return;
+        return null;
       }
       if (errEl) {
         const appleHint = provider === 'apple'
@@ -346,14 +351,20 @@
         errEl.textContent = (err?.message || 'Не удалось войти.') + appleHint;
         errEl.style.display = 'block';
       }
+      throw err;
     } finally {
       if (btn) btn.disabled = false;
     }
   }
 
+  function startFirebaseLogin(provider) {
+    return loginWithFirebase(provider).catch(() => null);
+  }
+
   window.startTelegramLogin = startTelegramLogin;
   window.startYandexLogin = startYandexLogin;
   window.startFirebaseLogin = startFirebaseLogin;
+  window.loginWithFirebase = loginWithFirebase;
 
   function setupCallFallbackButton() {
     const callBtn = document.getElementById('auth-call');

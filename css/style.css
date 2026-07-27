@@ -658,7 +658,9 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   backdrop-filter: blur(18px) saturate(140%);
 }
 
-.yandex-id-button {
+.yandex-id-button,
+.google-id-button,
+.apple-id-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -676,6 +678,25 @@ body:not(.home-today-active) .today-screen:not(.hidden) {
   color: #fff;
   font-weight: 800;
   line-height: 1;
+}
+
+.google-id-button,
+.apple-id-button {
+  border: 0;
+  color: #111;
+  background: #fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 14px 34px rgba(0,0,0,.28);
+}
+
+.google-id-button:hover,
+.apple-id-button:hover {
+  background: #f7f7f7;
+}
+
+.apple-id-button {
+  color: #000;
 }
 
 .auth-provider-panel .auth-gateway-copy {
