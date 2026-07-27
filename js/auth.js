@@ -296,7 +296,7 @@
         return;
       }
       const s = document.createElement('script');
-      s.src = '/js/firebase-config.js';
+      s.src = '/js/firebase-config.js?v=2';
       s.dataset.firebaseConfig = '1';
       s.onload = () => resolve();
       s.onerror = reject;
@@ -308,7 +308,7 @@
     await ensureFirebaseConfig();
     if (!window.FirebaseAuth) {
       // Cache-bust: unversioned import was serving a broken loop build on iPhone.
-      await import('/js/firebase-auth.js?v=3');
+      await import('/js/firebase-auth.js?v=4');
     }
     return window.FirebaseAuth;
   }

@@ -420,6 +420,14 @@ class ApiClient {
     return this.base + '/yandex/login?returnTo=' + encodeURIComponent(returnTo || '/');
   }
   firebaseLogin(idToken) {
+    // Circuit breaker: a broken Firebase session once looped this endpoint and hit rate limits.
+    const count = Number(sessionStorage.getItem('sistema:firebase-login-attempts') || 0);
+    if (count >= 3) {
+      return Promise.reject(Object.assign(new Error('Firebase login retried too many times'), {
+        code: 'FIREBASE_LOOP_GUARD',
+      }));
+    }
+    sessionStorage.setItem('sistema:firebase-login-attempts', String(count + 1));
     return this.request('POST', '/auth/firebase', { idToken });
   }
 
