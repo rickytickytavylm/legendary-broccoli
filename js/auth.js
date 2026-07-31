@@ -561,6 +561,40 @@
     window.openAuthModal(trigger.getAttribute('data-auth-open') || 'login');
   });
 
+  // === Мост «пришёл из приложения» (RN → веб): после входа — сразу в профиль ===
+  // Из приложения (paywall) веб открывается с ?from=app. В ЭТОМ И ТОЛЬКО В ЭТОМ
+  // сценарии после успешной авторизации нужно оказаться в /account/ (профиль), а
+  // не на главной. Флаг живёт в sessionStorage и переживает полностраничные
+  // редиректы входа (Яндекс /auth-yandex/, Firebase signInWithRedirect, magic-link),
+  // поэтому куда бы вход ни «приземлил» — один раз доводим человека до профиля.
+  // Обычных пользователей (без from=app) это не касается вообще.
+  const APP_POSTLOGIN_KEY = 'sistema:app-postlogin';
+  function captureAppLoginIntent() {
+    try {
+      if (sessionStorage.getItem(APP_POSTLOGIN_KEY) === '1') return;
+      const from = String(new URLSearchParams(location.search || '').get('from') || '').toLowerCase();
+      const bridged = !!sessionStorage.getItem('sistema:app-bridge');
+      if (from === 'app' || from === 'ios' || from === 'android' || bridged) {
+        sessionStorage.setItem(APP_POSTLOGIN_KEY, '1');
+      }
+    } catch (_) { /* ignore */ }
+  }
+  function maybeRedirectAfterAppLogin() {
+    try {
+      if (sessionStorage.getItem(APP_POSTLOGIN_KEY) !== '1') return;
+      if (!window.API?.isLoggedIn?.()) return; // ждём завершения входа
+      sessionStorage.removeItem(APP_POSTLOGIN_KEY); // одноразово — потом не мешаем навигации
+      if (!/^\/account\/?$/.test(location.pathname)) window.location.replace('/account/');
+    } catch (_) { /* ignore */ }
+  }
+  captureAppLoginIntent();
+  window.addEventListener('auth:change', () => { maybeRedirectAfterAppLogin(); });
+  if (window.firebaseAuthReady && typeof window.firebaseAuthReady.then === 'function') {
+    window.firebaseAuthReady.then(() => maybeRedirectAfterAppLogin());
+  }
+  // Вернулись уже авторизованными (например, после редиректа входа) — доводим до профиля.
+  maybeRedirectAfterAppLogin();
+
   // Telegram Web App auto-auth
   if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initData) {
     window.API.telegramAuth(Telegram.WebApp.initData)
