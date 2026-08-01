@@ -498,6 +498,11 @@ function renderToday(routeKey) {
       if (panelSubtitle) panelSubtitle.textContent = therapyState.panelSubtitle;
     }
   }
+
+  const sozaToolsPanel = document.querySelector('[data-today-soza-tools]');
+  if (sozaToolsPanel) {
+    sozaToolsPanel.classList.toggle('hidden', currentTodayRouteKey !== 'relationships');
+  }
 }
 
 async function handleTherapyRecruitClick(event) {
