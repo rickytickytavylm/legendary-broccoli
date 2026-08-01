@@ -4,6 +4,7 @@ const ONBOARDING_SCHEMA_KEY = 'sistema:onboarding-schema';
 const ONBOARDING_SCHEMA_VERSION = 'device-v1';
 const SPLASH_SEEN_KEY = 'sistema:intro-splash-seen';
 const ONBOARDING_AFTER_AUTH_KEY = 'sistema:onboarding-after-auth';
+const PENDING_ONBOARDING_FOCUS_KEY = 'sistema:pending-onboarding-focus';
 const TODAY_OPENED_PROGRAMS_KEY = 'sistema:today-opened-programs';
 const LIZA_TOUR_SEEN_KEY = 'sistema:liza-main-tour-seen';
 const TODAY_LESSON_COUNT_ENDPOINTS = {
@@ -162,6 +163,78 @@ let currentTodayRouteKey = null;
 let todayTouchStartX = 0;
 let todayTouchStartY = 0;
 let pendingLizaTour = false;
+
+/** Фокус с лендинга (?focus=relationships) — только для пропуска шага выбора направления. */
+function isValidOnboardingFocus(value) {
+  return typeof value === 'string' && todayRouteKeys.includes(value) && !!routes[value];
+}
+
+function getPendingOnboardingFocus() {
+  try {
+    const value = sessionStorage.getItem(PENDING_ONBOARDING_FOCUS_KEY) || '';
+    return isValidOnboardingFocus(value) ? value : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function setPendingOnboardingFocus(value) {
+  if (!isValidOnboardingFocus(value)) return;
+  try { sessionStorage.setItem(PENDING_ONBOARDING_FOCUS_KEY, value); } catch (e) { /* ignore */ }
+}
+
+function clearPendingOnboardingFocus() {
+  try { sessionStorage.removeItem(PENDING_ONBOARDING_FOCUS_KEY); } catch (e) { /* ignore */ }
+}
+
+function capturePendingFocusFromUrl() {
+  try {
+    const params = new URLSearchParams(location.search || '');
+    const focus = String(params.get('focus') || '').trim().toLowerCase();
+    if (!isValidOnboardingFocus(focus)) return null;
+    setPendingOnboardingFocus(focus);
+    params.delete('focus');
+    const clean = location.pathname + (params.toString() ? `?${params}` : '') + (location.hash || '');
+    history.replaceState({}, document.title, clean);
+    return focus;
+  } catch (e) {
+    return null;
+  }
+}
+
+function applyPendingFocusToState() {
+  const focus = getPendingOnboardingFocus();
+  if (!focus) return null;
+  onboardingState.focus = focus;
+  return focus;
+}
+
+function focusStepIndex() {
+  return onboardingSteps.findIndex((step) => step.key === 'focus');
+}
+
+/** Следующий/предыдущий шаг с пропуском focus, если направление уже пришло с лендинга. */
+function nextOnboardingIndex(fromIndex) {
+  let next = fromIndex + 1;
+  const focusIdx = focusStepIndex();
+  if (getPendingOnboardingFocus() && next === focusIdx) next += 1;
+  return Math.min(next, onboardingSteps.length - 1);
+}
+
+function prevOnboardingIndex(fromIndex) {
+  let prev = fromIndex - 1;
+  const focusIdx = focusStepIndex();
+  if (getPendingOnboardingFocus() && prev === focusIdx) prev -= 1;
+  return Math.max(prev, 0);
+}
+
+function startOnboardingFlow(user) {
+  applyPendingFocusToState();
+  onboardingIndex = 0;
+  onboardingState.name = displayUserName(user) || onboardingState.name || '';
+  renderOnboarding();
+  showNewHomeState('onboarding');
+}
 
 function displayUserName(user) {
   if (!user) return '';
@@ -557,6 +630,7 @@ function finishOnboarding() {
       metadata: savedProfile,
     }).catch(() => {});
   }
+  clearPendingOnboardingFocus();
   renderToday();
   showNewHomeState('today');
   pendingLizaTour = true;
@@ -564,7 +638,13 @@ function finishOnboarding() {
 }
 
 function renderOnboarding() {
+  // Страховка: если оказались на шаге focus при pending с лендинга — перепрыгиваем.
+  if (getPendingOnboardingFocus() && onboardingSteps[onboardingIndex]?.key === 'focus') {
+    applyPendingFocusToState();
+    onboardingIndex = nextOnboardingIndex(onboardingIndex);
+  }
   const step = onboardingSteps[onboardingIndex];
+  if (!step) return;
   const label = document.querySelector('[data-onboarding-step-label]');
   const title = document.querySelector('[data-onboarding-title]');
   const desc = document.querySelector('[data-onboarding-desc]');
@@ -770,9 +850,13 @@ function hasStepAnswer(step) {
 }
 
 function initOnboarding() {
+  // С лендинга созы: /?focus=relationships → sessionStorage (переживает OAuth).
+  capturePendingFocusFromUrl();
+
   function startYandexOnboardingLogin() {
     if (!window.API?.yandexLoginUrl) return;
     localStorage.setItem(ONBOARDING_AFTER_AUTH_KEY, 'true');
+    // returnTo без query ок: focus уже в sessionStorage.
     window.location.href = window.API.yandexLoginUrl('/');
   }
 
@@ -816,7 +900,7 @@ function initOnboarding() {
     }
     if (outcome === 'accepted') {
       onboardingState.installChoice = 'accepted';
-      onboardingIndex += 1;
+      onboardingIndex = nextOnboardingIndex(onboardingIndex);
       renderOnboarding();
     }
   });
@@ -833,7 +917,7 @@ function initOnboarding() {
 
   document.getElementById('onboarding-install-skip-btn')?.addEventListener('click', () => {
     onboardingState.installChoice = 'skipped';
-    onboardingIndex += 1;
+    onboardingIndex = nextOnboardingIndex(onboardingIndex);
     renderOnboarding();
   });
 
@@ -848,7 +932,7 @@ function initOnboarding() {
     const step = onboardingSteps[onboardingIndex];
     if (step && step.install) {
       onboardingState.installChoice = 'guided';
-      onboardingIndex += 1;
+      onboardingIndex = nextOnboardingIndex(onboardingIndex);
       renderOnboarding();
     }
   });
@@ -872,9 +956,7 @@ function initOnboarding() {
     btn.addEventListener('click', () => startFirebaseOnboardingLogin('apple', btn));
   });
   document.querySelector('[data-onboarding-start]')?.addEventListener('click', () => {
-    onboardingIndex = 0;
-    renderOnboarding();
-    showNewHomeState('onboarding');
+    startOnboardingFlow(window.__sistemaCurrentUser);
   });
   document.querySelector('[data-onboarding-inline-btn]')?.addEventListener('click', (ev) => {
     ev.preventDefault();
@@ -888,7 +970,7 @@ function initOnboarding() {
     renderOnboarding();
   });
   document.querySelector('[data-onboarding-back]')?.addEventListener('click', () => {
-    onboardingIndex = Math.max(0, onboardingIndex - 1);
+    onboardingIndex = prevOnboardingIndex(onboardingIndex);
     renderOnboarding();
   });
   document.querySelector('[data-onboarding-next]')?.addEventListener('click', () => {
@@ -912,7 +994,9 @@ function initOnboarding() {
       const first = step.options[0];
       onboardingState[step.key] = step.multiple ? [optionValue(first)] : optionValue(first);
     }
-    onboardingIndex += 1;
+    // Имя → сразу «направление выбрано», если focus пришёл с лендинга созы.
+    if (step.key === 'name') applyPendingFocusToState();
+    onboardingIndex = nextOnboardingIndex(onboardingIndex);
     renderOnboarding();
   });
   document.querySelector('[data-today-prev]')?.addEventListener('click', () => shiftTodayRoute(-1));
@@ -997,10 +1081,7 @@ function initOnboarding() {
       if (myGen !== bootGeneration) return;
       if (realUser && continueOnboarding && !completed) {
         localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
-        onboardingIndex = 0;
-        onboardingState.name = displayUserName(realUser);
-        renderOnboarding();
-        showNewHomeState('onboarding');
+        startOnboardingFlow(realUser);
         return;
       }
       if (!realUser) {
@@ -1011,6 +1092,8 @@ function initOnboarding() {
       }
       localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
       if (completed) {
+        // Уже прошёл онбординг — кампанийный focus не переписывает направление.
+        clearPendingOnboardingFocus();
         const showToday = () => {
           renderToday();
           showNewHomeState('today');
@@ -1029,10 +1112,7 @@ function initOnboarding() {
         }
         return;
       }
-      onboardingIndex = 0;
-      onboardingState.name = displayUserName(realUser);
-      renderOnboarding();
-      showNewHomeState('onboarding');
+      startOnboardingFlow(realUser);
     }, skipSplashDelay ? 0 : 1200);
   };
 
@@ -1065,13 +1145,11 @@ function initOnboarding() {
     const completed = !!user.onboarding_complete;
     localStorage.removeItem(ONBOARDING_AFTER_AUTH_KEY);
     if (completed) {
+      clearPendingOnboardingFocus();
       renderToday();
       showNewHomeState('today');
     } else {
-      onboardingIndex = 0;
-      onboardingState.name = displayUserName(user);
-      renderOnboarding();
-      showNewHomeState('onboarding');
+      startOnboardingFlow(user);
     }
   });
 
