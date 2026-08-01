@@ -16,7 +16,7 @@
   background:
     linear-gradient(180deg, rgba(3, 3, 4, 0.18), #050506 78%),
     var(--tools-page-image) center top / cover no-repeat;
-  filter: grayscale(1) saturate(0) contrast(0.9);
+  filter: saturate(0.92) contrast(0.94);
   opacity: 0.3;
   transform: scale(1.04);
 }
@@ -37,7 +37,6 @@
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(5, 5, 6, 0.9) 88%, #050506),
     var(--tools-page-image) center / cover no-repeat !important;
-  filter: grayscale(1) saturate(0);
 }
 
 .tools-hero .hero-content {
@@ -123,14 +122,14 @@
   inset: 0;
   z-index: -2;
   background: var(--hub-image) center / cover no-repeat;
-  filter: grayscale(1) saturate(0);
+  filter: saturate(0.88) brightness(0.88);
   transform: scale(1.02);
   transition: transform 0.6s ease, filter 0.35s ease;
 }
 
 .tools-hub-card:hover .tools-hub-card-image {
   transform: scale(1.06);
-  filter: grayscale(1) saturate(0);
+  filter: saturate(1) brightness(0.92);
 }
 
 .tools-hub-card::after {
@@ -143,10 +142,10 @@
     linear-gradient(115deg, rgba(255, 255, 255, 0.13), transparent 24%);
 }
 
-.tools-hub-card-illusions { --hub-image: url("/assets/webp/coda2.webp"); }
-.tools-hub-card-dictionary { --hub-image: url("/assets/webp/find_myself.webp"); }
-.tools-hub-card-i-statements { --hub-image: url("/assets/webp/man_woman.webp"); }
-.tools-hub-card-antivirus { --hub-image: url("/assets/webp/ai_back.webp"); }
+.tools-hub-card-illusions { --hub-image: url("/assets/webp/tool-illusions.webp"); }
+.tools-hub-card-dictionary { --hub-image: url("/assets/webp/tool-dictionary.webp"); }
+.tools-hub-card-i-statements { --hub-image: url("/assets/webp/tool-i-statements.webp"); }
+.tools-hub-card-antivirus { --hub-image: url("/assets/webp/tool-antivirus.webp"); }
 
 .tools-hub-card-copy {
   position: absolute;
@@ -426,9 +425,28 @@
 }
 
 .today-soza-tools-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  padding: 8px 2px 16px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 2px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+
+.today-soza-tools-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.today-soza-tools-grid.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .today-soza-tool-card {
@@ -437,8 +455,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 210px;
-  padding: 16px;
+  flex: 0 0 min(72vw, 270px);
+  height: 300px;
+  min-height: 0;
+  padding: 18px;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.17);
   background: rgba(10, 10, 12, 0.46);
@@ -448,6 +468,8 @@
   text-decoration: none;
   color: inherit;
   overflow: hidden;
+  scroll-snap-align: center;
+  -webkit-tap-highlight-color: transparent;
   transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
@@ -457,7 +479,7 @@
   z-index: -2;
   inset: 0;
   background: var(--tool-image) center / cover no-repeat;
-  filter: grayscale(1) saturate(0) contrast(0.92);
+  filter: saturate(0.92) contrast(0.94);
   transform: scale(1.02);
   transition: transform 0.55s ease, filter 0.3s ease;
 }
@@ -479,7 +501,7 @@
 
 .today-soza-tool-card:hover::before {
   transform: scale(1.07);
-  filter: grayscale(1) saturate(0) contrast(0.94);
+  filter: saturate(1) contrast(0.96);
 }
 
 .today-soza-tool-number {
@@ -557,10 +579,6 @@
     height: 230px;
   }
 
-  .today-soza-tools-grid {
-    grid-template-columns: 1fr;
-  }
-
   .tools-hub-grid {
     grid-template-columns: 1fr;
   }
@@ -570,6 +588,27 @@
   }
 
   .today-soza-tool-card {
-    min-height: 196px;
+    flex-basis: min(72vw, 250px);
+    height: 286px;
+  }
+
+  .today-soza-tools-grid {
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    padding: 8px 16px 14px;
+    scroll-padding-left: 16px;
+  }
+}
+
+@media (min-width: 769px) {
+  .today-soza-tool-card {
+    flex-basis: min(28vw, 300px);
+  }
+}
+
+@media (max-width: 768px) {
+  .tools-back {
+    display: none;
   }
 }

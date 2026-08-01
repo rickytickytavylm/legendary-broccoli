@@ -4,35 +4,35 @@
       title: 'Инструменты',
       kicker: 'Отношения / созависимость',
       subtitle: 'Практичные карточки для работы с оправданиями, границами, формулировками и тяжёлыми мыслями.',
-      image: '/assets/webp/new_soc.webp',
+      image: '/assets/webp/tool-illusions.webp',
     },
     illusions: {
       title: 'Иллюзии зависимого',
       kicker: 'Защитные механизмы',
       subtitle: 'Узнаваемые фразы и оправдания. Переверните карточку — увидите механизм, страхи и пояснение.',
       dataUrl: '/data/leo/illusions.json',
-      image: '/assets/webp/coda2.webp',
+      image: '/assets/webp/tool-illusions.webp',
     },
     dictionary: {
       title: 'Тематический словарь',
       kicker: 'Термины без каши',
       subtitle: 'Короткие объяснения понятий зависимости и психологии — чтобы говорить на одном языке с материалом.',
       dataUrl: '/data/leo/dictionary.json',
-      image: '/assets/webp/find_myself.webp',
+      image: '/assets/webp/tool-dictionary.webp',
     },
     'i-statements': {
       title: 'Я-высказывания',
       kicker: 'Коммуникация',
       subtitle: 'Из обвинения — в ясный разговор о своих чувствах и потребностях. Нажмите карточку, чтобы перевернуть.',
       dataUrl: '/data/leo/i-statements.json',
-      image: '/assets/webp/man_woman.webp',
+      image: '/assets/webp/tool-i-statements.webp',
     },
     antivirus: {
       title: 'Эмоциональный антивирус',
       kicker: 'Мысли',
       subtitle: 'Негативная мысль → здоровая альтернатива. Переверните карточку, когда мысль «зациклилась».',
       dataUrl: '/data/leo/antivirus.json',
-      image: '/assets/webp/ai_back.webp',
+      image: '/assets/webp/tool-antivirus.webp',
     },
   };
 
@@ -48,6 +48,24 @@
     const parts = location.pathname.replace(/\/+$/, '').split('/').filter(Boolean);
     if (parts[0] !== 'tools') return 'hub';
     return parts[1] || 'hub';
+  }
+
+  function injectToolsHeaderBack(destination) {
+    const header = document.getElementById('app-mobile-header');
+    if (!header || header.querySelector('.ai-header-back')) return;
+    header.classList.add('has-back-button');
+
+    const button = document.createElement('a');
+    button.href = destination;
+    button.className = 'ai-header-back';
+    button.setAttribute('aria-label', 'Назад');
+    button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (history.length > 1) history.back();
+      else window.location.assign(destination);
+    });
+    header.insertBefore(button, header.firstChild);
   }
 
   function bindFlip(root) {
@@ -243,6 +261,7 @@
     document.title = `${meta.title} — Система Молодцова`;
     document.body.dataset.tool = toolId;
     document.body.style.setProperty('--tools-page-image', `url('${meta.image}')`);
+    injectToolsHeaderBack(toolId === 'hub' ? '/' : '/tools/');
 
     try {
       if (toolId === 'hub') {

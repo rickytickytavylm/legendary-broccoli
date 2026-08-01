@@ -1489,4 +1489,50 @@ function initMarathonCarousel() {
   }, true);
 }
 
+function initToolsCarousel() {
+  const stage = document.querySelector('[data-tools-carousel]');
+  if (!stage) return;
+
+  let pointerId = null;
+  let startX = 0;
+  let startScroll = 0;
+  let dragged = false;
+
+  stage.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startScroll = stage.scrollLeft;
+    dragged = false;
+  });
+
+  stage.addEventListener('pointermove', (event) => {
+    if (pointerId === null || event.pointerId !== pointerId) return;
+    const dx = event.clientX - startX;
+    if (!dragged && Math.abs(dx) < 6) return;
+    if (!dragged) {
+      dragged = true;
+      stage.classList.add('is-dragging');
+      try { stage.setPointerCapture(pointerId); } catch (e) {}
+    }
+    stage.scrollLeft = startScroll - dx;
+  });
+
+  function endDrag(event) {
+    if (pointerId === null || (event && event.pointerId !== pointerId)) return;
+    pointerId = null;
+    stage.classList.remove('is-dragging');
+  }
+
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+  stage.addEventListener('click', (event) => {
+    if (!dragged) return;
+    event.preventDefault();
+    event.stopPropagation();
+    dragged = false;
+  }, true);
+}
+
 document.addEventListener('DOMContentLoaded', initMarathonCarousel);
+document.addEventListener('DOMContentLoaded', initToolsCarousel);
