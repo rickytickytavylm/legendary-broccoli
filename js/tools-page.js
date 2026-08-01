@@ -4,30 +4,35 @@
       title: 'Инструменты',
       kicker: 'Отношения / созависимость',
       subtitle: 'Практичные карточки для работы с оправданиями, границами, формулировками и тяжёлыми мыслями.',
+      image: '/assets/webp/new_soc.webp',
     },
     illusions: {
       title: 'Иллюзии зависимого',
       kicker: 'Защитные механизмы',
       subtitle: 'Узнаваемые фразы и оправдания. Переверните карточку — увидите механизм, страхи и пояснение.',
       dataUrl: '/data/leo/illusions.json',
+      image: '/assets/webp/coda2.webp',
     },
     dictionary: {
       title: 'Тематический словарь',
       kicker: 'Термины без каши',
       subtitle: 'Короткие объяснения понятий зависимости и психологии — чтобы говорить на одном языке с материалом.',
       dataUrl: '/data/leo/dictionary.json',
+      image: '/assets/webp/find_myself.webp',
     },
     'i-statements': {
       title: 'Я-высказывания',
       kicker: 'Коммуникация',
       subtitle: 'Из обвинения — в ясный разговор о своих чувствах и потребностях. Нажмите карточку, чтобы перевернуть.',
       dataUrl: '/data/leo/i-statements.json',
+      image: '/assets/webp/man_woman.webp',
     },
     antivirus: {
       title: 'Эмоциональный антивирус',
       kicker: 'Мысли',
       subtitle: 'Негативная мысль → здоровая альтернатива. Переверните карточку, когда мысль «зациклилась».',
       dataUrl: '/data/leo/antivirus.json',
+      image: '/assets/webp/ai_back.webp',
     },
   };
 
@@ -73,10 +78,14 @@
         ${tools
           .map(
             (tool) => `
-          <a class="tools-hub-card" href="${escapeHtml(tool.href)}">
-            <span>${tool.count} карточек</span>
-            <strong>${escapeHtml(tool.title)}</strong>
-            <p>${escapeHtml(tool.desc)}</p>
+          <a class="tools-hub-card tools-hub-card-${escapeHtml(tool.id)}" href="${escapeHtml(tool.href)}">
+            <div class="tools-hub-card-image" aria-hidden="true"></div>
+            <div class="tools-hub-card-copy">
+              <span>${tool.count} карточек</span>
+              <strong>${escapeHtml(tool.title)}</strong>
+              <p>${escapeHtml(tool.desc)}</p>
+              <i>Открыть <b>↗</b></i>
+            </div>
           </a>`
           )
           .join('')}
@@ -120,9 +129,8 @@
         .map((item) => {
           const fears = (item.fears || []).map((fear) => `<div class="sm-flip-sub">• ${escapeHtml(fear)}</div>`).join('');
           return `
-          <article class="sm-flip is-tall" data-flip tabindex="0" role="button" aria-pressed="false" style="--card-accent:${escapeHtml(item.color || '#d8bf9b')}">
+          <article class="sm-flip is-tall" data-flip tabindex="0" role="button" aria-pressed="false">
             <div class="sm-flip-face sm-flip-front">
-              <span class="sm-flip-accent" aria-hidden="true"></span>
               <div class="sm-flip-meta">
                 <span class="sm-flip-pill">${escapeHtml(item.addictionType || '')}</span>
                 <span class="sm-flip-pill is-soft">${escapeHtml(item.mechanism || '')}</span>
@@ -131,14 +139,13 @@
               <div class="sm-flip-hint">Нажмите, чтобы перевернуть</div>
             </div>
             <div class="sm-flip-face sm-flip-back">
-              <span class="sm-flip-accent" aria-hidden="true"></span>
               <div class="sm-flip-meta">
                 <span class="sm-flip-pill">${escapeHtml(item.mechanism || '')}</span>
               </div>
               <div class="sm-flip-text" style="display:block;text-align:left;overflow:auto">
                 <p style="font-size:14.5px;text-align:left">${escapeHtml(item.explanation)}</p>
-                ${item.meaning ? `<div class="sm-flip-sub" style="text-align:left"><strong style="color:#d8bf9b">Смысл:</strong> ${escapeHtml(item.meaning)}</div>` : ''}
-                ${fears ? `<div class="sm-flip-sub" style="text-align:left;margin-top:8px"><strong style="color:#d8bf9b">Страхи:</strong>${fears}</div>` : ''}
+                ${item.meaning ? `<div class="sm-flip-sub" style="text-align:left"><strong class="sm-flip-section-label">Смысл:</strong> ${escapeHtml(item.meaning)}</div>` : ''}
+                ${fears ? `<div class="sm-flip-sub" style="text-align:left;margin-top:8px"><strong class="sm-flip-section-label">Страхи:</strong>${fears}</div>` : ''}
               </div>
               <div class="sm-flip-hint">Нажмите, чтобы вернуть</div>
             </div>
@@ -234,6 +241,8 @@
     const meta = META[toolId] || META.hub;
 
     document.title = `${meta.title} — Система Молодцова`;
+    document.body.dataset.tool = toolId;
+    document.body.style.setProperty('--tools-page-image', `url('${meta.image}')`);
 
     try {
       if (toolId === 'hub') {

@@ -1,13 +1,53 @@
 /* Инструменты созависимости — flip-cards в дизайне Системы */
 
 .tools-page {
+  position: relative;
+  isolation: isolate;
   padding: 0 0 110px;
+  background: #050506;
+  overflow: hidden;
+}
+
+.tools-page::before {
+  content: "";
+  position: fixed;
+  z-index: -2;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(3, 3, 4, 0.18), #050506 78%),
+    var(--tools-page-image) center top / cover no-repeat;
+  filter: grayscale(1) saturate(0) contrast(0.9);
+  opacity: 0.3;
+  transform: scale(1.04);
+}
+
+.tools-page::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 12%, rgba(255, 255, 255, 0.11), transparent 42%),
+    linear-gradient(180deg, transparent 0, rgba(5, 5, 6, 0.76) 42%, #050506 78%);
+}
+
+.tools-hero {
+  min-height: min(60vh, 540px);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(5, 5, 6, 0.9) 88%, #050506),
+    var(--tools-page-image) center / cover no-repeat !important;
+  filter: grayscale(1) saturate(0);
+}
+
+.tools-hero .hero-content {
+  filter: none;
 }
 
 .tools-shell {
   max-width: 720px;
   margin: 0 auto;
-  padding: 20px 16px 0;
+  padding: 28px 16px 0;
 }
 
 .tools-back {
@@ -31,6 +71,7 @@
 
 .tools-intro .ios-section-kicker {
   margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.48);
 }
 
 .tools-intro h1 {
@@ -51,55 +92,113 @@
 
 .tools-hub-grid {
   display: grid;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
 }
 
 .tools-hub-card {
-  display: grid;
-  gap: 8px;
-  padding: 18px 18px 16px;
-  border-radius: 22px;
-  border: 1px solid var(--sm-glass-border, rgba(255, 255, 255, 0.16));
-  background:
-    radial-gradient(circle at 88% 120%, rgba(216, 191, 155, 0.12), transparent 42%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
-    rgba(7, 8, 12, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 16px 40px rgba(0, 0, 0, 0.28);
+  position: relative;
+  min-height: 290px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  background: rgba(12, 12, 14, 0.42);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 24px 70px rgba(0, 0, 0, 0.42);
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 0.25s ease, transform 0.25s ease;
 }
 
 .tools-hub-card:hover {
-  border-color: rgba(216, 191, 155, 0.42);
-  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.32);
+  transform: translateY(-3px);
 }
 
-.tools-hub-card span {
+.tools-hub-card-image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--hub-image) center / cover no-repeat;
+  filter: grayscale(1) saturate(0);
+  transform: scale(1.02);
+  transition: transform 0.6s ease, filter 0.35s ease;
+}
+
+.tools-hub-card:hover .tools-hub-card-image {
+  transform: scale(1.06);
+  filter: grayscale(1) saturate(0);
+}
+
+.tools-hub-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.04) 10%, rgba(0, 0, 0, 0.54) 52%, rgba(5, 5, 7, 0.94) 100%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.13), transparent 24%);
+}
+
+.tools-hub-card-illusions { --hub-image: url("/assets/webp/coda2.webp"); }
+.tools-hub-card-dictionary { --hub-image: url("/assets/webp/find_myself.webp"); }
+.tools-hub-card-i-statements { --hub-image: url("/assets/webp/man_woman.webp"); }
+.tools-hub-card-antivirus { --hub-image: url("/assets/webp/ai_back.webp"); }
+
+.tools-hub-card-copy {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  gap: 8px;
+  padding: 22px;
+  backdrop-filter: blur(16px) saturate(0);
+  -webkit-backdrop-filter: blur(16px) saturate(0);
+}
+
+.tools-hub-card-copy span {
   display: inline-flex;
   width: fit-content;
-  padding: 5px 10px;
+  padding: 5px 9px;
   border-radius: 999px;
-  border: 1px solid rgba(216, 191, 155, 0.28);
-  background: rgba(216, 191, 155, 0.1);
-  color: #d8bf9b;
+  border: 1px solid rgba(255, 255, 255, 0.19);
+  background: rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.68);
   font-size: 11px;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.tools-hub-card strong {
+.tools-hub-card-copy strong {
   color: #fff;
   font-size: 18px;
   letter-spacing: -0.02em;
 }
 
-.tools-hub-card p {
+.tools-hub-card-copy p {
   margin: 0;
   color: rgba(255, 255, 255, 0.52);
   font-size: 14px;
   line-height: 1.5;
+}
+
+.tools-hub-card-copy i {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 650;
+}
+
+.tools-hub-card-copy i b {
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .tools-toolbar {
@@ -122,9 +221,9 @@
 }
 
 .tools-chip.is-active {
-  border-color: rgba(216, 191, 155, 0.45);
-  background: rgba(216, 191, 155, 0.14);
-  color: #f2e4c9;
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
 }
 
 .tools-search {
@@ -144,7 +243,7 @@
 }
 
 .tools-search:focus {
-  border-color: rgba(216, 191, 155, 0.4);
+  border-color: rgba(255, 255, 255, 0.34);
 }
 
 .tools-list {
@@ -170,23 +269,27 @@
 .sm-flip-face {
   position: absolute;
   inset: 0;
-  border-radius: 22px;
+  border-radius: 28px;
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.19),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 24px 70px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px 18px 16px;
+  padding: 22px 20px 18px;
   box-sizing: border-box;
   background:
-    linear-gradient(145deg, rgba(18, 20, 28, 0.88), rgba(8, 9, 14, 0.78)),
-    rgba(10, 11, 16, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+    radial-gradient(circle at 12% 0%, rgba(255, 255, 255, 0.15), transparent 34%),
+    linear-gradient(145deg, rgba(30, 30, 34, 0.68), rgba(8, 8, 10, 0.57)),
+    rgba(8, 8, 10, 0.52);
+  backdrop-filter: blur(28px) saturate(0);
+  -webkit-backdrop-filter: blur(28px) saturate(0);
 }
 
 .sm-flip-front {
@@ -210,7 +313,10 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 40%);
+  border-radius: inherit;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.13), transparent 25%),
+    radial-gradient(circle at 85% 110%, rgba(255, 255, 255, 0.06), transparent 36%);
 }
 
 .sm-flip-meta {
@@ -225,9 +331,9 @@
   display: inline-flex;
   padding: 4px 9px;
   border-radius: 999px;
-  background: rgba(216, 191, 155, 0.12);
-  border: 1px solid rgba(216, 191, 155, 0.22);
-  color: #d8bf9b;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 11px;
   font-weight: 700;
 }
@@ -272,20 +378,24 @@
   font-weight: 550;
 }
 
-.sm-flip-accent {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--card-accent, #d8bf9b);
+.sm-flip-section-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
 }
 
 .sm-dict-card {
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.035);
-  padding: 16px 16px 14px;
+  position: relative;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 255, 255, 0.11), transparent 34%),
+    rgba(14, 14, 16, 0.48);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    0 18px 48px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(24px) saturate(0);
+  -webkit-backdrop-filter: blur(24px) saturate(0);
+  padding: 20px;
 }
 
 .sm-dict-card h3 {
@@ -318,34 +428,128 @@
 .today-soza-tools-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .today-soza-tool-card {
-  display: grid;
-  gap: 6px;
-  min-height: 118px;
-  padding: 14px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    radial-gradient(circle at 100% 0%, rgba(216, 191, 155, 0.14), transparent 46%),
-    rgba(255, 255, 255, 0.035);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 210px;
+  padding: 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  background: rgba(10, 10, 12, 0.46);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 20px 54px rgba(0, 0, 0, 0.32);
   text-decoration: none;
   color: inherit;
+  overflow: hidden;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
-.today-soza-tool-card strong {
+.today-soza-tool-card::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background: var(--tool-image) center / cover no-repeat;
+  filter: grayscale(1) saturate(0) contrast(0.92);
+  transform: scale(1.02);
+  transition: transform 0.55s ease, filter 0.3s ease;
+}
+
+.today-soza-tool-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.12) 30%, rgba(3, 3, 4, 0.94) 100%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 24%);
+}
+
+.today-soza-tool-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.today-soza-tool-card:hover::before {
+  transform: scale(1.07);
+  filter: grayscale(1) saturate(0) contrast(0.94);
+}
+
+.today-soza-tool-number {
+  width: fit-content;
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.today-soza-tool-copy {
+  display: grid;
+  gap: 5px;
+  margin-top: auto;
+  padding-top: 56px;
+}
+
+.today-soza-tool-copy strong {
   color: #fff;
-  font-size: 14.5px;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
+  font-size: 16px;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
-.today-soza-tool-card span {
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 12.5px;
+.today-soza-tool-copy small {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
   line-height: 1.4;
+}
+
+.today-soza-tool-card > i {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 14px;
+  font-style: normal;
+}
+
+.today-soza-tools-all {
+  margin: 14px 0 0;
+}
+
+.today-soza-tools-all a {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 13.5px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.today-soza-tools-all a:hover {
+  color: #fff;
 }
 
 @media (max-width: 640px) {
@@ -355,5 +559,17 @@
 
   .today-soza-tools-grid {
     grid-template-columns: 1fr;
+  }
+
+  .tools-hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tools-hub-card {
+    min-height: 280px;
+  }
+
+  .today-soza-tool-card {
+    min-height: 196px;
   }
 }
