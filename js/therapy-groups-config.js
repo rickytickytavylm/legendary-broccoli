@@ -30,7 +30,7 @@ window.SISTEMA_THERAPY_GROUPS = {
     title: 'Отношения / созависимость',
     directionLabel: 'Отношения / созависимость',
     leader: 'Владимир Земелькин',
-    image: '/assets/webp/coda2.webp',
+    image: '/assets/webp/relative_second.webp',
     cardDesc: 'Чат со специалистом и участниками направления по теме отношений и созависимости.',
   },
   selfworth: {
