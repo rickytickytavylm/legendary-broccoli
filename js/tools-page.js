@@ -35,6 +35,7 @@
       image: '/assets/webp/tool-antivirus.webp',
     },
   };
+  const DIRECTION_ROUTES = new Set(['calm', 'body', 'selfworth', 'selfstudy', 'communication']);
 
   function escapeHtml(value) {
     return String(value || '')
@@ -44,10 +45,19 @@
       .replace(/"/g, '&quot;');
   }
 
-  function toolIdFromPath() {
+  function pageContext() {
     const parts = location.pathname.replace(/\/+$/, '').split('/').filter(Boolean);
-    if (parts[0] !== 'tools') return 'hub';
-    return parts[1] || 'hub';
+    const route = DIRECTION_ROUTES.has(parts[1]) ? parts[1] : 'relationships';
+    if (route !== 'relationships') {
+      return {
+        route,
+        toolId: new URLSearchParams(location.search).get('tool') || '',
+      };
+    }
+    return {
+      route,
+      toolId: parts[1] && parts[1] !== 'tools' ? parts[1] : 'hub',
+    };
   }
 
   function injectToolsHeaderBack(destination) {
@@ -109,6 +119,41 @@
           .join('')}
       </div>
     `;
+  }
+
+  function renderDirectionHub(root, routeData) {
+    root.innerHTML = `
+      <a class="tools-back" href="/">← На главную</a>
+      <div class="tools-intro">
+        <p class="ios-section-kicker">${escapeHtml(routeData.title)}</p>
+        <h1>Инструменты</h1>
+        <p>${escapeHtml(routeData.subtitle)}</p>
+      </div>
+      <div class="tools-hub-grid">
+        ${(routeData.tools || []).map((tool) => `
+          <a class="tools-hub-card" href="/tools/${escapeHtml(routeData.route)}/?tool=${encodeURIComponent(tool.id)}" style="--hub-image:url('${escapeHtml(tool.image)}')">
+            <div class="tools-hub-card-image" aria-hidden="true"></div>
+            <div class="tools-hub-card-copy">
+              <span>${tool.items.length} карточек</span>
+              <strong>${escapeHtml(tool.title)}</strong>
+              <p>${escapeHtml(tool.desc)}</p>
+              <i>Открыть <b>↗</b></i>
+            </div>
+          </a>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function updateHero(kicker, title, subtitle) {
+    const hero = document.querySelector('.tools-hero');
+    if (!hero) return;
+    const kickerEl = hero.querySelector('.hub-kicker');
+    const titleEl = hero.querySelector('.hero-title');
+    const subtitleEl = hero.querySelector('.hero-subtitle');
+    if (kickerEl) kickerEl.textContent = kicker;
+    if (titleEl) titleEl.textContent = title;
+    if (subtitleEl) subtitleEl.textContent = subtitle;
   }
 
   function renderIllusions(root, items) {
@@ -182,9 +227,9 @@
     paint();
   }
 
-  function renderFlipPairs(root, meta, items, frontKey, backKey, frontLabel, backLabel) {
+  function renderFlipPairs(root, meta, items, frontKey, backKey, frontLabel, backLabel, backHref = '/tools/') {
     root.innerHTML = `
-      <a class="tools-back" href="/tools/">← Все инструменты</a>
+      <a class="tools-back" href="${escapeHtml(backHref)}">← Все инструменты</a>
       <div class="tools-intro">
         <p class="ios-section-kicker">${escapeHtml(meta.kicker)}</p>
         <h1>${escapeHtml(meta.title)}</h1>
@@ -255,22 +300,58 @@
   async function init() {
     const root = document.querySelector('[data-tools-root]');
     if (!root) return;
-    const toolId = toolIdFromPath();
-    const meta = META[toolId] || META.hub;
-
-    document.title = `${meta.title} — Система Молодцова`;
-    document.body.dataset.tool = toolId;
-    document.body.style.setProperty('--tools-page-image', `url('${meta.image}')`);
-    injectToolsHeaderBack(toolId === 'hub' ? '/' : '/tools/');
+    const context = pageContext();
 
     try {
+      if (context.route !== 'relationships') {
+        const res = await fetch(`/data/tools/${context.route}.json`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Tools data: ${res.status}`);
+        const routeData = await res.json();
+        const selectedTool = (routeData.tools || []).find((tool) => tool.id === context.toolId);
+        const pageImage = selectedTool?.image || routeData.tools?.[0]?.image || '';
+        const pageTitle = selectedTool?.title || 'Инструменты';
+        const pageSubtitle = selectedTool?.desc || routeData.subtitle;
+
+        document.title = `${pageTitle} — Система Молодцова`;
+        document.body.dataset.tool = selectedTool?.id || context.route;
+        document.body.style.setProperty('--tools-page-image', `url('${pageImage}')`);
+        updateHero(routeData.title, pageTitle, pageSubtitle);
+        injectToolsHeaderBack(selectedTool ? `/tools/${context.route}/` : '/');
+
+        if (!selectedTool) {
+          renderDirectionHub(root, routeData);
+          return;
+        }
+        renderFlipPairs(
+          root,
+          { ...selectedTool, subtitle: selectedTool.desc },
+          selectedTool.items || [],
+          'front',
+          'back',
+          selectedTool.frontLabel,
+          selectedTool.backLabel,
+          `/tools/${context.route}/`
+        );
+        return;
+      }
+
+      const toolId = context.toolId;
+      const meta = META[toolId] || META.hub;
+      document.title = `${meta.title} — Система Молодцова`;
+      document.body.dataset.tool = toolId;
+      document.body.style.setProperty('--tools-page-image', `url('${meta.image}')`);
+      updateHero(META.hub.kicker, meta.title, meta.subtitle);
+      injectToolsHeaderBack(toolId === 'hub' ? '/' : '/tools/');
+
       if (toolId === 'hub') {
         const res = await fetch('/data/leo/index.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Tools data: ${res.status}`);
         const data = await res.json();
         renderHub(root, data.tools || []);
         return;
       }
       const res = await fetch(meta.dataUrl, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`Tools data: ${res.status}`);
       const items = await res.json();
       if (toolId === 'illusions') renderIllusions(root, items);
       else if (toolId === 'dictionary') renderDictionary(root, items);

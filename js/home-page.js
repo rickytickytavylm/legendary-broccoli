@@ -159,6 +159,76 @@ const routes = {
 };
 
 const todayRouteKeys = ['calm', 'body', 'relationships', 'selfworth', 'selfstudy', 'communication'];
+
+const todayTools = {
+  calm: {
+    title: 'Инструменты заботы о себе',
+    subtitle: 'Короткие карточки для контакта с телом, отдыха и снижения напряжения.',
+    hub: '/tools/calm/',
+    items: [
+      { title: 'Сигналы тела', desc: 'Замечать ощущения без поспешных выводов', href: '/tools/calm/?tool=body-signals', image: '/assets/webp/tool-calm-signals.webp' },
+      { title: 'Словарь практик', desc: 'Дыхание, заземление и саморегуляция', href: '/tools/calm/?tool=practice-dictionary', image: '/assets/webp/tool-calm-dictionary.webp' },
+      { title: 'Мягкое разрешение', desc: 'Снижать внутреннее «надо» без вины', href: '/tools/calm/?tool=gentle-permission', image: '/assets/webp/tool-calm-permission.webp' },
+      { title: 'Антивирус напряжения', desc: 'Более гибкий ответ тревожной мысли', href: '/tools/calm/?tool=tension-antivirus', image: '/assets/webp/tool-calm-antivirus.webp' },
+    ],
+  },
+  body: {
+    title: 'Инструменты тела и симптомов',
+    subtitle: 'Наблюдение, ясные термины и бережная работа с тревогой о теле.',
+    hub: '/tools/body/',
+    items: [
+      { title: 'Мифы психосоматики', desc: 'Отделить факты от опасных упрощений', href: '/tools/body/?tool=psychosomatic-myths', image: '/assets/webp/tool-body-myths.webp' },
+      { title: 'Словарь тела', desc: 'Симптомы, стресс и регуляция понятным языком', href: '/tools/body/?tool=body-dictionary', image: '/assets/webp/tool-body-dictionary.webp' },
+      { title: 'Диалог с симптомом', desc: 'От борьбы — к точному наблюдению', href: '/tools/body/?tool=symptom-dialogue', image: '/assets/webp/tool-body-dialogue.webp' },
+      { title: 'Антивирус тревоги о теле', desc: 'Катастрофа → реалистичный следующий шаг', href: '/tools/body/?tool=body-anxiety-antivirus', image: '/assets/webp/tool-body-antivirus.webp' },
+    ],
+  },
+  relationships: {
+    title: 'Инструменты созависимости',
+    subtitle: 'Карточки для оправданий, границ, формулировок и тяжёлых мыслей.',
+    hub: '/tools/',
+    items: [
+      { title: 'Иллюзии зависимого', desc: 'Оправдания и защитные механизмы', href: '/tools/illusions/', image: '/assets/webp/tool-illusions.webp' },
+      { title: 'Тематический словарь', desc: 'Психология понятным языком', href: '/tools/dictionary/', image: '/assets/webp/tool-dictionary.webp' },
+      { title: 'Я-высказывания', desc: 'Говорить о чувствах без обвинения', href: '/tools/i-statements/', image: '/assets/webp/tool-i-statements.webp' },
+      { title: 'Эмоциональный антивирус', desc: 'Здоровая альтернатива тяжёлой мысли', href: '/tools/antivirus/', image: '/assets/webp/tool-antivirus.webp' },
+    ],
+  },
+  selfworth: {
+    title: 'Инструменты самооценки и опоры',
+    subtitle: 'Карточки для работы с критиком, стыдом и устойчивой самоценностью.',
+    hub: '/tools/selfworth/',
+    items: [
+      { title: 'Иллюзии самооценки', desc: 'Увидеть ловушки сравнения и перфекционизма', href: '/tools/selfworth/?tool=selfworth-illusions', image: '/assets/webp/tool-selfworth-illusions.webp' },
+      { title: 'Словарь опоры', desc: 'Самоценность, границы и внутренний критик', href: '/tools/selfworth/?tool=support-dictionary', image: '/assets/webp/tool-selfworth-dictionary.webp' },
+      { title: 'Критик → опора', desc: 'Жёсткая фраза → поддерживающий ответ', href: '/tools/selfworth/?tool=critic-to-support', image: '/assets/webp/tool-selfworth-support.webp' },
+      { title: 'Антивирус стыда', desc: 'От приговора себе — к реальности и достоинству', href: '/tools/selfworth/?tool=shame-antivirus', image: '/assets/webp/tool-selfworth-antivirus.webp' },
+    ],
+  },
+  selfstudy: {
+    title: 'Инструменты самопонимания',
+    subtitle: 'Карточки для исследования чувств, потребностей и защит психики.',
+    hub: '/tools/selfstudy/',
+    items: [
+      { title: 'Защиты психики', desc: 'Как психика оберегает нас от перегрузки', href: '/tools/selfstudy/?tool=defense-mechanisms', image: '/assets/webp/tool-selfstudy-defenses.webp' },
+      { title: 'Словарь самопонимания', desc: 'Контакт, потребность, инсайт и границы', href: '/tools/selfstudy/?tool=selfstudy-dictionary', image: '/assets/webp/tool-selfstudy-dictionary.webp' },
+      { title: 'Чувство → потребность', desc: 'Исследовать, о чём может говорить эмоция', href: '/tools/selfstudy/?tool=feeling-to-need', image: '/assets/webp/tool-selfstudy-needs.webp' },
+      { title: 'Антивирус самообмана', desc: 'Удобная версия → честный вопрос к себе', href: '/tools/selfstudy/?tool=self-deception-antivirus', image: '/assets/webp/tool-selfstudy-antivirus.webp' },
+    ],
+  },
+  communication: {
+    title: 'Инструменты коммуникации',
+    subtitle: 'Карточки для ясного диалога, границ и деэскалации конфликтов.',
+    hub: '/tools/communication/',
+    items: [
+      { title: 'Ловушки спора', desc: 'Распознать обобщения, обвинения и чтение мыслей', href: '/tools/communication/?tool=argument-traps', image: '/assets/webp/tool-communication-traps.webp' },
+      { title: 'Словарь диалога', desc: 'Валидация, границы и ассертивность', href: '/tools/communication/?tool=dialogue-dictionary', image: '/assets/webp/tool-communication-dictionary.webp' },
+      { title: 'Конфликтные реплики', desc: 'Острая фраза → конструктивная формулировка', href: '/tools/communication/?tool=conflict-replies', image: '/assets/webp/tool-communication-replies.webp' },
+      { title: 'Антивирус эскалации', desc: 'Проверить догадку и вернуть паузу', href: '/tools/communication/?tool=escalation-antivirus', image: '/assets/webp/tool-communication-antivirus.webp' },
+    ],
+  },
+};
+
 let currentTodayRouteKey = null;
 let todayTouchStartX = 0;
 let todayTouchStartY = 0;
@@ -499,9 +569,32 @@ function renderToday(routeKey) {
     }
   }
 
-  const sozaToolsPanel = document.querySelector('[data-today-soza-tools]');
-  if (sozaToolsPanel) {
-    sozaToolsPanel.classList.toggle('hidden', currentTodayRouteKey !== 'relationships');
+  const toolsPanel = document.querySelector('[data-today-soza-tools]');
+  const toolsConfig = todayTools[currentTodayRouteKey];
+  if (toolsPanel) {
+    toolsPanel.classList.toggle('hidden', !toolsConfig);
+    if (toolsConfig) {
+      const toolsTitle = toolsPanel.querySelector('[data-today-tools-title]');
+      const toolsSubtitle = toolsPanel.querySelector('[data-today-tools-subtitle]');
+      const toolsGrid = toolsPanel.querySelector('[data-tools-carousel]');
+      const toolsAll = toolsPanel.querySelector('[data-today-tools-all]');
+      if (toolsTitle) toolsTitle.textContent = toolsConfig.title;
+      if (toolsSubtitle) toolsSubtitle.textContent = toolsConfig.subtitle;
+      if (toolsAll) toolsAll.href = toolsConfig.hub;
+      if (toolsGrid) {
+        toolsGrid.scrollLeft = 0;
+        toolsGrid.innerHTML = toolsConfig.items.map((item, index) => `
+          <a class="today-soza-tool-card" href="${item.href}" style="--tool-image:url('${item.image}')">
+            <span class="today-soza-tool-number">${String(index + 1).padStart(2, '0')}</span>
+            <span class="today-soza-tool-copy">
+              <strong>${item.title}</strong>
+              <small>${item.desc}</small>
+            </span>
+            <i aria-hidden="true">↗</i>
+          </a>
+        `).join('');
+      }
+    }
   }
 }
 
