@@ -566,56 +566,48 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
-    /* ── Post contacts (Telegram + MAX icons via [[contacts]] marker) ── */
+    /* ── Post contacts (Telegram + MAX chips via [[contacts]] marker) ── */
     .post-contacts {
       display: flex;
-      gap: 22px;
+      flex-wrap: wrap;
+      gap: 9px;
       padding: 2px 18px 20px;
     }
 
     .post-contact {
       display: inline-flex;
-      flex-direction: column;
       align-items: center;
       gap: 7px;
-      text-decoration: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .post-contact-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.32);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .post-contact-tg .post-contact-icon {
-      background: linear-gradient(180deg, #37aee2, #1e96c8);
-    }
-
-    .post-contact-max .post-contact-icon {
-      color: #06212b;
-      background: linear-gradient(180deg, #5fe0ff, #24c2f2);
-    }
-
-    .post-contact:active .post-contact-icon {
-      transform: scale(0.93);
-    }
-
-    .post-contact:hover .post-contact-icon {
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    .post-contact-label {
-      font-size: 12px;
+      height: 36px;
+      padding: 0 14px 0 12px;
+      border-radius: 999px;
+      font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.01em;
-      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+    }
+
+    .post-contact-glyph {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .post-contact-tg .post-contact-glyph { color: #37aee2; }
+    .post-contact-max .post-contact-glyph { color: #4c8dff; }
+
+    .post-contact:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .post-contact:active {
+      transform: scale(0.97);
     }
 
     /* ── Instagram-Style Comments Section ── */
@@ -1574,7 +1566,7 @@
   <script src="/js/auth.js?v=26"></script>
   <script src="/js/nav.js?v=102"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/page-inline/feed-1.js?v=17"></script>
+  <script src="/js/page-inline/feed-1.js?v=18"></script>
 </body>
 </html>
 

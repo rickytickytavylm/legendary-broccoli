@@ -26,16 +26,12 @@
     return `
       <div class="post-contacts" role="group" aria-label="Связаться со специалистом">
         <a class="post-contact post-contact-tg" href="${escapeHtml(POST_CONTACTS.telegram)}" target="_blank" rel="noopener noreferrer" data-post-contact="telegram" aria-label="Написать в Telegram">
-          <span class="post-contact-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M21.94 4.34a1.5 1.5 0 0 0-1.6-.23L3.3 11.2c-1.06.44-1.02 1.98.06 2.36l4.2 1.47 1.6 5.02c.26.82 1.32 1.02 1.87.36l2.3-2.77 4.2 3.1c.62.46 1.51.13 1.69-.62l3.06-13.6a1.5 1.5 0 0 0-.34-1.36ZM9.7 14.1l8.2-6.06-6.5 7.06-.2 2.94-1.5-3.94Z"/></svg>
-          </span>
-          <span class="post-contact-label">Telegram</span>
+          <svg class="post-contact-glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="16" height="16"><path d="M21.94 4.34a1.5 1.5 0 0 0-1.6-.23L3.3 11.2c-1.06.44-1.02 1.98.06 2.36l4.2 1.47 1.6 5.02c.26.82 1.32 1.02 1.87.36l2.3-2.77 4.2 3.1c.62.46 1.51.13 1.69-.62l3.06-13.6a1.5 1.5 0 0 0-.34-1.36ZM9.7 14.1l8.2-6.06-6.5 7.06-.2 2.94-1.5-3.94Z"/></svg>
+          <span>Telegram</span>
         </a>
         <a class="post-contact post-contact-max" href="${escapeHtml(POST_CONTACTS.max)}" target="_blank" rel="noopener noreferrer" data-post-contact="max" aria-label="Написать в мессенджере MAX">
-          <span class="post-contact-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5Z"/></svg>
-          </span>
-          <span class="post-contact-label">MAX</span>
+          <svg class="post-contact-glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="16" height="16"><path d="M12 3.4c-5.1 0-9.2 3.4-9.2 7.7 0 2.4 1.3 4.6 3.4 6-.1.9-.5 2.1-1.5 3.2-.3.3 0 .8.4.7 2-.5 3.5-1.3 4.4-2 .8.2 1.6.3 2.5.3 5.1 0 9.2-3.4 9.2-7.7S17.1 3.4 12 3.4Z"/></svg>
+          <span>MAX</span>
         </a>
       </div>
     `;
