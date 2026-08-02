@@ -8470,7 +8470,7 @@ body.psych-book-modal-open {
 
 .today-therapy-group-card {
   display: grid;
-  min-height: 168px;
+  min-height: 208px;
 }
 
 .today-therapy-group-card > div {
@@ -12349,5 +12349,23 @@ body.chat-page .notification-prompt-banner {
   }
   .home-marathon-card small {
     font-size: 11px;
+  }
+}
+
+/* Плашка «Набор терапевтической группы» — чуть крупнее и с описанием сути */
+@media (max-width: 768px) {
+  body .today-therapy-group-card {
+    min-height: 236px !important;
+    padding: 22px 22px !important;
+  }
+  body .today-therapy-group-card p {
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+  }
+}
+
+@media (min-width: 769px) {
+  body.home-today-active .today-therapy-group-card {
+    min-height: 300px !important;
   }
 }
