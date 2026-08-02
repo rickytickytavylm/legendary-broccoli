@@ -8311,8 +8311,9 @@ body.psych-book-modal-open {
 .today-rehab-card {
   position: relative;
   display: block;
-  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
-  margin: 0 auto;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0;
   min-height: 300px;
   border-radius: 28px;
   overflow: hidden;
@@ -8442,6 +8443,7 @@ body.psych-book-modal-open {
 @media (max-width: 760px) {
   .today-rehab-card {
     width: min(calc(100% - 28px), 560px);
+    margin: 0 auto;
     min-height: 0;
   }
 
