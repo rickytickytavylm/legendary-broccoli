@@ -164,11 +164,6 @@
 
     root.innerHTML = `
       <a class="tools-back" href="/tools/">← Все инструменты</a>
-      <div class="tools-intro">
-        <p class="ios-section-kicker">${escapeHtml(meta.kicker)}</p>
-        <h1>${escapeHtml(meta.title)}</h1>
-        <p>${escapeHtml(meta.subtitle)}</p>
-      </div>
       <div class="tools-toolbar" data-type-filters></div>
       <div class="tools-list" data-list></div>
     `;
@@ -230,11 +225,6 @@
   function renderFlipPairs(root, meta, items, frontKey, backKey, frontLabel, backLabel, backHref = '/tools/') {
     root.innerHTML = `
       <a class="tools-back" href="${escapeHtml(backHref)}">← Все инструменты</a>
-      <div class="tools-intro">
-        <p class="ios-section-kicker">${escapeHtml(meta.kicker)}</p>
-        <h1>${escapeHtml(meta.title)}</h1>
-        <p>${escapeHtml(meta.subtitle)}</p>
-      </div>
       <div class="tools-list">
         ${items
           .map(
@@ -262,11 +252,6 @@
     const meta = META.dictionary;
     root.innerHTML = `
       <a class="tools-back" href="/tools/">← Все инструменты</a>
-      <div class="tools-intro">
-        <p class="ios-section-kicker">${escapeHtml(meta.kicker)}</p>
-        <h1>${escapeHtml(meta.title)}</h1>
-        <p>${escapeHtml(meta.subtitle)}</p>
-      </div>
       <input class="tools-search" type="search" placeholder="Найти термин…" data-search />
       <div class="tools-list" data-list></div>
     `;
