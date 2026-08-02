@@ -105,7 +105,6 @@
 
       <div class="psych-detail-cta">
         <button class="psych-book-btn" type="button" data-psych-book>
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="20" height="20"><path d="M21.94 4.34a1.5 1.5 0 0 0-1.6-.23L3.3 11.2c-1.06.44-1.02 1.98.06 2.36l4.2 1.47 1.6 5.02c.26.82 1.32 1.02 1.87.36l2.3-2.77 4.2 3.1c.62.46 1.51.13 1.69-.62l3.06-13.6a1.5 1.5 0 0 0-.34-1.36ZM9.7 14.1l8.2-6.06-6.5 7.06-.2 2.94-1.5-3.94Z"/></svg>
           <span>Записаться на консультацию</span>
         </button>
       </div>
@@ -133,6 +132,29 @@
         });
       }
     } catch (e) { /* tracking is best-effort */ }
+  }
+
+  // Telegram-ссылка виснет на веб-заглушке t.me внутри webview/PWA — на мобильных
+  // сначала пробуем открыть само приложение через tg://, с фолбэком на веб-версию.
+  function openContactLink(channel, url) {
+    if (!url) return;
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+    if (channel === 'telegram' && isMobile) {
+      const domain = (url.split('t.me/')[1] || '').split(/[/?#]/)[0];
+      if (domain) {
+        let handedOff = false;
+        const onHide = () => { handedOff = true; document.removeEventListener('visibilitychange', onHide); };
+        document.addEventListener('visibilitychange', onHide);
+        window.location.href = `tg://resolve?domain=${domain}`;
+        setTimeout(() => {
+          document.removeEventListener('visibilitychange', onHide);
+          if (!handedOff) window.open(url, '_blank', 'noopener');
+        }, 700);
+        return;
+      }
+    }
+    const win = window.open(url, '_blank', 'noopener');
+    if (!win) window.location.href = url;
   }
 
   function closeBookModal() {
@@ -195,7 +217,10 @@
       }
       const option = event.target.closest('[data-book-channel]');
       if (option) {
-        trackBookEvent('contact', person, option.getAttribute('data-book-channel'));
+        event.preventDefault();
+        const channel = option.getAttribute('data-book-channel');
+        trackBookEvent('contact', person, channel);
+        openContactLink(channel, option.getAttribute('href'));
       }
     });
 

@@ -15,6 +15,73 @@
   let isFeedAdmin = false;
   let currentFeedPosts = [];
 
+  // Контакты для маркера [[contacts]] в тексте поста (ссылки «под капотом», как в модалке «Записаться»)
+  const POST_CONTACTS = {
+    telegram: 'https://t.me/ZabolotnovK',
+    max: 'https://max.ru/u/f9LHodD0cOLdTeQ_WDJ5-fOVSCctL0CWxtpGZR_UjpMwwb9VlX6qWKYjJpU',
+  };
+  const CONTACTS_MARKER = /\[\[\s*contacts\s*\]\]/gi;
+
+  function renderContactsBlock() {
+    return `
+      <div class="post-contacts" role="group" aria-label="Связаться со специалистом">
+        <a class="post-contact post-contact-tg" href="${escapeHtml(POST_CONTACTS.telegram)}" target="_blank" rel="noopener noreferrer" data-post-contact="telegram" aria-label="Написать в Telegram">
+          <span class="post-contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M21.94 4.34a1.5 1.5 0 0 0-1.6-.23L3.3 11.2c-1.06.44-1.02 1.98.06 2.36l4.2 1.47 1.6 5.02c.26.82 1.32 1.02 1.87.36l2.3-2.77 4.2 3.1c.62.46 1.51.13 1.69-.62l3.06-13.6a1.5 1.5 0 0 0-.34-1.36ZM9.7 14.1l8.2-6.06-6.5 7.06-.2 2.94-1.5-3.94Z"/></svg>
+          </span>
+          <span class="post-contact-label">Telegram</span>
+        </a>
+        <a class="post-contact post-contact-max" href="${escapeHtml(POST_CONTACTS.max)}" target="_blank" rel="noopener noreferrer" data-post-contact="max" aria-label="Написать в мессенджере MAX">
+          <span class="post-contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5Z"/></svg>
+          </span>
+          <span class="post-contact-label">MAX</span>
+        </a>
+      </div>
+    `;
+  }
+
+  // Telegram-ссылка виснет на веб-заглушке t.me внутри webview/PWA — на мобильных
+  // сначала пробуем открыть само приложение через tg://, с фолбэком на веб-версию.
+  function openContactLink(channel, url) {
+    if (!url) return;
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+    if (channel === 'telegram' && isMobile) {
+      const domain = (url.split('t.me/')[1] || '').split(/[/?#]/)[0];
+      if (domain) {
+        let handedOff = false;
+        const onHide = () => { handedOff = true; document.removeEventListener('visibilitychange', onHide); };
+        document.addEventListener('visibilitychange', onHide);
+        window.location.href = `tg://resolve?domain=${domain}`;
+        setTimeout(() => {
+          document.removeEventListener('visibilitychange', onHide);
+          if (!handedOff) window.open(url, '_blank', 'noopener');
+        }, 700);
+        return;
+      }
+    }
+    const win = window.open(url, '_blank', 'noopener');
+    if (!win) window.location.href = url;
+  }
+
+  document.addEventListener('click', (event) => {
+    const contact = event.target.closest('[data-post-contact]');
+    if (!contact) return;
+    event.preventDefault();
+    const channel = contact.getAttribute('data-post-contact');
+    try {
+      if (window.API && typeof window.API.trackActivity === 'function') {
+        const card = contact.closest('.post-card');
+        window.API.trackActivity('post_contact_click', {
+          entity_type: 'feed_post',
+          entity_id: card ? card.getAttribute('data-post-id') : null,
+          metadata: { channel: channel || null },
+        });
+      }
+    } catch (e) { /* tracking is best-effort */ }
+    openContactLink(channel, contact.getAttribute('href'));
+  });
+
   function escapeHtml(value) {
     return String(value || '')
       .replace(/&/g, '&amp;')
@@ -109,7 +176,12 @@
   function renderPost(post) {
     const id = postSlug(post);
     const title = post.title || 'Пост Руслана Молодцова';
-    const shareText = String(post.body || '').replace(/\s+/g, ' ').trim().slice(0, 140) || title;
+    const rawBody = String(post.body || '');
+    const hasContacts = CONTACTS_MARKER.test(rawBody);
+    CONTACTS_MARKER.lastIndex = 0;
+    const cleanBody = rawBody.replace(CONTACTS_MARKER, '').replace(/\n{3,}/g, '\n\n').trim();
+    const postForCaption = hasContacts ? Object.assign({}, post, { body: cleanBody }) : post;
+    const shareText = cleanBody.replace(/\s+/g, ' ').trim().slice(0, 140) || title;
     const likes = Number(post.likes_count) || 0;
     return `
       <article class="post-card" id="post-${escapeHtml(id)}" data-post-id="${escapeHtml(id)}" data-share-title="${escapeHtml(title)}" data-share-text="${escapeHtml(shareText)}">
@@ -140,8 +212,9 @@
           </button>
         </div>
         <div class="post-likes" data-base-likes="${likes}" data-likes>${formatLikes(likes)}</div>
-        <div class="post-caption">${renderCaptionHtml(post)}</div>
+        <div class="post-caption">${renderCaptionHtml(postForCaption)}</div>
         <button class="post-expand-link" type="button">Развернуть весь текст</button>
+        ${hasContacts ? renderContactsBlock() : ''}
         <div class="post-comments-preview-section hidden" data-comments-preview-container>
           <div class="post-comments-preview-list" data-comments-preview-list></div>
           <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>

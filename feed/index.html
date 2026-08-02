@@ -566,6 +566,58 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
+    /* ── Post contacts (Telegram + MAX icons via [[contacts]] marker) ── */
+    .post-contacts {
+      display: flex;
+      gap: 22px;
+      padding: 2px 18px 20px;
+    }
+
+    .post-contact {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .post-contact-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.32);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .post-contact-tg .post-contact-icon {
+      background: linear-gradient(180deg, #37aee2, #1e96c8);
+    }
+
+    .post-contact-max .post-contact-icon {
+      color: #06212b;
+      background: linear-gradient(180deg, #5fe0ff, #24c2f2);
+    }
+
+    .post-contact:active .post-contact-icon {
+      transform: scale(0.93);
+    }
+
+    .post-contact:hover .post-contact-icon {
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .post-contact-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
     /* ── Instagram-Style Comments Section ── */
     .post-comments-section {
       border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -1522,7 +1574,7 @@
   <script src="/js/auth.js?v=26"></script>
   <script src="/js/nav.js?v=102"></script>
   <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
-  <script src="/js/page-inline/feed-1.js?v=16"></script>
+  <script src="/js/page-inline/feed-1.js?v=17"></script>
 </body>
 </html>
 
