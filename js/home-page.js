@@ -1629,3 +1629,18 @@ function initToolsCarousel() {
 
 document.addEventListener('DOMContentLoaded', initMarathonCarousel);
 document.addEventListener('DOMContentLoaded', initToolsCarousel);
+
+// Трекинг клика по плашке реабилитационного центра (для админки).
+document.addEventListener('click', (event) => {
+  const cta = event.target.closest('[data-rehab-cta]');
+  if (!cta) return;
+  try {
+    if (window.API && typeof window.API.trackActivity === 'function') {
+      window.API.trackActivity('rehab_banner_click', {
+        entity_type: 'rehab_center',
+        entity_id: 'obraz-mysli',
+        metadata: { href: 'https://трудныйподросток.рф/', source: 'home_relationships' },
+      });
+    }
+  } catch (e) { /* best-effort */ }
+});

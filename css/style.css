@@ -8122,6 +8122,342 @@ body.psychologist-detail-page .psych-detail-cta {
     aspect-ratio: 3 / 4;
     max-height: min(78svh, 620px);
   }
+
+  /* Имя, лид и теги на мобиле не должны прилипать к краям экрана */
+  body.psychologist-detail-page .psych-detail-copy,
+  body.psychologist-detail-page .psych-detail-grid,
+  body.psychologist-detail-page .psych-detail-cta {
+    padding-left: clamp(16px, 5vw, 24px);
+    padding-right: clamp(16px, 5vw, 24px);
+    box-sizing: border-box;
+  }
+}
+
+/* ─── Модалка «Записаться» у психолога ─────────────────── */
+body.psych-book-modal-open {
+  overflow: hidden;
+}
+
+.psych-book-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.psych-book-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 5, 8, 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  animation: psychBookFade 0.2s ease;
+}
+
+.psych-book-sheet {
+  position: relative;
+  z-index: 1;
+  width: min(460px, 100%);
+  margin: 0 12px 12px;
+  padding: 24px 22px calc(22px + env(safe-area-inset-bottom, 0px));
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(26, 32, 46, 0.62), rgba(9, 11, 17, 0.86)),
+    #0a0c12;
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+  backdrop-filter: blur(30px) saturate(150%);
+  box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  animation: psychBookSlide 0.26s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (min-width: 601px) {
+  .psych-book-modal {
+    align-items: center;
+  }
+  .psych-book-sheet {
+    margin: 0;
+    animation: psychBookPop 0.24s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+
+.psych-book-x {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.psych-book-eyebrow {
+  margin: 0 0 8px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.psych-book-title {
+  margin: 0 0 6px;
+  color: #fff;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.psych-book-sub {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.psych-book-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.psych-book-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  text-decoration: none;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.12s ease;
+}
+
+.psych-book-option:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.psych-book-option:active {
+  transform: scale(0.99);
+}
+
+.psych-book-option-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+}
+
+.psych-book-option-tg .psych-book-option-icon {
+  background: linear-gradient(180deg, #37bbfe, #007dbb);
+  color: #fff;
+}
+
+.psych-book-option-max .psych-book-option-icon {
+  background: linear-gradient(180deg, #8b5cf6, #5b21b6);
+  color: #fff;
+}
+
+.psych-book-option-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.psych-book-option-copy strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.psych-book-option-copy small {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+.psych-book-option-arrow {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 18px;
+}
+
+@keyframes psychBookFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes psychBookSlide {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes psychBookPop {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Плашка реабилитационного центра ───────────────────── */
+.today-rehab-card {
+  position: relative;
+  display: block;
+  width: min(calc(100% - clamp(16px, 4vw, 56px)), 1100px);
+  margin: 0 auto;
+  min-height: 300px;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #05070d;
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  text-decoration: none;
+  color: #fff;
+  isolation: isolate;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.today-rehab-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 34px 84px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.today-rehab-video {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.today-rehab-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(5, 7, 13, 0.32) 0%, rgba(5, 7, 13, 0.55) 42%, rgba(5, 7, 13, 0.94) 100%),
+    linear-gradient(90deg, rgba(5, 7, 13, 0.78), rgba(5, 7, 13, 0.18) 68%, transparent);
+  pointer-events: none;
+}
+
+.today-rehab-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(22px, 3.4vw, 40px);
+  max-width: 640px;
+}
+
+.today-rehab-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(0, 0, 0, 0.28);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.today-rehab-headline {
+  margin: 4px 0 0;
+  font-size: clamp(24px, 3.2vw, 38px);
+  font-weight: 850;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.today-rehab-sub {
+  margin: 0;
+  max-width: 52ch;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(13px, 1.5vw, 15px);
+  line-height: 1.5;
+}
+
+.today-rehab-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 6px 0 4px;
+  padding: 0;
+  list-style: none;
+}
+
+.today-rehab-points li {
+  position: relative;
+  padding-left: 18px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.today-rehab-points li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6ee7b7;
+}
+
+.today-rehab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 14px;
+  background: #fff;
+  color: #0a0c12;
+  font-size: 14px;
+  font-weight: 750;
+  transition: background 0.2s ease;
+}
+
+.today-rehab-card:hover .today-rehab-button {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 760px) {
+  .today-rehab-card {
+    width: min(calc(100% - 28px), 560px);
+    min-height: 0;
+  }
+
+  .today-rehab-overlay {
+    background:
+      linear-gradient(180deg, rgba(5, 7, 13, 0.28) 0%, rgba(5, 7, 13, 0.6) 46%, rgba(5, 7, 13, 0.96) 100%);
+  }
+
+  .today-rehab-body {
+    padding: 20px 18px 22px;
+  }
+
+  .today-rehab-button {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .today-event-yoga-panel {
