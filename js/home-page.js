@@ -95,6 +95,7 @@ const routes = {
     desc: 'Два мягких входа: через движение и через внимание к телу.',
     short: 'йога / забота о себе',
     heroImage: '/assets/webp/king_calm.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-calm-4k.webp',
     heroPos: 'center 38%',
     programs: [
       { title: 'Мини-йога', desc: 'Мягкое начало через дыхание и движение.', href: '/yoga/', image: '/assets/webp/mini-yoga.webp' },
@@ -106,6 +107,7 @@ const routes = {
     desc: 'Два входа: понять психосоматику и мягко вернуться в телесное ощущение.',
     short: 'тело и симптомы',
     heroImage: '/assets/webp/body.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-body-4k.webp',
     heroPos: 'center 40%',
     programs: [
       { title: 'Психосоматика', desc: 'Связь эмоций, стресса и телесных симптомов.', href: '/psihosomatika/', image: '/assets/webp/psysomatic.webp' },
@@ -117,6 +119,7 @@ const routes = {
     desc: 'Основной вход — созависимость; дополнительно — мужско-женская динамика.',
     short: 'отношения / созависимость',
     heroImage: '/assets/webp/new_soc.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-relationships-4k.webp',
     heroPos: 'center 35%',
     programs: [
       { title: 'Созависимость', desc: 'Границы, привязанность и повторяющиеся сценарии.', href: '/sozavisimost/', image: '/assets/webp/coda2.webp' },
@@ -128,6 +131,7 @@ const routes = {
     desc: 'Два входа: восстановление опоры и контакт с собой.',
     short: 'самооценка и опора',
     heroImage: '/assets/webp/opora.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-selfworth-4k.webp',
     heroPos: 'center 28%',
     programs: [
       { title: 'Работа с травмами', desc: 'Кризисы, травматичный опыт и восстановление опоры.', href: '/dermer/', image: '/assets/webp/geshtalt.webp' },
@@ -139,6 +143,7 @@ const routes = {
     desc: 'Два входа: базовая программа для самопонимания и работа с состояниями внимания.',
     short: 'самопонимание',
     heroImage: '/assets/webp/find_myself.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-selfstudy-4k.webp',
     heroPos: 'center 35%',
     programs: [
       { title: 'Гештальт-подход', desc: 'Эмоции, потребности, контакт и границы.', href: '/geshtalt/', image: '/assets/webp/courses.webp' },
@@ -150,6 +155,7 @@ const routes = {
     desc: 'Два входа: навыки общения и сценарии в отношениях.',
     short: 'коммуникация и конфликты',
     heroImage: '/assets/webp/conflicts_programs.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-communication-4k.webp',
     heroPos: 'center 42%',
     programs: [
       { title: 'Мастер Коммуникаций', desc: 'Навыки общения, диалог и управление конфликтом.', href: '/master/', image: '/assets/webp/masterofcommication.webp' },
@@ -350,6 +356,7 @@ function routeConfig(profile = onboardingState, routeKey) {
     href: primary.href,
     image: primary.image,
     hero: route.heroImage || primary.image,
+    desktopHero: route.desktopHeroImage || route.heroImage || primary.image,
   };
   return copy;
 }
@@ -507,6 +514,7 @@ function renderToday(routeKey) {
   if (stepDesc) stepDesc.textContent = route.firstStepDesc;
   if (hero) {
     hero.style.setProperty('--ux-bg', `url('${route.hero}')`);
+    hero.style.setProperty('--ux-bg-desktop', `url('${route.desktopHero}')`);
     if (route.heroPos) {
       hero.style.setProperty('--ux-bg-pos', route.heroPos);
     } else {

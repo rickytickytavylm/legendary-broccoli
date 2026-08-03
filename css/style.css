@@ -11367,6 +11367,16 @@ body.chat-page .notification-prompt-banner {
     /* Убираем боковой паддинг отсюда, чтобы герой мог быть на всю ширину рабочей области */
     padding: 0 0 96px;
     box-sizing: border-box;
+    /* Чистый desktop-фон без растянутых radial-gradient, создававших мутную «пыль» */
+    background:
+      linear-gradient(180deg,
+        #07100E 0%,
+        #050C0A 42%,
+        #030806 100%);
+  }
+
+  body.home-today-active {
+    background: #030806;
   }
 
   body.home-today-active .today-screen > * {
@@ -11388,7 +11398,7 @@ body.chat-page .notification-prompt-banner {
     left: 0 !important;
     margin: -80px 0 44px 0 !important;
     padding: clamp(140px, 18vh, 190px) var(--today-pad, 48px) clamp(48px, 7vh, 84px) !important;
-    background-image: var(--ux-bg, url('/assets/webp/new_main.webp')) !important;
+    background-image: var(--ux-bg-desktop, var(--ux-bg, url('/assets/webp/new_main.webp'))) !important;
     background-size: cover !important;
     background-position: var(--ux-bg-pos, center 35%) !important;
     overflow: hidden !important;
