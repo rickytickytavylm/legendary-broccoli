@@ -553,7 +553,8 @@ function renderToday(routeKey) {
     } else {
       delete therapyCard.dataset.therapyRecruit;
     }
-    therapyCard.style.setProperty('--ux-bg', `url('${therapyCfg.image}')`);
+    therapyCard.style.setProperty('--ux-bg', `url('${therapyCfg.imageMobile || therapyCfg.image}')`);
+    therapyCard.style.setProperty('--therapy-bg-desktop', `url('${therapyCfg.imageDesktop || therapyCfg.image}')`);
     therapyCard.setAttribute('aria-label', therapyState.external ? 'Открыть йога-клуб' : 'Открыть терапевтическую группу');
     const therapyTitle = therapyCard.querySelector('[data-today-therapy-title]');
     const therapyLeader = therapyCard.querySelector('[data-today-therapy-leader]');

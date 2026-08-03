@@ -12397,6 +12397,11 @@ body.chat-page .notification-prompt-banner {
   body.home-today-active .today-therapy-group-card {
     min-height: 300px !important;
   }
+
+  body.home-today-active .today-therapy-group-card::before {
+    background-image: var(--therapy-bg-desktop, var(--ux-bg));
+    background-position: center;
+  }
 }
 
 /* Стрелки переключения направлений видимы и на мобилке/тач-устройствах (как в приложении) */
