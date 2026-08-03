@@ -11388,7 +11388,7 @@ body.chat-page .notification-prompt-banner {
   body.home-today-active .today-hero-card {
     width: 100% !important;
     max-width: none !important;
-    min-height: clamp(380px, 54vh, 580px) !important;
+    min-height: clamp(440px, 62vh, 660px) !important;
     border-radius: 0 !important;
     border: 0 !important;
     box-shadow: none !important;

@@ -95,7 +95,7 @@ const routes = {
     desc: 'Два мягких входа: через движение и через внимание к телу.',
     short: 'йога / забота о себе',
     heroImage: '/assets/webp/king_calm.webp',
-    desktopHeroImage: '/assets/webp/desktop/hero-calm-4k.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-calm-4k.webp?v=2',
     heroPos: 'center 38%',
     programs: [
       { title: 'Мини-йога', desc: 'Мягкое начало через дыхание и движение.', href: '/yoga/', image: '/assets/webp/mini-yoga.webp' },
@@ -131,7 +131,7 @@ const routes = {
     desc: 'Два входа: восстановление опоры и контакт с собой.',
     short: 'самооценка и опора',
     heroImage: '/assets/webp/opora.webp',
-    desktopHeroImage: '/assets/webp/desktop/hero-selfworth-4k.webp',
+    desktopHeroImage: '/assets/webp/desktop/hero-selfworth-4k.webp?v=2',
     heroPos: 'center 28%',
     programs: [
       { title: 'Работа с травмами', desc: 'Кризисы, травматичный опыт и восстановление опоры.', href: '/dermer/', image: '/assets/webp/geshtalt.webp' },
