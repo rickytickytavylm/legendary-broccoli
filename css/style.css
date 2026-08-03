@@ -11680,9 +11680,10 @@ body.chat-page .notification-prompt-banner {
     max-width: 52ch !important;
   }
 
+  /* Заголовки нижних панелей (Доп. программа / Инструменты) видимы на десктопе */
   body.home-today-active .today-bento-secondary .ios-section-header,
   body.home-today-active .today-bento-tools .ios-section-header {
-    display: none;
+    margin: 0 0 14px;
   }
 
   .feed-carousel-section {
@@ -11948,6 +11949,18 @@ body.chat-page .notification-prompt-banner {
   body.home-today-active .home-marathon-orbit-stage {
     gap: 24px;
     padding: 8px 2px 22px;
+  }
+
+  /* Медитации и центр выравниваем по тем же полям (--today-pad), что борд и марафоны */
+  body.home-today-active .today-meditation-panel,
+  body.home-today-active .today-rehab-panel {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: var(--today-pad, 48px);
+    padding-right: var(--today-pad, 48px);
+    box-sizing: border-box;
   }
 
   /* Компактные, благородные карточки марафонов ровно в 3 колонки сетки */
