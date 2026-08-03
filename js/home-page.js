@@ -596,6 +596,10 @@ function renderToday(routeKey) {
       }
     }
   }
+
+  // Плашку реабилитационного центра показываем только в направлении «отношения / созависимость».
+  const rehabPanel = document.querySelector('.today-rehab-panel');
+  if (rehabPanel) rehabPanel.classList.toggle('hidden', currentTodayRouteKey !== 'relationships');
 }
 
 async function handleTherapyRecruitClick(event) {

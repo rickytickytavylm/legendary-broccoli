@@ -605,6 +605,12 @@
   .today-soza-tool-card {
     flex-basis: min(28vw, 300px);
   }
+
+  /* Чтобы последняя карточка в горизонтальной ленте не обрезалась у правого края */
+  .today-soza-tools-grid {
+    padding-right: 32px;
+    scroll-padding-right: 32px;
+  }
 }
 
 @media (max-width: 768px) {
