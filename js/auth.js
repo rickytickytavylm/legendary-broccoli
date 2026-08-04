@@ -562,19 +562,20 @@
   });
 
   // === Мост «пришёл из приложения» (RN → веб): после входа — сразу в профиль ===
-  // Из приложения (paywall) веб открывается с ?from=app. В ЭТОМ И ТОЛЬКО В ЭТОМ
-  // сценарии после успешной авторизации нужно оказаться в /account/ (профиль), а
-  // не на главной. Флаг живёт в sessionStorage и переживает полностраничные
-  // редиректы входа (Яндекс /auth-yandex/, Firebase signInWithRedirect, magic-link),
-  // поэтому куда бы вход ни «приземлил» — один раз доводим человека до профиля.
-  // Обычных пользователей (без from=app) это не касается вообще.
+  // Из приложения веб открывается с ?from=app. ОДИН РАЗ после успешной авторизации
+  // доводим человека до /account/. Флаг переживает OAuth-редиректы.
+  //
+  // ВАЖНО: смотрим ТОЛЬКО на query ?from=app в URL, а НЕ на sessionStorage
+  // sistema:app-bridge. Иначе после первого захода bridge живёт ~2 часа и на
+  // КАЖДОЙ странице снова выставляется postlogin → человек навсегда заперт
+  // в /account/ (клики по таббару/меню возвращают в профиль).
   const APP_POSTLOGIN_KEY = 'sistema:app-postlogin';
   function captureAppLoginIntent() {
     try {
-      if (sessionStorage.getItem(APP_POSTLOGIN_KEY) === '1') return;
+      const state = sessionStorage.getItem(APP_POSTLOGIN_KEY);
+      if (state === '1' || state === 'done') return;
       const from = String(new URLSearchParams(location.search || '').get('from') || '').toLowerCase();
-      const bridged = !!sessionStorage.getItem('sistema:app-bridge');
-      if (from === 'app' || from === 'ios' || from === 'android' || bridged) {
+      if (from === 'app' || from === 'ios' || from === 'android') {
         sessionStorage.setItem(APP_POSTLOGIN_KEY, '1');
       }
     } catch (_) { /* ignore */ }
@@ -583,7 +584,9 @@
     try {
       if (sessionStorage.getItem(APP_POSTLOGIN_KEY) !== '1') return;
       if (!window.API?.isLoggedIn?.()) return; // ждём завершения входа
-      sessionStorage.removeItem(APP_POSTLOGIN_KEY); // одноразово — потом не мешаем навигации
+      // 'done' — больше никогда не редиректим в этой сессии, даже если кто-то
+      // снова положит from=app в URL (например, шаринг).
+      sessionStorage.setItem(APP_POSTLOGIN_KEY, 'done');
       if (!/^\/account\/?$/.test(location.pathname)) window.location.replace('/account/');
     } catch (_) { /* ignore */ }
   }

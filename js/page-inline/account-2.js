@@ -401,6 +401,10 @@ function escapeHtml(value) {
 
   function showAppBridgeBanner(bridge) {
     if (!bridge || document.getElementById('app-bridge-banner')) return;
+    // Баннер только для paywall-сценария (оформить доступ). Из профиля приложения
+    // приходит intent=open_account — там «Один аккаунт — везде» выглядело как
+    // корявая чужая плашка поверх обычного кабинета, её не показываем.
+    if (bridge.intent !== 'continue_access') return;
     const host = document.querySelector('.profile-wrap') || document.querySelector('main') || document.body;
     if (!host) return;
 
@@ -408,26 +412,27 @@ function escapeHtml(value) {
       const style = document.createElement('style');
       style.id = 'app-bridge-banner-styles';
       style.textContent = `
-        .app-bridge-banner{margin:0 0 18px;padding:16px 18px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.88)}
+        .app-bridge-banner{position:relative;margin:0 0 18px;padding:16px 44px 16px 18px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.88)}
         .app-bridge-banner strong{display:block;margin:0 0 6px;font-size:15px;font-weight:800;letter-spacing:-.02em}
         .app-bridge-banner p{margin:0;font-size:13px;line-height:1.45;color:rgba(255,255,255,.58)}
+        .app-bridge-banner-x{position:absolute;top:10px;right:12px;width:28px;height:28px;border:0;border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:18px;line-height:1;cursor:pointer}
       `;
       document.head.appendChild(style);
     }
 
-    const intent = bridge.intent || '';
-    // Текст для человека, не для разработки: коротко, без «from/intent/синхронизации».
-    const title = intent === 'continue_access'
-      ? 'Продолжите здесь'
-      : 'Один аккаунт — везде';
-    const text = intent === 'continue_access'
-      ? 'Оформите полный доступ на сайте. Потом просто вернитесь в приложение — всё откроется само, вход тот же.'
-      : 'Если вы уже пользуетесь приложением: доступ с сайта работает и там. Достаточно войти тем же аккаунтом.';
-
     const banner = document.createElement('div');
     banner.id = 'app-bridge-banner';
     banner.className = 'app-bridge-banner';
-    banner.innerHTML = `<strong>${title}</strong><p>${text}</p>`;
+    banner.innerHTML = `
+      <button type="button" class="app-bridge-banner-x" aria-label="Закрыть" data-bridge-close>&times;</button>
+      <strong>Продолжите здесь</strong>
+      <p>Оформите полный доступ на сайте. Потом просто вернитесь в приложение — всё откроется само, вход тот же.</p>
+    `;
+    banner.addEventListener('click', (event) => {
+      if (!event.target.closest('[data-bridge-close]')) return;
+      banner.remove();
+      try { sessionStorage.removeItem('sistema:app-bridge'); } catch (_) { /* ignore */ }
+    });
     host.insertBefore(banner, host.firstChild);
   }
 
