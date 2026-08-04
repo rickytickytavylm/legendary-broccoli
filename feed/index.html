@@ -1,20 +1,20 @@
-<!DOCTYPE html>
+п»ї<!DOCTYPE html>
 <html lang="ru">
 <head>
   <!-- PWA Standalone Meta Tags -->
   <link rel="manifest" href="/manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Система" />
+  <meta name="apple-mobile-web-app-title" content="РЎРёСЃС‚РµРјР°" />
   <link rel="apple-touch-icon" href="/assets/logo2.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#030605" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://www.gstatic.com https://apis.google.com https://appleid.cdn-apple.com https://cdn.jsdelivr.net https://telegram.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.gstatic.com wss: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://cdn.jsdelivr.net https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.googleapis.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com; media-src 'self' blob: data: https://api.xn----7sbbhjdu1agcwbb5abq1f.xn--p1ai https://web-production-3cb7a.up.railway.app https://*.up.railway.app https://sistema-molodtsov.storage.yandexcloud.net https://*.storage.yandexcloud.net; frame-src 'self' https://accounts.google.com https://appleid.apple.com https://sistema-molodtsova.firebaseapp.com https://*.firebaseapp.com https://oauth.telegram.org https://telegram.org; manifest-src 'self'; upgrade-insecure-requests" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <title>Лента — Система Молодцова</title>
+  <title>Р›РµРЅС‚Р° вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°</title>
   <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
-  <meta property="og:title" content="Лента — Система Молодцова" />
+  <meta property="og:title" content="Р›РµРЅС‚Р° вЂ” РЎРёСЃС‚РµРјР° РњРѕР»РѕРґС†РѕРІР°" />
   <meta property="og:image" content="/assets/webp/logo2.webp" />
   <link rel="stylesheet" href="/css/style.css?v=161" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
@@ -96,7 +96,7 @@
       color: rgba(255, 255, 255, 0.4);
     }
 
-    /* Полный кадр постера без кропа: cover + фикс. aspect-ratio ломали разметку с текстом на изображении */
+    /* РџРѕР»РЅС‹Р№ РєР°РґСЂ РїРѕСЃС‚РµСЂР° Р±РµР· РєСЂРѕРїР°: cover + С„РёРєСЃ. aspect-ratio Р»РѕРјР°Р»Рё СЂР°Р·РјРµС‚РєСѓ СЃ С‚РµРєСЃС‚РѕРј РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРё */
     .post-image {
       width: 100%;
       height: auto;
@@ -566,7 +566,7 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
-    /* -- Post contacts (Telegram + MAX chips via [[contacts]] marker) -- */
+    /* в”Ђв”Ђ Post contacts (Telegram + MAX chips via [[contacts]] marker) в”Ђв”Ђ */
     .post-contacts {
       display: flex;
       flex-wrap: wrap;
@@ -610,7 +610,7 @@
       transform: scale(0.97);
     }
 
-    /* -- Instagram-Style Comments Section -- */
+    /* в”Ђв”Ђ Instagram-Style Comments Section в”Ђв”Ђ */
     .post-comments-section {
       border-top: 1px solid rgba(255, 255, 255, 0.05);
       padding: 14px 18px 16px;
@@ -854,7 +854,7 @@
       display: inline-block;
     }
 
-    /* -- Post Comments Preview -- */
+    /* в”Ђв”Ђ Post Comments Preview в”Ђв”Ђ */
     .post-comments-preview-section {
       display: none !important;
     }
@@ -890,7 +890,7 @@
       color: rgba(255, 255, 255, 0.65);
     }
 
-    /* -- Post Quick Comment Form (Instagram Style) -- */
+    /* в”Ђв”Ђ Post Quick Comment Form (Instagram Style) в”Ђв”Ђ */
     .post-quick-comment-form {
       display: flex;
       align-items: center;
@@ -959,7 +959,7 @@
       cursor: not-allowed;
     }
 
-    /* -- Comments Bottom Sheet -- */
+    /* в”Ђв”Ђ Comments Bottom Sheet в”Ђв”Ђ */
     .comment-sheet-overlay {
       position: fixed;
       inset: 0;
@@ -1255,246 +1255,246 @@
   <main>
     <div class="feed-container">
       <div class="feed-admin-compose" id="feed-admin-compose">
-        <button class="feed-admin-open" type="button" id="feed-admin-open">+ Новый пост</button>
+        <button class="feed-admin-open" type="button" id="feed-admin-open">+ РќРѕРІС‹Р№ РїРѕСЃС‚</button>
       </div>
       <div id="feed-posts-root" aria-busy="true">
       <!-- Post 3: newest -->
-      <article class="post-card" id="post-interview" data-post-id="interview" data-share-title="Интервью с дочерью" data-share-text="Руслан Молодцов — новый разговор с дочерью о подростках, отношениях и ролях.">
+      <article class="post-card" id="post-interview" data-post-id="interview" data-share-title="РРЅС‚РµСЂРІСЊСЋ СЃ РґРѕС‡РµСЂСЊСЋ" data-share-text="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ вЂ” РЅРѕРІС‹Р№ СЂР°Р·РіРѕРІРѕСЂ СЃ РґРѕС‡РµСЂСЊСЋ Рѕ РїРѕРґСЂРѕСЃС‚РєР°С…, РѕС‚РЅРѕС€РµРЅРёСЏС… Рё СЂРѕР»СЏС….">
         <div class="post-author">
-          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ" loading="lazy" decoding="async" />
           <div class="post-author-info">
-            <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">Сегодня</span>
+            <span class="post-author-name">Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</span>
+            <span class="post-time">РЎРµРіРѕРґРЅСЏ</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/new_post.webp?v=4" alt="Интервью с дочерью" loading="lazy" decoding="async" />
+        <img class="post-image" src="/assets/webp/new_post.webp?v=4" alt="РРЅС‚РµСЂРІСЊСЋ СЃ РґРѕС‡РµСЂСЊСЋ" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+          <button class="post-action-btn" aria-label="РќСЂР°РІРёС‚СЃСЏ" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+          <button class="post-action-btn" aria-label="РљРѕРјРјРµРЅС‚Р°СЂРёРё" data-comment-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             <span class="post-comment-count" data-comment-count></span>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+          <button class="post-action-btn" aria-label="РџРѕРґРµР»РёС‚СЊСЃСЏ" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes" data-base-likes="214" data-likes>Нравится: 214</div>
+        <div class="post-likes" data-base-likes="214" data-likes>РќСЂР°РІРёС‚СЃСЏ: 214</div>
         <div class="post-caption">
-          <p><strong>Руслан Молодцов</strong>Наконец-то, друзья!</p>
-          <p>Случилось то, что вы давно просили. Четыре года назад я записывал интервью со старшей дочерью — ей тогда было 12, и это был такой разговор отца с ребенком.</p>
-          <p>Сейчас ей 16. И это уже совсем другой разговор. Мы задавали друг другу непростые вопросы. Говорили о разном — от детско-родительских отношений до мужских и женских ролей. Затронули тему зависимостей и то, как подростки в них попадают. И главное — как на самом деле выстраивать отношения с подростками.</p>
-          <p>Спойлер: все проще, чем нам кажется.</p>
-          <p><a href="https://youtu.be/UkOKGeByz2U?si=Y6GsWqjsO6wm8ttx" target="_blank" rel="noopener noreferrer">Ссылка на видео</a></p>
-          <p>Смотрите, комментируйте, делитесь впечатлениями. Нам с дочкой очень важно.</p>
+          <p><strong>Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</strong>РќР°РєРѕРЅРµС†-С‚Рѕ, РґСЂСѓР·СЊСЏ!</p>
+          <p>РЎР»СѓС‡РёР»РѕСЃСЊ С‚Рѕ, С‡С‚Рѕ РІС‹ РґР°РІРЅРѕ РїСЂРѕСЃРёР»Рё. Р§РµС‚С‹СЂРµ РіРѕРґР° РЅР°Р·Р°Рґ СЏ Р·Р°РїРёСЃС‹РІР°Р» РёРЅС‚РµСЂРІСЊСЋ СЃРѕ СЃС‚Р°СЂС€РµР№ РґРѕС‡РµСЂСЊСЋ вЂ” РµР№ С‚РѕРіРґР° Р±С‹Р»Рѕ 12, Рё СЌС‚Рѕ Р±С‹Р» С‚Р°РєРѕР№ СЂР°Р·РіРѕРІРѕСЂ РѕС‚С†Р° СЃ СЂРµР±РµРЅРєРѕРј.</p>
+          <p>РЎРµР№С‡Р°СЃ РµР№ 16. Р СЌС‚Рѕ СѓР¶Рµ СЃРѕРІСЃРµРј РґСЂСѓРіРѕР№ СЂР°Р·РіРѕРІРѕСЂ. РњС‹ Р·Р°РґР°РІР°Р»Рё РґСЂСѓРі РґСЂСѓРіСѓ РЅРµРїСЂРѕСЃС‚С‹Рµ РІРѕРїСЂРѕСЃС‹. Р“РѕРІРѕСЂРёР»Рё Рѕ СЂР°Р·РЅРѕРј вЂ” РѕС‚ РґРµС‚СЃРєРѕ-СЂРѕРґРёС‚РµР»СЊСЃРєРёС… РѕС‚РЅРѕС€РµРЅРёР№ РґРѕ РјСѓР¶СЃРєРёС… Рё Р¶РµРЅСЃРєРёС… СЂРѕР»РµР№. Р—Р°С‚СЂРѕРЅСѓР»Рё С‚РµРјСѓ Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№ Рё С‚Рѕ, РєР°Рє РїРѕРґСЂРѕСЃС‚РєРё РІ РЅРёС… РїРѕРїР°РґР°СЋС‚. Р РіР»Р°РІРЅРѕРµ вЂ” РєР°Рє РЅР° СЃР°РјРѕРј РґРµР»Рµ РІС‹СЃС‚СЂР°РёРІР°С‚СЊ РѕС‚РЅРѕС€РµРЅРёСЏ СЃ РїРѕРґСЂРѕСЃС‚РєР°РјРё.</p>
+          <p>РЎРїРѕР№Р»РµСЂ: РІСЃРµ РїСЂРѕС‰Рµ, С‡РµРј РЅР°Рј РєР°Р¶РµС‚СЃСЏ.</p>
+          <p><a href="https://youtu.be/UkOKGeByz2U?si=Y6GsWqjsO6wm8ttx" target="_blank" rel="noopener noreferrer">РЎСЃС‹Р»РєР° РЅР° РІРёРґРµРѕ</a></p>
+          <p>РЎРјРѕС‚СЂРёС‚Рµ, РєРѕРјРјРµРЅС‚РёСЂСѓР№С‚Рµ, РґРµР»РёС‚РµСЃСЊ РІРїРµС‡Р°С‚Р»РµРЅРёСЏРјРё. РќР°Рј СЃ РґРѕС‡РєРѕР№ РѕС‡РµРЅСЊ РІР°Р¶РЅРѕ.</p>
         </div>
-        <button class="post-expand-link" type="button">Развернуть весь текст</button>
+        <button class="post-expand-link" type="button">Р Р°Р·РІРµСЂРЅСѓС‚СЊ РІРµСЃСЊ С‚РµРєСЃС‚</button>
 
         <!-- Comments Preview Section -->
         <div class="post-comments-preview-section hidden" data-comments-preview-container>
           <div class="post-comments-preview-list" data-comments-preview-list></div>
-          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</button>
         </div>
 
       </article>
 
       <!-- Post 2 -->
-      <article class="post-card" id="post-meditation-day" data-post-id="meditation-day" data-share-title="День медитации" data-share-text="Руслан Молодцов выступает 24 мая на фестивале «День медитации».">
+      <article class="post-card" id="post-meditation-day" data-post-id="meditation-day" data-share-title="Р”РµРЅСЊ РјРµРґРёС‚Р°С†РёРё" data-share-text="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ РІС‹СЃС‚СѓРїР°РµС‚ 24 РјР°СЏ РЅР° С„РµСЃС‚РёРІР°Р»Рµ В«Р”РµРЅСЊ РјРµРґРёС‚Р°С†РёРёВ».">
         <div class="post-author">
-          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ" loading="lazy" decoding="async" />
           <div class="post-author-info">
-            <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">Вчера</span>
+            <span class="post-author-name">Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</span>
+            <span class="post-time">Р’С‡РµСЂР°</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/post2.webp" alt="День медитации" loading="lazy" decoding="async" />
+        <img class="post-image" src="/assets/webp/post2.webp" alt="Р”РµРЅСЊ РјРµРґРёС‚Р°С†РёРё" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+          <button class="post-action-btn" aria-label="РќСЂР°РІРёС‚СЃСЏ" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+          <button class="post-action-btn" aria-label="РљРѕРјРјРµРЅС‚Р°СЂРёРё" data-comment-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             <span class="post-comment-count" data-comment-count></span>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+          <button class="post-action-btn" aria-label="РџРѕРґРµР»РёС‚СЊСЃСЏ" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes" data-base-likes="176" data-likes>Нравится: 176</div>
+        <div class="post-likes" data-base-likes="176" data-likes>РќСЂР°РІРёС‚СЃСЏ: 176</div>
         <div class="post-caption">
-          <p><strong>Руслан Молодцов</strong>Ты с нами?</p>
-          <p>24 мая выступаю на фестивале «ДЕНЬ МЕДИТАЦИИ» — большая лекция-практика про то, как тело на самом деле хранит стресс, эмоции и внутренние конфликты.</p>
-          <p>Разберем подробно:</p>
-          <p>почему хроническое напряжение влияет не только на тело, но и на мышление;<br>как через телесные практики быстрее проходить внутренние изменения;<br>и почему связка психотерапии + йоги работает глубже, чем по отдельности.</p>
-          <p>Плюс дам конкретные техники и инструменты, которые можно будет применять сразу.</p>
-          <p>Кто давно хотел попасть ко мне вживую — жду 24 мая!</p>
-          <p>Информация и билеты — <a href="https://organic-people.com/events/meditationdayrussia" target="_blank" rel="noopener noreferrer">organic-people.com/events/meditationdayrussia</a></p>
+          <p><strong>Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</strong>РўС‹ СЃ РЅР°РјРё?</p>
+          <p>24 РјР°СЏ РІС‹СЃС‚СѓРїР°СЋ РЅР° С„РµСЃС‚РёРІР°Р»Рµ В«Р”Р•РќР¬ РњР•Р”РРўРђР¦РРВ» вЂ” Р±РѕР»СЊС€Р°СЏ Р»РµРєС†РёСЏ-РїСЂР°РєС‚РёРєР° РїСЂРѕ С‚Рѕ, РєР°Рє С‚РµР»Рѕ РЅР° СЃР°РјРѕРј РґРµР»Рµ С…СЂР°РЅРёС‚ СЃС‚СЂРµСЃСЃ, СЌРјРѕС†РёРё Рё РІРЅСѓС‚СЂРµРЅРЅРёРµ РєРѕРЅС„Р»РёРєС‚С‹.</p>
+          <p>Р Р°Р·Р±РµСЂРµРј РїРѕРґСЂРѕР±РЅРѕ:</p>
+          <p>РїРѕС‡РµРјСѓ С…СЂРѕРЅРёС‡РµСЃРєРѕРµ РЅР°РїСЂСЏР¶РµРЅРёРµ РІР»РёСЏРµС‚ РЅРµ С‚РѕР»СЊРєРѕ РЅР° С‚РµР»Рѕ, РЅРѕ Рё РЅР° РјС‹С€Р»РµРЅРёРµ;<br>РєР°Рє С‡РµСЂРµР· С‚РµР»РµСЃРЅС‹Рµ РїСЂР°РєС‚РёРєРё Р±С‹СЃС‚СЂРµРµ РїСЂРѕС…РѕРґРёС‚СЊ РІРЅСѓС‚СЂРµРЅРЅРёРµ РёР·РјРµРЅРµРЅРёСЏ;<br>Рё РїРѕС‡РµРјСѓ СЃРІСЏР·РєР° РїСЃРёС…РѕС‚РµСЂР°РїРёРё + Р№РѕРіРё СЂР°Р±РѕС‚Р°РµС‚ РіР»СѓР±Р¶Рµ, С‡РµРј РїРѕ РѕС‚РґРµР»СЊРЅРѕСЃС‚Рё.</p>
+          <p>РџР»СЋСЃ РґР°Рј РєРѕРЅРєСЂРµС‚РЅС‹Рµ С‚РµС…РЅРёРєРё Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚С‹, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р±СѓРґРµС‚ РїСЂРёРјРµРЅСЏС‚СЊ СЃСЂР°Р·Сѓ.</p>
+          <p>РљС‚Рѕ РґР°РІРЅРѕ С…РѕС‚РµР» РїРѕРїР°СЃС‚СЊ РєРѕ РјРЅРµ РІР¶РёРІСѓСЋ вЂ” Р¶РґСѓ 24 РјР°СЏ!</p>
+          <p>РРЅС„РѕСЂРјР°С†РёСЏ Рё Р±РёР»РµС‚С‹ вЂ” <a href="https://organic-people.com/events/meditationdayrussia" target="_blank" rel="noopener noreferrer">organic-people.com/events/meditationdayrussia</a></p>
         </div>
-        <button class="post-expand-link" type="button">Развернуть весь текст</button>
+        <button class="post-expand-link" type="button">Р Р°Р·РІРµСЂРЅСѓС‚СЊ РІРµСЃСЊ С‚РµРєСЃС‚</button>
 
         <!-- Comments Preview Section -->
         <div class="post-comments-preview-section hidden" data-comments-preview-container>
           <div class="post-comments-preview-list" data-comments-preview-list></div>
-          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</button>
         </div>
 
       </article>
 
       <!-- Post 1: oldest -->
-      <article class="post-card" id="post-note" data-post-id="note" data-share-title="Кто помнит это чувство?" data-share-text="Пост Руслана Молодцова о записке от родителей и чувстве детства.">
+      <article class="post-card" id="post-note" data-post-id="note" data-share-title="РљС‚Рѕ РїРѕРјРЅРёС‚ СЌС‚Рѕ С‡СѓРІСЃС‚РІРѕ?" data-share-text="РџРѕСЃС‚ Р СѓСЃР»Р°РЅР° РњРѕР»РѕРґС†РѕРІР° Рѕ Р·Р°РїРёСЃРєРµ РѕС‚ СЂРѕРґРёС‚РµР»РµР№ Рё С‡СѓРІСЃС‚РІРµ РґРµС‚СЃС‚РІР°.">
         <div class="post-author">
-          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ" loading="lazy" decoding="async" />
           <div class="post-author-info">
-            <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">2 дня назад</span>
+            <span class="post-author-name">Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</span>
+            <span class="post-time">2 РґРЅСЏ РЅР°Р·Р°Рґ</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/post1.webp" alt="Записка от родителей" loading="lazy" decoding="async" />
+        <img class="post-image" src="/assets/webp/post1.webp" alt="Р—Р°РїРёСЃРєР° РѕС‚ СЂРѕРґРёС‚РµР»РµР№" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+          <button class="post-action-btn" aria-label="РќСЂР°РІРёС‚СЃСЏ" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+          <button class="post-action-btn" aria-label="РљРѕРјРјРµРЅС‚Р°СЂРёРё" data-comment-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             <span class="post-comment-count" data-comment-count></span>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+          <button class="post-action-btn" aria-label="РџРѕРґРµР»РёС‚СЊСЃСЏ" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes" data-base-likes="243" data-likes>Нравится: 243</div>
+        <div class="post-likes" data-base-likes="243" data-likes>РќСЂР°РІРёС‚СЃСЏ: 243</div>
         <div class="post-caption">
-          <p><strong>Руслан Молодцов</strong>Кто помнит это чувство?</p>
-          <p>Просыпаешься с утра, родители уже ушли по делам, а на столе лежит записка ?????</p>
-          <p>а впереди целая жизнь…</p>
+          <p><strong>Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</strong>РљС‚Рѕ РїРѕРјРЅРёС‚ СЌС‚Рѕ С‡СѓРІСЃС‚РІРѕ?</p>
+          <p>РџСЂРѕСЃС‹РїР°РµС€СЊСЃСЏ СЃ СѓС‚СЂР°, СЂРѕРґРёС‚РµР»Рё СѓР¶Рµ СѓС€Р»Рё РїРѕ РґРµР»Р°Рј, Р° РЅР° СЃС‚РѕР»Рµ Р»РµР¶РёС‚ Р·Р°РїРёСЃРєР° вќ¤пёЏвЂЌрџ©№</p>
+          <p>Р° РІРїРµСЂРµРґРё С†РµР»Р°СЏ Р¶РёР·РЅСЊвЂ¦</p>
         </div>
 
         <!-- Comments Preview Section -->
         <div class="post-comments-preview-section hidden" data-comments-preview-container>
           <div class="post-comments-preview-list" data-comments-preview-list></div>
-          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</button>
         </div>
 
       </article>
       </div>
       <template id="feed-static-fallback">
       <!-- Post 3: newest -->
-      <article class="post-card" id="post-interview" data-post-id="interview" data-share-title="Интервью с дочерью" data-share-text="Руслан Молодцов — новый разговор с дочерью о подростках, отношениях и ролях.">
+      <article class="post-card" id="post-interview" data-post-id="interview" data-share-title="РРЅС‚РµСЂРІСЊСЋ СЃ РґРѕС‡РµСЂСЊСЋ" data-share-text="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ вЂ” РЅРѕРІС‹Р№ СЂР°Р·РіРѕРІРѕСЂ СЃ РґРѕС‡РµСЂСЊСЋ Рѕ РїРѕРґСЂРѕСЃС‚РєР°С…, РѕС‚РЅРѕС€РµРЅРёСЏС… Рё СЂРѕР»СЏС….">
         <div class="post-author">
-          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ" loading="lazy" decoding="async" />
           <div class="post-author-info">
-            <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">Сегодня</span>
+            <span class="post-author-name">Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</span>
+            <span class="post-time">РЎРµРіРѕРґРЅСЏ</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/new_post.webp?v=4" alt="Интервью с дочерью" loading="lazy" decoding="async" />
+        <img class="post-image" src="/assets/webp/new_post.webp?v=4" alt="РРЅС‚РµСЂРІСЊСЋ СЃ РґРѕС‡РµСЂСЊСЋ" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+          <button class="post-action-btn" aria-label="РќСЂР°РІРёС‚СЃСЏ" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+          <button class="post-action-btn" aria-label="РљРѕРјРјРµРЅС‚Р°СЂРёРё" data-comment-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             <span class="post-comment-count" data-comment-count></span>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+          <button class="post-action-btn" aria-label="РџРѕРґРµР»РёС‚СЊСЃСЏ" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes" data-base-likes="214" data-likes>Нравится: 214</div>
+        <div class="post-likes" data-base-likes="214" data-likes>РќСЂР°РІРёС‚СЃСЏ: 214</div>
         <div class="post-caption">
-          <p><strong>Руслан Молодцов</strong>Наконец-то, друзья!</p>
-          <p>Случилось то, что вы давно просили. Четыре года назад я записывал интервью со старшей дочерью — ей тогда было 12, и это был такой разговор отца с ребенком.</p>
-          <p>Сейчас ей 16. И это уже совсем другой разговор. Мы задавали друг другу непростые вопросы. Говорили о разном — от детско-родительских отношений до мужских и женских ролей. Затронули тему зависимостей и то, как подростки в них попадают. И главное — как на самом деле выстраивать отношения с подростками.</p>
-          <p>Спойлер: все проще, чем нам кажется.</p>
-          <p><a href="https://youtu.be/UkOKGeByz2U?si=Y6GsWqjsO6wm8ttx" target="_blank" rel="noopener noreferrer">Ссылка на видео</a></p>
-          <p>Смотрите, комментируйте, делитесь впечатлениями. Нам с дочкой очень важно.</p>
+          <p><strong>Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</strong>РќР°РєРѕРЅРµС†-С‚Рѕ, РґСЂСѓР·СЊСЏ!</p>
+          <p>РЎР»СѓС‡РёР»РѕСЃСЊ С‚Рѕ, С‡С‚Рѕ РІС‹ РґР°РІРЅРѕ РїСЂРѕСЃРёР»Рё. Р§РµС‚С‹СЂРµ РіРѕРґР° РЅР°Р·Р°Рґ СЏ Р·Р°РїРёСЃС‹РІР°Р» РёРЅС‚РµСЂРІСЊСЋ СЃРѕ СЃС‚Р°СЂС€РµР№ РґРѕС‡РµСЂСЊСЋ вЂ” РµР№ С‚РѕРіРґР° Р±С‹Р»Рѕ 12, Рё СЌС‚Рѕ Р±С‹Р» С‚Р°РєРѕР№ СЂР°Р·РіРѕРІРѕСЂ РѕС‚С†Р° СЃ СЂРµР±РµРЅРєРѕРј.</p>
+          <p>РЎРµР№С‡Р°СЃ РµР№ 16. Р СЌС‚Рѕ СѓР¶Рµ СЃРѕРІСЃРµРј РґСЂСѓРіРѕР№ СЂР°Р·РіРѕРІРѕСЂ. РњС‹ Р·Р°РґР°РІР°Р»Рё РґСЂСѓРі РґСЂСѓРіСѓ РЅРµРїСЂРѕСЃС‚С‹Рµ РІРѕРїСЂРѕСЃС‹. Р“РѕРІРѕСЂРёР»Рё Рѕ СЂР°Р·РЅРѕРј вЂ” РѕС‚ РґРµС‚СЃРєРѕ-СЂРѕРґРёС‚РµР»СЊСЃРєРёС… РѕС‚РЅРѕС€РµРЅРёР№ РґРѕ РјСѓР¶СЃРєРёС… Рё Р¶РµРЅСЃРєРёС… СЂРѕР»РµР№. Р—Р°С‚СЂРѕРЅСѓР»Рё С‚РµРјСѓ Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№ Рё С‚Рѕ, РєР°Рє РїРѕРґСЂРѕСЃС‚РєРё РІ РЅРёС… РїРѕРїР°РґР°СЋС‚. Р РіР»Р°РІРЅРѕРµ вЂ” РєР°Рє РЅР° СЃР°РјРѕРј РґРµР»Рµ РІС‹СЃС‚СЂР°РёРІР°С‚СЊ РѕС‚РЅРѕС€РµРЅРёСЏ СЃ РїРѕРґСЂРѕСЃС‚РєР°РјРё.</p>
+          <p>РЎРїРѕР№Р»РµСЂ: РІСЃРµ РїСЂРѕС‰Рµ, С‡РµРј РЅР°Рј РєР°Р¶РµС‚СЃСЏ.</p>
+          <p><a href="https://youtu.be/UkOKGeByz2U?si=Y6GsWqjsO6wm8ttx" target="_blank" rel="noopener noreferrer">РЎСЃС‹Р»РєР° РЅР° РІРёРґРµРѕ</a></p>
+          <p>РЎРјРѕС‚СЂРёС‚Рµ, РєРѕРјРјРµРЅС‚РёСЂСѓР№С‚Рµ, РґРµР»РёС‚РµСЃСЊ РІРїРµС‡Р°С‚Р»РµРЅРёСЏРјРё. РќР°Рј СЃ РґРѕС‡РєРѕР№ РѕС‡РµРЅСЊ РІР°Р¶РЅРѕ.</p>
         </div>
-        <button class="post-expand-link" type="button">Развернуть весь текст</button>
+        <button class="post-expand-link" type="button">Р Р°Р·РІРµСЂРЅСѓС‚СЊ РІРµСЃСЊ С‚РµРєСЃС‚</button>
 
         <!-- Comments Preview Section -->
         <div class="post-comments-preview-section hidden" data-comments-preview-container>
           <div class="post-comments-preview-list" data-comments-preview-list></div>
-          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</button>
         </div>
 
       </article>
 
       <!-- Post 2 -->
-      <article class="post-card" id="post-meditation-day" data-post-id="meditation-day" data-share-title="День медитации" data-share-text="Руслан Молодцов выступает 24 мая на фестивале «День медитации».">
+      <article class="post-card" id="post-meditation-day" data-post-id="meditation-day" data-share-title="Р”РµРЅСЊ РјРµРґРёС‚Р°С†РёРё" data-share-text="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ РІС‹СЃС‚СѓРїР°РµС‚ 24 РјР°СЏ РЅР° С„РµСЃС‚РёРІР°Р»Рµ В«Р”РµРЅСЊ РјРµРґРёС‚Р°С†РёРёВ».">
         <div class="post-author">
-          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ" loading="lazy" decoding="async" />
           <div class="post-author-info">
-            <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">Вчера</span>
+            <span class="post-author-name">Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</span>
+            <span class="post-time">Р’С‡РµСЂР°</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/post2.webp" alt="День медитации" loading="lazy" decoding="async" />
+        <img class="post-image" src="/assets/webp/post2.webp" alt="Р”РµРЅСЊ РјРµРґРёС‚Р°С†РёРё" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+          <button class="post-action-btn" aria-label="РќСЂР°РІРёС‚СЃСЏ" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+          <button class="post-action-btn" aria-label="РљРѕРјРјРµРЅС‚Р°СЂРёРё" data-comment-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             <span class="post-comment-count" data-comment-count></span>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+          <button class="post-action-btn" aria-label="РџРѕРґРµР»РёС‚СЊСЃСЏ" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes" data-base-likes="176" data-likes>Нравится: 176</div>
+        <div class="post-likes" data-base-likes="176" data-likes>РќСЂР°РІРёС‚СЃСЏ: 176</div>
         <div class="post-caption">
-          <p><strong>Руслан Молодцов</strong>Ты с нами?</p>
-          <p>24 мая выступаю на фестивале «ДЕНЬ МЕДИТАЦИИ» — большая лекция-практика про то, как тело на самом деле хранит стресс, эмоции и внутренние конфликты.</p>
-          <p>Разберем подробно:</p>
-          <p>почему хроническое напряжение влияет не только на тело, но и на мышление;<br>как через телесные практики быстрее проходить внутренние изменения;<br>и почему связка психотерапии + йоги работает глубже, чем по отдельности.</p>
-          <p>Плюс дам конкретные техники и инструменты, которые можно будет применять сразу.</p>
-          <p>Кто давно хотел попасть ко мне вживую — жду 24 мая!</p>
-          <p>Информация и билеты — <a href="https://organic-people.com/events/meditationdayrussia" target="_blank" rel="noopener noreferrer">organic-people.com/events/meditationdayrussia</a></p>
+          <p><strong>Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</strong>РўС‹ СЃ РЅР°РјРё?</p>
+          <p>24 РјР°СЏ РІС‹СЃС‚СѓРїР°СЋ РЅР° С„РµСЃС‚РёРІР°Р»Рµ В«Р”Р•РќР¬ РњР•Р”РРўРђР¦РРВ» вЂ” Р±РѕР»СЊС€Р°СЏ Р»РµРєС†РёСЏ-РїСЂР°РєС‚РёРєР° РїСЂРѕ С‚Рѕ, РєР°Рє С‚РµР»Рѕ РЅР° СЃР°РјРѕРј РґРµР»Рµ С…СЂР°РЅРёС‚ СЃС‚СЂРµСЃСЃ, СЌРјРѕС†РёРё Рё РІРЅСѓС‚СЂРµРЅРЅРёРµ РєРѕРЅС„Р»РёРєС‚С‹.</p>
+          <p>Р Р°Р·Р±РµСЂРµРј РїРѕРґСЂРѕР±РЅРѕ:</p>
+          <p>РїРѕС‡РµРјСѓ С…СЂРѕРЅРёС‡РµСЃРєРѕРµ РЅР°РїСЂСЏР¶РµРЅРёРµ РІР»РёСЏРµС‚ РЅРµ С‚РѕР»СЊРєРѕ РЅР° С‚РµР»Рѕ, РЅРѕ Рё РЅР° РјС‹С€Р»РµРЅРёРµ;<br>РєР°Рє С‡РµСЂРµР· С‚РµР»РµСЃРЅС‹Рµ РїСЂР°РєС‚РёРєРё Р±С‹СЃС‚СЂРµРµ РїСЂРѕС…РѕРґРёС‚СЊ РІРЅСѓС‚СЂРµРЅРЅРёРµ РёР·РјРµРЅРµРЅРёСЏ;<br>Рё РїРѕС‡РµРјСѓ СЃРІСЏР·РєР° РїСЃРёС…РѕС‚РµСЂР°РїРёРё + Р№РѕРіРё СЂР°Р±РѕС‚Р°РµС‚ РіР»СѓР±Р¶Рµ, С‡РµРј РїРѕ РѕС‚РґРµР»СЊРЅРѕСЃС‚Рё.</p>
+          <p>РџР»СЋСЃ РґР°Рј РєРѕРЅРєСЂРµС‚РЅС‹Рµ С‚РµС…РЅРёРєРё Рё РёРЅСЃС‚СЂСѓРјРµРЅС‚С‹, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р±СѓРґРµС‚ РїСЂРёРјРµРЅСЏС‚СЊ СЃСЂР°Р·Сѓ.</p>
+          <p>РљС‚Рѕ РґР°РІРЅРѕ С…РѕС‚РµР» РїРѕРїР°СЃС‚СЊ РєРѕ РјРЅРµ РІР¶РёРІСѓСЋ вЂ” Р¶РґСѓ 24 РјР°СЏ!</p>
+          <p>РРЅС„РѕСЂРјР°С†РёСЏ Рё Р±РёР»РµС‚С‹ вЂ” <a href="https://organic-people.com/events/meditationdayrussia" target="_blank" rel="noopener noreferrer">organic-people.com/events/meditationdayrussia</a></p>
         </div>
-        <button class="post-expand-link" type="button">Развернуть весь текст</button>
+        <button class="post-expand-link" type="button">Р Р°Р·РІРµСЂРЅСѓС‚СЊ РІРµСЃСЊ С‚РµРєСЃС‚</button>
 
         <!-- Comments Preview Section -->
         <div class="post-comments-preview-section hidden" data-comments-preview-container>
           <div class="post-comments-preview-list" data-comments-preview-list></div>
-          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</button>
         </div>
 
       </article>
 
       <!-- Post 1: oldest -->
-      <article class="post-card" id="post-note" data-post-id="note" data-share-title="Кто помнит это чувство?" data-share-text="Пост Руслана Молодцова о записке от родителей и чувстве детства.">
+      <article class="post-card" id="post-note" data-post-id="note" data-share-title="РљС‚Рѕ РїРѕРјРЅРёС‚ СЌС‚Рѕ С‡СѓРІСЃС‚РІРѕ?" data-share-text="РџРѕСЃС‚ Р СѓСЃР»Р°РЅР° РњРѕР»РѕРґС†РѕРІР° Рѕ Р·Р°РїРёСЃРєРµ РѕС‚ СЂРѕРґРёС‚РµР»РµР№ Рё С‡СѓРІСЃС‚РІРµ РґРµС‚СЃС‚РІР°.">
         <div class="post-author">
-          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Руслан Молодцов" loading="lazy" decoding="async" />
+          <img class="post-avatar" src="/assets/webp/ruslan_promo.webp" alt="Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ" loading="lazy" decoding="async" />
           <div class="post-author-info">
-            <span class="post-author-name">Руслан Молодцов</span>
-            <span class="post-time">2 дня назад</span>
+            <span class="post-author-name">Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</span>
+            <span class="post-time">2 РґРЅСЏ РЅР°Р·Р°Рґ</span>
           </div>
         </div>
-        <img class="post-image" src="/assets/webp/post1.webp" alt="Записка от родителей" loading="lazy" decoding="async" />
+        <img class="post-image" src="/assets/webp/post1.webp" alt="Р—Р°РїРёСЃРєР° РѕС‚ СЂРѕРґРёС‚РµР»РµР№" loading="lazy" decoding="async" />
         <div class="post-actions">
-          <button class="post-action-btn" aria-label="Нравится" aria-pressed="false" data-like-button>
+          <button class="post-action-btn" aria-label="РќСЂР°РІРёС‚СЃСЏ" aria-pressed="false" data-like-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="post-action-btn" aria-label="Комментарии" data-comment-button>
+          <button class="post-action-btn" aria-label="РљРѕРјРјРµРЅС‚Р°СЂРёРё" data-comment-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             <span class="post-comment-count" data-comment-count></span>
           </button>
-          <button class="post-action-btn" aria-label="Поделиться" data-share-button>
+          <button class="post-action-btn" aria-label="РџРѕРґРµР»РёС‚СЊСЃСЏ" data-share-button>
             <svg viewBox="0 0 24 24" stroke-width="1.75"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
-        <div class="post-likes" data-base-likes="243" data-likes>Нравится: 243</div>
+        <div class="post-likes" data-base-likes="243" data-likes>РќСЂР°РІРёС‚СЃСЏ: 243</div>
         <div class="post-caption">
-          <p><strong>Руслан Молодцов</strong>Кто помнит это чувство?</p>
-          <p>Просыпаешься с утра, родители уже ушли по делам, а на столе лежит записка ?????</p>
-          <p>а впереди целая жизнь…</p>
+          <p><strong>Р СѓСЃР»Р°РЅ РњРѕР»РѕРґС†РѕРІ</strong>РљС‚Рѕ РїРѕРјРЅРёС‚ СЌС‚Рѕ С‡СѓРІСЃС‚РІРѕ?</p>
+          <p>РџСЂРѕСЃС‹РїР°РµС€СЊСЃСЏ СЃ СѓС‚СЂР°, СЂРѕРґРёС‚РµР»Рё СѓР¶Рµ СѓС€Р»Рё РїРѕ РґРµР»Р°Рј, Р° РЅР° СЃС‚РѕР»Рµ Р»РµР¶РёС‚ Р·Р°РїРёСЃРєР° вќ¤пёЏвЂЌрџ©№</p>
+          <p>Р° РІРїРµСЂРµРґРё С†РµР»Р°СЏ Р¶РёР·РЅСЊвЂ¦</p>
         </div>
 
         <!-- Comments Preview Section -->
         <div class="post-comments-preview-section hidden" data-comments-preview-container>
           <div class="post-comments-preview-list" data-comments-preview-list></div>
-          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>Посмотреть все комментарии</button>
+          <button class="post-comments-view-all-btn hidden" type="button" data-view-comments-btn>РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</button>
         </div>
 
       </article>
@@ -1505,32 +1505,32 @@
   <div class="feed-post-modal hidden" id="feed-post-modal" aria-hidden="true">
     <div class="feed-post-backdrop" data-feed-post-close></div>
     <div class="feed-post-dialog" role="dialog" aria-modal="true" aria-labelledby="feed-post-title">
-      <h2 id="feed-post-title">Новый пост</h2>
-      <p class="feed-post-dialog-subtitle">Как в Telegram: выберите медиа, добавьте текст и сразу публикуйте в ленту.</p>
+      <h2 id="feed-post-title">РќРѕРІС‹Р№ РїРѕСЃС‚</h2>
+      <p class="feed-post-dialog-subtitle">РљР°Рє РІ Telegram: РІС‹Р±РµСЂРёС‚Рµ РјРµРґРёР°, РґРѕР±Р°РІСЊС‚Рµ С‚РµРєСЃС‚ Рё СЃСЂР°Р·Сѓ РїСѓР±Р»РёРєСѓР№С‚Рµ РІ Р»РµРЅС‚Сѓ.</p>
       <form class="feed-post-form" id="feed-post-form">
-        <div class="feed-post-type-row" role="group" aria-label="Тип медиа">
-          <button class="feed-post-type active" type="button" data-feed-media-type="image">Фото</button>
-          <button class="feed-post-type" type="button" data-feed-media-type="video">Видео</button>
-          <button class="feed-post-type" type="button" data-feed-media-type="circle_video">Кружочек</button>
+        <div class="feed-post-type-row" role="group" aria-label="РўРёРї РјРµРґРёР°">
+          <button class="feed-post-type active" type="button" data-feed-media-type="image">Р¤РѕС‚Рѕ</button>
+          <button class="feed-post-type" type="button" data-feed-media-type="video">Р’РёРґРµРѕ</button>
+          <button class="feed-post-type" type="button" data-feed-media-type="circle_video">РљСЂСѓР¶РѕС‡РµРє</button>
         </div>
         <input class="feed-post-file" id="feed-post-file" type="file" accept="image/*" required />
         <button class="feed-post-file-card" id="feed-post-file-trigger" type="button">
           <span class="feed-post-file-icon" aria-hidden="true">+</span>
           <span class="feed-post-file-copy">
-            <strong id="feed-post-file-title">Выбрать фото</strong>
-            <span id="feed-post-file-name">Из галереи телефона</span>
+            <strong id="feed-post-file-title">Р’С‹Р±СЂР°С‚СЊ С„РѕС‚Рѕ</strong>
+            <span id="feed-post-file-name">РР· РіР°Р»РµСЂРµРё С‚РµР»РµС„РѕРЅР°</span>
           </span>
         </button>
         <div class="feed-post-preview" id="feed-post-preview"></div>
         <div class="feed-post-upload-progress" id="feed-post-upload-progress" aria-hidden="true">
           <div class="feed-post-upload-track"><div class="feed-post-upload-fill" id="feed-post-upload-fill"></div></div>
-          <div class="feed-post-upload-label" id="feed-post-upload-label">Готово к загрузке</div>
+          <div class="feed-post-upload-label" id="feed-post-upload-label">Р“РѕС‚РѕРІРѕ Рє Р·Р°РіСЂСѓР·РєРµ</div>
         </div>
-        <textarea class="feed-post-text" id="feed-post-body" placeholder="Текст поста..." required></textarea>
+        <textarea class="feed-post-text" id="feed-post-body" placeholder="РўРµРєСЃС‚ РїРѕСЃС‚Р°..." required></textarea>
         <div class="feed-post-status" id="feed-post-status" aria-live="polite"></div>
         <div class="feed-post-actions">
-          <button class="feed-post-cancel" type="button" data-feed-post-close>Отмена</button>
-          <button class="feed-post-submit" type="submit">Опубликовать</button>
+          <button class="feed-post-cancel" type="button" data-feed-post-close>РћС‚РјРµРЅР°</button>
+          <button class="feed-post-submit" type="submit">РћРїСѓР±Р»РёРєРѕРІР°С‚СЊ</button>
         </div>
       </form>
     </div>
@@ -1540,21 +1540,21 @@
   <div class="comment-sheet hidden" id="comment-sheet">
     <div class="comment-sheet-handle"></div>
     <div class="comment-sheet-header">
-      <strong>Комментарии</strong>
-      <button class="comment-sheet-close" id="comment-sheet-close" aria-label="Закрыть">&times;</button>
+      <strong>РљРѕРјРјРµРЅС‚Р°СЂРёРё</strong>
+      <button class="comment-sheet-close" id="comment-sheet-close" aria-label="Р—Р°РєСЂС‹С‚СЊ">&times;</button>
     </div>
     <div class="comment-sheet-list" id="comment-sheet-list"></div>
     <div class="comment-sheet-input-wrap">
       <div class="comment-reply-banner hidden" id="comment-reply-banner">
         <div>
-          <strong>Ответ <span id="comment-reply-name"></span></strong>
+          <strong>РћС‚РІРµС‚ <span id="comment-reply-name"></span></strong>
           <span id="comment-reply-text"></span>
         </div>
-        <button type="button" id="comment-reply-cancel" aria-label="Отменить ответ">&times;</button>
+        <button type="button" id="comment-reply-cancel" aria-label="РћС‚РјРµРЅРёС‚СЊ РѕС‚РІРµС‚">&times;</button>
       </div>
       <form class="comment-sheet-form" id="comment-sheet-form">
-        <input type="text" class="comment-sheet-input" id="comment-sheet-input" placeholder="Добавить комментарий..." required />
-        <button type="submit" class="comment-sheet-submit" id="comment-sheet-submit" aria-label="Отправить комментарий">
+        <input type="text" class="comment-sheet-input" id="comment-sheet-input" placeholder="Р”РѕР±Р°РІРёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№..." required />
+        <button type="submit" class="comment-sheet-submit" id="comment-sheet-submit" aria-label="РћС‚РїСЂР°РІРёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
         </button>
       </form>
