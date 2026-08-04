@@ -5895,6 +5895,48 @@ body.audio-player-open::-webkit-scrollbar {
   display: none !important;
 }
 
+/* Медитации: fullscreen-фон вместо маленького квадрата по центру + blur-градиента */
+.meditation-audio-player {
+  padding: 0;
+  background: #050505;
+}
+.meditation-audio-player::before {
+  inset: 0;
+  filter: none;
+  transform: none;
+  background:
+    linear-gradient(180deg, rgba(5,5,5,.28) 0%, rgba(5,5,5,.18) 36%, rgba(5,5,5,.72) 68%, #050505 100%),
+    var(--audio-artwork, url('/assets/webp/meditations/flower.webp')) center/cover no-repeat;
+  z-index: -2;
+}
+.meditation-audio-player::after {
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255,255,255,.10), transparent 42%),
+    linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.08) 40%, rgba(0,0,0,.55) 72%, #050505 100%);
+  z-index: -1;
+}
+.meditation-audio-player .audio-mode-shell {
+  width: min(430px, 100%);
+  padding-left: 18px;
+  padding-right: 18px;
+  grid-template-rows: auto 1fr auto;
+}
+.meditation-audio-player .meditation-player-art,
+.meditation-audio-player .audio-mode-art {
+  display: none !important;
+}
+.meditation-audio-player .audio-mode-body {
+  align-self: end;
+  padding-bottom: 8px;
+}
+.meditation-audio-player .audio-mode-title {
+  text-shadow: 0 8px 28px rgba(0,0,0,.45);
+}
+.meditation-audio-player .audio-mode-artist {
+  color: rgba(255,255,255,.62);
+}
+
 .audio-mode-sheet {
   position: fixed;
   left: 10px;
@@ -8793,25 +8835,45 @@ body.psych-book-modal-open {
   }
 }
 
+/* Fullscreen cover (overrides старый blur/квадрат) */
 .meditation-audio-player {
-  background:
-    radial-gradient(circle at 50% 16%, rgba(216,191,155,.26), transparent 34%),
-    radial-gradient(circle at 50% 74%, rgba(180,145,62,.16), transparent 42%),
-    #07100E;
+  padding: 0;
+  background: #050505;
 }
 
 .meditation-audio-player::before {
+  inset: 0;
+  filter: none;
+  transform: none;
   background:
-    linear-gradient(180deg, rgba(216,191,155,.08), rgba(7,16,14,.88) 78%),
-    var(--audio-artwork, url('/assets/webp/mmeditation.webp')) center/cover no-repeat;
-  filter: blur(64px) brightness(.46) saturate(1.42);
+    linear-gradient(180deg, rgba(5,5,5,.28) 0%, rgba(5,5,5,.18) 36%, rgba(5,5,5,.72) 68%, #050505 100%),
+    var(--audio-artwork, url('/assets/webp/meditations/flower.webp')) center/cover no-repeat;
+  z-index: -2;
 }
 
 .meditation-audio-player::after {
+  inset: 0;
   background:
-    radial-gradient(circle at 50% 8%, rgba(216,191,155,.32), transparent 32%),
-    radial-gradient(circle at 50% 58%, rgba(216,191,155,.14), transparent 44%),
-    linear-gradient(180deg, rgba(7,16,14,.02) 0%, rgba(7,16,14,.50) 54%, #07100E 100%);
+    radial-gradient(ellipse at 50% 18%, rgba(255,255,255,.10), transparent 42%),
+    linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,.08) 40%, rgba(0,0,0,.55) 72%, #050505 100%);
+  z-index: -1;
+}
+
+.meditation-audio-player .meditation-player-art,
+.meditation-audio-player .audio-mode-art {
+  display: none !important;
+}
+
+.meditation-audio-player .audio-mode-shell {
+  width: min(430px, 100%);
+  padding-left: 18px;
+  padding-right: 18px;
+  grid-template-rows: auto 1fr auto;
+}
+
+.meditation-audio-player .audio-mode-body {
+  align-self: end;
+  padding-bottom: 8px;
 }
 
 .meditation-audio-player .audio-mode-progress span,

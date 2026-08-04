@@ -14,58 +14,261 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Медитации — Система Молодцова</title>
   <link rel="icon" type="image/webp" href="/assets/webp/logo2.webp" />
-  <link rel="stylesheet" href="/css/style.css?v=161" />
+  <link rel="stylesheet" href="/css/style.css?v=184" />
   <link rel="stylesheet" href="/css/nav.css?v=76" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    .meditations-page { padding: 32px 24px 100px; max-width: 1180px; margin: 0 auto; }
-    .meditations-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start; margin-top: 20px; }
-    .meditation-player-preview { position: relative; min-height: 340px; border-radius: 28px; border: 1px solid rgba(255,255,255,.14); background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.62)), url('/assets/webp/mmeditation.webp') center/cover no-repeat; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 22px 64px rgba(0,0,0,.3); display: flex; align-items: flex-end; padding: clamp(20px, 3vw, 32px); overflow: hidden; isolation: isolate; }
-    .meditation-player-preview::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.38) 48%, rgba(0,0,0,.82)); }
-    .meditation-preview-copy { position: relative; z-index: 1; max-width: 560px; }
-    .meditation-preview-copy span { display: inline-flex; margin-bottom: 14px; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: rgba(255,255,255,.78); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-    .meditation-preview-copy h2 { margin: 0 0 10px; color: #fff; font-size: clamp(30px, 4.4vw, 52px); line-height: .96; letter-spacing: -.06em; }
-    .meditation-preview-copy p { margin: 0; max-width: 520px; color: rgba(255,255,255,.66); line-height: 1.65; }
-    .meditation-sidebar { border-radius: 28px; border: 1px solid rgba(255,255,255,.1); background: radial-gradient(circle at 18% 0%, rgba(255,255,255,.1), transparent 34%), linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)), rgba(7,8,10,.72); box-shadow: 0 22px 70px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12); padding: 18px; }
-    .meditation-sidebar-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
-    .meditation-sidebar-head h2 { margin: 0; color: #fff; font-size: 16px; }
-    .meditation-sidebar-head span { color: rgba(255,255,255,.42); font-size: 12px; font-weight: 650; }
-    .meditation-list { display: grid; gap: 8px; }
-    .meditation-track { width: 100%; min-height: 62px; display: grid; grid-template-columns: 36px minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 10px; border: 1px solid transparent; border-radius: 16px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
-    .meditation-track:hover, .meditation-track.active { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.11); }
-    .meditation-index { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); font-size: 12px; font-weight: 850; }
-    .meditation-title { display: block; color: rgba(255,255,255,.9); font-size: 14px; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .meditation-duration { display: block; margin-top: 3px; color: rgba(255,255,255,.42); font-size: 12px; }
-    .meditation-play-mini { color: rgba(255,255,255,.5); font-size: 18px; }
-    .meditation-error { color: rgba(255,255,255,.48); padding: 16px; }
-    .meditation-index-space { background: radial-gradient(circle at 45% 28%, rgba(255,255,255,.72), rgba(122,144,255,.28) 36%, rgba(255,255,255,.08)); color: #fff; }
-    @media (max-width: 1024px) { .meditations-grid { grid-template-columns: 1fr; } .meditation-player-preview { min-height: 320px; } }
-    @media (max-width: 640px) { .meditations-page { padding: 24px 14px 92px; } .meditation-player-preview { min-height: 300px; border-radius: 24px; } .meditation-sidebar { border-radius: 24px; } }
-    .meditations-semantogram { margin-top: 20px; padding: 24px; border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.08); background: radial-gradient(circle at 10% 0%, rgba(216, 191, 155, 0.08), transparent 44%), rgba(255, 255, 255, 0.02); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); }
-    .meditations-semantogram h3 { margin: 0 0 12px; color: #fff; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
-    .meditations-semantogram p.sem-lead { color: rgba(244, 245, 247, 0.72); font-size: 14.5px; line-height: 1.6; margin: 20px 0 0; max-width: 680px; }
-    .sem-grid { position: relative; display: grid; grid-template-columns: 1fr; gap: 12px; margin: 18px 0 0; }
-    @media (min-width: 640px) {
-      .sem-grid { grid-template-columns: repeat(3, 1fr); }
-      .sem-grid::before { content: ""; position: absolute; left: 14%; right: 14%; top: 28px; height: 1px; background: linear-gradient(90deg, transparent, rgba(216,191,155,.28), transparent); }
+    .meditations-page {
+      padding: 28px 24px 110px;
+      max-width: 760px;
+      margin: 0 auto;
     }
-    .sem-col { position: relative; z-index: 1; padding: 16px; border-radius: 22px; border: 1px solid rgba(216, 191, 155, 0.16); background: rgba(255,255,255,0.035); }
-    .sem-col strong { display: block; color: #d8bf9b; font-size: 12.5px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
-    .sem-col p { margin: 0; color: rgba(244, 245, 247, 0.52); font-size: 13px; line-height: 1.55; }
-    .sem-footer { margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 20px; }
-    .sem-footer strong { display: block; color: rgba(255, 255, 255, 0.85); font-size: 13.5px; font-weight: 750; margin-bottom: 8px; }
-    .sem-footer p { margin: 0; color: rgba(244, 245, 247, 0.45); font-size: 12.5px; line-height: 1.5; }
+    .meditations-album {
+      display: grid;
+      gap: 22px;
+      justify-items: center;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .med-cover {
+      width: min(78vw, 320px);
+      aspect-ratio: 1;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.35)),
+        var(--med-cover, url('/assets/webp/meditations/flower.webp')) center/cover no-repeat;
+      box-shadow: 0 28px 70px rgba(0,0,0,.45);
+    }
+    .med-album-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(28px, 7vw, 40px);
+      font-weight: 850;
+      letter-spacing: -.04em;
+      line-height: 1.05;
+    }
+    .med-album-meta {
+      margin: -8px 0 0;
+      color: rgba(255,255,255,.48);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .med-hint {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.05);
+      text-align: left;
+    }
+    .med-hint-kicker {
+      display: block;
+      margin-bottom: 4px;
+      color: rgba(255,255,255,.42);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .med-hint-text {
+      margin: 0;
+      color: rgba(255,255,255,.88);
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    .med-hint-thumbs {
+      display: flex;
+      align-items: center;
+    }
+    .med-preview-thumb {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(8,10,12,.9);
+      background-size: cover;
+      background-position: center;
+      margin-left: -10px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.35);
+    }
+    .med-preview-thumb:first-child { margin-left: 0; }
+
+    .meditation-sidebar {
+      width: 100%;
+      margin-top: 6px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      padding: 10px 8px 8px;
+    }
+    .meditation-sidebar-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 4px 8px 10px;
+    }
+    .meditation-sidebar-head h2 { margin: 0; color: #fff; font-size: 15px; font-weight: 800; }
+    .meditation-sidebar-head span { color: rgba(255,255,255,.42); font-size: 12px; font-weight: 650; }
+    .meditation-list { display: grid; gap: 2px; }
+    .meditation-track {
+      width: 100%;
+      min-height: 58px;
+      display: grid;
+      grid-template-columns: 44px minmax(0,1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 14px;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+    .meditation-track:hover,
+    .meditation-track.active { background: rgba(255,255,255,.06); }
+    .meditation-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      background-color: rgba(255,255,255,.08);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+    .meditation-copy { min-width: 0; }
+    .meditation-title {
+      display: block;
+      color: rgba(255,255,255,.94);
+      font-size: 15px;
+      font-weight: 750;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .meditation-duration {
+      display: block;
+      margin-top: 3px;
+      color: rgba(255,255,255,.42);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .meditation-play-mini { color: rgba(255,255,255,.35); font-size: 18px; padding: 0 4px; }
+    .meditation-error { color: rgba(255,255,255,.48); padding: 16px; }
+
+    .meditations-semantogram {
+      width: 100%;
+      margin-top: 8px;
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      text-align: left;
+    }
+    .meditations-semantogram-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .meditations-semantogram h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .sem-toggle {
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .sem-panel {
+      display: none;
+      margin-top: 14px;
+    }
+    .sem-panel.is-open { display: block; }
+    .sem-lead-compact {
+      margin: 0 0 14px;
+      color: rgba(244,245,247,.62);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .sem-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 720px) {
+      .sem-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .sem-col {
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+    }
+    .sem-col strong {
+      display: block;
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sem-col p {
+      margin: 0;
+      color: rgba(244,245,247,.5);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .sem-footer {
+      margin-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 12px;
+    }
+    .sem-footer strong {
+      display: block;
+      color: rgba(255,255,255,.8);
+      font-size: 13px;
+      font-weight: 750;
+      margin-bottom: 6px;
+    }
+    .sem-footer p {
+      margin: 0;
+      color: rgba(244,245,247,.45);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 640px) {
+      .meditations-page { padding: 20px 14px 100px; }
+      .med-cover { width: min(72vw, 280px); }
+    }
   </style>
 </head>
 <body class="dark-theme">
   <main class="main-content">
-    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/mmeditation.webp') center/cover no-repeat;">
+    <section class="hero hero-courses" style="background:linear-gradient(to bottom, rgba(0,0,0,.24) 0%, rgba(0,0,0,.82) 74%, var(--bg-main) 100%), url('/assets/webp/meditations/flower.webp') center/cover no-repeat;">
       <div class="hero-content text-left">
         <div class="hero-top-text fade-up">Практики</div>
         <h1 class="hero-title fade-up">Медитации</h1>
-        <p class="hero-subtitle fade-up">Аудиопрактики для восстановления внимания, контакта с телом и спокойного внутреннего ритма.</p>
+        <p class="hero-subtitle fade-up">Аудиопрактики для внимания, контакта с телом и спокойного ритма.</p>
       </div>
     </section>
 
@@ -75,40 +278,46 @@
         Назад
       </a>
 
-      <div class="meditations-grid">
-        <div class="meditations-left-col">
-          <section class="meditation-player-preview" aria-label="Медитации">
-            <div class="meditation-preview-copy">
-              <span>Практики</span>
-              <h2>Выберите практику</h2>
-              <p>Каждый трек открывается в полноэкранном аудиоплеере. Слушайте в любое время — без регистрации.</p>
-            </div>
-          </section>
+      <div class="meditations-album">
+        <div class="med-cover" data-med-preview-art style="--med-cover:url('/assets/webp/meditations/flower.webp')"></div>
+        <h2 class="med-album-title">Медитации</h2>
+        <p class="med-album-meta">Система Молодцова · аудиопрактики</p>
 
-          <!-- Смыслограмма медитаций -->
-          <article class="meditations-semantogram">
-            <h3>Смыслограмма медитаций: Навигация состояний</h3>
+        <div class="med-hint">
+          <div>
+            <span class="med-hint-kicker">Попробуйте</span>
+            <p class="med-hint-text">Каждая практика — свой образ. Выберите трек и слушайте в полноэкранном плеере.</p>
+          </div>
+          <div class="med-hint-thumbs" data-med-preview-thumbs aria-hidden="true"></div>
+        </div>
+
+        <article class="meditations-semantogram">
+          <div class="meditations-semantogram-head">
+            <h3>Навигация состояний</h3>
+            <button type="button" class="sem-toggle" data-sem-toggle aria-expanded="false">Подробнее</button>
+          </div>
+          <div class="sem-panel" data-sem-panel>
+            <p class="sem-lead-compact">Медитативные треки — пошаговый навигатор по психоэмоциональному и соматическому состоянию. Каждая сессия сонастраивает ум и тело через три регистра.</p>
             <div class="sem-grid">
               <div class="sem-col">
-                <strong>1. Соматический (Заземление)</strong>
-                <p>Перевод вегетативной нервной системы из режима напряжения и стресса (симпатика) в режим безопасности и самовосстановления (парасимпатика) за счет управляемого дыхания.</p>
+                <strong>Соматический</strong>
+                <p>Из режима напряжения — в безопасность и самовосстановление через дыхание.</p>
               </div>
               <div class="sem-col">
-                <strong>2. Смысловой (Интеграция)</strong>
-                <p>Связывание мышечных блоков и телесных сигналов с подавленными эмоциями. Практика помогает не просто убрать симптом, а бережно прожить вызвавшее его чувство.</p>
+                <strong>Смысловой</strong>
+                <p>Связь телесных сигналов с подавленными эмоциями — прожить, а не «убрать симптом».</p>
               </div>
               <div class="sem-col">
-                <strong>3. Акустический (Якорение)</strong>
-                <p>Выверенный автором темп ведения, смысловые паузы и соматоакустический фон. Помогает мозгу генерировать альфа- и тета-волны, стабилизируя фокус внимания.</p>
+                <strong>Акустический</strong>
+                <p>Темп, паузы и фон, которые помогают стабилизировать фокус внимания.</p>
               </div>
             </div>
-            <p class="sem-lead">Медитативные треки в Системе — это не абстрактная фоновая музыка для расслабления, а пошаговый навигатор по вашему психоэмоциональному и соматическому состоянию. Каждая сессия решает конкретную задачу сонастройки ума и тела через три терапевтических регистра.</p>
             <div class="sem-footer">
-              <strong>Как интегрировать в ежедневный ритм:</strong>
-              <p>Для утреннего фокуса выбирайте телесно-опосредованные треки (например, «Комната эмоций» или «Чердак»). При приступах острой тревоги используйте заземляющие практики («Озеро покоя», «Океан»). Вечером отдавайте предпочтение глубокой соматосенсорной релаксации («Поход вдоль ручья» или «Стихии»).</p>
+              <strong>Как встроить в день</strong>
+              <p>Утром — «Комната эмоций» или «Чердак». При тревоге — «Озеро покоя», «Океан». Вечером — «Поход вдоль ручья» или «Стихии».</p>
             </div>
-          </article>
-        </div>
+          </div>
+        </article>
 
         <aside class="meditation-sidebar">
           <div class="meditation-sidebar-head">
@@ -128,7 +337,6 @@
   <script src="/js/auth.js?v=27"></script>
   <script src="/js/nav.js?v=102"></script>
   <script src="/js/main.js?v=2"></script>
-  <script src="/js/meditations-page.js?v=2"></script>
+  <script src="/js/meditations-page.js?v=4"></script>
 </body>
 </html>
-

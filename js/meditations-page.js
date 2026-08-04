@@ -1,8 +1,25 @@
 (function initMeditationsPage() {
   const list = document.getElementById('meditations-list');
   const count = document.querySelector('[data-meditations-count]');
-  const artwork = '/assets/webp/mmeditation.webp';
-  const spaceTrackTitle = 'Взгляд из космоса';
+  const previewArt = document.querySelector('[data-med-preview-art]');
+  const previewThumbs = document.querySelector('[data-med-preview-thumbs]');
+  const defaultArtwork = '/assets/webp/meditations/flower.webp';
+
+  // Картинки плеера / плашек — 1:1 с названиями треков.
+  const ARTWORK_BY_TITLE = {
+    'цветок': '/assets/webp/meditations/flower.webp',
+    'библиотека': '/assets/webp/meditations/library.webp',
+    'взгляд из космоса': '/assets/webp/meditations/space.webp',
+    'комната эмоций': '/assets/webp/meditations/room.webp',
+    'седьмой горизонт': '/assets/webp/meditations/horizon.webp',
+    'медитация 7 неделя': '/assets/webp/meditations/horizon.webp',
+    'озеро покоя': '/assets/webp/meditations/lake.webp',
+    'океан': '/assets/webp/meditations/ocean.webp',
+    'поход вдоль ручья': '/assets/webp/meditations/stream.webp',
+    'стихии': '/assets/webp/meditations/elements.webp',
+    'чердак': '/assets/webp/meditations/attic.webp',
+  };
+
   let tracks = [];
   let currentIndex = 0;
   let audio = null;
@@ -18,6 +35,11 @@
     }[char]));
   }
 
+  function artworkFor(track) {
+    const key = String(track?.title || '').trim().toLowerCase();
+    return ARTWORK_BY_TITLE[key] || defaultArtwork;
+  }
+
   function fmt(value) {
     if (!Number.isFinite(value) || value <= 0) return '0:00';
     const total = Math.floor(value);
@@ -30,7 +52,7 @@
     if (card) return;
     card = document.createElement('div');
     card.className = 'audio-mode-card hidden meditation-audio-player';
-    card.style.setProperty('--audio-artwork', `url("${artwork}")`);
+    card.style.setProperty('--audio-artwork', `url("${defaultArtwork}")`);
     card.innerHTML = `
       <div class="audio-mode-shell">
         <div class="audio-mode-topbar">
@@ -40,7 +62,7 @@
           <div class="audio-mode-eyebrow">Медитация</div>
           <span></span>
         </div>
-        <div class="audio-mode-art"><img src="${artwork}" alt="" loading="lazy" decoding="async"></div>
+        <div class="audio-mode-art meditation-player-art" aria-hidden="true"></div>
         <div class="audio-mode-body">
           <div class="audio-mode-meta">
             <div class="audio-mode-title" data-title>Медитация</div>
@@ -95,22 +117,16 @@
       const pct = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
       audio.currentTime = pct * total;
     }
-    progressEl.addEventListener('click', (event) => {
-      seekFromProgressEvent(event);
-    });
+    progressEl.addEventListener('click', (event) => seekFromProgressEvent(event));
     progressEl.addEventListener('pointerdown', (event) => {
       if (event.button > 0) return;
       event.preventDefault();
-      try {
-        progressEl.setPointerCapture(event.pointerId);
-      } catch (e) {}
+      try { progressEl.setPointerCapture(event.pointerId); } catch (e) {}
       seekFromProgressEvent(event);
       const onMove = (moveEvent) => seekFromProgressEvent(moveEvent);
       function onDone(upEvent) {
         seekFromProgressEvent(upEvent);
-        try {
-          progressEl.releasePointerCapture(event.pointerId);
-        } catch (e2) {}
+        try { progressEl.releasePointerCapture(event.pointerId); } catch (e2) {}
         window.removeEventListener('pointermove', onMove);
         window.removeEventListener('pointerup', onDone);
         window.removeEventListener('pointercancel', onDone);
@@ -127,7 +143,13 @@
   }
 
   function isSpaceTrack(track) {
-    return String(track?.title || '').trim().toLowerCase() === spaceTrackTitle.toLowerCase();
+    return String(track?.title || '').trim().toLowerCase() === 'взгляд из космоса';
+  }
+
+  function setPlayerArtwork(track) {
+    const url = artworkFor(track);
+    card.style.setProperty('--audio-artwork', `url("${url}")`);
+    if (previewArt) previewArt.style.setProperty('--med-cover', `url("${url}")`);
   }
 
   function updateProgress() {
@@ -154,6 +176,7 @@
       node.classList.toggle('active', nodeIndex === index);
     });
     card.querySelector('[data-title]').textContent = track.title || 'Медитация';
+    setPlayerArtwork(track);
     card.classList.remove('hidden');
     document.body.classList.add('audio-player-open');
     audio.pause();
@@ -174,6 +197,14 @@
     audio.play().catch(() => {});
   }
 
+  function renderPreviewThumbs() {
+    if (!previewThumbs) return;
+    const slice = tracks.slice(0, 4);
+    previewThumbs.innerHTML = slice.map((track) => `
+      <span class="med-preview-thumb" style="background-image:url('${artworkFor(track)}')"></span>
+    `).join('');
+  }
+
   function render(data) {
     const section = Array.isArray(data) ? data[0] : null;
     tracks = section?.lessons || [];
@@ -182,14 +213,17 @@
       list.innerHTML = '<p class="meditation-error">Медитации пока не найдены.</p>';
       return;
     }
+    if (previewArt) previewArt.style.setProperty('--med-cover', `url("${artworkFor(tracks[0])}")`);
+    renderPreviewThumbs();
+
     list.innerHTML = tracks.map((track, index) => `
       <button type="button" class="meditation-track" data-index="${index}">
-        <span class="meditation-index${isSpaceTrack(track) ? ' meditation-index-space' : ''}">${index + 1}</span>
-        <span>
+        <span class="meditation-thumb" style="background-image:url('${artworkFor(track)}')"></span>
+        <span class="meditation-copy">
           <span class="meditation-title">${escapeHtml(track.title)}</span>
-          <span class="meditation-duration">${escapeHtml(track.duration || 'Аудио')}</span>
+          <span class="meditation-duration">Система Молодцова · ${escapeHtml(track.duration || 'Аудио')}</span>
         </span>
-        <span class="meditation-play-mini">›</span>
+        <span class="meditation-play-mini" aria-hidden="true">›</span>
       </button>
     `).join('');
     list.querySelectorAll('.meditation-track').forEach((button) => {
@@ -202,7 +236,19 @@
     }
   }
 
+  function bindSemantogramToggle() {
+    const btn = document.querySelector('[data-sem-toggle]');
+    const panel = document.querySelector('[data-sem-panel]');
+    if (!btn || !panel) return;
+    btn.addEventListener('click', () => {
+      const open = panel.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? 'Свернуть' : 'Подробнее';
+    });
+  }
+
   async function init() {
+    bindSemantogramToggle();
     try {
       const data = await window.API.getMeditations();
       render(data);
