@@ -914,7 +914,11 @@ window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
   window.__sistemaSubscriptionActive = true;
   window.__sistemaSubscriptionExpiresAt = expiresRaw ? (new Date(expiresRaw).getTime() || null) : null;
   if (typeof onActivated === 'function') {
-    onActivated(optimistic);
+    try {
+      onActivated(optimistic);
+    } catch (err) {
+      console.error('Trial activation UI callback failed:', err);
+    }
   }
   if (typeof window.sistemaRenderSubscriptionCard === 'function') {
     window.sistemaRenderSubscriptionCard(optimistic);
@@ -942,6 +946,19 @@ window.handleTrialActivated = function handleTrialActivated(res, onActivated) {
   }, 800);
   return optimistic;
 };
+
+function dismissTrialModal(btn) {
+  const modal = btn?.closest?.('#global-subscription-modal, #ios-subscription-modal, .ios-sub-modal');
+  if (!modal) return;
+  const closeBtn = modal.querySelector('.ios-sub-modal-close, [data-close]');
+  if (closeBtn) {
+    closeBtn.click();
+    return;
+  }
+  modal.classList.remove('active');
+  modal.style.pointerEvents = 'none';
+  setTimeout(() => modal.remove(), 320);
+}
 
 document.addEventListener('click', async function handleTrialClick(event) {
   const btn = event.target && event.target.closest && event.target.closest('[data-trial-activate], .trial-cta');
@@ -981,7 +998,14 @@ document.addEventListener('click', async function handleTrialClick(event) {
       }
       return;
     }
-    window.handleTrialActivated(res, btn.__trialOnActivated);
+    // The server has already granted access. Close the modal unconditionally;
+    // profile/card repaint failures must never leave a frozen paywall onscreen.
+    dismissTrialModal(btn);
+    try {
+      window.handleTrialActivated(res, btn.__trialOnActivated);
+    } catch (uiErr) {
+      console.error('Trial activated, but UI refresh failed:', uiErr);
+    }
   } catch (err) {
     btn.disabled = false;
     if (btn.classList && btn.classList.contains('trial-cta')) btn.innerHTML = original;
