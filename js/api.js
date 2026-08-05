@@ -572,6 +572,17 @@ class ApiClient {
         return data;
       });
   }
+  activatePromo(code) {
+    return this.request('POST', '/payment/activate-promo', { code })
+      .then((data) => {
+        if (data) {
+          this.subscriptionCache = data;
+          this.subscriptionCacheAt = Date.now();
+          this.subscriptionPromise = null;
+        }
+        return data;
+      });
+  }
   isSubscriptionActive(subscription) {
     return !!(subscription && subscription.subscription_active === true);
   }
@@ -770,6 +781,89 @@ window.requirePaymentLegalAccepted = function requirePaymentLegalAccepted(scope 
   return false;
 };
 
+function ensurePromoStyles() {
+  if (document.getElementById('promo-code-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'promo-code-styles';
+  style.textContent = `
+    .promo-code-box{width:100%;margin:0 0 12px}
+    .promo-code-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+    .promo-code-input{min-width:0;height:46px;padding:0 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-size:14px;font-weight:700;text-transform:uppercase;outline:none}
+    .promo-code-input:focus{border-color:rgba(255,255,255,.38);background:rgba(255,255,255,.1)}
+    .promo-code-input::placeholder{color:rgba(255,255,255,.34);text-transform:none;font-weight:500}
+    .promo-code-apply{height:46px;padding:0 16px;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:800;cursor:pointer}
+    .promo-code-apply:disabled{opacity:.55;cursor:wait}
+    .promo-code-status{min-height:16px;margin:7px 2px 0;color:rgba(255,255,255,.48);font-size:11px;line-height:1.35;text-align:left}
+    .promo-code-status.error{color:#ff8d8d}
+    .promo-code-status.success{color:#6ee7a3}
+  `;
+  document.head.appendChild(style);
+}
+
+function injectPromoOption(scope, buyBtn) {
+  if (!scope || !buyBtn || scope.querySelector('.promo-code-box')) return;
+  ensurePromoStyles();
+  const box = document.createElement('div');
+  box.className = 'promo-code-box';
+  box.innerHTML = `
+    <div class="promo-code-row">
+      <input class="promo-code-input" type="text" inputmode="text" autocomplete="off" maxlength="64" placeholder="Промокод">
+      <button class="promo-code-apply" type="button">Применить</button>
+    </div>
+    <p class="promo-code-status"></p>
+  `;
+  buyBtn.insertAdjacentElement('beforebegin', box);
+  const input = box.querySelector('.promo-code-input');
+  const applyBtn = box.querySelector('.promo-code-apply');
+  const status = box.querySelector('.promo-code-status');
+
+  const apply = async () => {
+    const code = String(input.value || '').trim().toUpperCase();
+    status.className = 'promo-code-status';
+    if (!code) {
+      status.textContent = 'Введите промокод.';
+      status.classList.add('error');
+      return;
+    }
+    if (!(window.API.isLoggedIn && window.API.isLoggedIn())) {
+      if (window.openAuthModal) window.openAuthModal('login');
+      else status.textContent = 'Сначала войдите в аккаунт.';
+      return;
+    }
+    applyBtn.disabled = true;
+    input.disabled = true;
+    status.textContent = 'Проверяем промокод…';
+    try {
+      const result = await window.API.activatePromo(code);
+      if (!result?.promo_applied || !result?.subscription_active) throw new Error('Промокод не применён');
+      status.textContent = 'Промокод применён. Доступ открыт на 30 дней.';
+      status.classList.add('success');
+      window.__sistemaSubscriptionActive = true;
+      window.__sistemaSubscriptionExpiresAt = result.expires_at
+        ? new Date(result.expires_at).getTime() || null
+        : null;
+      dismissTrialModal(applyBtn);
+      window.paintSubscriptionBadgeDirect?.({ ...result, is_trial: false });
+      window.dispatchEvent(new CustomEvent('sistema:subscription-changed', {
+        detail: { active: true, expires_at: result.expires_at, subscription: result }
+      }));
+    } catch (err) {
+      status.textContent = err?.error || err?.message || 'Промокод недействителен.';
+      status.classList.add('error');
+      applyBtn.disabled = false;
+      input.disabled = false;
+      input.focus();
+    }
+  };
+  applyBtn.addEventListener('click', apply);
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      apply();
+    }
+  });
+}
+
 // === Trial CTA (1-day free trial, no card) ===
 // Врезает кнопку триала в любую модалку подписки (.ios-sub-btn-buy / [data-buy]).
 // Показывается только если триал ещё доступен (не использован, нет оплаты, доступ неактивен).
@@ -801,6 +895,7 @@ window.injectTrialOption = async function injectTrialOption(scope, opts = {}) {
     if (!scope || !window.API) return;
     const buyBtn = scope.querySelector('.ios-sub-btn-buy, [data-buy]');
     if (!buyBtn) return;
+    injectPromoOption(scope, buyBtn);
     if (scope.querySelector('.trial-cta')) return;
 
     const loggedIn = window.API.isLoggedIn && window.API.isLoggedIn();
