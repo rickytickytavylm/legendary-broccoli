@@ -436,8 +436,32 @@ function escapeHtml(value) {
     host.insertBefore(banner, host.firstChild);
   }
 
+  async function consumeWebHandoff() {
+    const params = new URLSearchParams(location.search || '');
+    const code = params.get('handoff');
+    if (!code) return false;
+    // Remove the one-time credential from browser history immediately.
+    params.delete('handoff');
+    const clean = location.pathname + (params.toString() ? `?${params}` : '') + (location.hash || '');
+    history.replaceState({}, document.title, clean);
+    try {
+      const result = await window.API.exchangeWebHandoff(code);
+      if (!result?.tokens?.access || !result?.tokens?.refresh) return false;
+      window.API.setTokens(result.tokens);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async function initProfile() {
     const bridge = captureAppBridgeParams() || readAppBridge();
+    await consumeWebHandoff();
+    if (!(window.API?.isLoggedIn && window.API.isLoggedIn())) {
+      showAuthGate();
+      showAppBridgeBanner(bridge);
+      return;
+    }
     showDashboardShell();
     showAppBridgeBanner(bridge);
     try {
@@ -771,6 +795,14 @@ function escapeHtml(value) {
     });
     return dashboardPromise;
   }
+
+  document.getElementById('gate-login-btn')?.addEventListener('click', () => {
+    if (window.openAuthModal) {
+      window.openAuthModal('login');
+    } else {
+      window.location.href = '/';
+    }
+  });
 
   initProfile();
 

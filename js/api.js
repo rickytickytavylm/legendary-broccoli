@@ -394,6 +394,14 @@ class ApiClient {
   verifyPhoneCode(data) { return this.request('POST', '/auth/phone/verify', data); }
   requestMagicLink(data) { return this.request('POST', '/auth/magic/request', data); }
   verifyMagicLink(token) { return this.request('POST', '/auth/magic/verify', { token }); }
+  exchangeWebHandoff(code) {
+    return this.request(
+      'POST',
+      '/auth/web-handoff/exchange',
+      { code },
+      { skipAuthRefresh: true, requireAuth: false }
+    );
+  }
   me(opts = {}) {
     const ttl = opts.ttl || 60 * 1000;
     const cached = !opts.fresh ? this.readMeCache(ttl) : null;
