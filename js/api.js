@@ -788,7 +788,7 @@ function ensurePromoStyles() {
   style.textContent = `
     .promo-code-box{width:100%;margin:0 0 12px}
     .promo-code-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
-    .promo-code-input{min-width:0;height:46px;padding:0 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-size:14px;font-weight:700;text-transform:uppercase;outline:none}
+    .promo-code-input{min-width:0;height:46px;padding:0 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-size:16px;font-weight:700;text-transform:uppercase;outline:none}
     .promo-code-input:focus{border-color:rgba(255,255,255,.38);background:rgba(255,255,255,.1)}
     .promo-code-input::placeholder{color:rgba(255,255,255,.34);text-transform:none;font-weight:500}
     .promo-code-apply{height:46px;padding:0 16px;border-radius:16px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:800;cursor:pointer}
